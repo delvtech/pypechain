@@ -1,0 +1,38 @@
+# Environment variables
+*.env
+
+# Python environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+elf-env
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+.python-version
+__pypackages__/
+
+# build directories
+.build
+*.egg-info
+
+# ape, compiler, pytest cache
+.cache
+__pycache__/
+.pytest_cache
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# OSX files
+.DS_Store
+
+# VScode
+.vscode
+
+# pycharm
+.idea
