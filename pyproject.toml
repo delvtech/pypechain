@@ -17,9 +17,9 @@ classifiers = [
 
 [project.optional-dependencies]
 # This flag installs all dependencies and should be ran when installing this package
-with-dependencies = ["pypechain[base, lateral]"]
-base = ["black", "jinja2", "web3", "setuptools", "wheel", "twine"]
-lateral = []
+all = ["pypechain[base,build]"]
+base = ["black", "jinja2", "web3"]
+build = ["setuptools", "wheel", "twine"]
 
 [project.urls]
 "Homepage" = "https://github.com/delvtech/pypechain"
