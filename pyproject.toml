@@ -1,4 +1,5 @@
 [project]
+
 name = "pypechain"
 version = "0.0.0"
 authors = [
@@ -11,15 +12,18 @@ readme = "README.md"
 requires-python = ">=3.10, <3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Apache License 2.0",
+    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
+
+[project.scripts]
+pypechain = "pypechain.main:main"
 
 [project.optional-dependencies]
 # This flag installs all dependencies and should be ran when installing this package
 all = ["pypechain[base,build]"]
 base = ["black", "jinja2", "web3"]
-build = ["setuptools", "wheel", "twine"]
+build = ["build", "setuptools", "wheel", "twine"]
 
 [project.urls]
 "Homepage" = "https://github.com/delvtech/pypechain"
