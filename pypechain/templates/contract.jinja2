@@ -25,7 +25,7 @@ class {{contract_name}}{{function.capitalized_name}}ContractFunction(ContractFun
     {%- if function.input_names_and_types|length > 1 %}
     def __call__(self, {{function.required_input_names_and_types|join(', ')}}, {{function.optional_input_names_and_types|join(', ')}}) -> "{{contract_name}}{{function.capitalized_name}}ContractFunction":
         {# loop over the signatures for this function #}
-        {% for signature_names in function.input_names %}
+        {% for signature_name in function.input_names %}
         {# determine what type of python condition this will be #}
         {% if loop.first %}
         {% set conditional_string = 'if' %}
@@ -37,7 +37,7 @@ class {{contract_name}}{{function.capitalized_name}}ContractFunction(ContractFun
         {# python "if" or "elif" condition #}
         {% if conditional_string != 'else' %}
         {# get the optional names that are in in this signature #}
-        {%- set optional_names_in_this_signature = signature_names|select('in', function.optional_input_names)|list %}
+        {%- set optional_names_in_this_signature = signature_name|select('in', function.optional_input_names)|list %}
         {# does this signature have no optional names? #}
         {% if optional_names_in_this_signature|length == 0 %}
         {# py: [if] all optional args are None, execute this signature #}
@@ -45,7 +45,7 @@ class {{contract_name}}{{function.capitalized_name}}ContractFunction(ContractFun
         {# does this signature have optional names? #}
         {% else %}
         {# get the optional names that are not in this signature #}
-        {%- set optional_names_not_in_this_signature = function.optional_input_names|reject('in', signature_names)|list %}
+        {%- set optional_names_not_in_this_signature = function.optional_input_names|reject('in', signature_name)|list %}
         {# does this signature have all of the optional names? #}
         {% if  optional_names_not_in_this_signature|length == 0 %}
         {# py: [if] all optional args are not None, execute this signature #}

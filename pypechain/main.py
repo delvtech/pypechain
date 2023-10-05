@@ -2,13 +2,14 @@
 from __future__ import annotations
 
 import os
-import re
 import sys
 from dataclasses import asdict
 from pathlib import Path
+from typing import Sequence
 
-import black
 from jinja2 import Template
+from web3.types import ABIFunction, ABIFunctionComponents, ABIFunctionParams
+
 from pypechain.utilities.abi import (
     get_abi_items,
     get_events_for_abi,
@@ -17,75 +18,15 @@ from pypechain.utilities.abi import (
     is_abi_function,
     load_abi_from_file,
 )
-from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
+from pypechain.utilities.file import write_string_to_file
+from pypechain.utilities.format import (
+    apply_black_formatting,
+    avoid_python_keywords,
+    capitalize_first_letter_only,
+)
+from pypechain.utilities.sort import get_intersection_and_unique
 from pypechain.utilities.templates import setup_templates
 from pypechain.utilities.types import solidity_to_python_type
-from web3.types import ABIFunction
-
-
-def get_intersection_and_unique(lists: list[list[str]]) -> tuple[set[str], set[str]]:
-    """Process a list of lists of strings to get the intersection and unique values.
-
-    The intersection is a set of strings that occur in all sub-lists.
-    The unique values are strings that only occur in one sub-list.
-
-    Arguments
-    ---------
-    lists : list[list[str]]
-        A list of lists of strings, where each sub-list is an entity to compute sets over.
-
-    Returns
-    -------
-    tuple[set[str], set[str]]
-        The (intersection, unique_values) sets
-    """
-    intersection = set(lists[0])
-    for lst in lists[1:]:
-        intersection &= set(lst)
-    string_counts = {}
-    for lst in lists:
-        for item in set(lst):
-            string_counts[item] = string_counts.get(item, 0) + 1
-    unique_values = {item for item, count in string_counts.items() if count == 1}
-    return (intersection, unique_values)
-
-
-def format_code(code: str, line_length: int) -> str:
-    """Format code with Black on default settings.
-
-    Arguments
-    ---------
-    code : str
-        A string containing Python code
-    line_length : int
-        Output file's maximum line length.
-
-    Returns
-    -------
-    str
-        A string containing the Black-formatted code
-    """
-    # remove extra newlines and let Black sort it out
-    code = re.sub(r"^[\s\t]*\n\n", "\n", code, flags=re.MULTILINE)
-    code = code.replace(", )", ")")  # remove trailing comma
-    try:
-        return black.format_file_contents(code, fast=False, mode=black.Mode(line_length=line_length))
-    except ValueError as exc:
-        raise ValueError(f"cannot format with Black\n code:\n{code}") from exc
-
-
-def write_code(path: str | os.PathLike, code: str) -> None:
-    """Save to specified path the provided code.
-
-    Arguments
-    ---------
-    path : str | os.PathLike
-        The location of the output file.
-    code : str
-        The code to be written, as a single string.
-    """
-    with open(path, "w", encoding="utf-8") as output_file:
-        output_file.write(code)
 
 
 def main(abi_file_path: str, output_dir: str, line_length: int = 80) -> None:
@@ -111,22 +52,28 @@ def main(abi_file_path: str, output_dir: str, line_length: int = 80) -> None:
     contract_template, types_template = setup_templates()
 
     # render the code
-    rendered_contract_code = render_contract_file(contract_name, contract_template, file_path)
+    rendered_contract_code = render_contract_file(
+        contract_name, contract_template, file_path
+    )
     rendered_types_code = render_types_file(contract_name, types_template, file_path)
 
     # TODO: Add more features:
     # TODO:  events
 
     # Format the generated code using Black
-    formatted_contract_code = format_code(rendered_contract_code, line_length)
-    formatted_types_code = format_code(rendered_types_code, line_length)
+    formatted_contract_code = apply_black_formatting(
+        rendered_contract_code, line_length
+    )
+    formatted_types_code = apply_black_formatting(rendered_types_code, line_length)
 
     # Write the code to file
-    write_code(f"{contract_path}Contract.py", formatted_contract_code)
-    write_code(f"{contract_path}Types.py", formatted_types_code)
+    write_string_to_file(f"{contract_path}Contract.py", formatted_contract_code)
+    write_string_to_file(f"{contract_path}Types.py", formatted_types_code)
 
 
-def render_contract_file(contract_name: str, contract_template: Template, abi_file_path: Path) -> str:
+def render_contract_file(
+    contract_name: str, contract_template: Template, abi_file_path: Path
+) -> str:
     """Returns a string of the contract file to be generated.
 
     Arguments
@@ -157,22 +104,33 @@ def render_contract_file(contract_name: str, contract_template: Template, abi_fi
                     "capitalized_name": capitalize_first_letter_only(name),
                     "input_names_and_types": [get_input_names_and_values(abi_function)],
                     "input_names": [get_input_names(abi_function)],
-                    "outputs": [get_outputs(abi_function)],
+                    "outputs": [get_output_names(abi_function)],
                 }
                 function_datas[name] = function_data
             else:  # this function already exists, presumably with a different signature
-                function_datas[name]["input_names_and_types"].append(get_input_names_and_values(abi_function))
-                function_datas[name]["input_names"].append(get_input_names(abi_function))
-                function_datas[name]["outputs"].append(get_outputs(abi_function))
+                function_datas[name]["input_names_and_types"].append(
+                    get_input_names_and_values(abi_function)
+                )
+                function_datas[name]["input_names"].append(
+                    get_input_names(abi_function)
+                )
+                function_datas[name]["outputs"].append(get_output_names(abi_function))
                 # input_names_and_types will need optional args at the end
-                shared_input_names_and_types, unique_input_names_and_types = get_intersection_and_unique(
+                (
+                    shared_input_names_and_types,
+                    unique_input_names_and_types,
+                ) = get_intersection_and_unique(
                     function_datas[name]["input_names_and_types"]
                 )
-                function_datas[name]["required_input_names_and_types"] = shared_input_names_and_types
+                function_datas[name][
+                    "required_input_names_and_types"
+                ] = shared_input_names_and_types
                 function_datas[name]["optional_input_names_and_types"] = []
                 for name_and_type in unique_input_names_and_types:  # optional args
                     name_and_type += " | None = None"
-                    function_datas[name]["optional_input_names_and_types"].append(name_and_type)
+                    function_datas[name]["optional_input_names_and_types"].append(
+                        name_and_type
+                    )
                 # we will also need the names to be separated
                 shared_input_names, unique_input_names = get_intersection_and_unique(
                     function_datas[name]["input_names"]
@@ -180,10 +138,14 @@ def render_contract_file(contract_name: str, contract_template: Template, abi_fi
                 function_datas[name]["required_input_names"] = shared_input_names
                 function_datas[name]["optional_input_names"] = unique_input_names
     # Render the template
-    return contract_template.render(contract_name=contract_name, functions=list(function_datas.values()))
+    return contract_template.render(
+        contract_name=contract_name, functions=list(function_datas.values())
+    )
 
 
-def render_types_file(contract_name: str, types_template: Template, abi_file_path: Path) -> str:
+def render_types_file(
+    contract_name: str, types_template: Template, abi_file_path: Path
+) -> str:
     """Returns a string of the types file to be generated.
 
     Arguments
@@ -244,17 +206,17 @@ def get_input_names_and_values(function: ABIFunction) -> list[str]:
             python_type = solidity_to_python_type(_input.get("type", "unknown"))
         else:
             raise ValueError("Solidity function parameter name cannot be None")
-        stringified_function_parameters.append(f"{avoid_python_keywords(name)}: {python_type}")
+        stringified_function_parameters.append(
+            f"{avoid_python_keywords(name)}: {python_type}"
+        )
     return stringified_function_parameters
 
 
-def stringify_parameters(parameters) -> list[str]:
-    """Stringifies parameters.
+def get_function_parameter_names(
+    parameters: Sequence[ABIFunctionParams | ABIFunctionComponents],
+) -> list[str]:
+    """Parses a list of ABIFunctionParams or ABIFUnctionComponents and returns a list of parameter names."""
 
-    .. todo::
-        handle empty strings.  Should replace them with 'arg1', 'arg2', and so one.
-        recursively handle this too for evil nested tuples with no names.
-    """
     stringified_function_parameters: list[str] = []
     arg_counter: int = 1
     for _input in parameters:
@@ -267,7 +229,7 @@ def stringify_parameters(parameters) -> list[str]:
 
 
 def get_input_names(function: ABIFunction) -> list[str]:
-    """Returns function input name/type strings for jinja templating.
+    """Returns function input name strings for jinja templating.
 
     i.e. for the solidity function signature:
     function doThing(address who, uint256 amount, bool flag, bytes extraData)
@@ -285,11 +247,11 @@ def get_input_names(function: ABIFunction) -> list[str]:
     list[str]
         A list of function names i.e. ['arg1', 'arg2']
     """
-    return stringify_parameters(function.get("inputs", []))
+    return get_function_parameter_names(function.get("inputs", []))
 
 
-def get_outputs(function: ABIFunction) -> list[str]:
-    """Returns function output name/type strings for jinja templating.
+def get_output_names(function: ABIFunction) -> list[str]:
+    """Returns function output name strings for jinja templating.
 
     i.e. for the solidity function signature:
     function doThing() returns (address who, uint256 amount, bool flag, bytes extraData)
@@ -309,7 +271,7 @@ def get_outputs(function: ABIFunction) -> list[str]:
             name: 'from', type: 'str'}, name: '
         }]]
     """
-    return stringify_parameters(function.get("outputs", []))
+    return get_function_parameter_names(function.get("outputs", []))
 
 
 if __name__ == "__main__":
@@ -320,4 +282,9 @@ if __name__ == "__main__":
     elif len(sys.argv) == 4:
         main(sys.argv[1], sys.argv[2], int(sys.argv[3]))
     else:
-        print("Usage: python script_name.py <path_to_abi_file> <output_dir> <line_length>")
+        print(
+            "Usage: python script_name.py <path_to_abi_file> <output_dir> <line_length>"
+        )
+
+
+def overloaded_function(*args: [])

@@ -1,5 +1,8 @@
 """Formatting utilities."""
 import keyword
+import re
+
+import black
 
 
 def avoid_python_keywords(name: str) -> str:
@@ -102,3 +105,29 @@ def capitalize_first_letter_only(string: str) -> str:
     if len(string) < 2:
         return string
     return string[0].upper() + string[1:]
+
+
+def apply_black_formatting(code: str, line_length: int) -> str:
+    """Formats a code string with Black on default settings.
+
+    Arguments
+    ---------
+    code : str
+        A string containing Python code
+    line_length : int
+        Output file's maximum line length.
+
+    Returns
+    -------
+    str
+        A string containing the Black-formatted code
+    """
+    # remove extra newlines and let Black sort it out
+    formatted_code = re.sub(r"^[\s\t]*\n\n", "\n", code, flags=re.MULTILINE)
+    formatted_code = code.replace(", )", ")")  # remove trailing comma
+    try:
+        return black.format_file_contents(
+            formatted_code, fast=False, mode=black.Mode(line_length=line_length)
+        )
+    except ValueError as exc:
+        raise ValueError(f"cannot format with Black\n code:\n{code}") from exc
