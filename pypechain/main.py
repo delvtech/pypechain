@@ -1,11 +1,13 @@
 """Script to generate typed web3.py classes for solidity contracts."""
 from __future__ import annotations
 
+import argparse
 import os
+import shutil
 import sys
 from dataclasses import asdict
 from pathlib import Path
-from typing import Sequence
+from typing import NamedTuple, Sequence
 
 from jinja2 import Template
 from web3.types import ABIFunction, ABIFunctionComponents, ABIFunctionParams
@@ -29,7 +31,35 @@ from pypechain.utilities.templates import setup_templates
 from pypechain.utilities.types import solidity_to_python_type
 
 
-def main(abi_file_path: str, output_dir: str, line_length: int = 80) -> None:
+def setup_directory(directory: str) -> None:
+    """Set up the output directory. If it exists, clear it. Otherwise, create it."""
+
+    # If the directory exists, remove it
+    if os.path.exists(directory):
+        shutil.rmtree(directory)
+
+    # Create the directory
+    os.makedirs(directory)
+
+
+class Args(NamedTuple):
+    """Command line arguments for pypechain."""
+
+    abi_file_path: str
+    output_dir: str
+    line_length: int
+
+
+def namespace_to_args(namespace: argparse.Namespace) -> Args:
+    """Converts argprase.Namespace to Args."""
+    return Args(
+        abi_file_path=namespace.abi_file_path,
+        output_dir=namespace.output_dir,
+        line_length=namespace.line_length,
+    )
+
+
+def main() -> None:
     """Generates class files for a given abi.
 
     Arguments
@@ -41,12 +71,56 @@ def main(abi_file_path: str, output_dir: str, line_length: int = 80) -> None:
     line_length : int
         Optional argument for the output file's maximum line length. Defaults to 80.
     """
+    parser = argparse.ArgumentParser(
+        description="Generates class files for a given abi."
+    )
+    parser.add_argument(
+        "abi_file_path",
+        help="Path to the abi JSON file or directory containing multiple JSON files.",
+    )
+
+    parser.add_argument(
+        "--output_dir",
+        default="pypechain_types",
+        help="Path to the directory where files will be generated. Defaults to pypechain_types.",
+    )
+    parser.add_argument(
+        "--line_length",
+        type=int,
+        default=80,
+        help="Optional argument for the output file's maximum line length. Defaults to 80.",
+    )
+
+    # If no arguments were passed, display the help message and exit
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+
+    args: Args = namespace_to_args(parser.parse_args())
+    abi_file_path, output_dir, line_length = args
+
+    # Set up the output directory
+    setup_directory(output_dir)
+
+    # Check if provided path is a directory or file
+    if os.path.isdir(abi_file_path):
+        # If directory, process all JSON files in the directory
+        for json_file in Path(abi_file_path).glob("*.json"):
+            process_file(str(json_file), output_dir, line_length)
+    else:
+        # Otherwise, process the single file
+        process_file(abi_file_path, output_dir, line_length)
+
+
+def process_file(abi_file_path: str, output_dir: str, line_length: int) -> None:
+    """Processes a single JSON file to generate class files."""
 
     # get names
     file_path = Path(abi_file_path)
+    output_path = Path(output_dir)
     filename = file_path.name
     contract_name = os.path.splitext(filename)[0]
-    contract_path = Path(output_dir).joinpath(f"{contract_name}")
+    contract_path = output_path.joinpath(f"{contract_name}")
 
     # grab the templates
     contract_template, types_template = setup_templates()
@@ -56,9 +130,6 @@ def main(abi_file_path: str, output_dir: str, line_length: int = 80) -> None:
         contract_name, contract_template, file_path
     )
     rendered_types_code = render_types_file(contract_name, types_template, file_path)
-
-    # TODO: Add more features:
-    # TODO:  events
 
     # Format the generated code using Black
     formatted_contract_code = apply_black_formatting(
@@ -215,7 +286,8 @@ def get_input_names_and_values(function: ABIFunction) -> list[str]:
 def get_function_parameter_names(
     parameters: Sequence[ABIFunctionParams | ABIFunctionComponents],
 ) -> list[str]:
-    """Parses a list of ABIFunctionParams or ABIFUnctionComponents and returns a list of parameter names."""
+    """Parses a list of ABIFunctionParams or ABIFUnctionComponents and returns a list of parameter
+    names."""
 
     stringified_function_parameters: list[str] = []
     arg_counter: int = 1
@@ -253,11 +325,10 @@ def get_input_names(function: ABIFunction) -> list[str]:
 def get_output_names(function: ABIFunction) -> list[str]:
     """Returns function output name strings for jinja templating.
 
-    i.e. for the solidity function signature:
-    function doThing() returns (address who, uint256 amount, bool flag, bytes extraData)
+    i.e. for the solidity function signature: function doThing() returns (address who, uint256
+    amount, bool flag, bytes extraData)
 
-    the following list would be returned:
-    ['who', 'amount', 'flag', 'extraData']
+    the following list would be returned: ['who', 'amount', 'flag', 'extraData']
 
     Arguments
     ---------
@@ -267,7 +338,8 @@ def get_output_names(function: ABIFunction) -> list[str]:
     Returns
     -------
     list[str]
-        A list of function names i.e. [{name: 'arg1', type: 'int'}, { name: 'TransferInfo', components: [{
+        A list of function names i.e. [{name: 'arg1', type: 'int'}, { name: 'TransferInfo',
+        components: [{
             name: 'from', type: 'str'}, name: '
         }]]
     """
@@ -275,16 +347,4 @@ def get_output_names(function: ABIFunction) -> list[str]:
 
 
 if __name__ == "__main__":
-    # TODO: add a bash script to make this easier, i.e. ./pypechain './abis', './build'
-    # TODO: make this installable so that other packages can use the command line tool
-    if len(sys.argv) == 3:
-        main(sys.argv[1], sys.argv[2])
-    elif len(sys.argv) == 4:
-        main(sys.argv[1], sys.argv[2], int(sys.argv[3]))
-    else:
-        print(
-            "Usage: python script_name.py <path_to_abi_file> <output_dir> <line_length>"
-        )
-
-
-def overloaded_function(*args: [])
+    main()
