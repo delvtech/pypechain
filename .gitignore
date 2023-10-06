@@ -19,6 +19,7 @@ build/
 dist/
 .build
 *.egg-info
+pypechain_types
 
 # ape, compiler, pytest cache
 .cache
