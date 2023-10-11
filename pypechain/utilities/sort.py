@@ -1,3 +1,6 @@
+"""Sorting utilities."""
+
+
 def get_intersection_and_unique(lists: list[list[str]]) -> tuple[set[str], set[str]]:
     """Process a list of lists of strings to get the intersection and unique values.
 

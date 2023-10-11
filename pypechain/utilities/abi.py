@@ -6,10 +6,21 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, NamedTuple, Sequence, TypeGuard, cast
 
-from pypechain.utilities.format import capitalize_first_letter_only
-from pypechain.utilities.types import solidity_to_python_type
 from web3 import Web3
-from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
+from web3.types import (
+    ABI,
+    ABIElement,
+    ABIEvent,
+    ABIFunction,
+    ABIFunctionComponents,
+    ABIFunctionParams,
+)
+
+from pypechain.utilities.format import (
+    avoid_python_keywords,
+    capitalize_first_letter_only,
+)
+from pypechain.utilities.types import solidity_to_python_type
 
 
 class Input(NamedTuple):
@@ -227,7 +238,11 @@ def get_structs(
                     get_structs([component], structs)
 
                 component_name = get_param_name(component)
-                component_type = component_name if is_struct(component_internal_type) else component.get("type", "")
+                component_type = (
+                    component_name
+                    if is_struct(component_internal_type)
+                    else component.get("type", "")
+                )
                 python_type = solidity_to_python_type(component_type)
                 struct_values.append(
                     StructValue(
@@ -334,7 +349,9 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
             # TODO add test for multiple anonymous events
             events.append(
                 EventInfo(
-                    name=item.get("name", f"Annonymous{anonymous_event_counter or None}"),
+                    name=item.get(
+                        "name", f"Annonymous{anonymous_event_counter or None}"
+                    ),
                     anonymous=anonymous,
                     inputs=inputs,
                 )
@@ -343,7 +360,9 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
     return events
 
 
-def get_param_name(param_or_component: ABIFunctionParams | ABIFunctionComponents) -> str:
+def get_param_name(
+    param_or_component: ABIFunctionParams | ABIFunctionComponents,
+) -> str:
     """Returns the name for a given ABIFunctionParams or ABIFunctionComponents.
 
     If the item is a struct, then we pull the name from the internalType attribute, otherwise we use
@@ -409,3 +428,97 @@ def get_abi_items(file_path: Path) -> list[ABIElement]:
     # pylint: disable=protected-access
     abi_functions_and_events = contract.functions._functions
     return abi_functions_and_events
+
+
+def get_function_parameter_names(
+    parameters: Sequence[ABIFunctionParams | ABIFunctionComponents],
+) -> list[str]:
+    """Parses a list of ABIFunctionParams or ABIFUnctionComponents and returns a list of parameter
+    names."""
+
+    stringified_function_parameters: list[str] = []
+    arg_counter: int = 1
+    for _input in parameters:
+        if name := get_param_name(_input):
+            stringified_function_parameters.append(avoid_python_keywords(name))
+        else:
+            name = f"arg{arg_counter}"
+            arg_counter += 1
+    return stringified_function_parameters
+
+
+def get_input_names(function: ABIFunction) -> list[str]:
+    """Returns function input name strings for jinja templating.
+
+    i.e. for the solidity function signature:
+    function doThing(address who, uint256 amount, bool flag, bytes extraData)
+
+    the following list would be returned:
+    ['who', 'amount', 'flag', 'extraData']
+
+    Arguments
+    ---------
+    function : ABIFunction
+        A web3 dict of an ABI function description.
+
+    Returns
+    -------
+    list[str]
+        A list of function names i.e. ['arg1', 'arg2']
+    """
+    return get_function_parameter_names(function.get("inputs", []))
+
+
+def get_output_names(function: ABIFunction) -> list[str]:
+    """Returns function output name strings for jinja templating.
+
+    i.e. for the solidity function signature: function doThing() returns (address who, uint256
+    amount, bool flag, bytes extraData)
+
+    the following list would be returned: ['who', 'amount', 'flag', 'extraData']
+
+    Arguments
+    ---------
+    function : ABIFunction
+        A web3 dict of an ABI function description.
+
+    Returns
+    -------
+    list[str]
+        A list of function names i.e. [{name: 'arg1', type: 'int'}, { name: 'TransferInfo',
+        components: [{
+            name: 'from', type: 'str'}, name: '
+        }]]
+    """
+    return get_function_parameter_names(function.get("outputs", []))
+
+
+def get_input_names_and_values(function: ABIFunction) -> list[str]:
+    """Returns function input name/type strings for jinja templating.
+
+    i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
+    flag, bytes extraData)
+
+    the following list would be returned: ['who: str', 'amount: int', 'flag: bool', 'extraData:
+    bytes']
+
+    Arguments
+    ---------
+    function : ABIFunction
+        A web3 dict of an ABI function description.
+
+    Returns
+    -------
+    list[str]
+        A list of function names and corresponding python values, i.e. ['arg1: str', 'arg2: bool']
+    """
+    stringified_function_parameters: list[str] = []
+    for _input in function.get("inputs", []):
+        if name := get_param_name(_input):
+            python_type = solidity_to_python_type(_input.get("type", "unknown"))
+        else:
+            raise ValueError("Solidity function parameter name cannot be None")
+        stringified_function_parameters.append(
+            f"{avoid_python_keywords(name)}: {python_type}"
+        )
+    return stringified_function_parameters
