@@ -1,12 +1,14 @@
 """Tests for ABI utilities."""
-
-from ethpy.test_fixtures import local_chain, local_hyperdrive_chain  # pylint: disable=unused-import, ungrouped-imports
-from ethpy.test_fixtures.local_chain import LocalHyperdriveChain
+import json
+import os
 
 from .abi import get_structs_for_abi
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
+
+current_path = os.path.abspath(os.path.dirname(__file__))
+project_root = os.path.dirname(os.path.dirname(current_path))
 
 
 class TestStructs:
@@ -14,15 +16,26 @@ class TestStructs:
 
     def test_hyperdrive_structs(
         self,
-        local_hyperdrive_chain: LocalHyperdriveChain,
     ):
         """Runs the entire pipeline and checks the database at the end.
         All arguments are fixtures.
         """
 
-        structs = get_structs_for_abi(local_hyperdrive_chain.hyperdrive_contract.abi)
+        json_file_path = os.path.join(project_root, "example/abis/IHyperdrive.json")
+        with open(json_file_path, "r", encoding="utf8") as file:
+            data = json.load(file)
+
+        structs = get_structs_for_abi(data["abi"])
 
         actual = list(structs)
-        expected = ["Checkpoint", "MarketState", "Fees", "PoolConfig", "PoolInfo", "WithdrawPool"]
+        print(f"{actual=}")
+        expected = [
+            "Checkpoint",
+            "MarketState",
+            "Fees",
+            "PoolConfig",
+            "PoolInfo",
+            "WithdrawPool",
+        ]
         assert actual == expected
         assert all(a == b for a, b in zip(actual, expected))

@@ -6,12 +6,12 @@ import os
 import shutil
 import sys
 from pathlib import Path
-from typing import NamedTuple
+from typing import NamedTuple, Sequence
 
 from pypechain.render.main import render_files
 
 
-def main() -> None:
+def main(argv: Sequence[str] | None = None) -> None:
     """Generates class files for a given abi.
 
     Arguments
@@ -48,20 +48,30 @@ def main() -> None:
         parser.print_help(sys.stderr)
         sys.exit(1)
 
-    args: Args = namespace_to_args(parser.parse_args())
+    args: Args = namespace_to_args(parser.parse_args(argv))
     abi_file_path, output_dir, line_length = args
 
     # Set up the output directory
     setup_directory(output_dir)
+    # List to store all JSON files to be processed
+    json_files_to_process = []
 
     # Check if provided path is a directory or file
     if os.path.isdir(abi_file_path):
-        # If directory, process all JSON files in the directory
-        for json_file in Path(abi_file_path).glob("*.json"):
-            render_files(str(json_file), output_dir, line_length)
+        # If directory, gather all JSON files recursively in the directory
+        json_files_to_process.extend(gather_json_files(abi_file_path))
     else:
-        # Otherwise, process the single file
-        render_files(abi_file_path, output_dir, line_length)
+        # Otherwise, add the single file to the list
+        json_files_to_process.append(Path(abi_file_path))
+
+    # Now process all gathered files
+    for json_file in json_files_to_process:
+        render_files(str(json_file), output_dir, line_length)
+
+
+def gather_json_files(directory: str) -> list:
+    """Gathers all JSON files in the specified directory and its subdirectories."""
+    return [file for file in Path(directory).rglob("*.json")]
 
 
 def setup_directory(directory: str) -> None:
