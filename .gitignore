@@ -21,6 +21,9 @@ dist/
 *.egg-info
 pypechain_types
 
+# hyperdrive test abis
+hyperdrive
+
 # ape, compiler, pytest cache
 .cache
 __pycache__/

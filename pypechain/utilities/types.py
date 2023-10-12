@@ -20,7 +20,7 @@ def solidity_to_python_type(solidity_type: str) -> str:
     # TODO: use an exhaustive match statement to cover all cases.
     # pylint: disable=too-many-return-statements
 
-    # Basic types
+    # uints and ints
     if solidity_type in [
         "uint8",
         "uint16",
@@ -36,24 +36,48 @@ def solidity_to_python_type(solidity_type: str) -> str:
         "int256",
     ]:
         return "int"
-    if solidity_type == "address":
-        return "str"
-    if solidity_type == "bool":
-        return "bool"
-    if solidity_type == "bytes":
-        return "bytes"
-        # TODO this should actually be a BytesLike string or something.
-    if solidity_type.startswith("bytes"):  # for bytes1, bytes2,...,bytes32
-        return "bytes"
-    if solidity_type == "string":
-        return "str"
     # Fixed-size arrays of uints and ints
-    if any(solidity_type.startswith(x) for x in ["uint", "int"]) and solidity_type.endswith("]"):
+    if any(
+        solidity_type.startswith(x) for x in ["uint", "int"]
+    ) and solidity_type.endswith("]"):
         # TODO: use a package like 'array' or 'numpy' to provide fixed arrays.
         # Extract the size of the array, e.g., "uint8[3]" -> 3
         # size = int(solidity_type.split("[")[-1].split("]")[0])
         # Return a list of 'int' of the given size
         return "list[int]"
+
+    # addresses
+    if solidity_type == "address":
+        return "str"
+    if solidity_type == "address[]":
+        return "list[str]"
+
+    # bools
+    if solidity_type == "bool":
+        return "bool"
+    if solidity_type == "bool[]":
+        return "list[bool]"
+
+    # bytes
+    # for bytes1[], bytes2[],...,bytes32[]
+    if solidity_type == "bytes":
+        return "bytes"
+        # TODO this should actually be a BytesLike string or something.
+    if solidity_type.startswith("bytes") and solidity_type.endswith("]"):
+        return "list[bytes]"
+    # for bytes1, bytes2,...,bytes32
+    if solidity_type.startswith("bytes"):
+        return "bytes"
+
+    # strings
+    if solidity_type == "string":
+        return "str"
+    if solidity_type == "string[]":
+        return "list[str]"
+
+    # tuple
+    if solidity_type == "tuple":
+        return "tuple"
 
     # If the Solidity type isn't recognized, make a warning.  This can happen when an internal type
     # is expeected for an input parameter or returned in an output.
