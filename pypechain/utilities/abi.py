@@ -95,14 +95,40 @@ def is_abi_function(item: ABIElement) -> TypeGuard[ABIFunction]:
     TypeGuard[ABIFunction]
     """
     # Check if the required keys exist
+    required_keys = ["type", "inputs"]
+
+    # Check if the required keys exist
+    if not all(key in item for key in required_keys):
+        return False
+
+    # Check if the type is a function
+    if item.get("type") not in ["function", "constructor", "fallback", "receive"]:
+        return False
+
+    return True
+
+
+def is_abi_constructor(item: ABIElement) -> TypeGuard[ABIFunction]:
+    """Typeguard function for ABIFunction.
+
+    Arguments
+    ---------
+    item:  Any
+        The item we are confirming is an ABIFunction
+
+    Returns
+    -------
+    TypeGuard[ABIFunction]
+    """
+    # Check if the required keys exist
     required_keys = ["type", "name", "inputs"]
 
     # Check if the required keys exist
     if not all(key in item for key in required_keys):
         return False
 
-    # Check if the type is "function"
-    if item.get("type") != "function":
+    # Check if the type is a constructor function
+    if item.get("type") != "constructor":
         return False
 
     return True
@@ -226,7 +252,7 @@ def get_structs(
 
         # if we find a struct, we'll add it to the dict of StructInfo's
         if is_struct(internal_type) and components:
-            struct_name = get_param_name(param)
+            struct_name = get_struct_name(param)
             struct_values: list[StructValue] = []
 
             # walk over the components of the struct
@@ -239,7 +265,7 @@ def get_structs(
 
                 component_name = get_param_name(component)
                 component_type = (
-                    component_name
+                    get_struct_name(component)
                     if is_struct(component_internal_type)
                     else component.get("type", "")
                 )
@@ -360,7 +386,7 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
     return events
 
 
-def get_param_name(
+def get_struct_name(
     param_or_component: ABIFunctionParams | ABIFunctionComponents,
 ) -> str:
     """Returns the name for a given ABIFunctionParams or ABIFunctionComponents.
@@ -379,11 +405,34 @@ def get_param_name(
         The name of the item.
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
-    if is_struct(internal_type):
-        # internal_type looks like 'struct ContractName.StructName' if it is a struct,
-        # pluck off the name
-        string_type = internal_type.split(".").pop()
-        return capitalize_first_letter_only(string_type)
+    string_type = internal_type.split(".").pop()
+    return capitalize_first_letter_only(string_type)
+
+
+def get_param_name(
+    param_or_component: ABIFunctionParams | ABIFunctionComponents,
+) -> str:
+    """Returns the name for a given ABIFunctionParams or ABIFunctionComponents.
+
+    If the item is a struct, then we pull the name from the internalType attribute, otherwise we use
+    the name if available.
+
+    Arguments
+    ---------
+    param : ABIFunctionParams | ABIFunctionComponents
+
+
+    Returns
+    -------
+    str
+        The name of the item.
+    """
+    # internal_type = cast(str, param_or_component.get("internalType", ""))
+    # if is_struct(internal_type):
+    #     # internal_type looks like 'struct ContractName.StructName' if it is a struct,
+    #     # pluck off the name
+    #     string_type = internal_type.split(".").pop()
+    #     return capitalize_first_letter_only(string_type)
 
     return param_or_component.get("name", "")
 
@@ -513,11 +562,11 @@ def get_input_names_and_values(function: ABIFunction) -> list[str]:
         A list of function names and corresponding python values, i.e. ['arg1: str', 'arg2: bool']
     """
     stringified_function_parameters: list[str] = []
-    for _input in function.get("inputs", []):
-        if name := get_param_name(_input):
-            python_type = solidity_to_python_type(_input.get("type", "unknown"))
-        else:
-            raise ValueError("Solidity function parameter name cannot be None")
+    for index, param in enumerate(function.get("inputs", []), start=1):
+        name = get_param_name(param)
+        if not name:
+            name = f"arg{index}"
+        python_type = solidity_to_python_type(param.get("type", "unknown"))
         stringified_function_parameters.append(
             f"{avoid_python_keywords(name)}: {python_type}"
         )
