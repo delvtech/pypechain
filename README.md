@@ -8,15 +8,17 @@ Static python bindings for ethereum smart contracts.
 
 ### Install
 
-See toplevel INSTALL.md
+```bash
+pip install --updgrade pypechain
+```
+
+For development install instructions, see toplevel [INSTALL.md](https://github.com/delvtech/pypechain/blob/main/INSTALL.md)
 
 ### Usage
 
-From lib/pypecahin, run:
-
 ```bash
-#  python pypechain/run_pypechain.py <ABI_FILE>          <OUT_FILE>
-❯❯ python pypechain/run_pypechain.py './abis/ERC20.json' './build/ERC20Contract.py'
+#  pypechain <ABI_FILE>          <OUT_FILE>
+❯❯ pypechain './abis/ERC20.json' './build/ERC20Contract.py'
 ```
 
 Much of this is subject to change as more features are fleshed out.
