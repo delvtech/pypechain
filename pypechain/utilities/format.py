@@ -126,6 +126,8 @@ def apply_black_formatting(code: str, line_length: int) -> str:
     # remove extra newlines and let Black sort it out
     formatted_code = re.sub(r"^[\s\t]*\n\n", "\n", code, flags=re.MULTILINE)
     formatted_code = code.replace(", )", ")")  # remove trailing comma
+    # replace Solidity list[] with Python list()
+    formatted_code = re.sub(r'(\w+)\[\]', r'list()', formatted_code)
     try:
         return black.format_file_contents(
             formatted_code, fast=False, mode=black.Mode(line_length=line_length)
