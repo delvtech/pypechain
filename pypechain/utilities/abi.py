@@ -452,7 +452,8 @@ def load_abi_from_file(file_path: Path) -> ABI:
     """
 
     with open(file_path, "r", encoding="utf-8") as file:
-        return json.load(file)["abi"]
+        json_file = json.load(file)
+        return json_file["abi"] if "abi" in json_file else json_file
 
 
 def get_abi_items(file_path: Path) -> list[ABIElement]:
