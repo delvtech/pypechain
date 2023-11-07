@@ -18,41 +18,17 @@ def main(argv: Sequence[str] | None = None) -> None:
     ---------
     abi_file_path : str
         Path to the abi JSON file.
-    output_dr: str
+    output_dir: str
         Path to the directory where files will be generated.
     line_length : int
         Optional argument for the output file's maximum line length. Defaults to 80.
     """
-    parser = argparse.ArgumentParser(
-        description="Generates class files for a given abi."
-    )
-    parser.add_argument(
-        "abi_file_path",
-        help="Path to the abi JSON file or directory containing multiple JSON files.",
-    )
 
-    parser.add_argument(
-        "--output_dir",
-        default="pypechain_types",
-        help="Path to the directory where files will be generated. Defaults to pypechain_types.",
-    )
-    parser.add_argument(
-        "--line_length",
-        type=int,
-        default=80,
-        help="Optional argument for the output file's maximum line length. Defaults to 80.",
-    )
+    abi_file_path, output_dir, line_length = parse_arguments(argv)
 
-    # If no arguments were passed, display the help message and exit
-    if len(sys.argv) == 1:
-        parser.print_help(sys.stderr)
-        sys.exit(1)
-
-    args: Args = namespace_to_args(parser.parse_args(argv))
-    abi_file_path, output_dir, line_length = args
-
-    # Set up the output directory
+    # Create/clear the directory
     setup_directory(output_dir)
+
     # List to store all JSON files to be processed
     json_files_to_process = []
 
@@ -100,6 +76,36 @@ def namespace_to_args(namespace: argparse.Namespace) -> Args:
         output_dir=namespace.output_dir,
         line_length=namespace.line_length,
     )
+
+def parse_arguments(argv: Sequence[str] | None = None) -> Args:
+    """Parses input arguments"""
+    parser = argparse.ArgumentParser(
+        description="Generates class files for a given abi."
+    )
+    parser.add_argument(
+        "abi_file_path",
+        help="Path to the abi JSON file or directory containing multiple JSON files.",
+    )
+
+    parser.add_argument(
+        "--output_dir",
+        default="pypechain_types",
+        help="Path to the directory where files will be generated. Defaults to pypechain_types.",
+    )
+    parser.add_argument(
+        "--line_length",
+        type=int,
+        default=80,
+        help="Optional argument for the output file's maximum line length. Defaults to 80.",
+    )
+
+    # If no arguments were passed, display the help message and exit
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+
+    return namespace_to_args(parser.parse_args(argv))
+
 
 
 if __name__ == "__main__":

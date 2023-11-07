@@ -11,6 +11,7 @@ from pypechain.utilities.abi import (
     get_output_names,
     is_abi_constructor,
     is_abi_function,
+    load_abi_from_file,
 )
 from pypechain.utilities.format import capitalize_first_letter_only
 from pypechain.utilities.sort import get_intersection_and_unique
@@ -99,12 +100,17 @@ def render_contract_file(
                         unique_input_names,
                     ) = get_intersection_and_unique(function_datas[name]["input_names"])
                     function_datas[name]["required_input_names"] = shared_input_names
+
                     function_datas[name]["optional_input_names"] = unique_input_names
+
+    abi = load_abi_from_file(abi_file_path)
 
     # Render the template
     return contract_template.render(
+        abi=abi,
         contract_name=contract_name,
         functions=list(function_datas.values()),
         # TODO: use this data to add a typed constructor
         constructor=constructor_data,
+
     )

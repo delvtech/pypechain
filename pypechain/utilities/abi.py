@@ -456,6 +456,7 @@ def load_abi_from_file(file_path: Path) -> ABI:
         return json_file["abi"] if "abi" in json_file else json_file
 
 
+# TODO: pass abi, not file_path
 def get_abi_items(file_path: Path) -> list[ABIElement]:
     """Gets all of the functions and events in the ABI.
 
