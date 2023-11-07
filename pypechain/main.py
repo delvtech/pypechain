@@ -26,8 +26,9 @@ def main(argv: Sequence[str] | None = None) -> None:
 
     abi_file_path, output_dir, line_length = parse_arguments(argv)
 
-    # Set up the output directory
+    # Create/clear the directory
     setup_directory(output_dir)
+
     # List to store all JSON files to be processed
     json_files_to_process = []
 

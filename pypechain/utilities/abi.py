@@ -455,6 +455,7 @@ def load_abi_from_file(file_path: Path) -> ABI:
         return json.load(file)["abi"]
 
 
+# TODO: pass abi, not file_path
 def get_abi_items(file_path: Path) -> list[ABIElement]:
     """Gets all of the functions and events in the ABI.
 
