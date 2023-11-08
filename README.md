@@ -9,7 +9,7 @@ Static python bindings for ethereum smart contracts.
 ### Install
 
 ```bash
-pip install --updgrade pypechain
+pip install --upgrade pypechain
 ```
 
 For development install instructions, see toplevel [INSTALL.md](https://github.com/delvtech/pypechain/blob/main/INSTALL.md)
