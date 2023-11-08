@@ -16,19 +16,15 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
-dependencies = [
-    "flit",
-    "black",
-    "jinja2",
-    "web3"
-]
+dependencies = ["flit", "black", "jinja2", "web3"]
 
 [project.scripts]
 pypechain = "pypechain.main:main"
 
 [project.optional-dependencies]
 # This flag installs all dependencies and should be ran when installing this package
-all = ["pypechain[build,test]"]
+all = ["pypechain[base,build,test]"]
+base = ["black", "jinja2", "multimethod", "web3"]
 build = ["build", "setuptools", "wheel", "twine"]
 test = ["pytest", "pyright", "pylint", "coverage"]
 
