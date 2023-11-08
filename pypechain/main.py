@@ -60,6 +60,10 @@ def setup_directory(directory: str) -> None:
     # Create the directory
     os.makedirs(directory)
 
+    # Create an empty __init__.py file in the directory
+    init_file_path = os.path.join(directory, "__init__.py")
+    open(init_file_path, "a", encoding="utf-8").close()
+
 
 class Args(NamedTuple):
     """Command line arguments for pypechain."""
@@ -77,11 +81,10 @@ def namespace_to_args(namespace: argparse.Namespace) -> Args:
         line_length=namespace.line_length,
     )
 
+
 def parse_arguments(argv: Sequence[str] | None = None) -> Args:
     """Parses input arguments"""
-    parser = argparse.ArgumentParser(
-        description="Generates class files for a given abi."
-    )
+    parser = argparse.ArgumentParser(description="Generates class files for a given abi.")
     parser.add_argument(
         "abi_file_path",
         help="Path to the abi JSON file or directory containing multiple JSON files.",
@@ -105,7 +108,6 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
         sys.exit(1)
 
     return namespace_to_args(parser.parse_args(argv))
-
 
 
 if __name__ == "__main__":
