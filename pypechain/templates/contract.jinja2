@@ -86,7 +86,7 @@ class {{contract_name}}ContractFunctions(ContractFunctions):
     {{function.name}}: {{contract_name}}{{function.capitalized_name}}ContractFunction
 {% endfor %}
 
-{{contract_name | lower}}_abi: ABI = {{abi}}
+{{contract_name | lower}}_abi: ABI = cast(ABI, {{abi}})
 
 class {{contract_name}}Contract(Contract):
     """A web3.py Contract class for the {{contract_name}} contract."""
