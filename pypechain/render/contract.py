@@ -1,6 +1,7 @@
 """Functions to render Python files from an abi usng a jinja2 template."""
 
 from pathlib import Path
+from typing import TypedDict
 
 from jinja2 import Template
 
@@ -14,7 +15,22 @@ from pypechain.utilities.abi import (
     load_abi_from_file,
 )
 from pypechain.utilities.format import capitalize_first_letter_only
-from pypechain.utilities.sort import get_intersection_and_unique
+
+
+class SignatureData(TypedDict):
+    """Define the structure of the signature_datas dictionary"""
+
+    input_names_and_types: list[str]
+    input_names: list[str]
+    outputs: list[str]
+
+
+class FunctionData(TypedDict):
+    """Define the structure of the function_data dictionary"""
+
+    name: str
+    capitalized_name: str
+    signature_datas: list[SignatureData]
 
 
 def render_contract_file(contract_name: str, contract_template: Template, abi_file_path: Path) -> str:
@@ -35,7 +51,7 @@ def render_contract_file(contract_name: str, contract_template: Template, abi_fi
 
     # TODO:  return types to function calls
     # Extract function names and their input parameters from the ABI
-    function_datas = {}
+    function_datas: dict[str, FunctionData] = {}
     constructor_data = {}
     for abi_function in get_abi_items(abi_file_path):
         if is_abi_function(abi_function):
@@ -50,42 +66,25 @@ def render_contract_file(contract_name: str, contract_template: Template, abi_fi
                     "outputs": [get_output_names(abi_function)],
                 }
 
-            # handle functions
+            # handle all other functions
             else:
                 name = abi_function.get("name", "")
-                if name and name not in function_datas:
-                    function_data = {
-                        # TODO: pass a typeguarded ABIFunction that has only required fields?
-                        # name is required in the typeguard.  Should be safe to default to empty string.
-                        "name": name,
-                        "capitalized_name": capitalize_first_letter_only(name),
-                        "input_names_and_types": [get_input_names_and_values(abi_function)],
-                        "input_names": [get_input_names(abi_function)],
-                        "outputs": [get_output_names(abi_function)],
-                    }
+                signature_data: SignatureData = {
+                    "input_names_and_types": get_input_names_and_values(abi_function),
+                    "input_names": get_input_names(abi_function),
+                    "outputs": get_output_names(abi_function),
+                }
+                function_data: FunctionData = {
+                    # TODO: pass a typeguarded ABIFunction that has only required fields?
+                    # name is required in the typeguard.  Should be safe to default to empty string.
+                    "name": name,
+                    "capitalized_name": capitalize_first_letter_only(name),
+                    "signature_datas": [signature_data],
+                }
+                if not function_datas[name]:
                     function_datas[name] = function_data
-                else:  # this function already exists, presumably with a different signature
-                    function_datas[name]["input_names_and_types"].append(get_input_names_and_values(abi_function))
-                    function_datas[name]["input_names"].append(get_input_names(abi_function))
-                    function_datas[name]["outputs"].append(get_output_names(abi_function))
-                    # input_names_and_types will need optional args at the end
-                    (
-                        shared_input_names_and_types,
-                        unique_input_names_and_types,
-                    ) = get_intersection_and_unique(function_datas[name]["input_names_and_types"])
-                    function_datas[name]["required_input_names_and_types"] = shared_input_names_and_types
-                    function_datas[name]["optional_input_names_and_types"] = []
-                    for name_and_type in unique_input_names_and_types:  # optional args
-                        name_and_type += " | None = None"
-                        function_datas[name]["optional_input_names_and_types"].append(name_and_type)
-                    # we will also need the names to be separated
-                    (
-                        shared_input_names,
-                        unique_input_names,
-                    ) = get_intersection_and_unique(function_datas[name]["input_names"])
-                    function_datas[name]["required_input_names"] = shared_input_names
-
-                    function_datas[name]["optional_input_names"] = unique_input_names
+                else:
+                    function_datas[name]["signature_datas"].append(signature_data)
 
     abi = load_abi_from_file(abi_file_path)
 
@@ -93,7 +92,7 @@ def render_contract_file(contract_name: str, contract_template: Template, abi_fi
     return contract_template.render(
         abi=abi,
         contract_name=contract_name,
-        functions=list(function_datas.values()),
+        functions=function_datas,
         # TODO: use this data to add a typed constructor
         constructor=constructor_data,
     )
