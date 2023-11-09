@@ -51,12 +51,12 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     """
     env = get_jinja_env()
     base_template = env.get_template("contract.py/base.py.jinja2")
-    contract_template = env.get_template("contract.py/contract.py.jinja2")
     functions_template = env.get_template("contract.py/functions.py.jinja2")
     abi_template = env.get_template("contract.py/abi.py.jinja2")
+    contract_template = env.get_template("contract.py/contract.py.jinja2")
 
-    # TODO:  return types to function calls
-    # Extract function names and their input parameters from the ABI
+    # TODO: add return types to function calls
+
     abi = load_abi_from_file(abi_file_path)
     function_datas, constructor_data = get_function_datas(abi)
     has_overloading = any(len(function_data["signature_datas"]) > 1 for function_data in function_datas.values())
@@ -74,7 +74,10 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
         contract_name=contract_name,
     )
 
-    contract_block = contract_template.render()
+    contract_block = contract_template.render(
+        contract_name=contract_name,
+        functions=function_datas,
+    )
 
     # Render the template
     return base_template.render(
@@ -84,6 +87,7 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
         abi_block=abi_block,
         contract_block=contract_block,
         # TODO: use this data to add a typed constructor
+        # constructor_data=constructor_data,
     )
 
 
@@ -130,7 +134,7 @@ def get_function_datas(abi: ABI) -> tuple[dict[str, FunctionData], SignatureData
                     "capitalized_name": capitalize_first_letter_only(name),
                     "signature_datas": [signature_data],
                 }
-                if not function_datas[name]:
+                if not function_datas.get(name):
                     function_datas[name] = function_data
                 else:
                     function_datas[name]["signature_datas"].append(signature_data)

@@ -7,11 +7,9 @@ from pathlib import Path
 from typing import List, Literal, NamedTuple, Sequence, TypeGuard, cast
 
 from web3 import Web3
-from web3.types import (ABI, ABIElement, ABIEvent, ABIFunction,
-                        ABIFunctionComponents, ABIFunctionParams)
+from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
-from pypechain.utilities.format import (avoid_python_keywords,
-                                        capitalize_first_letter_only)
+from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
 from pypechain.utilities.types import solidity_to_python_type
 
 
@@ -599,7 +597,5 @@ def _get_names_and_values(function: ABIFunction, inputOrOutput: Literal["inputs"
         if not name:
             name = f"arg{index}"
         python_type = solidity_to_python_type(param.get("type", "unknown"))
-        stringified_function_parameters.append(f"{avoid_python_keywords(name)}: {python_type}")
-    return stringified_function_parameters
         stringified_function_parameters.append(f"{avoid_python_keywords(name)}: {python_type}")
     return stringified_function_parameters

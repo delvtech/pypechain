@@ -108,7 +108,7 @@ def capitalize_first_letter_only(string: str) -> str:
     return string[0].upper() + string[1:]
 
 
-def apply_black_formatting(code: str, line_length: int) -> str:
+def apply_black_formatting(code: str, line_length: int = 80) -> str:
     """Formats a code string with Black on default settings.
 
     Arguments

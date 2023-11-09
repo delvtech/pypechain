@@ -24,9 +24,9 @@ def render_files(abi_file_path: str, output_dir: str, line_length: int) -> None:
     rendered_types_code = render_types_file(contract_name, file_path)
 
     # Format the generated code using Black
-    formatted_contract_code = apply_black_formatting(rendered_contract_code, line_length)
-    formatted_types_code = apply_black_formatting(rendered_types_code, line_length)
+    # formatted_contract_code = apply_black_formatting(rendered_contract_code, line_length)
+    # formatted_types_code = apply_black_formatting(rendered_types_code, line_length)
 
     # Write the code to file
-    write_string_to_file(f"{contract_path}Contract.py", formatted_contract_code)
-    write_string_to_file(f"{contract_path}Types.py", formatted_types_code)
+    write_string_to_file(f"{contract_path}Contract.py", rendered_contract_code)
+    write_string_to_file(f"{contract_path}Types.py", rendered_types_code)

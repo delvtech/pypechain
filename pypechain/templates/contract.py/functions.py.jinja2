@@ -9,7 +9,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
     {% if function_data.signature_datas|length > 1%}
     @multimethod
     {% endif %}
-    def __call__(self, {{signature_data.input_names_and_types|join(', ')}}) -> "{{contract_name}}{{signature_data.capitalized_name}}ContractFunction":
+    def __call__(self{% if signature_data.input_names_and_types %}, {{signature_data.input_names_and_types|join(', ')}}{% endif %}) -> "{{contract_name}}{{function_data.capitalized_name}}ContractFunction":
         super().__call__({{signature_data.input_names|join(', ')}})
         return self
     {% endfor %}
@@ -18,6 +18,6 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
 
 class {{contract_name}}ContractFunctions(ContractFunctions):
     """ContractFunctions for the {{contract_name}} contract."""
-{% for function in functions %}
+{% for function in functions.values() %}
     {{function.name}}: {{contract_name}}{{function.capitalized_name}}ContractFunction
 {% endfor %}
