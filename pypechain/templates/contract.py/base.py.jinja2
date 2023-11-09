@@ -1,17 +1,32 @@
-class {{contract_name}}Contract(Contract):
-    """A web3.py Contract class for the {{contract_name}} contract."""
+"""A web3.py Contract class for the {{contract_name}} contract."""
 
-    abi: ABI = {{contract_name | lower}}_abi
+# contracts have PascalCase names
+# pylint: disable=invalid-name
 
-    def __init__(self, address: ChecksumAddress | None = None) -> None:
-        try:
-            # Initialize parent Contract class
-            super().__init__(address=address)
+# contracts control how many attributes and arguments we have in generated code
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-arguments
 
-        except FallbackNotFound:
-            print("Fallback function not found. Continuing...")
+# we don't need else statement if the other conditionals all have return,
+# but it's easier to generate
+# pylint: disable=no-else-return
 
-    # TODO: add events
-    # events: ERC20ContractEvents
+# This file is bound to get very long depending on contract sizes.
+# pylint: disable=too-many-lines
 
-    functions: {{contract_name}}ContractFunctions
+from __future__ import annotations
+from typing import cast
+
+from eth_typing import ChecksumAddress
+from web3.types import ABI
+from web3.contract.contract import Contract, ContractFunction, ContractFunctions
+from web3.exceptions import FallbackNotFound
+{% if has_overloading %}
+from multimethod import multimethod
+{% endif %}
+
+{% block functions_block %}{% endblock %}
+
+{% block abi_block %}{% endblock %}
+
+{% block contract_block %}{% endblock %}

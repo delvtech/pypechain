@@ -7,9 +7,11 @@ from pathlib import Path
 from typing import List, Literal, NamedTuple, Sequence, TypeGuard, cast
 
 from web3 import Web3
-from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
+from web3.types import (ABI, ABIElement, ABIEvent, ABIFunction,
+                        ABIFunctionComponents, ABIFunctionParams)
 
-from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
+from pypechain.utilities.format import (avoid_python_keywords,
+                                        capitalize_first_letter_only)
 from pypechain.utilities.types import solidity_to_python_type
 
 
@@ -442,8 +444,7 @@ def load_abi_from_file(file_path: Path) -> ABI:
         return json_file["abi"] if "abi" in json_file else json_file
 
 
-# TODO: pass abi, not file_path
-def get_abi_items(file_path: Path) -> list[ABIElement]:
+def get_abi_items(abi: ABI) -> list[ABIElement]:
     """Gets all of the functions and events in the ABI.
 
     Arguments
@@ -457,7 +458,6 @@ def get_abi_items(file_path: Path) -> list[ABIElement]:
         _description_
     """
 
-    abi = load_abi_from_file(file_path)
     web3 = Web3()
     contract = web3.eth.contract(abi=abi)
 
@@ -599,5 +599,7 @@ def _get_names_and_values(function: ABIFunction, inputOrOutput: Literal["inputs"
         if not name:
             name = f"arg{index}"
         python_type = solidity_to_python_type(param.get("type", "unknown"))
+        stringified_function_parameters.append(f"{avoid_python_keywords(name)}: {python_type}")
+    return stringified_function_parameters
         stringified_function_parameters.append(f"{avoid_python_keywords(name)}: {python_type}")
     return stringified_function_parameters
