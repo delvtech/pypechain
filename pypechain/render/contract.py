@@ -15,6 +15,7 @@ from pypechain.utilities.abi import (
     load_abi_from_file,
 )
 from pypechain.utilities.format import capitalize_first_letter_only
+from pypechain.utilities.templates import get_jinja_env
 
 
 class SignatureData(TypedDict):
@@ -33,7 +34,7 @@ class FunctionData(TypedDict):
     signature_datas: list[SignatureData]
 
 
-def render_contract_file(contract_name: str, contract_template: Template, abi_file_path: Path) -> str:
+def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     """Returns the serialized code of the contract file to be generated.
 
     Arguments
@@ -48,6 +49,8 @@ def render_contract_file(contract_name: str, contract_template: Template, abi_fi
     str
         A serialized python file.
     """
+    env = get_jinja_env()
+    contract_template = env.get_template("contract.py/base.py.jinja2")
 
     # TODO:  return types to function calls
     # Extract function names and their input parameters from the ABI
