@@ -45,3 +45,9 @@ extension-pkg-allow-list = ["black"]
 
 [tool.pylint.'MESSAGES CONTROL']
 disable = ["fixme"]
+
+[tool.pylint.format]
+max-line-length = "80"
+
+[tool.black]
+line-length = "80"
