@@ -1,21 +1,16 @@
-
 {# loop over all functions and create types for each #}
-{% for name, function_data in functions.items() %}
+{%- for name, function_data in functions.items() -%}
 class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(ContractFunction):
     """ContractFunction for the {{function_data.name}} method."""
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
-    {% for signature_data in function_data.signature_datas %}
-    {% if function_data.signature_datas|length > 1%}
-    @multimethod
-    {% endif %}
+{% for signature_data in function_data.signature_datas %}
+{% if function_data.signature_datas|length > 1%}    @multimethod{% endif %}
     def __call__(self{% if signature_data.input_names_and_types %}, {{signature_data.input_names_and_types|join(', ')}}{% endif %}) -> "{{contract_name}}{{function_data.capitalized_name}}ContractFunction":
         super().__call__({{signature_data.input_names|join(', ')}})
         return self
-    {% endfor %}
 {% endfor %}
-
-
+{% endfor %}
 class {{contract_name}}ContractFunctions(ContractFunctions):
     """ContractFunctions for the {{contract_name}} contract."""
 {% for function in functions.values() %}
