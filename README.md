@@ -1,7 +1,7 @@
 [![](https://codecov.io/gh/delvtech/pypechain/branch/main/graph/badge.svg?token=1S60MD42ZP)](https://app.codecov.io/gh/delvtech/pypechain?displayType=list)
 [![](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![](https://img.shields.io/badge/testing-pytest-blue.svg)](https://docs.pytest.org/en/latest/contents.html)
-<br><a href="https://app.codecov.io/gh/delvtech/pypechain?displayType=list"><img height="50px" src="https://codecov.io/gh/delvtech/pypechain/branch/main/graphs/sunburst.svg?token=1S60MD42ZP"><a>
+<br><a href="https://app.codecov.io/gh/delvtech/pypechain?displayType=list"><img height="50px" src="https://codecov.io/gh/delvtech/pypechain/graphs/tree.svg?token=A3BTPZ02E6"><a>
 
 # Pypechain
 
@@ -27,4 +27,3 @@ For development install instructions, see toplevel [INSTALL.md](https://github.c
 #  pypechain <ABI_FILE>          <OUT_FILE>
 ❯❯ pypechain './abis/ERC20.json' './build/ERC20Contract.py'
 ```
-
