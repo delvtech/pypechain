@@ -1,0 +1,5 @@
+# ignore test files themselves
+ignore:
+  - "**/*_test.py"
+  - "**/test_*.py"
+  - "test/"
