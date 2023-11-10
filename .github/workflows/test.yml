@@ -1,0 +1,48 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{github.token}}
+
+      - name: set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "pip"
+          token: ${{github.token}}
+
+      - name: upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: install requirements
+        run: |
+          python -m pip install --upgrade .[all]
+
+      - name: run pytest with coverage
+        run: |
+          IN_CI=true coverage run -m pytest
+
+      - name: generate coverage report
+        run: |
+          coverage xml -i
+          coverage html -i
+
+      - name: upload coverage report to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: unittests
+          fail_ci_if_error: true
+          # A warning is thrown here unnecessarily.  tracking issue here:
+          # https://github.com/github/vscode-github-actions/issues/222
+          token: ${{ secrets.CODECOV_TOKEN }}

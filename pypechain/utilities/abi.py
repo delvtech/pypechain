@@ -265,9 +265,7 @@ def get_structs(
 
                 component_name = get_param_name(component)
                 component_type = (
-                    get_struct_name(component)
-                    if is_struct(component_internal_type)
-                    else component.get("type", "")
+                    get_struct_name(component) if is_struct(component_internal_type) else component.get("type", "")
                 )
                 python_type = solidity_to_python_type(component_type)
                 struct_values.append(
@@ -375,9 +373,7 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
             # TODO add test for multiple anonymous events
             events.append(
                 EventInfo(
-                    name=item.get(
-                        "name", f"Annonymous{anonymous_event_counter or None}"
-                    ),
+                    name=item.get("name", f"Annonymous{anonymous_event_counter or None}"),
                     anonymous=anonymous,
                     inputs=inputs,
                 )
@@ -569,7 +565,5 @@ def get_input_names_and_values(function: ABIFunction) -> list[str]:
         if not name:
             name = f"arg{index}"
         python_type = solidity_to_python_type(param.get("type", "unknown"))
-        stringified_function_parameters.append(
-            f"{avoid_python_keywords(name)}: {python_type}"
-        )
+        stringified_function_parameters.append(f"{avoid_python_keywords(name)}: {python_type}")
     return stringified_function_parameters

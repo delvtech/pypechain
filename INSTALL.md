@@ -2,19 +2,29 @@
 
 Pypechain is currently supported only for Python 3.10.
 
-## 1. Install Pyenv
+## Quick setup
+
+You can install pypechain via pypi:
+
+```bash
+pip install --upgrade pypechain
+```
+
+## Development install
+
+### 1. Install Pyenv
 
 Follow [Pyenv install instructions](https://github.com/pyenv/pyenv#installation).
 
-## 2. Clone Elf-simulations repo
+### 2. Clone Pypechain repo
 
 Clone the repo into a <repo_location> of your choice.
 
 ```bash
-git clone https://github.com/delvtech/elf-simulations.git <repo_location>
+git clone git@github.com:delvtech/pypechain.git <repo_location>
 ```
 
-## 3. Set up virtual environment
+### 3. Set up virtual environment
 
 You can use any environment, but we recommend [venv](https://docs.python.org/3/library/venv.html), which is part of the standard Python library.
 
@@ -26,19 +36,7 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-## 4. Install dependencies
-
-The flit build system is used to install dependencies. Make sure you have flit installed:
-
-```bash
-pip install flit
-```
-
-To install the base dependencies to run the code:
-
-````bash
-pip install ".[base]"```
-````
+### 4. Install dependencies
 
 To install the build dependencies to upload to pypi:
 
@@ -46,8 +44,14 @@ To install the build dependencies to upload to pypi:
 pip install ".[build]"```
 ````
 
+To install the test dependencies to upload to pypi:
+
+````bash
+pip install ".[test]"```
+````
+
 To install all the dependencies, run:
 
 ````bash
-pip install "pypechain[all]"```
+pip install ".[all]"```
 ````

@@ -11,9 +11,7 @@ from pypechain.utilities.abi import (
 )
 
 
-def render_types_file(
-    contract_name: str, types_template: Template, abi_file_path: Path
-) -> str:
+def render_types_file(contract_name: str, types_template: Template, abi_file_path: Path) -> str:
     """Returns the serialized code of the types file to be generated.
 
     Arguments

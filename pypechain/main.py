@@ -47,7 +47,7 @@ def main(argv: Sequence[str] | None = None) -> None:
 
 def gather_json_files(directory: str) -> list:
     """Gathers all JSON files in the specified directory and its subdirectories."""
-    return [file for file in Path(directory).rglob("*.json")]
+    return list(Path(directory).rglob("*.json"))
 
 
 def setup_directory(directory: str) -> None:
@@ -62,7 +62,8 @@ def setup_directory(directory: str) -> None:
 
     # Create an empty __init__.py file in the directory
     init_file_path = os.path.join(directory, "__init__.py")
-    open(init_file_path, "a", encoding="utf-8").close()
+    with open(init_file_path, "a", encoding="utf-8"):
+        pass
 
 
 class Args(NamedTuple):
@@ -102,8 +103,12 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
         help="Optional argument for the output file's maximum line length. Defaults to 80.",
     )
 
+    # Use system arguments if none were passed
+    if argv is None:
+        argv = sys.argv
+
     # If no arguments were passed, display the help message and exit
-    if len(sys.argv) == 1:
+    if len(argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
 
