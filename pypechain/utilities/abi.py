@@ -4,22 +4,12 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, NamedTuple, Sequence, TypeGuard, cast
+from typing import List, Literal, NamedTuple, Sequence, TypeGuard, cast
 
 from web3 import Web3
-from web3.types import (
-    ABI,
-    ABIElement,
-    ABIEvent,
-    ABIFunction,
-    ABIFunctionComponents,
-    ABIFunctionParams,
-)
+from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
-from pypechain.utilities.format import (
-    avoid_python_keywords,
-    capitalize_first_letter_only,
-)
+from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
 from pypechain.utilities.types import solidity_to_python_type
 
 
@@ -452,8 +442,7 @@ def load_abi_from_file(file_path: Path) -> ABI:
         return json_file["abi"] if "abi" in json_file else json_file
 
 
-# TODO: pass abi, not file_path
-def get_abi_items(file_path: Path) -> list[ABIElement]:
+def get_abi_items(abi: ABI) -> list[ABIElement]:
     """Gets all of the functions and events in the ABI.
 
     Arguments
@@ -467,7 +456,6 @@ def get_abi_items(file_path: Path) -> list[ABIElement]:
         _description_
     """
 
-    abi = load_abi_from_file(file_path)
     web3 = Web3()
     contract = web3.eth.contract(abi=abi)
 
@@ -559,8 +547,54 @@ def get_input_names_and_values(function: ABIFunction) -> list[str]:
     list[str]
         A list of function names and corresponding python values, i.e. ['arg1: str', 'arg2: bool']
     """
+    return _get_names_and_values(function, "inputs")
+
+
+def get_output_names_and_values(function: ABIFunction) -> list[str]:
+    """Returns function input name/type strings for jinja templating.
+
+    i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
+    flag, bytes extraData)
+
+    the following list would be returned: ['who: str', 'amount: int', 'flag: bool', 'extraData:
+    bytes']
+
+    Arguments
+    ---------
+    function : ABIFunction
+        A web3 dict of an ABI function description.
+
+    Returns
+    -------
+    list[str]
+        A list of function names and corresponding python values, i.e. ['arg1: str', 'arg2: bool']
+    """
+    return _get_names_and_values(function, "outputs")
+
+
+def _get_names_and_values(function: ABIFunction, parameters_type: Literal["inputs", "outputs"]) -> list[str]:
+    """Returns function input or output name/type strings for jinja templating.
+
+    i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
+    flag, bytes extraData)
+
+    the following list would be returned: ['who: str', 'amount: int', 'flag: bool', 'extraData:
+    bytes']
+
+    Arguments
+    ---------
+    function : ABIFunction
+        A web3 dict of an ABI function description.
+    parameters_type : Literal["inputs", "outputs"]
+        If we are looking at the inputs or outputs of a function.
+
+    Returns
+    -------
+    list[str]
+        A list of function names and corresponding python values, i.e. ['arg1: str', 'arg2: bool']
+    """
     stringified_function_parameters: list[str] = []
-    for index, param in enumerate(function.get("inputs", []), start=1):
+    for index, param in enumerate(function.get(parameters_type, []), start=1):
         name = get_param_name(param)
         if not name:
             name = f"arg{index}"

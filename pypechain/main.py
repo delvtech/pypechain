@@ -26,10 +26,10 @@ def main(argv: Sequence[str] | None = None) -> None:
 
     abi_file_path, output_dir, line_length = parse_arguments(argv)
 
-    # Create/clear the directory
+    # Create/clear the output directory
     setup_directory(output_dir)
 
-    # List to store all JSON files to be processed
+    # List to store all JSON ABI files to be processed
     json_files_to_process = []
 
     # Check if provided path is a directory or file

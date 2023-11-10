@@ -28,7 +28,6 @@ class TestStructs:
         structs = get_structs_for_abi(data["abi"])
 
         actual = list(structs)
-        print(f"{actual=}")
         expected = [
             "Checkpoint",
             "MarketState",

@@ -32,7 +32,7 @@ jobs:
       - name: get all Python files
         id: list_files
         run: |
-          echo "files=$(git ls-files '*.py' '*.pyi' | xargs)" >> $GITHUB_OUTPUT
+          echo "files=$(git ls-files '*.py' '*.pyi' | grep -v '^snapshots/' | xargs)" >> $GITHUB_OUTPUT
 
       - name: run Pylint on files
         run: |

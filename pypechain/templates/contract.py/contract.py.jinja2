@@ -1,0 +1,17 @@
+class {{contract_name}}Contract(Contract):
+    """A web3.py Contract class for the {{contract_name}} contract."""
+
+    abi: ABI = {{contract_name | lower}}_abi
+
+    def __init__(self, address: ChecksumAddress | None = None) -> None:
+        try:
+            # Initialize parent Contract class
+            super().__init__(address=address)
+
+        except FallbackNotFound:
+            print("Fallback function not found. Continuing...")
+
+    # TODO: add events
+    # events: ERC20ContractEvents
+
+    functions: {{contract_name}}ContractFunctions

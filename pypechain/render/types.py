@@ -2,16 +2,11 @@
 from dataclasses import asdict
 from pathlib import Path
 
-from jinja2 import Template
-
-from pypechain.utilities.abi import (
-    get_events_for_abi,
-    get_structs_for_abi,
-    load_abi_from_file,
-)
+from pypechain.utilities.abi import get_events_for_abi, get_structs_for_abi, load_abi_from_file
+from pypechain.utilities.templates import get_jinja_env
 
 
-def render_types_file(contract_name: str, types_template: Template, abi_file_path: Path) -> str:
+def render_types_file(contract_name: str, abi_file_path: Path) -> str:
     """Returns the serialized code of the types file to be generated.
 
     Arguments
@@ -28,6 +23,8 @@ def render_types_file(contract_name: str, types_template: Template, abi_file_pat
     str
         A serialized python file.
     """
+    env = get_jinja_env()
+    types_template = env.get_template("types.py.jinja2")
 
     abi = load_abi_from_file(abi_file_path)
 
