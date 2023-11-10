@@ -37,9 +37,7 @@ def solidity_to_python_type(solidity_type: str) -> str:
     ]:
         return "int"
     # Fixed-size arrays of uints and ints
-    if any(
-        solidity_type.startswith(x) for x in ["uint", "int"]
-    ) and solidity_type.endswith("]"):
+    if any(solidity_type.startswith(x) for x in ["uint", "int"]) and solidity_type.endswith("]"):
         # TODO: use a package like 'array' or 'numpy' to provide fixed arrays.
         # Extract the size of the array, e.g., "uint8[3]" -> 3
         # size = int(solidity_type.split("[")[-1].split("]")[0])

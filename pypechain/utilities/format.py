@@ -127,8 +127,6 @@ def apply_black_formatting(code: str, line_length: int) -> str:
     formatted_code = re.sub(r"^[\s\t]*\n\n", "\n", code, flags=re.MULTILINE)
     formatted_code = code.replace(", )", ")")  # remove trailing comma
     try:
-        return black.format_file_contents(
-            formatted_code, fast=False, mode=black.Mode(line_length=line_length)
-        )
+        return black.format_file_contents(formatted_code, fast=False, mode=black.Mode(line_length=line_length))
     except ValueError as exc:
         raise ValueError(f"cannot format with Black\n code:\n{code}") from exc

@@ -47,7 +47,7 @@ extension-pkg-allow-list = ["black"]
 disable = ["fixme"]
 
 [tool.pylint.format]
-max-line-length = "80"
+max-line-length = "120"
 
 [tool.black]
-line-length = "80"
+line-length = "120"
