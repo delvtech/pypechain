@@ -572,7 +572,7 @@ def get_output_names_and_values(function: ABIFunction) -> list[str]:
     return _get_names_and_values(function, "outputs")
 
 
-def _get_names_and_values(function: ABIFunction, inputOrOutput: Literal["inputs", "outputs"]) -> list[str]:
+def _get_names_and_values(function: ABIFunction, parameters_type: Literal["inputs", "outputs"]) -> list[str]:
     """Returns function input or output name/type strings for jinja templating.
 
     i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
@@ -585,6 +585,8 @@ def _get_names_and_values(function: ABIFunction, inputOrOutput: Literal["inputs"
     ---------
     function : ABIFunction
         A web3 dict of an ABI function description.
+    parameters_type : Literal["inputs", "outputs"]
+        If we are looking at the inputs or outputs of a function.
 
     Returns
     -------
@@ -592,7 +594,7 @@ def _get_names_and_values(function: ABIFunction, inputOrOutput: Literal["inputs"
         A list of function names and corresponding python values, i.e. ['arg1: str', 'arg2: bool']
     """
     stringified_function_parameters: list[str] = []
-    for index, param in enumerate(function.get(inputOrOutput, []), start=1):
+    for index, param in enumerate(function.get(parameters_type, []), start=1):
         name = get_param_name(param)
         if not name:
             name = f"arg{index}"

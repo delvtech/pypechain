@@ -1,6 +1,5 @@
 """Formatting utilities."""
 import keyword
-import re
 
 import black
 

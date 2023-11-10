@@ -2,8 +2,6 @@
 from dataclasses import asdict
 from pathlib import Path
 
-from jinja2 import Template
-
 from pypechain.utilities.abi import get_events_for_abi, get_structs_for_abi, load_abi_from_file
 from pypechain.utilities.templates import get_jinja_env
 
