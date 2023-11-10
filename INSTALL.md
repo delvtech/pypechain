@@ -49,5 +49,5 @@ pip install ".[build]"```
 To install all the dependencies, run:
 
 ````bash
-pip install "pypechain[all]"```
+pip install ".[all]"```
 ````
