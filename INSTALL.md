@@ -5,6 +5,7 @@ Pypechain is currently supported only for Python 3.10.
 ## Quick setup
 
 You can install pypechain via pypi:
+
 ```bash
 pip install --upgrade pypechain
 ```
