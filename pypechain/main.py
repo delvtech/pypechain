@@ -112,7 +112,7 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
         parser.print_help(sys.stderr)
         sys.exit(1)
 
-    return namespace_to_args(parser.parse_args(argv))
+    return namespace_to_args(parser.parse_args())
 
 
 if __name__ == "__main__":
