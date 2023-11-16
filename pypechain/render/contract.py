@@ -11,6 +11,8 @@ from pypechain.utilities.abi import (
     get_input_names,
     get_input_names_and_values,
     get_output_names,
+    get_output_names_and_values,
+    get_output_types,
     is_abi_constructor,
     is_abi_function,
     load_abi_from_file,
@@ -25,6 +27,7 @@ class SignatureData(TypedDict):
     input_names_and_types: list[str]
     input_names: list[str]
     outputs: list[str]
+    output_types: list[str]
 
 
 class FunctionData(TypedDict):
@@ -139,6 +142,7 @@ def get_function_datas(abi: ABI) -> tuple[dict[str, FunctionData], SignatureData
                     "input_names_and_types": get_input_names_and_values(abi_function),
                     "input_names": get_input_names(abi_function),
                     "outputs": get_output_names(abi_function),
+                    "output_types": get_output_names_and_values(abi_function),
                 }
 
             # handle all other functions
@@ -148,6 +152,7 @@ def get_function_datas(abi: ABI) -> tuple[dict[str, FunctionData], SignatureData
                     "input_names_and_types": get_input_names_and_values(abi_function),
                     "input_names": get_input_names(abi_function),
                     "outputs": get_output_names(abi_function),
+                    "output_types": get_output_types(abi_function),
                 }
                 function_data: FunctionData = {
                     # TODO: pass a typeguarded ABIFunction that has only required fields?

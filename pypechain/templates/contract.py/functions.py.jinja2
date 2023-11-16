@@ -13,6 +13,17 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
     def __call__(self{% if signature_data.input_names_and_types %}, {{signature_data.input_names_and_types|join(', ')}}{% endif %}) -> "{{contract_name}}{{function_data.capitalized_name}}ContractFunction":{%- if has_overloading %} #type: ignore{% endif %}
         super().__call__({{signature_data.input_names|join(', ')}})
         return self
+
+    def call(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier = 'latest',
+        state_override: CallOverride | None = None,
+        ccip_read_enabled: bool | None = None){% if signature_data.output_types|length == 1 %} -> {{signature_data.output_types[0]}}{% elif signature_data.output_types|length > 1%} -> tuple[{{signature_data.output_types|join(', ')}}]{% endif %}:
+            {% if signature_data.output_types|length == 1 %}"""returns {{signature_data.output_types[0]}}"""{% elif signature_data.output_types|length > 1%}"""returns ({{signature_data.output_types|join(', ')}})"""{% else %}"""No return value"""{% endif %}
+            return super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
+
 {% endfor %}
 {% endfor %}
 class {{contract_name}}ContractFunctions(ContractFunctions):

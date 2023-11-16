@@ -15,11 +15,11 @@
 # pylint: disable=too-many-lines
 
 from __future__ import annotations
-from typing import cast
+from typing import cast, NamedTuple
 
 from eth_typing import ChecksumAddress{% if has_bytecode %}, HexStr{% endif %}
 {% if has_bytecode %}from hexbytes import HexBytes{% endif %}
-from web3.types import ABI
+from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
 from web3.exceptions import FallbackNotFound
 {% if has_overloading %}
