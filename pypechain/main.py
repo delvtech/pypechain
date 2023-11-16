@@ -8,6 +8,8 @@ import sys
 from pathlib import Path
 from typing import NamedTuple, Sequence
 
+from web3.exceptions import NoABIFunctionsFound
+
 from pypechain.render.main import render_files
 
 
@@ -42,7 +44,13 @@ def main(argv: Sequence[str] | None = None) -> None:
 
     # Now process all gathered files
     for json_file in json_files_to_process:
-        render_files(str(json_file), output_dir, line_length)
+        try:
+            render_files(str(json_file), output_dir, line_length)
+        except NoABIFunctionsFound:
+            print(f"No ABI Functions found in {json_file}, skipping...")
+        except BaseException as err:
+            print(f"Error creating types for {json_file}")
+            raise err
 
 
 def gather_json_files(directory: str) -> list:
