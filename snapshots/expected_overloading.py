@@ -1,14 +1,14 @@
 class OverloadedBalanceOfContractFunction(ContractFunction):
     """ContractFunction for the balanceOf method."""
     # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
 
-    @multimethod
     def __call__(self) -> "OverloadedBalanceOfContractFunction":
         super().__call__()
         return self
 
-    @multimethod
+
     def __call__(self, who: str) -> "OverloadedBalanceOfContractFunction":
         super().__call__(who)
         return self

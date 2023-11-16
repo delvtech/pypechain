@@ -29,6 +29,9 @@ jobs:
         run: |
           python -m pip install --upgrade .[all]
 
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
       - name: run pytest with coverage
         run: |
           IN_CI=true coverage run -m pytest

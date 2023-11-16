@@ -26,7 +26,7 @@ def render_types_file(contract_name: str, abi_file_path: Path) -> str:
     env = get_jinja_env()
     types_template = env.get_template("types.py.jinja2")
 
-    abi = load_abi_from_file(abi_file_path)
+    abi, _ = load_abi_from_file(abi_file_path)
 
     structs_by_name = get_structs_for_abi(abi)
     structs_list = list(structs_by_name.values())

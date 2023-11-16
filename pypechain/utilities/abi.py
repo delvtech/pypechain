@@ -4,13 +4,15 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, List, Literal, NamedTuple, Sequence, TypedDict, TypeGuard, cast
-from uu import Error
+from typing import List, Literal, NamedTuple, Sequence, TypeGuard, cast
 
 from web3 import Web3
 from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
+from pypechain.foundry.types import FoundryJson
+from pypechain.solc.types import SolcJson
 from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
+from pypechain.utilities.json import get_bytecode_from_json, is_foundry_json, is_solc_json
 from pypechain.utilities.types import solidity_to_python_type
 
 
@@ -447,122 +449,6 @@ def load_abi_from_file(file_path: Path) -> tuple[ABI, str]:
         return abi, bytecode
 
 
-class FoundryByteCode(TypedDict):
-    object: str
-    sourceMap: str
-    linkReference: Any
-
-
-class FoundryDeployedByteCode(TypedDict):
-    object: str
-    sourceMap: str
-    linkReference: Any
-
-
-class FoundryMetadata(TypedDict, total=False):
-    compiler: FoundryCompiler
-    language: Literal["Solidity", "Vyper"]
-
-
-class FoundryCompiler(TypedDict):
-    version: str
-
-
-class FoundryJson(TypedDict):
-    abi: ABI
-    bytecode: FoundryByteCode
-    deployedBytecode: FoundryDeployedByteCode
-    methodIdentifiers: dict[str, str]
-    rawMetadata: str
-    metadata: FoundryMetadata
-    ast: Any
-    id: int
-
-
-class SolcContract(TypedDict):
-    abi: ABI
-    bin: str
-    metadata: str
-
-
-class SolcJson(TypedDict):
-    contracts: dict[str, SolcContract]
-    version: str
-
-
-def get_bytecode_from_json(json_abi: FoundryJson | SolcJson) -> str:
-    if is_foundry_json(json_abi):
-        return _get_bytecode_from_foundry_json(json_abi)
-    if is_solc_json(json_abi):
-        return _get_bytecode_from_solc_json(json_abi)
-
-    raise ValueError("Unable to retrieve bytecode, JSON in unknown format.")
-
-
-def is_foundry_json(val: object) -> TypeGuard[FoundryJson]:
-    """Determines whether a json object is a FoundryJson."""
-    required_keys = {"abi", "bytecode", "deployedBytecode", "methodIdentifiers", "rawMetadata", "metadata", "ast", "id"}
-    return isinstance(val, dict) and required_keys.issubset(val.keys())
-
-
-def is_solc_json(val: object) -> TypeGuard[SolcJson]:
-    """Determines whether a json object is a SolcJson."""
-    return (
-        isinstance(val, dict)
-        and "contracts" in val
-        and isinstance(val["contracts"], dict)
-        and all(
-            isinstance(contract, dict) and "abi" in contract and "bin" in contract and "metadata" in contract
-            for contract in val["contracts"].values()
-        )
-        and "version" in val
-    )
-
-
-def _get_bytecode_from_foundry_json(json_abi: FoundryJson) -> str:
-    return json_abi.get("bytecode").get("object")
-
-
-def _get_bytecode_from_solc_json(json_abi: SolcJson) -> str:
-    # assume one contract right now
-    contract = list(json_abi.get("contracts").values())[0]
-    binary = contract.get("bin")
-    return f"0x{binary}"
-
-
-def get_abi_from_json(json_abi: FoundryJson | SolcJson | ABI) -> ABI:
-    if is_foundry_json(json_abi):
-        return _get_abi_from_foundry_json(json_abi)
-    if is_solc_json(json_abi):
-        return _get_abi_from_solc_json(json_abi)
-    if is_abi(json_abi):
-        return json_abi
-
-    raise ValueError("Unable to identify an ABI for the given JSON.")
-
-
-def is_abi(json: object) -> TypeGuard[ABI]:
-    if not isinstance(json, list):
-        return False  # ABI should be a list
-
-    # Check if there's at least one entry with 'name', 'inputs', and 'type'
-    for entry in json:
-        if isinstance(entry, dict) and {"name", "inputs", "type"}.issubset(entry.keys()):
-            return True
-
-    return False  # No entry with the required fields was found
-
-
-def _get_abi_from_foundry_json(json_abi: FoundryJson) -> ABI:
-    return json_abi.get("abi")
-
-
-def _get_abi_from_solc_json(json_abi: SolcJson) -> ABI:
-    # assume one contract right now
-    contract = list(json_abi.get("contracts").values())[0]
-    return contract.get("abi")
-
-
 def get_abi_items(abi: ABI) -> list[ABIElement]:
     """Gets all of the functions and events in the ABI.
 
@@ -722,3 +608,38 @@ def _get_names_and_values(function: ABIFunction, parameters_type: Literal["input
         python_type = solidity_to_python_type(param.get("type", "unknown"))
         stringified_function_parameters.append(f"{avoid_python_keywords(name)}: {python_type}")
     return stringified_function_parameters
+
+
+def get_abi_from_json(json_abi: FoundryJson | SolcJson | ABI) -> ABI:
+    """Gets the ABI from a supported json format."""
+    if is_foundry_json(json_abi):
+        return _get_abi_from_foundry_json(json_abi)
+    if is_solc_json(json_abi):
+        return _get_abi_from_solc_json(json_abi)
+    if is_abi(json_abi):
+        return json_abi
+
+    raise ValueError("Unable to identify an ABI for the given JSON.")
+
+
+def is_abi(maybe_abi: object) -> TypeGuard[ABI]:
+    """Typeguard for ABI's"""
+    if not isinstance(json, list):
+        return False  # ABI should be a list
+
+    # Check if there's at least one entry with 'name', 'inputs', and 'type'
+    for entry in maybe_abi:  # type: ignore
+        if isinstance(entry, dict) and {"name", "inputs", "type"}.issubset(entry.keys()):
+            return True
+
+    return False  # No entry with the required fields was found
+
+
+def _get_abi_from_foundry_json(json_abi: FoundryJson) -> ABI:
+    return json_abi.get("abi")
+
+
+def _get_abi_from_solc_json(json_abi: SolcJson) -> ABI:
+    # assume one contract right now
+    contract = list(json_abi.get("contracts").values())[0]
+    return contract.get("abi")

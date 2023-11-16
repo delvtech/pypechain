@@ -1,14 +1,12 @@
 """Tests for overloading methods."""
 from __future__ import annotations
 
-import errno
 import os
 
 import pytest
-import web3
 from web3.exceptions import Web3ValidationError
 
-from pypechain.test.overloading.pypechain_types.OverloadedMethodsContract import OverloadedMethodsContract
+from pypechain.test.overloading.types.OverloadedMethodsContract import OverloadedMethodsContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name

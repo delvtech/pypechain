@@ -9,8 +9,8 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
     # pylint: disable=function-redefined
 {%- endif -%}
 {% for signature_data in function_data.signature_datas %}
-{% if function_data.signature_datas|length > 1%}    @multimethod{% endif %}
-    def __call__(self{% if signature_data.input_names_and_types %}, {{signature_data.input_names_and_types|join(', ')}}{% endif %}) -> "{{contract_name}}{{function_data.capitalized_name}}ContractFunction":
+{% if has_overloading %}    @multimethod{% endif %}
+    def __call__(self{% if signature_data.input_names_and_types %}, {{signature_data.input_names_and_types|join(', ')}}{% endif %}) -> "{{contract_name}}{{function_data.capitalized_name}}ContractFunction":{%- if has_overloading %} #type: ignore{% endif %}
         super().__call__({{signature_data.input_names|join(', ')}})
         return self
 {% endfor %}
