@@ -9,7 +9,10 @@ from typing import List, Literal, NamedTuple, Sequence, TypeGuard, cast
 from web3 import Web3
 from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
+from pypechain.foundry.types import FoundryJson
+from pypechain.solc.types import SolcJson
 from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
+from pypechain.utilities.json import get_bytecode_from_json, is_foundry_json, is_solc_json
 from pypechain.utilities.types import solidity_to_python_type
 
 
@@ -413,6 +416,7 @@ def get_param_name(
     str
         The name of the item.
     """
+
     # internal_type = cast(str, param_or_component.get("internalType", ""))
     # if is_struct(internal_type):
     #     # internal_type looks like 'struct ContractName.StructName' if it is a struct,
@@ -423,7 +427,7 @@ def get_param_name(
     return param_or_component.get("name", "")
 
 
-def load_abi_from_file(file_path: Path) -> ABI:
+def load_abi_from_file(file_path: Path) -> tuple[ABI, str]:
     """Loads a contract ABI from a file.
 
     Arguments
@@ -433,13 +437,16 @@ def load_abi_from_file(file_path: Path) -> ABI:
 
     Returns
     -------
-    Any
-        An object containing the contract's abi.
+    tuple[ABI, str]
+        ABI: An object containing the contract's abi.
+        str: The bytecode.
     """
 
     with open(file_path, "r", encoding="utf-8") as file:
         json_file = json.load(file)
-        return json_file["abi"] if "abi" in json_file else json_file
+        abi = get_abi_from_json(json_file)
+        bytecode = get_bytecode_from_json(json_file)
+        return abi, bytecode
 
 
 def get_abi_items(abi: ABI) -> list[ABIElement]:
@@ -601,3 +608,38 @@ def _get_names_and_values(function: ABIFunction, parameters_type: Literal["input
         python_type = solidity_to_python_type(param.get("type", "unknown"))
         stringified_function_parameters.append(f"{avoid_python_keywords(name)}: {python_type}")
     return stringified_function_parameters
+
+
+def get_abi_from_json(json_abi: FoundryJson | SolcJson | ABI) -> ABI:
+    """Gets the ABI from a supported json format."""
+    if is_foundry_json(json_abi):
+        return _get_abi_from_foundry_json(json_abi)
+    if is_solc_json(json_abi):
+        return _get_abi_from_solc_json(json_abi)
+    if is_abi(json_abi):
+        return json_abi
+
+    raise ValueError("Unable to identify an ABI for the given JSON.")
+
+
+def is_abi(maybe_abi: object) -> TypeGuard[ABI]:
+    """Typeguard for ABI's"""
+    if not isinstance(json, list):
+        return False  # ABI should be a list
+
+    # Check if there's at least one entry with 'name', 'inputs', and 'type'
+    for entry in maybe_abi:  # type: ignore
+        if isinstance(entry, dict) and {"name", "inputs", "type"}.issubset(entry.keys()):
+            return True
+
+    return False  # No entry with the required fields was found
+
+
+def _get_abi_from_foundry_json(json_abi: FoundryJson) -> ABI:
+    return json_abi.get("abi")
+
+
+def _get_abi_from_solc_json(json_abi: SolcJson) -> ABI:
+    # assume one contract right now
+    contract = list(json_abi.get("contracts").values())[0]
+    return contract.get("abi")

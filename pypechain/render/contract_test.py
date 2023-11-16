@@ -67,3 +67,55 @@ class TestOverloading:
 
         snapshot.snapshot_dir = "snapshots"  # This line is optional.
         snapshot.assert_match(functions_block, "expected_overloading.py")
+
+    def test_notoverloading(self, snapshot):
+        """Runs the entire pipeline and checks the database at the end.
+        All arguments are fixtures.
+        """
+
+        env = get_jinja_env()
+        functions_template = env.get_template("contract.py/functions.py.jinja2")
+
+        # TODO: add return types to function calls
+
+        # different names, should NOT be overloaded
+        abi_str = """
+            [
+                {
+                    "constant": true,
+                    "inputs": [],
+                    "name": "balanceOf",
+                    "outputs": [{"name": "", "type": "uint256"}],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [{"name": "who", "type": "address"}],
+                    "name": "balanceOfWho",
+                    "outputs": [{"name": "", "type": "bool"}],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                }
+            ]
+        """
+
+        abi: ABI = json.loads(abi_str)
+
+        function_datas, constructor_data = get_function_datas(abi)
+        has_overloading = any(len(function_data["signature_datas"]) > 1 for function_data in function_datas.values())
+        contract_name = "Overloaded"
+
+        functions_block = functions_template.render(
+            abi=abi,
+            contract_name=contract_name,
+            functions=function_datas,
+            # TODO: use this data to add a typed constructor
+            constructor=constructor_data,
+        )
+        assert has_overloading is False
+
+        snapshot.snapshot_dir = "snapshots"
+        snapshot.assert_match(functions_block, "expected_not_overloading.py")
