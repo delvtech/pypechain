@@ -1,1 +1,4 @@
 {{contract_name | lower}}_abi: ABI = cast(ABI, {{abi}})
+{% if bytecode %}
+{{contract_name | lower}}_bytecode = HexStr("{{bytecode}}")
+{%- endif -%}

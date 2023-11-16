@@ -58,9 +58,10 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
 
     # TODO: add return types to function calls
 
-    abi = load_abi_from_file(abi_file_path)
+    abi, bytecode = load_abi_from_file(abi_file_path)
     function_datas, constructor_data = get_function_datas(abi)
     has_overloading = any(len(function_data["signature_datas"]) > 1 for function_data in function_datas.values())
+    has_bytecode = (True if bytecode else False,)
 
     functions_block = functions_template.render(
         abi=abi,
@@ -72,10 +73,12 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
 
     abi_block = abi_template.render(
         abi=abi,
+        bytecode=bytecode,
         contract_name=contract_name,
     )
 
     contract_block = contract_template.render(
+        has_bytecode=has_bytecode,
         contract_name=contract_name,
         functions=function_datas,
     )
@@ -84,6 +87,7 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     return base_template.render(
         contract_name=contract_name,
         has_overloading=has_overloading,
+        has_bytecode=has_bytecode,
         functions_block=functions_block,
         abi_block=abi_block,
         contract_block=contract_block,
