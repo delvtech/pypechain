@@ -42,8 +42,6 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     env = get_jinja_env()
     templates = get_templates_for_contract_file(env)
 
-    # TODO: add return types to function calls
-
     abi, bytecode = load_abi_from_file(abi_file_path)
     function_datas, constructor_data = get_function_datas(abi)
     has_overloading = any(len(function_data["signature_datas"]) > 1 for function_data in function_datas.values())
@@ -126,8 +124,6 @@ def get_function_datas(abi: ABI) -> tuple[dict[str, FunctionData], SignatureData
     constructor_data: SignatureData | None = None
     for abi_function in get_abi_items(abi):
         if is_abi_function(abi_function):
-            # TODO: investigate better typing here?  templete.render expects an object so we'll have
-            # to convert.
             # hanndle constructor
             if is_abi_constructor(abi_function):
                 constructor_data = {
@@ -149,8 +145,6 @@ def get_function_datas(abi: ABI) -> tuple[dict[str, FunctionData], SignatureData
                     "output_types": get_output_types(abi_function),
                 }
                 function_data: FunctionData = {
-                    # TODO: pass a typeguarded ABIFunction that has only required fields?
-                    # name is required in the typeguard.  Should be safe to default to empty string.
                     "name": name,
                     "capitalized_name": capitalize_first_letter_only(name),
                     "signature_datas": [signature_data],
