@@ -3,12 +3,12 @@ class OverloadedBalanceOfContractFunction(ContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
-
-    def __call__(self) -> "OverloadedBalanceOfContractFunction":
+    @multimethod
+    def __call__(self) -> "OverloadedBalanceOfContractFunction": #type: ignore
         super().__call__()
         return self
-
-    def call(
+    @multimethod
+    def call( #type: ignore
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = 'latest',
@@ -19,12 +19,12 @@ class OverloadedBalanceOfContractFunction(ContractFunction):
 
 
 
-
-    def __call__(self, who: str) -> "OverloadedBalanceOfContractFunction":
+    @multimethod
+    def __call__(self, who: str) -> "OverloadedBalanceOfContractFunction": #type: ignore
         super().__call__(who)
         return self
-
-    def call(
+    @multimethod
+    def call( #type: ignore
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = 'latest',
