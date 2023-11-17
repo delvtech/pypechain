@@ -128,4 +128,3 @@ def apply_black_formatting(code: str, line_length: int = 80) -> str:
         print(f"cannot format with Black\n code:\n{code}")
         print(f"{exc=}")
         return code
-        # raise ValueError(f"cannot format with Black\n code:\n{code}") from exc

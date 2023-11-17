@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Literal, NamedTuple, Sequence, TypedDict, TypeGuard, cast
+from typing import Literal, NamedTuple, Sequence, TypeGuard, cast
 
 from web3 import Web3
 from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
@@ -14,34 +14,6 @@ from pypechain.solc.types import SolcJson
 from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
 from pypechain.utilities.json import get_bytecode_from_json, is_foundry_json, is_solc_json
 from pypechain.utilities.types import solidity_to_python_type
-
-
-class Input(TypedDict):
-    """An input of a function or event."""
-
-    internalType: str
-    name: str
-    type: str
-    indexed: bool | None
-
-
-class Output(TypedDict):
-    """An output of a function or event."""
-
-    internalType: str
-    name: str
-    type: str
-
-
-class AbiItem(TypedDict):
-    """An item of an ABI, can be an event, function or struct."""
-
-    type: str
-    inputs: List[Input]
-    stateMutability: str | None
-    anonymous: bool | None
-    name: str | None
-    outputs: List[Output] | None
 
 
 class AbiJson(NamedTuple):
