@@ -8,10 +8,32 @@ class OverloadedBalanceOfContractFunction(ContractFunction):
         super().__call__()
         return self
 
+    def call(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier = 'latest',
+        state_override: CallOverride | None = None,
+        ccip_read_enabled: bool | None = None) -> int:
+            """returns int"""
+            return super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
+
+
 
     def __call__(self, who: str) -> "OverloadedBalanceOfContractFunction":
         super().__call__(who)
         return self
+
+    def call(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier = 'latest',
+        state_override: CallOverride | None = None,
+        ccip_read_enabled: bool | None = None) -> int:
+            """returns int"""
+            return super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
+
 
 
 class OverloadedContractFunctions(ContractFunctions):

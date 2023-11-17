@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, NamedTuple, TypedDict
+from typing import Any, NamedTuple
 
 from web3.types import ABI
 
@@ -10,29 +10,18 @@ from pypechain.utilities.abi import (
     get_abi_items,
     get_input_names,
     get_input_names_and_values,
+    get_input_types,
     get_output_names,
+    get_output_names_and_values,
+    get_output_types,
+    get_structs_for_abi,
     is_abi_constructor,
     is_abi_function,
     load_abi_from_file,
 )
 from pypechain.utilities.format import capitalize_first_letter_only
 from pypechain.utilities.templates import get_jinja_env
-
-
-class SignatureData(TypedDict):
-    """Define the structure of the signature_datas dictionary"""
-
-    input_names_and_types: list[str]
-    input_names: list[str]
-    outputs: list[str]
-
-
-class FunctionData(TypedDict):
-    """Define the structure of the function_data dictionary"""
-
-    name: str
-    capitalized_name: str
-    signature_datas: list[SignatureData]
+from pypechain.utilities.types import FunctionData, SignatureData, gather_matching_types
 
 
 def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
@@ -53,12 +42,13 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     env = get_jinja_env()
     templates = get_templates_for_contract_file(env)
 
-    # TODO: add return types to function calls
-
     abi, bytecode = load_abi_from_file(abi_file_path)
     function_datas, constructor_data = get_function_datas(abi)
     has_overloading = any(len(function_data["signature_datas"]) > 1 for function_data in function_datas.values())
     has_bytecode = bool(bytecode)
+
+    structs_for_abi = get_structs_for_abi(abi)
+    structs_used = gather_matching_types(list(function_datas.values()), list(structs_for_abi.keys()))
 
     functions_block = templates.functions_template.render(
         abi=abi,
@@ -84,6 +74,7 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     # Render the template
     return templates.base_template.render(
         contract_name=contract_name,
+        structs_used=structs_used,
         has_overloading=has_overloading,
         has_bytecode=has_bytecode,
         functions_block=functions_block,
@@ -131,14 +122,14 @@ def get_function_datas(abi: ABI) -> tuple[dict[str, FunctionData], SignatureData
     constructor_data: SignatureData | None = None
     for abi_function in get_abi_items(abi):
         if is_abi_function(abi_function):
-            # TODO: investigate better typing here?  templete.render expects an object so we'll have
-            # to convert.
             # hanndle constructor
             if is_abi_constructor(abi_function):
                 constructor_data = {
                     "input_names_and_types": get_input_names_and_values(abi_function),
                     "input_names": get_input_names(abi_function),
+                    "input_types": get_input_types(abi_function),
                     "outputs": get_output_names(abi_function),
+                    "output_types": get_output_names_and_values(abi_function),
                 }
 
             # handle all other functions
@@ -147,11 +138,11 @@ def get_function_datas(abi: ABI) -> tuple[dict[str, FunctionData], SignatureData
                 signature_data: SignatureData = {
                     "input_names_and_types": get_input_names_and_values(abi_function),
                     "input_names": get_input_names(abi_function),
+                    "input_types": get_input_types(abi_function),
                     "outputs": get_output_names(abi_function),
+                    "output_types": get_output_types(abi_function),
                 }
                 function_data: FunctionData = {
-                    # TODO: pass a typeguarded ABIFunction that has only required fields?
-                    # name is required in the typeguard.  Should be safe to default to empty string.
                     "name": name,
                     "capitalized_name": capitalize_first_letter_only(name),
                     "signature_datas": [signature_data],

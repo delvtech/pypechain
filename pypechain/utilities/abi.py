@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Literal, NamedTuple, Sequence, TypeGuard, cast
+from typing import Literal, NamedTuple, Sequence, TypeGuard, cast
 
 from web3 import Web3
 from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
@@ -14,35 +14,6 @@ from pypechain.solc.types import SolcJson
 from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
 from pypechain.utilities.json import get_bytecode_from_json, is_foundry_json, is_solc_json
 from pypechain.utilities.types import solidity_to_python_type
-
-
-class Input(NamedTuple):
-    """An input of a function or event."""
-
-    internalType: str
-    name: str
-    type: str
-    indexed: bool | None = None
-
-
-class Output(NamedTuple):
-    """An output of a function or event."""
-
-    internalType: str
-    internalType: str
-    name: str
-    type: str
-
-
-class AbiItem(NamedTuple):
-    """An item of an ABI, can be an event, function or struct."""
-
-    type: str
-    inputs: List[Input]
-    stateMutability: str | None = None
-    anonymous: bool | None = None
-    name: str | None = None
-    outputs: List[Output] | None = None
 
 
 class AbiJson(NamedTuple):
@@ -557,6 +528,48 @@ def get_input_names_and_values(function: ABIFunction) -> list[str]:
     return _get_names_and_values(function, "inputs")
 
 
+def get_input_types(function: ABIFunction) -> list[str]:
+    """Returns function input type strings for jinja templating.
+
+    i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
+    flag, bytes extraData)
+
+    the following list would be returned: ['str', 'int', 'bool', 'bytes']
+
+    Arguments
+    ---------
+    function : ABIFunction
+        A web3 dict of an ABI function description.
+
+    Returns
+    -------
+    list[str]
+        A list of function python values, i.e. ['str', 'bool']
+    """
+    return _get_param_types(function, "inputs")
+
+
+def get_output_types(function: ABIFunction) -> list[str]:
+    """Returns function output type strings for jinja templating.
+
+    i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
+    flag, bytes extraData)
+
+    the following list would be returned: ['str', 'int', 'bool', 'bytes']
+
+    Arguments
+    ---------
+    function : ABIFunction
+        A web3 dict of an ABI function description.
+
+    Returns
+    -------
+    list[str]
+        A list of function python values, i.e. ['str', 'bool']
+    """
+    return _get_param_types(function, "outputs")
+
+
 def get_output_names_and_values(function: ABIFunction) -> list[str]:
     """Returns function input name/type strings for jinja templating.
 
@@ -608,6 +621,48 @@ def _get_names_and_values(function: ABIFunction, parameters_type: Literal["input
         python_type = solidity_to_python_type(param.get("type", "unknown"))
         stringified_function_parameters.append(f"{avoid_python_keywords(name)}: {python_type}")
     return stringified_function_parameters
+
+
+def _get_param_types(function: ABIFunction, parameters_type: Literal["inputs", "outputs"]) -> list[str]:
+    """Returns function input or output type strings for jinja templating.
+
+    i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
+    flag, bytes extraData)
+
+    the following list would be returned: ['who: str', 'amount: int', 'flag: bool', 'extraData:
+    bytes']
+
+    Arguments
+    ---------
+    function : ABIFunction
+        A web3 dict of an ABI function description.
+    parameters_type : Literal["inputs", "outputs"]
+        If we are looking at the inputs or outputs of a function.
+
+    Returns
+    -------
+    list[str]
+        A list of function parameter python types, i.e. ['str', 'bool']
+    """
+    stringified_function_parameters: list[str] = []
+    inputs_or_outputs = function.get(parameters_type, [])
+    inputs_or_outputs = cast(list[ABIFunctionParams], inputs_or_outputs)
+
+    for param in inputs_or_outputs:
+        python_type = get_param_type(param)
+        stringified_function_parameters.append(f"{python_type}")
+    return stringified_function_parameters
+
+
+def get_param_type(param: ABIFunctionParams):
+    """Gets the associated python type, including generated dataclasses"""
+    internal_type = cast(str, param.get("internalType", ""))
+    # if we find a struct, we'll add it to the dict of StructInfo's
+    if is_struct(internal_type):
+        python_type = get_struct_name(param)
+    else:
+        python_type = solidity_to_python_type(param.get("type", "unknown"))
+    return python_type
 
 
 def get_abi_from_json(json_abi: FoundryJson | SolcJson | ABI) -> ABI:

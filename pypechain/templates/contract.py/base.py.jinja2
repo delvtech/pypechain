@@ -19,12 +19,13 @@ from typing import cast
 
 from eth_typing import ChecksumAddress{% if has_bytecode %}, HexStr{% endif %}
 {% if has_bytecode %}from hexbytes import HexBytes{% endif %}
-from web3.types import ABI
+from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
 from web3.exceptions import FallbackNotFound
 {% if has_overloading %}
 from multimethod import multimethod
 {% endif %}
+{% if structs_used|length > 0 %}from .{{contract_name}}Types import {{ structs_used|join(', ')}}{% endif %}
 
 {{functions_block}}
 
