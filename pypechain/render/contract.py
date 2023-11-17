@@ -48,9 +48,7 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     has_bytecode = bool(bytecode)
 
     structs_for_abi = get_structs_for_abi(abi)
-    print(f"{structs_for_abi=}")
     structs_used = gather_matching_types(list(function_datas.values()), list(structs_for_abi.keys()))
-    print(f"{structs_used=}")
 
     functions_block = templates.functions_template.render(
         abi=abi,
