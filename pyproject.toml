@@ -1,7 +1,7 @@
 [project]
 
 name = "pypechain"
-version = "0.0.6"
+version = "0.0.7"
 authors = [
     { name = "Matthew Brown", email = "matt@delv.tech" },
     { name = "Dylan Paiton", email = "dylan@delv.tech" },
@@ -16,7 +16,7 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["flit", "black", "jinja2", "web3"]
+dependencies = ["flit", "black", "jinja2", "web3", "multimethod"]
 
 [project.scripts]
 pypechain = "pypechain.main:main"

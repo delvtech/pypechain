@@ -388,13 +388,6 @@ def get_param_name(
         The name of the item.
     """
 
-    # internal_type = cast(str, param_or_component.get("internalType", ""))
-    # if is_struct(internal_type):
-    #     # internal_type looks like 'struct ContractName.StructName' if it is a struct,
-    #     # pluck off the name
-    #     string_type = internal_type.split(".").pop()
-    #     return capitalize_first_letter_only(string_type)
-
     return param_or_component.get("name", "")
 
 
@@ -456,7 +449,8 @@ def get_function_parameter_names(
             stringified_function_parameters.append(avoid_python_keywords(name))
         else:
             name = f"arg{arg_counter}"
-            arg_counter += 1
+            stringified_function_parameters.append(avoid_python_keywords(name))
+        arg_counter += 1
     return stringified_function_parameters
 
 
@@ -506,7 +500,7 @@ def get_output_names(function: ABIFunction) -> list[str]:
     return get_function_parameter_names(function.get("outputs", []))
 
 
-def get_input_names_and_values(function: ABIFunction) -> list[str]:
+def get_input_names_and_types(function: ABIFunction) -> list[str]:
     """Returns function input name/type strings for jinja templating.
 
     i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
@@ -523,9 +517,9 @@ def get_input_names_and_values(function: ABIFunction) -> list[str]:
     Returns
     -------
     list[str]
-        A list of function names and corresponding python values, i.e. ['arg1: str', 'arg2: bool']
+        A list of function names and corresponding python types, i.e. ['arg1: str', 'arg2: bool']
     """
-    return _get_names_and_values(function, "inputs")
+    return _get_names_and_types(function, "inputs")
 
 
 def get_input_types(function: ABIFunction) -> list[str]:
@@ -544,7 +538,7 @@ def get_input_types(function: ABIFunction) -> list[str]:
     Returns
     -------
     list[str]
-        A list of function python values, i.e. ['str', 'bool']
+        A list of function python types, i.e. ['str', 'bool']
     """
     return _get_param_types(function, "inputs")
 
@@ -565,12 +559,12 @@ def get_output_types(function: ABIFunction) -> list[str]:
     Returns
     -------
     list[str]
-        A list of function python values, i.e. ['str', 'bool']
+        A list of function python types, i.e. ['str', 'bool']
     """
     return _get_param_types(function, "outputs")
 
 
-def get_output_names_and_values(function: ABIFunction) -> list[str]:
+def get_output_names_and_types(function: ABIFunction) -> list[str]:
     """Returns function input name/type strings for jinja templating.
 
     i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
@@ -587,12 +581,12 @@ def get_output_names_and_values(function: ABIFunction) -> list[str]:
     Returns
     -------
     list[str]
-        A list of function names and corresponding python values, i.e. ['arg1: str', 'arg2: bool']
+        A list of function names and corresponding python types, i.e. ['arg1: str', 'arg2: bool']
     """
-    return _get_names_and_values(function, "outputs")
+    return _get_names_and_types(function, "outputs")
 
 
-def _get_names_and_values(function: ABIFunction, parameters_type: Literal["inputs", "outputs"]) -> list[str]:
+def _get_names_and_types(function: ABIFunction, parameters_type: Literal["inputs", "outputs"]) -> list[str]:
     """Returns function input or output name/type strings for jinja templating.
 
     i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
@@ -611,14 +605,14 @@ def _get_names_and_values(function: ABIFunction, parameters_type: Literal["input
     Returns
     -------
     list[str]
-        A list of function names and corresponding python values, i.e. ['arg1: str', 'arg2: bool']
+        A list of function names and corresponding python types, i.e. ['arg1: str', 'arg2: bool']
     """
     stringified_function_parameters: list[str] = []
     for index, param in enumerate(function.get(parameters_type, []), start=1):
         name = get_param_name(param)
         if not name:
             name = f"arg{index}"
-        python_type = solidity_to_python_type(param.get("type", "unknown"))
+        python_type = get_param_type(param)
         stringified_function_parameters.append(f"{avoid_python_keywords(name)}: {python_type}")
     return stringified_function_parameters
 
