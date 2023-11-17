@@ -9,10 +9,10 @@ from web3.types import ABI
 from pypechain.utilities.abi import (
     get_abi_items,
     get_input_names,
-    get_input_names_and_values,
+    get_input_names_and_types,
     get_input_types,
     get_output_names,
-    get_output_names_and_values,
+    get_output_names_and_types,
     get_output_types,
     get_structs_for_abi,
     is_abi_constructor,
@@ -125,18 +125,18 @@ def get_function_datas(abi: ABI) -> tuple[dict[str, FunctionData], SignatureData
             # hanndle constructor
             if is_abi_constructor(abi_function):
                 constructor_data = {
-                    "input_names_and_types": get_input_names_and_values(abi_function),
+                    "input_names_and_types": get_input_names_and_types(abi_function),
                     "input_names": get_input_names(abi_function),
                     "input_types": get_input_types(abi_function),
                     "outputs": get_output_names(abi_function),
-                    "output_types": get_output_names_and_values(abi_function),
+                    "output_types": get_output_names_and_types(abi_function),
                 }
 
             # handle all other functions
             else:
                 name = abi_function.get("name", "")
                 signature_data: SignatureData = {
-                    "input_names_and_types": get_input_names_and_values(abi_function),
+                    "input_names_and_types": get_input_names_and_types(abi_function),
                     "input_names": get_input_names(abi_function),
                     "input_types": get_input_types(abi_function),
                     "outputs": get_output_names(abi_function),
