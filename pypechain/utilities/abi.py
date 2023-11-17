@@ -556,14 +556,34 @@ def get_input_names_and_values(function: ABIFunction) -> list[str]:
     return _get_names_and_values(function, "inputs")
 
 
+def get_input_types(function: ABIFunction) -> list[str]:
+    """Returns function input type strings for jinja templating.
+
+    i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
+    flag, bytes extraData)
+
+    the following list would be returned: ['str', 'int', 'bool', 'bytes']
+
+    Arguments
+    ---------
+    function : ABIFunction
+        A web3 dict of an ABI function description.
+
+    Returns
+    -------
+    list[str]
+        A list of function python values, i.e. ['str', 'bool']
+    """
+    return _get_param_types(function, "inputs")
+
+
 def get_output_types(function: ABIFunction) -> list[str]:
     """Returns function output type strings for jinja templating.
 
     i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
     flag, bytes extraData)
 
-    the following list would be returned: ['who: str', 'amount: int', 'flag: bool', 'extraData:
-    bytes']
+    the following list would be returned: ['str', 'int', 'bool', 'bytes']
 
     Arguments
     ---------

@@ -2,6 +2,25 @@
 
 
 import logging
+from typing import TypedDict
+
+
+class SignatureData(TypedDict):
+    """Define the structure of the signature_datas dictionary"""
+
+    input_names_and_types: list[str]
+    input_names: list[str]
+    input_types: list[str]
+    outputs: list[str]
+    output_types: list[str]
+
+
+class FunctionData(TypedDict):
+    """Define the structure of the function_data dictionary"""
+
+    name: str
+    capitalized_name: str
+    signature_datas: list[SignatureData]
 
 
 def solidity_to_python_type(solidity_type: str) -> str:
@@ -82,3 +101,34 @@ def solidity_to_python_type(solidity_type: str) -> str:
     logging.warning("Unknown Solidity type: %s", solidity_type)
 
     return solidity_type
+
+
+def gather_matching_types(function_datas: list[FunctionData], known_types: list[str]) -> list[str]:
+    """Gather matching types from inputs and outputs in the function_datas.
+
+    Parameters
+    ----------
+    function_datas : list[FunctionData]
+        A list of function datas.
+    known_types : list[str]
+        A list of known types.
+
+    Returns
+    -------
+    list[str]
+        The matching list of types.
+    """
+    matching_types = []
+
+    for function_data in function_datas:
+        for signature_data in function_data["signature_datas"]:
+            # Check input types
+            for input_type in signature_data["input_types"]:
+                if input_type in known_types:
+                    matching_types.append(input_type)
+            # Check output types
+            for output_type in signature_data["output_types"]:
+                if output_type in known_types:
+                    matching_types.append(output_type)
+
+    return matching_types
