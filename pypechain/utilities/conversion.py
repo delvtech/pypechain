@@ -1,31 +1,8 @@
-"""A web3.py Contract class for the {{contract_name}} contract."""
-
-# contracts have PascalCase names
-# pylint: disable=invalid-name
-
-# contracts control how many attributes and arguments we have in generated code
-# pylint: disable=too-many-instance-attributes
-# pylint: disable=too-many-arguments
-
-# we don't need else statement if the other conditionals all have return,
-# but it's easier to generate
-# pylint: disable=no-else-return
-
-# This file is bound to get very long depending on contract sizes.
-# pylint: disable=too-many-lines
-
+"""Conversion helpers."""
 from __future__ import annotations
-from typing import Any, Tuple, TypeVar, cast
-from dataclasses import fields, is_dataclass
 
-from eth_typing import ChecksumAddress{% if has_bytecode %}, HexStr{% endif %}
-{% if has_bytecode %}from hexbytes import HexBytes{% endif %}
-from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
-from web3.contract.contract import Contract, ContractFunction, ContractFunctions
-from web3.exceptions import FallbackNotFound
-{% if has_overloading %}
-from multimethod import multimethod
-{% endif %}
+from dataclasses import fields, is_dataclass
+from typing import Any, Tuple, TypeVar, cast
 
 T = TypeVar("T")
 
@@ -39,7 +16,7 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
     ---------
     cls: type[T]
         The dataclass type to which the tuple data is to be converted.
-    tuple_data: Any | Tuple[Any, ...]
+    tuple_data: Any | Typle[Any, ...]
         A tuple (or nested tuple) of values to convert into a dataclass instance.
 
     Returns
@@ -65,10 +42,3 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
             field_values[field_name] = value
 
     return cls(**field_values)
-{% if structs_used|length > 0 %}from .{{contract_name}}Types import {{ structs_used|join(', ')}}{% endif %}
-
-{{functions_block}}
-
-{{abi_block}}
-
-{{contract_block}}

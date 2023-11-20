@@ -18,3 +18,21 @@ class {{contract_name}}Contract(Contract):
     # events: ERC20ContractEvents
 
     functions: {{contract_name}}ContractFunctions
+
+    def _call(self, return_types, raw_values):
+        # cover case of multiple return values
+        if isinstance(return_types, tuple):
+            # Ensure raw_values is a tuple for consistency
+            if not isinstance(raw_values, tuple):
+                raw_values = (raw_values,)
+
+            # Convert the tuple to the dataclass instance using the utility function
+            converted_values = (
+                tuple(tuple_to_dataclass(return_type, value) for return_type, value in zip(return_types, raw_values)),
+            )
+
+            return converted_values
+
+        # cover case of single return value
+        converted_value = tuple_to_dataclass(return_types, raw_values)
+        return converted_value
