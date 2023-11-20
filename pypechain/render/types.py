@@ -1,4 +1,6 @@
 """Functions to render Python types from an abi usng a jinja2 template."""
+from __future__ import annotations
+
 from dataclasses import asdict
 from pathlib import Path
 
@@ -6,7 +8,7 @@ from pypechain.utilities.abi import get_events_for_abi, get_structs_for_abi, loa
 from pypechain.utilities.templates import get_jinja_env
 
 
-def render_types_file(contract_name: str, abi_file_path: Path) -> str:
+def render_types_file(contract_name: str, abi_file_path: Path) -> str | None:
     """Returns the serialized code of the types file to be generated.
 
     Arguments
@@ -33,7 +35,11 @@ def render_types_file(contract_name: str, abi_file_path: Path) -> str:
     structs = [asdict(struct) for struct in structs_list]
     events = [asdict(event) for event in get_events_for_abi(abi)]
     has_events = bool(events)
+    has_structs = bool(structs)
     has_event_params = any(len(event["inputs"]) > 0 for event in events)
+
+    if not has_events and not has_structs:
+        return None
 
     return types_template.render(
         contract_name=contract_name,

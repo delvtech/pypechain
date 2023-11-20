@@ -1,0 +1,5 @@
+"""Export all types from generated files."""
+
+{% for name in file_names -%}
+from .{{name}} import *
+{% endfor %}
