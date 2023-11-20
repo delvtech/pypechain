@@ -11,6 +11,8 @@ from typing import NamedTuple, Sequence
 from web3.exceptions import NoABIFunctionsFound
 
 from pypechain.render.main import render_files
+from pypechain.utilities.file import write_string_to_file
+from pypechain.utilities.templates import get_jinja_env
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -32,7 +34,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     setup_directory(output_dir)
 
     # List to store all JSON ABI files to be processed
-    json_files_to_process = []
+    json_files_to_process: list[Path] = []
 
     # Check if provided path is a directory or file
     if os.path.isdir(abi_file_path):
@@ -42,15 +44,29 @@ def main(argv: Sequence[str] | None = None) -> None:
         # Otherwise, add the single file to the list
         json_files_to_process.append(Path(abi_file_path))
 
+    file_names: list[str] = []
+
     # Now process all gathered files
     for json_file in json_files_to_process:
         try:
-            render_files(str(json_file), output_dir, line_length)
+            rendered_file_names = render_files(str(json_file), output_dir, line_length)
+            file_names.extend(rendered_file_names)
         except NoABIFunctionsFound:
             print(f"No ABI Functions found in {json_file}, skipping...")
         except BaseException as err:
             print(f"Error creating types for {json_file}")
             raise err
+
+    # Finally, render the __init__.py file
+    render_init_file(output_dir, file_names)
+
+
+def render_init_file(output_dir: str, file_names: list[str]):
+    """Creates an __init__.py file that imports all other files."""
+    env = get_jinja_env()
+    init_template = env.get_template("init.py.jinja2")
+    init_code = init_template.render(file_names=file_names)
+    write_string_to_file(f"{output_dir}/__init__.py", init_code)
 
 
 def gather_json_files(directory: str) -> list:
@@ -67,11 +83,6 @@ def setup_directory(directory: str) -> None:
 
     # Create the directory
     os.makedirs(directory)
-
-    # Create an empty __init__.py file in the directory
-    init_file_path = os.path.join(directory, "__init__.py")
-    with open(init_file_path, "a", encoding="utf-8"):
-        pass
 
 
 class Args(NamedTuple):
