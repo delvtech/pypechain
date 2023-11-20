@@ -39,7 +39,7 @@ def render_types_file(contract_name: str, abi_file_path: Path) -> str | None:
     has_event_params = any(len(event["inputs"]) > 0 for event in events)
 
     if not has_events and not has_structs:
-        return
+        return None
 
     return types_template.render(
         contract_name=contract_name,
