@@ -11,8 +11,10 @@ from web3 import Web3
 from web3.middleware import geth_poa
 from web3.types import RPCEndpoint
 
+# pylint: disable=redefined-outer-name
 
-@pytest.fixture(scope="function")
+
+@pytest.fixture(scope="session")
 def local_chain() -> Iterator[str]:
     """Launch a local anvil chain for testing and kill the anvil chain after.
 
@@ -35,8 +37,8 @@ def local_chain() -> Iterator[str]:
 
     local_chain_ = "http://" + host + ":" + str(anvil_port)
 
-    # TODO Hack, wait for anvil chain to initialize
-    time.sleep(3)
+    # wait for anvil chain to initialize
+    time.sleep(1)
 
     yield local_chain_
 
@@ -44,8 +46,8 @@ def local_chain() -> Iterator[str]:
     anvil_process.kill()
 
 
-@pytest.fixture(scope="function")
-def w3(local_chain) -> Web3:  # pylint: disable=redefined-outer-name
+@pytest.fixture(scope="session")
+def w3_init(local_chain) -> Web3:
     """gets a Web3 instance connected to the local chain.
 
     Parameters
@@ -60,6 +62,24 @@ def w3(local_chain) -> Web3:  # pylint: disable=redefined-outer-name
     """
 
     return initialize_web3_with_http_provider(local_chain)
+
+
+@pytest.fixture(scope="function")
+def w3(w3_init) -> Web3:  # type: ignore
+    """resets the anvil instance at the function level so each test gets a fresh chain.
+
+    Parameters
+    ----------
+    w3_init : Web3
+        A web3.py instance.
+
+    Returns
+    -------
+    Web3
+        A web3.py instance.
+    """
+    w3_init.provider.make_request(method=RPCEndpoint("anvil_reset"), params=[])
+    return w3_init
 
 
 def initialize_web3_with_http_provider(

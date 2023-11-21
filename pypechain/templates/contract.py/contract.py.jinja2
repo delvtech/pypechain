@@ -10,6 +10,7 @@ class {{contract_name}}Contract(Contract):
         try:
             # Initialize parent Contract class
             super().__init__(address=address)
+            self.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, self.w3, address)
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
@@ -18,3 +19,10 @@ class {{contract_name}}Contract(Contract):
     # events: ERC20ContractEvents
 
     functions: {{contract_name}}ContractFunctions
+
+    @classmethod
+    def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
+        contract = super().factory(w3, class_name, **kwargs)
+        contract.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, w3, None)
+
+        return contract

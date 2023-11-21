@@ -2,6 +2,7 @@
 import keyword
 
 import black
+from black.report import NothingChanged
 
 
 def avoid_python_keywords(name: str) -> str:
@@ -127,4 +128,6 @@ def apply_black_formatting(code: str, line_length: int = 80) -> str:
     except ValueError as exc:
         print(f"cannot format with Black\n code:\n{code}")
         print(f"{exc=}")
+        return code
+    except NothingChanged:
         return code

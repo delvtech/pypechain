@@ -1,41 +1,11 @@
-"""A web3.py Contract class for the {{contract_name}} contract."""
-
-# contracts have PascalCase names
-# pylint: disable=invalid-name
-
-# contracts control how many attributes and arguments we have in generated code
-# pylint: disable=too-many-instance-attributes
-# pylint: disable=too-many-arguments
-
-# we don't need else statement if the other conditionals all have return,
-# but it's easier to generate
-# pylint: disable=no-else-return
-
-# This file is bound to get very long depending on contract sizes.
-# pylint: disable=too-many-lines
-
+"""Conversion helpers."""
 from __future__ import annotations
-from typing import Any, Tuple, Type, TypeVar, cast
-from typing_extensions import Self
-from dataclasses import fields, is_dataclass
 
-from eth_typing import ChecksumAddress{% if has_bytecode %}, HexStr{% endif %}
-{% if has_bytecode %}from hexbytes import HexBytes{% endif %}
-from web3 import Web3
-from web3.contract.contract import Contract, ContractFunction, ContractFunctions
-from web3.exceptions import FallbackNotFound
-from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
-{% if has_overloading %}
-from multimethod import multimethod
-{% endif %}
-{% if structs_for_abi|length > 0 %}from .{{contract_name}}Types import {{ structs_for_abi|join(', ')}}{% endif %}
+from dataclasses import fields, is_dataclass
+from typing import Any, Tuple, TypeVar, cast
 
 T = TypeVar("T")
 
-structs = {
-{%- for struct_name in structs_for_abi %}
-    "{{struct_name}}": {{struct_name}},
-{%- endfor %}}
 
 def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
     """
@@ -46,7 +16,7 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
     ---------
     cls: type[T]
         The dataclass type to which the tuple data is to be converted.
-    tuple_data: Any | Tuple[Any, ...]
+    tuple_data: Any | Typle[Any, ...]
         A tuple (or nested tuple) of values to convert into a dataclass instance.
 
     Returns
@@ -61,7 +31,6 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
     field_values = {}
 
     for (field_name, field_type), value in zip(field_types.items(), tuple_data):
-        field_type = structs.get(field_type, field_type)
         if is_dataclass(field_type):
             # Recursively convert nested tuples to nested dataclasses
             field_values[field_name] = tuple_to_dataclass(field_type, value)
@@ -73,9 +42,3 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
             field_values[field_name] = value
 
     return cls(**field_values)
-
-{{functions_block}}
-
-{{abi_block}}
-
-{{contract_block}}
