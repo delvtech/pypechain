@@ -126,9 +126,10 @@ def gather_matching_types(function_datas: list[FunctionData], known_types: list[
             for input_type in signature_data["input_types"]:
                 if input_type in known_types:
                     matching_types.append(input_type)
+
             # Check output types
             for output_type in signature_data["output_types"]:
                 if output_type in known_types:
                     matching_types.append(output_type)
 
-    return matching_types
+    return list(set(matching_types))

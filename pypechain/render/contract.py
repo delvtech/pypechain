@@ -75,6 +75,7 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     return templates.base_template.render(
         contract_name=contract_name,
         structs_used=structs_used,
+        structs_for_abi=structs_for_abi,
         has_overloading=has_overloading,
         has_bytecode=has_bytecode,
         functions_block=functions_block,

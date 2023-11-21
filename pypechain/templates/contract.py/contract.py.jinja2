@@ -10,6 +10,7 @@ class {{contract_name}}Contract(Contract):
         try:
             # Initialize parent Contract class
             super().__init__(address=address)
+            self.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, self.w3, address)
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
@@ -19,20 +20,9 @@ class {{contract_name}}Contract(Contract):
 
     functions: {{contract_name}}ContractFunctions
 
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, tuple):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, tuple):
-                raw_values = (raw_values,)
+    @classmethod
+    def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
+        contract = super().factory(w3, class_name, **kwargs)
+        contract.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, w3, None)
 
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = (
-                tuple(tuple_to_dataclass(return_type, value) for return_type, value in zip(return_types, raw_values)),
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
+        return contract
