@@ -21,6 +21,8 @@ class FunctionData(TypedDict):
     name: str
     capitalized_name: str
     signature_datas: list[SignatureData]
+    has_overloading: bool
+    has_multiple_return_signatures: bool
 
 
 def solidity_to_python_type(solidity_type: str) -> str:
