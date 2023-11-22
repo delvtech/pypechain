@@ -11,29 +11,14 @@ class OverloadedBalanceOfContractFunction(ContractFunction):
         return self
 
     @multimethod
-    def call( #type: ignore
-        self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = 'latest',
-        state_override: CallOverride | None = None,
-        ccip_read_enabled: bool | None = None) -> int:
-            """returns int"""
-            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-            # Define the expected return types from the smart contract call
-            return_types = int
-            
-            return cast(int, self._call(return_types, raw_values))
-            
-
-    @multimethod
     def __call__(self, who: str) -> "OverloadedBalanceOfContractFunction": #type: ignore
         clone = super().__call__(who)
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
 
-    @multimethod
-    def call( #type: ignore
+
+    def call(
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = 'latest',
@@ -46,7 +31,6 @@ class OverloadedBalanceOfContractFunction(ContractFunction):
             
             return cast(int, self._call(return_types, raw_values))
             
-
     def _call(self, return_types, raw_values):
         # cover case of multiple return values
         if isinstance(return_types, list):

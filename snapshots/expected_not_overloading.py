@@ -23,7 +23,6 @@ class OverloadedBalanceOfContractFunction(ContractFunction):
             
             return cast(int, self._call(return_types, raw_values))
             
-
     def _call(self, return_types, raw_values):
         # cover case of multiple return values
         if isinstance(return_types, list):
@@ -66,7 +65,6 @@ class OverloadedBalanceOfWhoContractFunction(ContractFunction):
             
             return cast(bool, self._call(return_types, raw_values))
             
-
     def _call(self, return_types, raw_values):
         # cover case of multiple return values
         if isinstance(return_types, list):
