@@ -20,10 +20,9 @@ class OverloadedBalanceOfContractFunction(ContractFunction):
             raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
             # Define the expected return types from the smart contract call
             return_types = int
-
+            
             return cast(int, self._call(return_types, raw_values))
-
-
+            
     def _call(self, return_types, raw_values):
         # cover case of multiple return values
         if isinstance(return_types, list):
@@ -63,10 +62,9 @@ class OverloadedBalanceOfWhoContractFunction(ContractFunction):
             raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
             # Define the expected return types from the smart contract call
             return_types = bool
-
+            
             return cast(bool, self._call(return_types, raw_values))
-
-
+            
     def _call(self, return_types, raw_values):
         # cover case of multiple return values
         if isinstance(return_types, list):
@@ -117,3 +115,4 @@ class OverloadedContractFunctions(ContractFunctions):
             decode_tuples=decode_tuples,
             function_identifier="balanceOfWho",
         )
+        
