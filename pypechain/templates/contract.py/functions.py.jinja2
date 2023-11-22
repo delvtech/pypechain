@@ -31,8 +31,6 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
             return cast({{output_types[0]}}, self._call(return_types, raw_values))
             {% elif output_types|length > 1 %}
             return cast(tuple[{{output_types|join(', ')}}], self._call(return_types, raw_values))
-            {% else %}
-            return None
             {% endif %}
     def _call(self, return_types, raw_values):
         # cover case of multiple return values
