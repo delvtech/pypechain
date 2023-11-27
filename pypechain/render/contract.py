@@ -140,7 +140,7 @@ class GetFunctionDatasReturnValue(NamedTuple):
 
 
 def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
-    """_summary_
+    """TODO fill me in
 
     Arguments
     ---------

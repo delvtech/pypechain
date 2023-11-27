@@ -31,7 +31,8 @@ def main(argv: Sequence[str] | None = None) -> None:
 
     abi_file_path, output_dir, line_length = parse_arguments(argv)
 
-    # Create/clear the output directory
+    # TODO: move to end of main() so that files aren't cleared if something breaks during script
+    # execution. Create/clear the output directory
     setup_directory(output_dir)
 
     # List to store all JSON ABI files to be processed
@@ -53,6 +54,7 @@ def main(argv: Sequence[str] | None = None) -> None:
             rendered_file_names = render_files(str(json_file), output_dir, line_length)
             file_names.extend(rendered_file_names)
         except NoABIFunctionsFound:
+            # TODO: use logging
             print(f"No ABI Functions found in {json_file}, skipping...")
         except BaseException as err:
             print(f"Error creating types for {json_file}")
