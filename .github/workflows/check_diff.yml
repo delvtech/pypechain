@@ -32,18 +32,18 @@ jobs:
         id: check
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-              # For PRs, compare PR head against base branch
-              OLD_VERSION=$(git show ${{ github.event.pull_request.base.sha }}:${{ inputs.file_path }} | grep '^version = ' | cut -d '"' -f 2)
-            else
-              # For direct pushes, compare the last two commits
-              OLD_VERSION=$(git show HEAD~1:${{ inputs.file_path }} | grep '^version = ' | cut -d '"' -f 2)
-            fi
+            # For PRs, compare PR head against base branch
+            OLD_VERSION=$(git show ${{ github.event.pull_request.base.sha }}:${{ inputs.file_path }} | grep '^version = ' | cut -d '"' -f 2)
+          else
+            # For direct pushes, compare the last two commits
+            OLD_VERSION=$(git show HEAD~1:${{ inputs.file_path }} | grep '^version = ' | cut -d '"' -f 2)
+          fi
 
-            # `cut` grabs everything inside the ", i.e. the version number x.y.z
-            NEW_VERSION=$(grep '^version = ' ${{ inputs.file_path }} | cut -d '"' -f 2)
+          # `cut` grabs everything inside the ", i.e. the version number x.y.z
+          NEW_VERSION=$(grep '^version = ' ${{ inputs.file_path }} | cut -d '"' -f 2)
 
-            echo "OLD_VERSION=$OLD_VERSION"
-            echo "NEW_VERSION=$NEW_VERSION"
+          echo "OLD_VERSION=$OLD_VERSION"
+          echo "NEW_VERSION=$NEW_VERSION"
 
           if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
             echo "Version has changed."
