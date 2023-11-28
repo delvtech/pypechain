@@ -37,7 +37,8 @@ class TestReturnTypes:
 
     def test_no_name_two_values(self, deployed_contract: ReturnTypesContract):
         """Tests two values"""
-        result: tuple[str, int] = deployed_contract.functions.noNameTwoValues("a string").call()
+        result = deployed_contract.functions.noNameTwoValues("a string").call()
+        assert isinstance(result, deployed_contract.functions.noNameTwoValues.ReturnValues)
         assert result == ("a string", 2)
 
     def test_named_single_value(self, deployed_contract: ReturnTypesContract):
@@ -48,6 +49,7 @@ class TestReturnTypes:
     def test_named_two_values(self, deployed_contract: ReturnTypesContract):
         """Tests two named values"""
         result = deployed_contract.functions.namedTwoValues(1, 2).call()
+        assert isinstance(result, deployed_contract.functions.namedTwoValues.ReturnValues)
         assert result == (2, 1)
 
     def test_single_simple_struct(self, deployed_contract: ReturnTypesContract):
@@ -63,11 +65,13 @@ class TestReturnTypes:
     def test_two_simple_structs(self, deployed_contract: ReturnTypesContract):
         """Tests two structs"""
         result = deployed_contract.functions.twoSimpleStructs().call()
+        assert isinstance(result, deployed_contract.functions.twoSimpleStructs.ReturnValues)
         assert result == (SimpleStruct(1, "You are number 1"), SimpleStruct(2, "You are number 2"))
 
     def test_two_mixed_structs(self, deployed_contract: ReturnTypesContract):
         """Tests two structs, one nested"""
         result = deployed_contract.functions.twoMixedStructs().call()
+        assert isinstance(result, deployed_contract.functions.twoMixedStructs.ReturnValues)
         assert result == (SimpleStruct(1, "You are number 1"), NestedStruct(2, "You are number 2", InnerStruct(True)))
 
     def test_named_single_struct(self, deployed_contract: ReturnTypesContract):
@@ -78,11 +82,13 @@ class TestReturnTypes:
     def test_named_two_mixed_structs(self, deployed_contract: ReturnTypesContract):
         """Tests two named structs, one nested"""
         result = deployed_contract.functions.namedTwoMixedStructs().call()
+        assert isinstance(result, deployed_contract.functions.namedTwoMixedStructs.ReturnValues)
         assert result == (SimpleStruct(1, "You are number 1"), NestedStruct(2, "You are number 2", InnerStruct(True)))
 
     def test_mix_structs_and_primitives(self, deployed_contract: ReturnTypesContract):
         """Tests two structs, one nested, and other values returned"""
         result = deployed_contract.functions.mixStructsAndPrimitives().call()
+        assert isinstance(result, deployed_contract.functions.mixStructsAndPrimitives.ReturnValues)
         assert result == (
             SimpleStruct(1, "You are number 1"),
             NestedStruct(2, "You are number 2", InnerStruct(True)),
