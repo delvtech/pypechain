@@ -4,7 +4,7 @@ from __future__ import annotations
 import os
 
 import pytest
-from web3.exceptions import Web3ValidationError
+from multimethod import DispatchError
 
 from pypechain.test.overloading.types.OverloadedMethodsContract import OverloadedMethodsContract
 
@@ -49,6 +49,15 @@ class TestOverloading:
         result = deployed_contract.functions.doSomething(x, y).call()
         assert result == 1 + 2
 
-        with pytest.raises(Web3ValidationError) as err:
+        # checks that it fails
+        with pytest.raises(DispatchError) as err:
             result = deployed_contract.functions.doSomething(x, y, s).call()
-        assert "Could not identify the intended function with name `doSomething`" in str(err.value)
+
+        # checks error string
+        try:
+            result = deployed_contract.functions.doSomething(x, y, s).call()
+        except TypeError as err:
+            assert (
+                "OverloadedMethodsDoSomethingContractFunction.__call__() takes 3 positional arguments but 4 were given"
+                in str(err.__context__)
+            )
