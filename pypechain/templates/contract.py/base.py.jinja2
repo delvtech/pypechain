@@ -21,15 +21,20 @@ from __future__ import annotations
 
 from dataclasses import fields, is_dataclass
 from typing import Any, Tuple, Type, TypeVar, cast
+{% if has_events %}from typing import Iterable, Sequence{% endif %}
 
 from eth_typing import ChecksumAddress{% if has_bytecode %}, HexStr{% endif %}
-{% if has_bytecode %}from hexbytes import HexBytes{% endif %}
+{% if has_events %}from eth_utils.decorators import combomethod{% endif %}
+from hexbytes import HexBytes
 {% if has_overloading %}from multimethod import multimethod {% endif %}
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
+{% if has_events %}from web3.contract.contract import ContractEvent, ContractEvents{% endif %}
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
+{% if has_events %}from web3.types import EventData{% endif %}
+{% if has_events %}from web3._utils.filters import LogFilter{% endif %}
 {% if structs_for_abi|length > 0 %}from .{{contract_name}}Types import {{ structs_for_abi|join(', ')}}{% endif %}
 
 T = TypeVar("T")
@@ -77,6 +82,8 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
     return cls(**field_values)
 
 {{functions_block}}
+
+{% if has_events %}{{ events_block }}{% endif %}
 
 {{abi_block}}
 
