@@ -129,7 +129,12 @@ def get_has_multiple_return_signatures(signature_datas: list[SignatureData]) -> 
         if first_output_types is None:
             first_output_types = signature_data["output_types"]
         else:
-            lists_equal = all(item[0] == item[1] for item in zip(first_output_types, signature_data["output_types"]))
+            lists_equal = all(
+                output_types_to_compare[0] == output_types_to_compare[1]
+                for output_types_to_compare in zip(first_output_types, signature_data["output_types"])
+            )
+            if not lists_equal:
+                break
 
     return not lists_equal
 

@@ -49,6 +49,9 @@ class TestOverloading:
         result = deployed_contract.functions.doSomething(x, y).call()
         assert result == 1 + 2
 
+        result = deployed_contract.functions.doSomething(x, s).call()
+        assert result == (x, s)
+
         # checks that it fails
         # TODO ensure this throws validation error
         with pytest.raises(DispatchError) as err:

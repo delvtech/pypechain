@@ -17,4 +17,9 @@ contract OverloadedMethods {
     function doSomething(uint x, uint y) public pure returns (uint added) {
         return x + y;
     }
+
+    // Another overloaded version accepts an integer and a string, returns both unchanged
+    function doSomething(uint x, string memory s) public pure returns (uint added, string memory) {
+        return (x, s);
+    }
 }
