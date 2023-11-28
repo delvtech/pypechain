@@ -16,12 +16,13 @@ from pypechain.utilities.abi import (
     get_output_types,
     get_structs_for_abi,
     is_abi_constructor,
+    is_abi_event,
     is_abi_function,
     load_abi_from_file,
 )
 from pypechain.utilities.format import capitalize_first_letter_only
 from pypechain.utilities.templates import get_jinja_env
-from pypechain.utilities.types import FunctionData, SignatureData, gather_matching_types
+from pypechain.utilities.types import EventData, FunctionData, SignatureData, gather_matching_types
 
 
 def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
@@ -195,3 +196,28 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
                         signature_datas
                     )
     return GetFunctionDatasReturnValue(function_datas, constructor_data)
+
+
+def get_event_datas(abi: ABI) -> dict[str, EventData]:
+    """Gets the event datas required for the events template.
+
+    Arguments
+    ---------
+    abi : ABI
+        An application boundary interface for smart contract in json format.
+
+    Returns
+    -------
+    dict[str, EventData]
+        A dictionary of EventData's keyed by event name.
+    """
+    event_datas: dict[str, EventData] = {}
+    for abi_event in get_abi_items(abi):
+        if is_abi_event(abi_event):
+            name = abi_event.get("name", "")
+            event_data: EventData = {
+                "name": name,
+                "capitalized_name": capitalize_first_letter_only(name),
+            }
+            event_datas[name] = event_data
+    return event_datas

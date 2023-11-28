@@ -25,6 +25,13 @@ class FunctionData(TypedDict):
     has_multiple_return_signatures: bool
 
 
+class EventData(TypedDict):
+    """Define the structure of the event_data dictionary"""
+
+    name: str
+    capitalized_name: str
+
+
 def solidity_to_python_type(solidity_type: str) -> str:
     """Returns the stringfied python type for the gien solidity type.
 

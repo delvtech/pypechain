@@ -7,12 +7,26 @@ from pathlib import Path
 from typing import Literal, NamedTuple, Sequence, TypeGuard, cast
 
 from web3 import Web3
-from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
+from web3.types import (
+    ABI,
+    ABIElement,
+    ABIEvent,
+    ABIFunction,
+    ABIFunctionComponents,
+    ABIFunctionParams,
+)
 
 from pypechain.foundry.types import FoundryJson
 from pypechain.solc.types import SolcJson
-from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
-from pypechain.utilities.json import get_bytecode_from_json, is_foundry_json, is_solc_json
+from pypechain.utilities.format import (
+    avoid_python_keywords,
+    capitalize_first_letter_only,
+)
+from pypechain.utilities.json import (
+    get_bytecode_from_json,
+    is_foundry_json,
+    is_solc_json,
+)
 from pypechain.utilities.types import solidity_to_python_type
 
 
@@ -433,6 +447,7 @@ def get_abi_items(abi: ABI) -> list[ABIElement]:
     # leverage the private list of ABIFunction's
     # pylint: disable=protected-access
     abi_functions_and_events = contract.functions._functions
+    abi_functions_and_events.extend(contract.events._events)
     return abi_functions_and_events
 
 
