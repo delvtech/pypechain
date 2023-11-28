@@ -38,16 +38,20 @@ jobs:
           echo "NEW_VERSION=$NEW_VERSION"
 
           if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
+            echo "Version has changed."
             echo "version_changed=true" >> $GITHUB_OUTPUT
             IFS='.' read -ra OLD_PARTS <<< "$OLD_VERSION"
             IFS='.' read -ra NEW_PARTS <<< "$NEW_VERSION"
 
             if [ "${OLD_PARTS[0]}" == "${NEW_PARTS[0]}" ] && [ "${OLD_PARTS[1]}" == "${NEW_PARTS[1]}" ]; then
+              echo "Only the patch version has changed."
               echo "only_patch_version_changed=true" >> $GITHUB_OUTPUT
             else
+              echo "Major or minor version has changed."
               echo "only_patch_version_changed=false" >> $GITHUB_OUTPUT
             fi
           else
+            echo "No version change detected."
             echo "version_changed=false" >> $GITHUB_OUTPUT
             echo "only_patch_version_changed=false" >> $GITHUB_OUTPUT
           fi
