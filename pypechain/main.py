@@ -10,8 +10,8 @@ from typing import NamedTuple, Sequence
 
 from web3.exceptions import NoABIFunctionsFound
 
+from pypechain.render.init import render_init_file
 from pypechain.render.main import render_files
-from pypechain.render.render_init_file import render_init_file
 
 
 def main(argv: Sequence[str] | None = None) -> None:
