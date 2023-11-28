@@ -11,9 +11,7 @@ from typing import NamedTuple, Sequence
 from web3.exceptions import NoABIFunctionsFound
 
 from pypechain.render.main import render_files
-from pypechain.utilities.file import write_string_to_file
-from pypechain.utilities.format import apply_black_formatting
-from pypechain.utilities.templates import get_jinja_env
+from pypechain.render.render_init_file import render_init_file
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -62,15 +60,6 @@ def main(argv: Sequence[str] | None = None) -> None:
 
     # Finally, render the __init__.py file
     render_init_file(output_dir, file_names, line_length)
-
-
-def render_init_file(output_dir: str, file_names: list[str], line_length):
-    """Creates an __init__.py file that imports all other files."""
-    env = get_jinja_env()
-    init_template = env.get_template("init.py.jinja2")
-    init_code = init_template.render(file_names=file_names)
-    formatted_init_code = apply_black_formatting(init_code, line_length)
-    write_string_to_file(f"{output_dir}/__init__.py", formatted_init_code)
 
 
 def gather_json_files(directory: str) -> list:
