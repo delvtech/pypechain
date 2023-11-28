@@ -34,10 +34,6 @@ contract ReturnTypes {
         return (y,x);
     }
 
-    function mixedTwoValues(uint x, uint y) public pure returns (uint flip, uint) {
-        return (y,x);
-    }
-
     function singleSimpleStruct() public pure returns (SimpleStruct memory) {
         return SimpleStruct({
             intVal: 1,
