@@ -1,4 +1,5 @@
 ## Generate ABIs
+Install [`solc`](https://docs.soliditylang.org/en/latest/installing-solidity.html).
 
 from this directory run:
 
