@@ -1,0 +1,76 @@
+{# loop over all functions and create types for each #}
+{%- for name, function_data in functions.items() -%}
+class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(ContractFunction):
+    """ContractFunction for the {{function_data.name}} method."""
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ
+{%- if function_data.signature_datas|length > 1-%}
+    # disable this warning when there is overloading
+    # pylint: disable=function-redefined
+{%- endif -%}
+{% for signature_data in function_data.signature_datas %}
+{% if function_data.has_overloading %}    @multimethod{% endif %}
+    def __call__(self{% if signature_data.input_names_and_types %}, {{signature_data.input_names_and_types|join(', ')}}{% endif %}) -> "{{contract_name}}{{function_data.capitalized_name}}ContractFunction":{%- if function_data.signature_datas|length > 1 %} #type: ignore{% endif %}
+        clone = super().__call__({{signature_data.input_names|join(', ')}})
+        self.kwargs = clone.kwargs
+        self.args = clone.args
+        return self
+{% endfor %}
+{% set output_types = function_data.signature_datas[0].output_types %}
+    def call(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier = 'latest',
+        state_override: CallOverride | None = None,
+        ccip_read_enabled: bool | None = None){% if function_data.has_multiple_return_signatures %} -> Any{% elif output_types|length == 1 %} -> {{output_types[0]}}{% elif output_types|length > 1%} -> tuple[{{output_types|join(', ')}}]{% else %} -> None{% endif %}:
+            {% if output_types|length == 1 %}"""returns {{output_types[0]}}"""{% elif output_types|length > 1%}"""returns ({{output_types|join(', ')}})"""{% else %}"""No return value"""{% endif %}
+            {% if output_types|length > 0 %}raw_values = {% endif %}super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+            # Define the expected return types from the smart contract call
+            {% if output_types|length == 1 %}return_types = {{output_types[0]}}{% elif output_types|length > 1%}return_types = [{{output_types|join(', ')}}]{% endif %}
+            {% if output_types|length == 1 %}
+            return cast({{output_types[0]}}, self._call(return_types, raw_values))
+            {% elif output_types|length > 1 %}
+            return cast(tuple[{{output_types|join(', ')}}], self._call(return_types, raw_values))
+            {% endif %}
+    def _call(self, return_types, raw_values):
+        # cover case of multiple return values
+        if isinstance(return_types, list):
+            # Ensure raw_values is a tuple for consistency
+            if not isinstance(raw_values, list):
+                raw_values = (raw_values,)
+
+            # Convert the tuple to the dataclass instance using the utility function
+            converted_values = tuple(
+                (tuple_to_dataclass(return_type, value) for return_type, value in zip(return_types, raw_values))
+            )
+
+            return converted_values
+
+        # cover case of single return value
+        converted_value = tuple_to_dataclass(return_types, raw_values)
+        return converted_value
+{% endfor %}
+
+class {{contract_name}}ContractFunctions(ContractFunctions):
+    """ContractFunctions for the {{contract_name}} contract."""
+{% for function in functions.values() %}
+    {{function.name}}: {{contract_name}}{{function.capitalized_name}}ContractFunction
+{% endfor %}
+    def __init__(
+        self,
+        abi: ABI,
+        w3: "Web3",
+        address: ChecksumAddress | None = None,
+        decode_tuples: bool | None = False,
+    ) -> None:
+        super().__init__(abi, w3, address, decode_tuples)
+        {% for function in functions.values() -%}
+        self.{{function.name}} = {{contract_name}}{{function.capitalized_name}}ContractFunction.factory(
+            "{{function.name}}",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="{{function.name}}",
+        )
+        {% endfor %}
