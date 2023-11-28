@@ -22,12 +22,7 @@ from pypechain.utilities.abi import (
 )
 from pypechain.utilities.format import capitalize_first_letter_only
 from pypechain.utilities.templates import get_jinja_env
-from pypechain.utilities.types import (
-    EventData,
-    FunctionData,
-    SignatureData,
-    gather_matching_types,
-)
+from pypechain.utilities.types import EventData, FunctionData, SignatureData, gather_matching_types
 
 
 def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
@@ -45,6 +40,10 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     str
         A serialized python file.
     """
+
+    # TODO: break this function up or bundle arguments to save on variables
+    # pylint: disable=too-many-locals
+
     env = get_jinja_env()
     templates = get_templates_for_contract_file(env)
 
@@ -54,6 +53,8 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
 
     has_bytecode = bool(bytecode)
     has_events = bool(len(event_datas.values()))
+    # if any function has overloading
+    has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
 
     structs_for_abi = get_structs_for_abi(abi)
     structs_used = gather_matching_types(list(function_datas.values()), list(structs_for_abi.keys()))
@@ -83,9 +84,6 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
         contract_name=contract_name,
         functions=function_datas,
     )
-
-    # if any function has overloading
-    has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
 
     # Render the template
     return templates.base_template.render(
