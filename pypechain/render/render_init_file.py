@@ -1,3 +1,4 @@
+"""Functions to render __init__.py from a list of filenames usng a jinja2 template."""
 from pypechain.utilities.file import write_string_to_file
 from pypechain.utilities.format import apply_black_formatting
 from pypechain.utilities.templates import get_jinja_env
