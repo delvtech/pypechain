@@ -1,6 +1,7 @@
 """Test fixture for deploying local anvil chain."""
 from __future__ import annotations
 
+import os
 import subprocess
 import time
 from typing import Iterator
@@ -12,6 +13,32 @@ from web3.middleware import geth_poa
 from web3.types import RPCEndpoint
 
 # pylint: disable=redefined-outer-name
+
+# IMPORTANT NOTE!!!!!
+# If you end up using this debugging method, this will catch exceptions before teardown of fixtures
+
+# Use this in conjunction with the following launch.json configuration:
+#      {
+#        "name": "Debug Current Test",
+#        "type": "python",
+#        "request": "launch",
+#        "module": "pytest",
+#        "args": ["${file}", "-vs"],
+#        "console": "integratedTerminal",
+#        "justMyCode": true,
+#        "env": {
+#            "_PYTEST_RAISE": "1"
+#        },
+#      },
+if os.getenv("_PYTEST_RAISE", "0") != "0":
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_exception_interact(call):
+        raise call.excinfo.value
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_internalerror(excinfo):
+        raise excinfo.value
 
 
 @pytest.fixture(scope="session")
