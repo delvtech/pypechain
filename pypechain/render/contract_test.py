@@ -15,12 +15,10 @@ project_root = os.path.dirname(os.path.dirname(current_path))
 
 
 class TestOverloading:
-    """Tests pipeline from bots making trades to viewing the trades in the db"""
+    """Tests overloading for code gen using snapshots"""
 
     def test_overloading(self, snapshot):
-        """Runs the entire pipeline and checks the database at the end.
-        All arguments are fixtures.
-        """
+        """Tests overloading for code gen using snapshots"""
 
         env = get_jinja_env()
         functions_template = env.get_template("contract.py/functions.py.jinja2")
@@ -69,9 +67,7 @@ class TestOverloading:
         snapshot.assert_match(functions_block, "expected_overloading.py")
 
     def test_notoverloading(self, snapshot):
-        """Runs the entire pipeline and checks the database at the end.
-        All arguments are fixtures.
-        """
+        """Tests not overloading for code gen using snapshots"""
 
         env = get_jinja_env()
         functions_template = env.get_template("contract.py/functions.py.jinja2")
