@@ -1,11 +1,22 @@
 #!/bin/bash
 
-# Source the .env file to export the TWINE_USERNAME and TWINE_PASSWORD
+# Check if there is a .env file with TWINE_USERNAME and TWINE_PASSWORD
+# or if the environment variables are already set.
 if [ -f ".env" ]; then
+    echo "Overwriting TWINE_USERNAME and TWINE_PASSWORD environment variables from .env"
     export $(cat .env | xargs)
 else
-    echo ".env file not found"
-    exit 1
+    echo "Checking for TWINE_USERNAME and TWINE_PASSWORD environment variables..."
+
+    if  [ -z "$TWINE_USERNAME" ]; then
+        echo "TWINE_USERNAME environment variable was not set"
+        exit 1
+    fi
+
+    if  [ -z "$TWINE_PASSWORD" ]; then
+        echo "TWINE_PASSWORD environment variable was not set"
+        exit 1
+    fi
 fi
 
 # Navigate to the dist directory
