@@ -149,7 +149,7 @@ def get_has_multiple_return_values(signature_datas: list[SignatureData]) -> bool
         If there are multiple return signatures or not.
     """
     for signature_data in signature_datas:
-        if len(signature_data["outputs"]) > 0:
+        if len(signature_data["outputs"]) > 1:
             return True
     return False
 
