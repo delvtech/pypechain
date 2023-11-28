@@ -1,7 +1,7 @@
 [project]
 
 name = "pypechain"
-version = "0.0.10"
+version = "0.0.11"
 authors = [
     { name = "Matthew Brown", email = "matt@delv.tech" },
     { name = "Dylan Paiton", email = "dylan@delv.tech" },
@@ -10,7 +10,7 @@ authors = [
 ]
 description = "Codegen python interfaces for web3.py contracts."
 readme = "README.md"
-requires-python = ">=3.10, <3.11"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache Software License",
