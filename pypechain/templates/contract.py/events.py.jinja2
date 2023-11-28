@@ -4,15 +4,14 @@ class {{contract_name}}{{event_data.capitalized_name}}ContractEvent(ContractEven
     """ContractEvent for {{event_data.name}}."""
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
-
     {# TODO: add type-hints for argument_names #}
     # TODO: remove pylint disable when we add a type-hint for argument_names
     # pylint: disable=useless-parent-delegation
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)
 
-    {# TODO: add type-hints for argument_filters #}
-    {# TODO: add dataclass for [EventName]Data return value #}
+    {# TODO: add type-hints for argument_filters -#}
+    {# TODO: add dataclass for [EventName]Data return value -#}
     @combomethod
     def get_logs(
         self,
@@ -22,8 +21,9 @@ class {{contract_name}}{{event_data.capitalized_name}}ContractEvent(ContractEven
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return super().get_logs(argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash)
-    {# TODO: add type-hints for argument_filters #}
-    {# TODO: add dataclass for [EventName]Data return value #}
+
+    {# TODO: add type-hints for argument_filters -#}
+    {# TODO: add dataclass for [EventName]Data return value -#}
     @combomethod
     def create_filter(
         self,

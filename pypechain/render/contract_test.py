@@ -4,7 +4,7 @@ import os
 
 from web3.types import ABI
 
-from pypechain.render.contract import get_function_datas
+from pypechain.render.contract import get_event_datas, get_function_datas
 from pypechain.utilities.templates import get_jinja_env
 
 # using pytest fixtures necessitates this.
@@ -115,3 +115,79 @@ class TestOverloading:
 
         snapshot.snapshot_dir = "snapshots"
         snapshot.assert_match(functions_block, "expected_not_overloading.py")
+
+    def test_has_events(self, snapshot):
+        """Tests that events are created."""
+
+        env = get_jinja_env()
+        events_template = env.get_template("contract.py/events.py.jinja2")
+
+        # different names, should NOT be overloaded
+        abi_str = """
+            [
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                        },
+                        {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                        },
+                        {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                        }
+                    ],
+                    "name": "Transfer",
+                    "type": "event"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                        },
+                        {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "spender",
+                        "type": "address"
+                        },
+                        {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                        }
+                    ],
+                    "name": "Approval",
+                    "type": "event"
+                }
+            ]
+        """
+
+        abi: ABI = json.loads(abi_str)
+
+        event_datas = get_event_datas(abi)
+        contract_name = "Overloaded"
+
+        events_block = events_template.render(
+            abi=abi,
+            contract_name=contract_name,
+            events=event_datas,
+        )
+
+        snapshot.snapshot_dir = "snapshots"
+        snapshot.assert_match(events_block, "has_events.py")
