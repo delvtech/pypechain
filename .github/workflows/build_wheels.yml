@@ -45,11 +45,12 @@ jobs:
           path: dist/*.whl
 
   publish-to-pypi:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.detect-changes.outputs.only_patch_version_changed == 'true'
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
