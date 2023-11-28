@@ -14,38 +14,38 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
         clone = super().__call__({{signature_data.input_names|join(', ')}})
         self.kwargs = clone.kwargs
         self.args = clone.args
+        self.call = signature_data
         return self
 {% endfor %}
-{% set output_names = function_data.signature_datas[0].outputs %}
-{% set output_types = function_data.signature_datas[0].output_types %}
 
+
+{% for i in range(function_data.signature_datas|length) %}
+{% set output_names = function_data.signature_datas[i].outputs %}
+{% set output_types = function_data.signature_datas[i].output_types %}
     {% if output_types|length > 1%}
-    class ReturnValues(NamedTuple):
-        {% for i in range(output_types | length) -%}
-            {{output_names[i]}}: {{output_types[i]}}
+    class ReturnValues{{i}}(NamedTuple):
+        """The return named tuple for {{function_data.capitalized_name}}."""
+        {% for j in range(output_types | length) -%}
+            {{output_names[j]}}: {{output_types[j]}}
         {% endfor %}
     {% endif %}
+{% endfor %}
     
     def call(
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = 'latest',
         state_override: CallOverride | None = None,
-        ccip_read_enabled: bool | None = None){% if function_data.has_multiple_return_signatures %} -> Any{% elif output_types|length == 1 %} -> {{output_types[0]}}{% elif output_types|length > 1%} -> {{contract_name}}{{function_data.capitalized_name}}ContractFunctionReturn{% else %} -> None{% endif %}:
+        ccip_read_enabled: bool | None = None){% if function_data.has_multiple_return_signatures %} -> Any{% elif output_types|length == 1 %} -> {{output_types[0]}}{% elif output_types|length > 1%} -> ReturnValues{% else %} -> None{% endif %}:
             {% if output_types|length == 1 %}"""returns {{output_types[0]}}"""{% elif output_types|length > 1%}"""returns ({{output_types|join(', ')}})"""{% else %}"""No return value"""{% endif %}
             {% if output_types|length > 0 %}raw_values = {% endif %}super().call(transaction, block_identifier, state_override, ccip_read_enabled)
             # Define the expected return types from the smart contract call
             {% if output_types|length == 1 %}return_types = {{output_types[0]}}{% elif output_types|length > 1%}return_types = [{{output_types|join(', ')}}]{% endif %}
-            {% if output_types|length == 1 %}
-            return cast({{output_types[0]}}, self._call(return_types, raw_values))
-            {% elif output_types|length > 1 %}
-            return_values = self._call(return_types, raw_values)
-            return self.ReturnValues(
-                {% for i in range(output_types | length) -%}
-                    {{output_names[i]}}=return_values[{{i}}],
-                {% endfor %}
-            )
-            {% endif %}
+
+            return self._call(return_types, raw_values)
+
+
+
     def _call(self, return_types, raw_values):
         # cover case of multiple return values
         if isinstance(return_types, list):
@@ -58,7 +58,16 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
                 (tuple_to_dataclass(return_type, value) for return_type, value in zip(return_types, raw_values))
             )
 
-            return converted_values
+            {% if output_types|length == 1 %}
+            return cast({{output_types[0]}}, self._call(return_types, raw_values))
+            {% elif output_types|length > 1 %}
+            return_values = self._call(return_types, raw_values)
+            return self.ReturnValues(
+                {% for i in range(output_types | length) -%}
+                    {{output_names[i]}}=return_values[{{i}}],
+                {% endfor %}
+            )
+            {% endif %}
 
         # cover case of single return value
         converted_value = tuple_to_dataclass(return_types, raw_values)
