@@ -173,7 +173,7 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
     constructor_data: SignatureData | None = None
     for abi_function in get_abi_items(abi):
         if is_abi_function(abi_function):
-            # hanndle constructor
+            # handle constructor
             if is_abi_constructor(abi_function):
                 constructor_data = {
                     "input_names_and_types": get_input_names_and_types(abi_function),
