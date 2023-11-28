@@ -10,6 +10,10 @@ class OverloadedBalanceOfContractFunction(ContractFunction):
         return self
 
 
+
+
+    
+    
     def call(
         self,
         transaction: TxParams | None = None,
@@ -52,6 +56,10 @@ class OverloadedBalanceOfWhoContractFunction(ContractFunction):
         return self
 
 
+
+
+    
+    
     def call(
         self,
         transaction: TxParams | None = None,
