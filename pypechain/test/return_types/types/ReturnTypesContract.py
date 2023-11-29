@@ -143,7 +143,7 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = self.ReturnValues
+        return_types = [SimpleStruct, NestedStruct, int, str, bool]
 
         # Call the function
         raw_values = super().call(
@@ -242,7 +242,7 @@ class ReturnTypesNamedTwoMixedStructsContractFunction(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = self.ReturnValues
+        return_types = [SimpleStruct, NestedStruct]
 
         # Call the function
         raw_values = super().call(
@@ -281,7 +281,7 @@ class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = self.ReturnValues
+        return_types = [int, int]
 
         # Call the function
         raw_values = super().call(
@@ -347,7 +347,7 @@ class ReturnTypesNoNameTwoValuesContractFunction(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = self.ReturnValues
+        return_types = [str, int]
 
         # Call the function
         raw_values = super().call(
@@ -446,7 +446,7 @@ class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = self.ReturnValues
+        return_types = [SimpleStruct, NestedStruct]
 
         # Call the function
         raw_values = super().call(
@@ -483,7 +483,7 @@ class ReturnTypesTwoSimpleStructsContractFunction(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = self.ReturnValues
+        return_types = [SimpleStruct, SimpleStruct]
 
         # Call the function
         raw_values = super().call(

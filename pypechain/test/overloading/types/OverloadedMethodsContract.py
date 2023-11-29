@@ -134,7 +134,7 @@ class OverloadedMethodsDoSomethingContractFunction0(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = self.ReturnValues
+        return_types = [int, str]
 
         # Call the function
         raw_values = super().call(

@@ -35,7 +35,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction{{i}}(C
         {% if output_types|length == 1 %}
         return_types = {{return_type}}
         {% elif output_types|length > 1%}
-        return_types = self.{{return_type}}
+        return_types = [{{output_types|join(', ')}}]
         {% endif %}
         # Call the function
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
@@ -97,7 +97,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
         {% if output_types|length == 1 %}
         return_types = {{return_type}}
         {% elif output_types|length > 1%}
-        return_types = self.{{return_type}}
+        return_types = [{{output_types|join(', ')}}]
         {% endif %}
         # Call the function
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
