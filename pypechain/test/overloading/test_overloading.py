@@ -15,6 +15,7 @@ current_path = os.path.abspath(os.path.dirname(__file__))
 project_root = os.path.dirname(os.path.dirname(current_path))
 
 
+@pytest.mark.usefixtures("process_contracts")
 class TestOverloading:
     """Tests pipeline from bots making trades to viewing the trades in the db"""
 
