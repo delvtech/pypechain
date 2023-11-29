@@ -331,13 +331,13 @@ class OverloadedMethodsContract(Contract):
     functions: OverloadedMethodsContractFunctions
 
     @classmethod
-    def deploy(cls, w3: Web3, signer) -> Self:
-        """Deplays and instance of the contract.
+    def deploy(cls, w3: Web3, signer: ChecksumAddress) -> Self:
+        """Deploys and instance of the contract.
 
         Parameters
         ----------
         w3 : Web3
-            An instance of Web3
+            A web3 instance.
         signer : ChecksumAddress
             The address to deploy the contract from.
 

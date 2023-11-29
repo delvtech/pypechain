@@ -934,7 +934,21 @@ class ReturnTypesContract(Contract):
     functions: ReturnTypesContractFunctions
 
     @classmethod
-    def deploy(cls, w3: Web3, signer) -> Self:
+    def deploy(cls, w3: Web3, signer: ChecksumAddress) -> Self:
+        """Deploys and instance of the contract.
+
+        Parameters
+        ----------
+        w3 : Web3
+            A web3 instance.
+        signer : ChecksumAddress
+            The address to deploy the contract from.
+
+        Returns
+        -------
+        Self
+            A deployed instance of the contract.
+        """
         deployer = cls.factory(w3=w3)
         tx_hash = deployer.constructor().transact({"from": signer})
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
