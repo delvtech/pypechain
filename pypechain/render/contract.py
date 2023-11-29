@@ -140,8 +140,8 @@ def get_has_multiple_return_signatures(signature_datas: list[SignatureData]) -> 
 
 
 def get_has_multiple_return_values(signature_datas: list[SignatureData]) -> bool:
-    """If there are multiple return signatures for a smart contract function, we'll need to overload
-       the call() method.  This method compares the output types of all the signatures of a method.
+    """If there are multiple return values for a smart contract function, we'll need to overload
+       the call() method. This method compares the output types of all the values of a method.
 
     Parameters
     ----------
