@@ -1,0 +1,96 @@
+{
+  "contracts": {
+    "pypechain/test/events/contracts/Events.sol:Events": {
+      "abi": [
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "EventA",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [],
+          "name": "EventB",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "x",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "y",
+              "type": "uint256"
+            }
+          ],
+          "name": "emitNoEvents",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "added",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            }
+          ],
+          "name": "emitOneEvent",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            }
+          ],
+          "name": "emitTwoEvents",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ],
+      "bin": "608060405234801561000f575f80fd5b5061035b8061001d5f395ff3fe608060405234801561000f575f80fd5b506004361061003f575f3560e01c8063307324fd14610043578063b517b0d81461005f578063c79ba18b1461007b575b5f80fd5b61005d60048036038101906100589190610221565b6100ab565b005b61007960048036038101906100749190610221565b6100fd565b005b6100956004803603810190610090919061025f565b61017b565b6040516100a291906102ac565b60405180910390f35b8073ffffffffffffffffffffffffffffffffffffffff167f9796ec8d639e8a8082085b1912b0c782def636bb8e5bde841892baff0f925433836040516100f191906102ac565b60405180910390a25050565b8073ffffffffffffffffffffffffffffffffffffffff167f9796ec8d639e8a8082085b1912b0c782def636bb8e5bde841892baff0f9254338360405161014391906102ac565b60405180910390a27f72c635b4ade595df848fdc26063ba6c3f276cd7121dadbacb0064e1e3a61961460405160405180910390a15050565b5f818361018891906102f2565b905092915050565b5f80fd5b5f819050919050565b6101a681610194565b81146101b0575f80fd5b50565b5f813590506101c18161019d565b92915050565b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f6101f0826101c7565b9050919050565b610200816101e6565b811461020a575f80fd5b50565b5f8135905061021b816101f7565b92915050565b5f806040838503121561023757610236610190565b5b5f610244858286016101b3565b92505060206102558582860161020d565b9150509250929050565b5f806040838503121561027557610274610190565b5b5f610282858286016101b3565b9250506020610293858286016101b3565b9150509250929050565b6102a681610194565b82525050565b5f6020820190506102bf5f83018461029d565b92915050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52601160045260245ffd5b5f6102fc82610194565b915061030783610194565b925082820190508082111561031f5761031e6102c5565b5b9291505056fea2646970667358221220b383644ab18d548fe7afe30be32478f77f7e0db56970ec5447b2d4a0a79fa05d64736f6c63430008170033",
+      "metadata": "{\"compiler\":{\"version\":\"0.8.23+commit.f704f362\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"EventA\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"EventB\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"x\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"y\",\"type\":\"uint256\"}],\"name\":\"emitNoEvents\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"added\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"}],\"name\":\"emitOneEvent\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"}],\"name\":\"emitTwoEvents\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/events/contracts/Events.sol\":\"Events\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/events/contracts/Events.sol\":{\"keccak256\":\"0xa6b243686d4c8e5e64e4eca11c285183eef168a7b9f763b97f9fd0d886d2c430\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://62cd615e0fb4f5405a042f5a65b6c513388da7666bef5f69c32d0a9c7db071df\",\"dweb:/ipfs/QmWxZD2gtYMy3GNf2Es9q13Jgu14MNUkeJqZgaQqxnSecs\"]}},\"version\":1}"
+    }
+  },
+  "version": "0.8.23+commit.f704f362.Darwin.appleclang"
+}
