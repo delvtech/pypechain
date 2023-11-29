@@ -32,6 +32,12 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
+      - name: Install Solidity Compiler
+        run: |
+          sudo add-apt-repository ppa:ethereum/ethereum
+          sudo apt-get update
+          sudo apt-get install solc
+
       - name: run pytest with coverage
         run: |
           IN_CI=true coverage run -m pytest
