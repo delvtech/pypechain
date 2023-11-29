@@ -4,7 +4,7 @@ from __future__ import annotations
 import os
 
 import pytest
-from multimethod import DispatchError
+from web3.exceptions import Web3ValidationError
 
 from pypechain.test.overloading.types.OverloadedMethodsContract import OverloadedMethodsContract
 
@@ -39,40 +39,15 @@ class TestOverloading:
         x = 1
         y = 2
 
-        cls = deployed_contract.functions.doSomething(s)
-        func = cls.call
-        result = func()
-        assert isinstance(result, str)
+        result = deployed_contract.functions.doSomething(s).call()
         assert result == "test string"
 
-        cls = deployed_contract.functions.doSomething(x)
-        func = cls.call
-        result = func()
-        assert isinstance(result, int)
+        result = deployed_contract.functions.doSomething(x).call()
         assert result == 1 * 2
 
-        cls = deployed_contract.functions.doSomething(x, y)
-        func = cls.call
-        result = func()
-        assert isinstance(result, int)
+        result = deployed_contract.functions.doSomething(x, y).call()
         assert result == 1 + 2
 
-        cls = deployed_contract.functions.doSomething(x, s)
-        func = cls.call
-        result = func()
-        assert isinstance(result, tuple)
-        assert result == (1, "test string")
-
-        # checks that it fails
-        # TODO ensure this throws validation error
-        with pytest.raises(DispatchError) as err:
+        with pytest.raises(Web3ValidationError) as err:
             result = deployed_contract.functions.doSomething(x, y, s).call()
-
-        # checks error string
-        try:
-            result = deployed_contract.functions.doSomething(x, y, s).call()
-        except TypeError as err:
-            assert (
-                "OverloadedMethodsDoSomethingContractFunction.__call__() takes 3 positional arguments but 4 were given"
-                in str(err.__context__)
-            )
+        assert "Could not identify the intended function with name `doSomething`" in str(err.value)
