@@ -23,6 +23,7 @@ def deployed_contract(w3: Web3):
     return ReturnTypesContract.deploy(w3=w3, signer=w3.eth.accounts[0])
 
 
+@pytest.mark.usefixtures("process_contracts")
 class TestReturnTypes:
     """Tests pipeline from bots making trades to viewing the trades in the db"""
 
