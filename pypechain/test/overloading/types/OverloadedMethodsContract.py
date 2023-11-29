@@ -23,10 +23,14 @@ from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast, overload
 
 from eth_typing import ChecksumAddress, HexStr
+
+from hexbytes import HexBytes
+from multimethod import multimethod
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
+
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 
@@ -354,9 +358,6 @@ class OverloadedMethodsContract(Contract):
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
-
-    # TODO: add events
-    # events: ERC20ContractEvents
 
     functions: OverloadedMethodsContractFunctions
 

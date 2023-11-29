@@ -23,12 +23,18 @@ from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast
 
 from eth_typing import ChecksumAddress, HexStr
+
+from hexbytes import HexBytes
+
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
+
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
+
+
 from .ReturnTypesTypes import SimpleStruct, InnerStruct, NestedStruct
 
 T = TypeVar("T")
@@ -1007,9 +1013,6 @@ class ReturnTypesContract(Contract):
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
-
-    # TODO: add events
-    # events: ERC20ContractEvents
 
     functions: ReturnTypesContractFunctions
 
