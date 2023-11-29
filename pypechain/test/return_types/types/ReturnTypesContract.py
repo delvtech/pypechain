@@ -74,10 +74,7 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
         if is_dataclass(field_type):
             # Recursively convert nested tuples to nested dataclasses
             field_values[field_name] = tuple_to_dataclass(field_type, value)
-        elif (
-            isinstance(value, tuple)
-            and not getattr(field_type, "_name", None) == "Tuple"
-        ):
+        elif isinstance(value, tuple) and not getattr(field_type, "_name", None) == "Tuple":
             # If it's a tuple and the field is not intended to be a tuple, assume it's a nested dataclass
             field_values[field_name] = tuple_to_dataclass(field_type, value)
         else:
@@ -110,8 +107,7 @@ def rename_returned_types(return_types, raw_values) -> Any:
 
         # Convert the tuple to the dataclass instance using the utility function
         converted_values = tuple(
-            tuple_to_dataclass(return_type, value)
-            for return_type, value in zip(return_types, raw_values)
+            tuple_to_dataclass(return_type, value) for return_type, value in zip(return_types, raw_values)
         )
 
         return converted_values
@@ -152,13 +148,9 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
         return_types = [SimpleStruct, NestedStruct, int, str, bool]
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-        return self.ReturnValues(
-            *rename_returned_types(return_types, raw_values)
-        )
+        return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesNamedSingleStructContractFunction(ContractFunction):
@@ -183,21 +175,15 @@ class ReturnTypesNamedSingleStructContractFunction(ContractFunction):
         return_types = SimpleStruct
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-        return cast(
-            SimpleStruct, rename_returned_types(return_types, raw_values)
-        )
+        return cast(SimpleStruct, rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesNamedSingleValueContractFunction(ContractFunction):
     """ContractFunction for the namedSingleValue method."""
 
-    def __call__(
-        self, x: int, y: int
-    ) -> ReturnTypesNamedSingleValueContractFunction:
+    def __call__(self, x: int, y: int) -> ReturnTypesNamedSingleValueContractFunction:
         clone = super().__call__(x, y)
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -216,9 +202,7 @@ class ReturnTypesNamedSingleValueContractFunction(ContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
         return cast(int, rename_returned_types(return_types, raw_values))
 
@@ -251,13 +235,9 @@ class ReturnTypesNamedTwoMixedStructsContractFunction(ContractFunction):
         return_types = [SimpleStruct, NestedStruct]
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-        return self.ReturnValues(
-            *rename_returned_types(return_types, raw_values)
-        )
+        return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
@@ -269,9 +249,7 @@ class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
         flip: int
         flop: int
 
-    def __call__(
-        self, x: int, y: int
-    ) -> ReturnTypesNamedTwoValuesContractFunction:
+    def __call__(self, x: int, y: int) -> ReturnTypesNamedTwoValuesContractFunction:
         clone = super().__call__(x, y)
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -290,13 +268,9 @@ class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
         return_types = [int, int]
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-        return self.ReturnValues(
-            *rename_returned_types(return_types, raw_values)
-        )
+        return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesNoNameSingleValueContractFunction(ContractFunction):
@@ -321,9 +295,7 @@ class ReturnTypesNoNameSingleValueContractFunction(ContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
         return cast(int, rename_returned_types(return_types, raw_values))
 
@@ -356,13 +328,9 @@ class ReturnTypesNoNameTwoValuesContractFunction(ContractFunction):
         return_types = [str, int]
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-        return self.ReturnValues(
-            *rename_returned_types(return_types, raw_values)
-        )
+        return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesSingleNestedStructContractFunction(ContractFunction):
@@ -387,13 +355,9 @@ class ReturnTypesSingleNestedStructContractFunction(ContractFunction):
         return_types = NestedStruct
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-        return cast(
-            NestedStruct, rename_returned_types(return_types, raw_values)
-        )
+        return cast(NestedStruct, rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesSingleSimpleStructContractFunction(ContractFunction):
@@ -418,13 +382,9 @@ class ReturnTypesSingleSimpleStructContractFunction(ContractFunction):
         return_types = SimpleStruct
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-        return cast(
-            SimpleStruct, rename_returned_types(return_types, raw_values)
-        )
+        return cast(SimpleStruct, rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
@@ -455,13 +415,9 @@ class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
         return_types = [SimpleStruct, NestedStruct]
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-        return self.ReturnValues(
-            *rename_returned_types(return_types, raw_values)
-        )
+        return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesTwoSimpleStructsContractFunction(ContractFunction):
@@ -492,13 +448,9 @@ class ReturnTypesTwoSimpleStructsContractFunction(ContractFunction):
         return_types = [SimpleStruct, SimpleStruct]
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-        return self.ReturnValues(
-            *rename_returned_types(return_types, raw_values)
-        )
+        return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesContractFunctions(ContractFunctions):
@@ -534,45 +486,37 @@ class ReturnTypesContractFunctions(ContractFunctions):
         decode_tuples: bool | None = False,
     ) -> None:
         super().__init__(abi, w3, address, decode_tuples)
-        self.mixStructsAndPrimitives = (
-            ReturnTypesMixStructsAndPrimitivesContractFunction.factory(
-                "mixStructsAndPrimitives",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="mixStructsAndPrimitives",
-            )
+        self.mixStructsAndPrimitives = ReturnTypesMixStructsAndPrimitivesContractFunction.factory(
+            "mixStructsAndPrimitives",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="mixStructsAndPrimitives",
         )
-        self.namedSingleStruct = (
-            ReturnTypesNamedSingleStructContractFunction.factory(
-                "namedSingleStruct",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="namedSingleStruct",
-            )
+        self.namedSingleStruct = ReturnTypesNamedSingleStructContractFunction.factory(
+            "namedSingleStruct",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="namedSingleStruct",
         )
-        self.namedSingleValue = (
-            ReturnTypesNamedSingleValueContractFunction.factory(
-                "namedSingleValue",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="namedSingleValue",
-            )
+        self.namedSingleValue = ReturnTypesNamedSingleValueContractFunction.factory(
+            "namedSingleValue",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="namedSingleValue",
         )
-        self.namedTwoMixedStructs = (
-            ReturnTypesNamedTwoMixedStructsContractFunction.factory(
-                "namedTwoMixedStructs",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="namedTwoMixedStructs",
-            )
+        self.namedTwoMixedStructs = ReturnTypesNamedTwoMixedStructsContractFunction.factory(
+            "namedTwoMixedStructs",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="namedTwoMixedStructs",
         )
         self.namedTwoValues = ReturnTypesNamedTwoValuesContractFunction.factory(
             "namedTwoValues",
@@ -582,65 +526,53 @@ class ReturnTypesContractFunctions(ContractFunctions):
             decode_tuples=decode_tuples,
             function_identifier="namedTwoValues",
         )
-        self.noNameSingleValue = (
-            ReturnTypesNoNameSingleValueContractFunction.factory(
-                "noNameSingleValue",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="noNameSingleValue",
-            )
+        self.noNameSingleValue = ReturnTypesNoNameSingleValueContractFunction.factory(
+            "noNameSingleValue",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="noNameSingleValue",
         )
-        self.noNameTwoValues = (
-            ReturnTypesNoNameTwoValuesContractFunction.factory(
-                "noNameTwoValues",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="noNameTwoValues",
-            )
+        self.noNameTwoValues = ReturnTypesNoNameTwoValuesContractFunction.factory(
+            "noNameTwoValues",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="noNameTwoValues",
         )
-        self.singleNestedStruct = (
-            ReturnTypesSingleNestedStructContractFunction.factory(
-                "singleNestedStruct",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="singleNestedStruct",
-            )
+        self.singleNestedStruct = ReturnTypesSingleNestedStructContractFunction.factory(
+            "singleNestedStruct",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="singleNestedStruct",
         )
-        self.singleSimpleStruct = (
-            ReturnTypesSingleSimpleStructContractFunction.factory(
-                "singleSimpleStruct",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="singleSimpleStruct",
-            )
+        self.singleSimpleStruct = ReturnTypesSingleSimpleStructContractFunction.factory(
+            "singleSimpleStruct",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="singleSimpleStruct",
         )
-        self.twoMixedStructs = (
-            ReturnTypesTwoMixedStructsContractFunction.factory(
-                "twoMixedStructs",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="twoMixedStructs",
-            )
+        self.twoMixedStructs = ReturnTypesTwoMixedStructsContractFunction.factory(
+            "twoMixedStructs",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="twoMixedStructs",
         )
-        self.twoSimpleStructs = (
-            ReturnTypesTwoSimpleStructsContractFunction.factory(
-                "twoSimpleStructs",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="twoSimpleStructs",
-            )
+        self.twoSimpleStructs = ReturnTypesTwoSimpleStructsContractFunction.factory(
+            "twoSimpleStructs",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="twoSimpleStructs",
         )
 
 
@@ -653,16 +585,8 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "simpleStruct",
@@ -670,24 +594,10 @@ returntypes_abi: ABI = cast(
                 },
                 {
                     "components": [
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                         {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
-                        {
-                            "components": [
-                                {
-                                    "internalType": "bool",
-                                    "name": "boolVal",
-                                    "type": "bool",
-                                }
-                            ],
+                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
                             "internalType": "struct ReturnTypes.InnerStruct",
                             "name": "innerStruct",
                             "type": "tuple",
@@ -710,16 +620,8 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "struct1",
@@ -735,9 +637,7 @@ returntypes_abi: ABI = cast(
                 {"internalType": "uint256", "name": "y", "type": "uint256"},
             ],
             "name": "namedSingleValue",
-            "outputs": [
-                {"internalType": "uint256", "name": "added", "type": "uint256"}
-            ],
+            "outputs": [{"internalType": "uint256", "name": "added", "type": "uint256"}],
             "stateMutability": "pure",
             "type": "function",
         },
@@ -747,16 +647,8 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "simpleStruct",
@@ -764,24 +656,10 @@ returntypes_abi: ABI = cast(
                 },
                 {
                     "components": [
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                         {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
-                        {
-                            "components": [
-                                {
-                                    "internalType": "bool",
-                                    "name": "boolVal",
-                                    "type": "bool",
-                                }
-                            ],
+                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
                             "internalType": "struct ReturnTypes.InnerStruct",
                             "name": "innerStruct",
                             "type": "tuple",
@@ -809,20 +687,14 @@ returntypes_abi: ABI = cast(
             "type": "function",
         },
         {
-            "inputs": [
-                {"internalType": "uint256", "name": "x", "type": "uint256"}
-            ],
+            "inputs": [{"internalType": "uint256", "name": "x", "type": "uint256"}],
             "name": "noNameSingleValue",
-            "outputs": [
-                {"internalType": "uint256", "name": "", "type": "uint256"}
-            ],
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "pure",
             "type": "function",
         },
         {
-            "inputs": [
-                {"internalType": "string", "name": "s", "type": "string"}
-            ],
+            "inputs": [{"internalType": "string", "name": "s", "type": "string"}],
             "name": "noNameTwoValues",
             "outputs": [
                 {"internalType": "string", "name": "", "type": "string"},
@@ -837,24 +709,10 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                         {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
-                        {
-                            "components": [
-                                {
-                                    "internalType": "bool",
-                                    "name": "boolVal",
-                                    "type": "bool",
-                                }
-                            ],
+                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
                             "internalType": "struct ReturnTypes.InnerStruct",
                             "name": "innerStruct",
                             "type": "tuple",
@@ -874,16 +732,8 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "",
@@ -899,16 +749,8 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "",
@@ -916,24 +758,10 @@ returntypes_abi: ABI = cast(
                 },
                 {
                     "components": [
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                         {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
-                        {
-                            "components": [
-                                {
-                                    "internalType": "bool",
-                                    "name": "boolVal",
-                                    "type": "bool",
-                                }
-                            ],
+                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
                             "internalType": "struct ReturnTypes.InnerStruct",
                             "name": "innerStruct",
                             "type": "tuple",
@@ -953,16 +781,8 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "",
@@ -970,16 +790,8 @@ returntypes_abi: ABI = cast(
                 },
                 {
                     "components": [
-                        {
-                            "internalType": "uint256",
-                            "name": "intVal",
-                            "type": "uint256",
-                        },
-                        {
-                            "internalType": "string",
-                            "name": "strVal",
-                            "type": "string",
-                        },
+                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
+                        {"internalType": "string", "name": "strVal", "type": "string"},
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "",
@@ -1007,9 +819,7 @@ class ReturnTypesContract(Contract):
         try:
             # Initialize parent Contract class
             super().__init__(address=address)
-            self.functions = ReturnTypesContractFunctions(
-                returntypes_abi, self.w3, address
-            )
+            self.functions = ReturnTypesContractFunctions(returntypes_abi, self.w3, address)
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
@@ -1017,12 +827,8 @@ class ReturnTypesContract(Contract):
     functions: ReturnTypesContractFunctions
 
     @classmethod
-    def factory(
-        cls, w3: Web3, class_name: str | None = None, **kwargs: Any
-    ) -> Type[Self]:
+    def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
         contract = super().factory(w3, class_name, **kwargs)
-        contract.functions = ReturnTypesContractFunctions(
-            returntypes_abi, w3, None
-        )
+        contract.functions = ReturnTypesContractFunctions(returntypes_abi, w3, None)
 
         return contract

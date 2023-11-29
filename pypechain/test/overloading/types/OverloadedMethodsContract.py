@@ -68,10 +68,7 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
         if is_dataclass(field_type):
             # Recursively convert nested tuples to nested dataclasses
             field_values[field_name] = tuple_to_dataclass(field_type, value)
-        elif (
-            isinstance(value, tuple)
-            and not getattr(field_type, "_name", None) == "Tuple"
-        ):
+        elif isinstance(value, tuple) and not getattr(field_type, "_name", None) == "Tuple":
             # If it's a tuple and the field is not intended to be a tuple, assume it's a nested dataclass
             field_values[field_name] = tuple_to_dataclass(field_type, value)
         else:
@@ -104,8 +101,7 @@ def rename_returned_types(return_types, raw_values) -> Any:
 
         # Convert the tuple to the dataclass instance using the utility function
         converted_values = tuple(
-            tuple_to_dataclass(return_type, value)
-            for return_type, value in zip(return_types, raw_values)
+            tuple_to_dataclass(return_type, value) for return_type, value in zip(return_types, raw_values)
         )
 
         return converted_values
@@ -141,13 +137,9 @@ class OverloadedMethodsDoSomethingContractFunction0(ContractFunction):
         return_types = [int, str]
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-        return self.ReturnValues(
-            *rename_returned_types(return_types, raw_values)
-        )
+        return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
 class OverloadedMethodsDoSomethingContractFunction1(ContractFunction):
@@ -170,9 +162,7 @@ class OverloadedMethodsDoSomethingContractFunction1(ContractFunction):
         return_types = str
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
         return cast(str, rename_returned_types(return_types, raw_values))
 
@@ -197,9 +187,7 @@ class OverloadedMethodsDoSomethingContractFunction2(ContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
         return cast(int, rename_returned_types(return_types, raw_values))
 
@@ -224,9 +212,7 @@ class OverloadedMethodsDoSomethingContractFunction3(ContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
         return cast(int, rename_returned_types(return_types, raw_values))
 
@@ -301,24 +287,16 @@ overloadedmethods_abi: ABI = cast(
             "type": "function",
         },
         {
-            "inputs": [
-                {"internalType": "string", "name": "s", "type": "string"}
-            ],
+            "inputs": [{"internalType": "string", "name": "s", "type": "string"}],
             "name": "doSomething",
-            "outputs": [
-                {"internalType": "string", "name": "", "type": "string"}
-            ],
+            "outputs": [{"internalType": "string", "name": "", "type": "string"}],
             "stateMutability": "pure",
             "type": "function",
         },
         {
-            "inputs": [
-                {"internalType": "uint256", "name": "x", "type": "uint256"}
-            ],
+            "inputs": [{"internalType": "uint256", "name": "x", "type": "uint256"}],
             "name": "doSomething",
-            "outputs": [
-                {"internalType": "uint256", "name": "", "type": "uint256"}
-            ],
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "pure",
             "type": "function",
         },
@@ -328,9 +306,7 @@ overloadedmethods_abi: ABI = cast(
                 {"internalType": "uint256", "name": "y", "type": "uint256"},
             ],
             "name": "doSomething",
-            "outputs": [
-                {"internalType": "uint256", "name": "added", "type": "uint256"}
-            ],
+            "outputs": [{"internalType": "uint256", "name": "added", "type": "uint256"}],
             "stateMutability": "pure",
             "type": "function",
         },
@@ -352,9 +328,7 @@ class OverloadedMethodsContract(Contract):
         try:
             # Initialize parent Contract class
             super().__init__(address=address)
-            self.functions = OverloadedMethodsContractFunctions(
-                overloadedmethods_abi, self.w3, address
-            )
+            self.functions = OverloadedMethodsContractFunctions(overloadedmethods_abi, self.w3, address)
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
@@ -362,12 +336,8 @@ class OverloadedMethodsContract(Contract):
     functions: OverloadedMethodsContractFunctions
 
     @classmethod
-    def factory(
-        cls, w3: Web3, class_name: str | None = None, **kwargs: Any
-    ) -> Type[Self]:
+    def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
         contract = super().factory(w3, class_name, **kwargs)
-        contract.functions = OverloadedMethodsContractFunctions(
-            overloadedmethods_abi, w3, None
-        )
+        contract.functions = OverloadedMethodsContractFunctions(overloadedmethods_abi, w3, None)
 
         return contract
