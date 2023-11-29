@@ -23,15 +23,12 @@ from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast, overload
 
 from eth_typing import ChecksumAddress, HexStr
-
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
-
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
-
 
 T = TypeVar("T")
 
@@ -332,6 +329,28 @@ class OverloadedMethodsContract(Contract):
             print("Fallback function not found. Continuing...")
 
     functions: OverloadedMethodsContractFunctions
+
+    @classmethod
+    def deploy(cls, w3: Web3, signer) -> Self:
+        """Deplays and instance of the contract.
+
+        Parameters
+        ----------
+        w3 : Web3
+            An instance of Web3
+        signer : ChecksumAddress
+            The address to deploy the contract from.
+
+        Returns
+        -------
+        Self
+            A deployed instance of the contract.
+        """
+        deployer = cls.factory(w3=w3)
+        tx_hash = deployer.constructor().transact({"from": signer})
+        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+        deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore
+        return deployed_contract
 
     @classmethod
     def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
