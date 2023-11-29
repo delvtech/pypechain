@@ -49,5 +49,5 @@ class TestOverloading:
         assert result == 1 + 2
 
         with pytest.raises(Web3ValidationError) as err:
-            result = deployed_contract.functions.doSomething(x, y, s).call()
+            result = deployed_contract.functions.doSomething(x, y, s).call()  # type: ignore
         assert "Could not identify the intended function with name `doSomething`" in str(err.value)

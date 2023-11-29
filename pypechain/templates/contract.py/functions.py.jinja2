@@ -7,9 +7,9 @@
 class {{contract_name}}{{function_data.capitalized_name}}ContractFunction{{i}}(ContractFunction):
     """ContractFunction for the {{function_data.name}} method."""
 
-    def __call__(self{% if function_data.signature_datas[i].input_names_and_types %}, {{function_data.signature_datas[i].input_names_and_types|join(', ')}}{% endif %}) -> "{{contract_name}}{{function_data.capitalized_name}}ContractFunction":{%- if function_data.signature_datas|length > 1 %} #type: ignore{% endif %}
+    def __call__(self{% if function_data.signature_datas[i].input_names_and_types %}, {{function_data.signature_datas[i].input_names_and_types|join(', ')}}{% endif %}) -> {{contract_name}}{{function_data.capitalized_name}}ContractFunction:{%- if function_data.signature_datas|length > 1 %} #type: ignore{% endif %}
         super().__call__({% if function_data.signature_datas[i].input_names%}{{function_data.signature_datas[i].input_names|join(', ')}}{% endif %})
-        return self
+        return cast({{contract_name}}{{function_data.capitalized_name}}ContractFunction, self)
 
     {% set output_names = function_data.signature_datas[i].outputs %}
     {% set output_types = function_data.signature_datas[i].output_types %}

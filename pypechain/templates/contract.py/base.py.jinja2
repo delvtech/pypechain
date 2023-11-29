@@ -25,8 +25,6 @@ from typing import Any, {% if has_multiple_return_values %}NamedTuple, {% endif 
 from eth_typing import ChecksumAddress{% if has_bytecode %}, HexStr{% endif %}
 {% if has_events %}from eth_utils.decorators import combomethod{% endif %}
 from hexbytes import HexBytes
-{% if has_overloading %}from multimethod import multimethod {% endif %}
-{% if has_bytecode %}from hexbytes import HexBytes{% endif %}
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions

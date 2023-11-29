@@ -25,8 +25,6 @@ from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast, overload
 from eth_typing import ChecksumAddress, HexStr
 
 from hexbytes import HexBytes
-from multimethod import multimethod
-from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
@@ -114,9 +112,9 @@ def rename_returned_types(return_types, raw_values) -> Any:
 class OverloadedMethodsDoSomethingContractFunction0(ContractFunction):
     """ContractFunction for the doSomething method."""
 
-    def __call__(self, x: int, s: str) -> "OverloadedMethodsDoSomethingContractFunction":  # type: ignore
+    def __call__(self, x: int, s: str) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
         super().__call__(x, s)
-        return self
+        return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     class ReturnValues(NamedTuple):
         """The return named tuple for DoSomething."""
@@ -145,9 +143,9 @@ class OverloadedMethodsDoSomethingContractFunction0(ContractFunction):
 class OverloadedMethodsDoSomethingContractFunction1(ContractFunction):
     """ContractFunction for the doSomething method."""
 
-    def __call__(self, s: str) -> "OverloadedMethodsDoSomethingContractFunction":  # type: ignore
+    def __call__(self, s: str) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
         super().__call__(s)
-        return self
+        return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     def call(
         self,
@@ -170,9 +168,9 @@ class OverloadedMethodsDoSomethingContractFunction1(ContractFunction):
 class OverloadedMethodsDoSomethingContractFunction2(ContractFunction):
     """ContractFunction for the doSomething method."""
 
-    def __call__(self, x: int) -> "OverloadedMethodsDoSomethingContractFunction":  # type: ignore
+    def __call__(self, x: int) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
         super().__call__(x)
-        return self
+        return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     def call(
         self,
@@ -195,9 +193,9 @@ class OverloadedMethodsDoSomethingContractFunction2(ContractFunction):
 class OverloadedMethodsDoSomethingContractFunction3(ContractFunction):
     """ContractFunction for the doSomething method."""
 
-    def __call__(self, x: int, y: int) -> "OverloadedMethodsDoSomethingContractFunction":  # type: ignore
+    def __call__(self, x: int, y: int) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
         super().__call__(x, y)
-        return self
+        return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     def call(
         self,
