@@ -140,7 +140,7 @@ class OverloadedMethodsDoSomethingContractFunction0(ContractFunction):
         )
 
         return self.ReturnValues(
-            rename_returned_types(return_types, raw_values)
+            *rename_returned_types(return_types, raw_values)
         )
 
 

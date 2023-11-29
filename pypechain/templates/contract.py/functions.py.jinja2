@@ -42,7 +42,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction{{i}}(C
         {% if output_types|length == 1 %}
         return rename_returned_types(return_types, raw_values)
         {% elif output_types|length > 1%}
-        return self.{{return_type}}(rename_returned_types(return_types, raw_values))
+        return self.{{return_type}}(*rename_returned_types(return_types, raw_values))
         {% endif %}
 {% endfor %}
 class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(ContractFunction):
@@ -104,7 +104,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
         {% if output_types|length == 1 %}
         return rename_returned_types(return_types, raw_values)
         {% elif output_types|length > 1%}
-        return self.{{return_type}}(rename_returned_types(return_types, raw_values))
+        return self.{{return_type}}(*rename_returned_types(return_types, raw_values))
         {% endif %}
 {% endif %} {# if function_data.has_overloading #}
 

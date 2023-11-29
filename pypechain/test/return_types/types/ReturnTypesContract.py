@@ -149,7 +149,7 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
         )
 
         return self.ReturnValues(
-            rename_returned_types(return_types, raw_values)
+            *rename_returned_types(return_types, raw_values)
         )
 
 
@@ -246,7 +246,7 @@ class ReturnTypesNamedTwoMixedStructsContractFunction(ContractFunction):
         )
 
         return self.ReturnValues(
-            rename_returned_types(return_types, raw_values)
+            *rename_returned_types(return_types, raw_values)
         )
 
 
@@ -285,7 +285,7 @@ class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
         )
 
         return self.ReturnValues(
-            rename_returned_types(return_types, raw_values)
+            *rename_returned_types(return_types, raw_values)
         )
 
 
@@ -351,7 +351,7 @@ class ReturnTypesNoNameTwoValuesContractFunction(ContractFunction):
         )
 
         return self.ReturnValues(
-            rename_returned_types(return_types, raw_values)
+            *rename_returned_types(return_types, raw_values)
         )
 
 
@@ -446,7 +446,7 @@ class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
         )
 
         return self.ReturnValues(
-            rename_returned_types(return_types, raw_values)
+            *rename_returned_types(return_types, raw_values)
         )
 
 
@@ -483,7 +483,7 @@ class ReturnTypesTwoSimpleStructsContractFunction(ContractFunction):
         )
 
         return self.ReturnValues(
-            rename_returned_types(return_types, raw_values)
+            *rename_returned_types(return_types, raw_values)
         )
 
 
