@@ -61,7 +61,6 @@ class TestReturnTypes:
 
     def test_single_nested_struct(self, deployed_contract: ReturnTypesContract):
         """Tests a nested struct"""
-        print("\n-----\n----\nYOOOO")
         result = deployed_contract.functions.singleNestedStruct().call()
         assert result == NestedStruct(1, "You are number 1", InnerStruct(True))
 
