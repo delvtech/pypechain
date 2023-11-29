@@ -34,10 +34,12 @@ if os.getenv("_PYTEST_RAISE", "0") != "0":
 
     @pytest.hookimpl(tryfirst=True)
     def pytest_exception_interact(call):
+        """Allows you to set breakpoints in pytest."""
         raise call.excinfo.value
 
     @pytest.hookimpl(tryfirst=True)
     def pytest_internalerror(excinfo):
+        """Allows you to set breakpoints in pytest."""
         raise excinfo.value
 
 
