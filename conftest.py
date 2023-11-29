@@ -178,4 +178,4 @@ def process_contracts(request):
 
     # Format the output directory using Black
     output_dir = os.path.join(test_dir, "types")
-    subprocess.run(f"black {output_dir}", shell=True, check=True)
+    subprocess.run(f"black --line-length=120 {output_dir}", shell=True, check=True)
