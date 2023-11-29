@@ -23,6 +23,7 @@ class FunctionData(TypedDict):
     signature_datas: list[SignatureData]
     has_overloading: bool
     has_multiple_return_signatures: bool
+    has_multiple_return_values: bool
 
 
 class EventData(TypedDict):

@@ -6,7 +6,7 @@ import os
 import pytest
 from web3.exceptions import Web3ValidationError
 
-from pypechain.test.overloading.types.OverloadedMethodsContract import OverloadedMethodsContract
+from pypechain.test.overloading.types import OverloadedMethodsContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
@@ -39,7 +39,6 @@ class TestOverloading:
         x = 1
         y = 2
 
-        # TODO:
         result = deployed_contract.functions.doSomething(s).call()
         assert result == "test string"
 
@@ -50,5 +49,5 @@ class TestOverloading:
         assert result == 1 + 2
 
         with pytest.raises(Web3ValidationError) as err:
-            result = deployed_contract.functions.doSomething(x, y, s).call()
+            result = deployed_contract.functions.doSomething(x, y, s).call()  # type: ignore
         assert "Could not identify the intended function with name `doSomething`" in str(err.value)

@@ -85,12 +85,19 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
         functions=function_datas,
     )
 
+    # if any function has overloading
+    has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
+    has_multiple_return_values = any(
+        function_data["has_multiple_return_values"] for function_data in function_datas.values()
+    )
+
     # Render the template
     return templates.base_template.render(
         contract_name=contract_name,
         structs_used=structs_used,
         structs_for_abi=structs_for_abi,
         has_overloading=has_overloading,
+        has_multiple_return_values=has_multiple_return_values,
         has_bytecode=has_bytecode,
         has_events=has_events,
         functions_block=functions_block,
@@ -122,9 +129,34 @@ def get_has_multiple_return_signatures(signature_datas: list[SignatureData]) -> 
         if first_output_types is None:
             first_output_types = signature_data["output_types"]
         else:
-            lists_equal = all(item[0] == item[1] for item in zip(first_output_types, signature_data["output_types"]))
+            lists_equal = all(
+                output_types_to_compare[0] == output_types_to_compare[1]
+                for output_types_to_compare in zip(first_output_types, signature_data["output_types"])
+            )
+            if not lists_equal:
+                break
 
     return not lists_equal
+
+
+def get_has_multiple_return_values(signature_datas: list[SignatureData]) -> bool:
+    """If there are multiple return values for a smart contract function, we'll need to overload
+       the call() method. This method compares the output types of all the values of a method.
+
+    Parameters
+    ----------
+    signature_datas : list[SignatureData]
+        a list of SignatureData's to compare.
+
+    Returns
+    -------
+    bool
+        If there are multiple return signatures or not.
+    """
+    for signature_data in signature_datas:
+        if len(signature_data["outputs"]) > 1:
+            return True
+    return False
 
 
 class ContractTemplates(NamedTuple):
@@ -173,7 +205,7 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
     constructor_data: SignatureData | None = None
     for abi_function in get_abi_items(abi):
         if is_abi_function(abi_function):
-            # hanndle constructor
+            # handle constructor
             if is_abi_constructor(abi_function):
                 constructor_data = {
                     "input_names_and_types": get_input_names_and_types(abi_function),
@@ -200,9 +232,13 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
                     "signature_datas": [signature_data],
                     "has_overloading": False,
                     "has_multiple_return_signatures": False,
+                    "has_multiple_return_values": False,
                 }
                 if not function_datas.get(name):
                     function_datas[name] = function_data
+                    function_datas[name]["has_multiple_return_values"] = get_has_multiple_return_values(
+                        [signature_data]
+                    )
                 else:
                     signature_datas = function_datas[name]["signature_datas"]
                     signature_datas.append(signature_data)
@@ -210,6 +246,7 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
                     function_datas[name]["has_multiple_return_signatures"] = get_has_multiple_return_signatures(
                         signature_datas
                     )
+                    function_datas[name]["has_multiple_return_values"] = get_has_multiple_return_values(signature_datas)
     return GetFunctionDatasReturnValue(function_datas, constructor_data)
 
 
