@@ -39,18 +39,29 @@ class TestOverloading:
         x = 1
         y = 2
 
-        # TODO:
-        result = deployed_contract.functions.doSomething(s).call()
+        cls = deployed_contract.functions.doSomething(s)
+        func = cls.call
+        result = func()
+        assert isinstance(result, str)
         assert result == "test string"
 
-        result = deployed_contract.functions.doSomething(x).call()
+        cls = deployed_contract.functions.doSomething(x)
+        func = cls.call
+        result = func()
+        assert isinstance(result, int)
         assert result == 1 * 2
 
-        result = deployed_contract.functions.doSomething(x, y).call()
+        cls = deployed_contract.functions.doSomething(x, y)
+        func = cls.call
+        result = func()
+        assert isinstance(result, int)
         assert result == 1 + 2
 
-        result = deployed_contract.functions.doSomething(x, s).call()
-        assert result == (x, s)
+        cls = deployed_contract.functions.doSomething(x, s)
+        func = cls.call
+        result = func()
+        assert isinstance(result, tuple)
+        assert result == (1, "test string")
 
         # checks that it fails
         # TODO ensure this throws validation error

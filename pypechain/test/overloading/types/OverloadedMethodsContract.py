@@ -29,8 +29,7 @@ from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
 from web3.exceptions import FallbackNotFound
-from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
-
+from web3.types import ABI, ABIFunction, BlockIdentifier, CallOverride, TxParams
 
 T = TypeVar("T")
 
@@ -65,10 +64,7 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
         if is_dataclass(field_type):
             # Recursively convert nested tuples to nested dataclasses
             field_values[field_name] = tuple_to_dataclass(field_type, value)
-        elif (
-            isinstance(value, tuple)
-            and not getattr(field_type, "_name", None) == "Tuple"
-        ):
+        elif isinstance(value, tuple) and not getattr(field_type, "_name", None) == "Tuple":
             # If it's a tuple and the field is not intended to be a tuple, assume it's a nested dataclass
             field_values[field_name] = tuple_to_dataclass(field_type, value)
         else:
@@ -81,64 +77,149 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
 class OverloadedMethodsDoSomethingContractFunction(ContractFunction):
     """ContractFunction for the doSomething method."""
 
+    def __init__(self, abi: ABIFunction | None = None) -> None:
+        super().__init__(abi)
+
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
     @multimethod
-    def __call__(self, x: int, s: str) -> "OverloadedMethodsDoSomethingContractFunction":  # type: ignore
+    def __call__(self, x: int, s: str) -> OverloadedMethodsDoSomethingContractFunction:
         clone = super().__call__(x, s)
         self.kwargs = clone.kwargs
         self.args = clone.args
-        return self
+
+        class ReturnValues(NamedTuple):
+            """The return named tuple for DoSomething(int x, str s)."""
+
+            int_input: int
+            arg2: str
+
+        class OverloadedMethod(OverloadedMethodsDoSomethingContractFunction):
+            """docstring"""
+
+            def __init__(self, super_call, abi: ABIFunction | None = None) -> None:
+                self.super_call = super_call
+                super().__init__(abi)
+
+            def call(
+                self,
+                transaction: TxParams | None = None,
+                block_identifier: BlockIdentifier = "latest",
+                state_override: CallOverride | None = None,
+                ccip_read_enabled: bool | None = None,
+            ) -> ReturnValues:
+                """returns (int, str)"""
+                # Define the expected return types from the smart contract call
+                return_types = [int, str]
+
+                # Call the function
+                raw_values = self.super_call(transaction, block_identifier, state_override, ccip_read_enabled)
+
+                return_values = super()._rename_returned_types(
+                    return_types, raw_values
+                )  # pylint: disable=protected-access
+                return ReturnValues(
+                    int_input=return_values[0],
+                    arg2=return_values[1],
+                )
+
+        return OverloadedMethod(super().call)
 
     @multimethod
-    def __call__(self, s: str) -> "OverloadedMethodsDoSomethingContractFunction":  # type: ignore
+    def __call__(self, s: str) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
         clone = super().__call__(s)
         self.kwargs = clone.kwargs
         self.args = clone.args
-        return self
+
+        class OverloadedMethod(OverloadedMethodsDoSomethingContractFunction):
+            """docstring"""
+
+            def __init__(self, super_call, abi: ABIFunction | None = None) -> None:
+                self.super_call = super_call
+                super().__init__(abi)
+
+            def call(
+                self,
+                transaction: TxParams | None = None,
+                block_identifier: BlockIdentifier = "latest",
+                state_override: CallOverride | None = None,
+                ccip_read_enabled: bool | None = None,
+            ) -> str:
+                """returns str"""
+                # Define the expected return types from the smart contract call
+                return_types = str
+
+                # Call the function
+                raw_values = self.super_call(transaction, block_identifier, state_override, ccip_read_enabled)
+
+                return super()._rename_returned_types(return_types, raw_values)  # pylint: disable=protected-access
+
+        return OverloadedMethod(super().call)
 
     @multimethod
-    def __call__(self, x: int) -> "OverloadedMethodsDoSomethingContractFunction":  # type: ignore
+    def __call__(self, x: int) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
         clone = super().__call__(x)
         self.kwargs = clone.kwargs
         self.args = clone.args
-        return self
+
+        class OverloadedMethod(OverloadedMethodsDoSomethingContractFunction):
+            """docstring"""
+
+            def __init__(self, super_call, abi: ABIFunction | None = None) -> None:
+                self.super_call = super_call
+                super().__init__(abi)
+
+            def call(
+                self,
+                transaction: TxParams | None = None,
+                block_identifier: BlockIdentifier = "latest",
+                state_override: CallOverride | None = None,
+                ccip_read_enabled: bool | None = None,
+            ) -> int:
+                """returns int"""
+                # Define the expected return types from the smart contract call
+                return_types = int
+
+                # Call the function
+                raw_values = self.super_call(transaction, block_identifier, state_override, ccip_read_enabled)
+
+                return super()._rename_returned_types(return_types, raw_values)  # pylint: disable=protected-access
+
+        return OverloadedMethod(super().call)
 
     @multimethod
-    def __call__(self, x: int, y: int) -> "OverloadedMethodsDoSomethingContractFunction":  # type: ignore
+    def __call__(self, x: int, y: int) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
         clone = super().__call__(x, y)
         self.kwargs = clone.kwargs
         self.args = clone.args
-        return self
 
-    class ReturnValues(NamedTuple):
-        """The return named tuple for DoSomething."""
+        class OverloadedMethod(OverloadedMethodsDoSomethingContractFunction):
+            """docstring"""
 
-        added: int
-        arg2: str
+            def __init__(self, super_call, abi: ABIFunction | None = None) -> None:
+                self.super_call = super_call
+                super().__init__(abi)
 
-    def call(
-        self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
-        ccip_read_enabled: bool | None = None,
-    ) -> Any:
-        """returns (int, str)"""
-        raw_values = super().call(
-            transaction, block_identifier, state_override, ccip_read_enabled
-        )
-        # Define the expected return types from the smart contract call
-        return_types = [int, str]
+            def call(
+                self,
+                transaction: TxParams | None = None,
+                block_identifier: BlockIdentifier = "latest",
+                state_override: CallOverride | None = None,
+                ccip_read_enabled: bool | None = None,
+            ) -> int:
+                """returns (int, str)"""
+                # Define the expected return types from the smart contract call
+                return_types = int
 
-        return_values = self._call(return_types, raw_values)
-        return self.ReturnValues(
-            added=return_values[0],
-            arg2=return_values[1],
-        )
+                # Call the function
+                raw_values = self.super_call(transaction, block_identifier, state_override, ccip_read_enabled)
 
-    def _call(self, return_types, raw_values):
+                return super()._rename_returned_types(return_types, raw_values)  # pylint: disable=protected-access
+
+        return OverloadedMethod(super().call)
+
+    def _rename_returned_types(self, return_types, raw_values) -> tuple:
         # cover case of multiple return values
         if isinstance(return_types, list):
             # Ensure raw_values is a tuple for consistency
@@ -147,10 +228,7 @@ class OverloadedMethodsDoSomethingContractFunction(ContractFunction):
 
             # Convert the tuple to the dataclass instance using the utility function
             converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
+                (tuple_to_dataclass(return_type, value) for return_type, value in zip(return_types, raw_values))
             )
 
             return converted_values
@@ -200,24 +278,16 @@ overloadedmethods_abi: ABI = cast(
             "type": "function",
         },
         {
-            "inputs": [
-                {"internalType": "string", "name": "s", "type": "string"}
-            ],
+            "inputs": [{"internalType": "string", "name": "s", "type": "string"}],
             "name": "doSomething",
-            "outputs": [
-                {"internalType": "string", "name": "", "type": "string"}
-            ],
+            "outputs": [{"internalType": "string", "name": "", "type": "string"}],
             "stateMutability": "pure",
             "type": "function",
         },
         {
-            "inputs": [
-                {"internalType": "uint256", "name": "x", "type": "uint256"}
-            ],
+            "inputs": [{"internalType": "uint256", "name": "x", "type": "uint256"}],
             "name": "doSomething",
-            "outputs": [
-                {"internalType": "uint256", "name": "", "type": "uint256"}
-            ],
+            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "pure",
             "type": "function",
         },
@@ -227,9 +297,7 @@ overloadedmethods_abi: ABI = cast(
                 {"internalType": "uint256", "name": "y", "type": "uint256"},
             ],
             "name": "doSomething",
-            "outputs": [
-                {"internalType": "uint256", "name": "added", "type": "uint256"}
-            ],
+            "outputs": [{"internalType": "uint256", "name": "added", "type": "uint256"}],
             "stateMutability": "pure",
             "type": "function",
         },
@@ -251,9 +319,7 @@ class OverloadedMethodsContract(Contract):
         try:
             # Initialize parent Contract class
             super().__init__(address=address)
-            self.functions = OverloadedMethodsContractFunctions(
-                overloadedmethods_abi, self.w3, address
-            )
+            self.functions = OverloadedMethodsContractFunctions(overloadedmethods_abi, self.w3, address)
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
@@ -264,12 +330,8 @@ class OverloadedMethodsContract(Contract):
     functions: OverloadedMethodsContractFunctions
 
     @classmethod
-    def factory(
-        cls, w3: Web3, class_name: str | None = None, **kwargs: Any
-    ) -> Type[Self]:
+    def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
         contract = super().factory(w3, class_name, **kwargs)
-        contract.functions = OverloadedMethodsContractFunctions(
-            overloadedmethods_abi, w3, None
-        )
+        contract.functions = OverloadedMethodsContractFunctions(overloadedmethods_abi, w3, None)
 
         return contract

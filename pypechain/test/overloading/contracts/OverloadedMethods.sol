@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 contract OverloadedMethods {
-
     // First version of the function accepts an integer, returns a uint
     function doSomething(uint x) public pure returns (uint) {
         return x * 2;
@@ -19,7 +18,10 @@ contract OverloadedMethods {
     }
 
     // Another overloaded version accepts an integer and a string, returns both unchanged
-    function doSomething(uint x, string memory s) public pure returns (uint added, string memory) {
+    function doSomething(
+        uint x,
+        string memory s
+    ) public pure returns (uint int_input, string memory) {
         return (x, s);
     }
 }
