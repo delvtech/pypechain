@@ -20,11 +20,7 @@ project_root = os.path.dirname(os.path.dirname(current_path))
 @pytest.fixture
 def deployed_contract(w3: Web3):
     """Deploys a ReturnTypes contract."""
-    deployer = ReturnTypesContract.factory(w3=w3)
-    tx_hash = deployer.constructor().transact({"from": w3.eth.accounts[0]})
-    tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
-    # contractAddress not recognized for some reason, adding type ignore
-    return deployer(address=tx_receipt.contractAddress)  # type: ignore
+    return ReturnTypesContract.deploy(w3=w3, signer=w3.eth.accounts[0])
 
 
 class TestReturnTypes:
