@@ -1,7 +1,10 @@
 """Test fixture for deploying local anvil chain."""
 from __future__ import annotations
 
+import glob
+import json
 import os
+import shutil
 import subprocess
 import time
 from typing import Iterator
@@ -140,3 +143,39 @@ def initialize_web3_with_http_provider(
         # TODO: Check that the user is running on anvil, raise error if not
         _ = web3.provider.make_request(method=RPCEndpoint("anvil_reset"), params=[])
     return web3
+
+
+@pytest.fixture(scope="class")
+def process_contracts(request):
+    """Generates abis for all contracts and pypechain types from those abis."""
+    # Define the contracts and abis directories
+    test_dir = os.path.dirname(os.path.abspath(request.fspath))
+    contracts_dir = os.path.join(test_dir, "contracts")
+    abis_dir = os.path.join(test_dir, "abis")
+
+    # Clear out the abis/ directory
+    if os.path.exists(abis_dir):
+        shutil.rmtree(abis_dir)
+    os.makedirs(abis_dir, exist_ok=True)
+
+    # Process each contract in the contracts directory
+    for contract_file in glob.glob(os.path.join(contracts_dir, "*.sol")):
+        contract_name = os.path.basename(contract_file).replace(".sol", "")
+        output_file = os.path.join(abis_dir, f"{contract_name}.json")
+
+        # Run the solc command
+        command = f"solc {contract_file} --combined-json abi,bin,metadata > {output_file}"
+        subprocess.run(command, shell=True, check=True)
+
+        # Format the JSON file
+        with open(output_file, "r", encoding="utf-8") as file:
+            data = json.load(file)
+        with open(output_file, "w", encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=2)
+
+    # Run the pypechain module after processing all contracts
+    subprocess.run(f"pypechain {test_dir}/abis --output_dir={test_dir}/types", shell=True, check=True)
+
+    # Format the output directory using Black
+    output_dir = os.path.join(test_dir, "types")
+    subprocess.run(f"black {output_dir}", shell=True, check=True)
