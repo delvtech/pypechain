@@ -22,6 +22,7 @@ from __future__ import annotations
 from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast, overload
 
+
 from eth_typing import ChecksumAddress, HexStr
 
 from hexbytes import HexBytes
