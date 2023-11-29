@@ -6,7 +6,7 @@ import os
 import pytest
 from web3.exceptions import Web3ValidationError
 
-from pypechain.test.overloading.types.OverloadedMethodsContract import OverloadedMethodsContract
+from pypechain.test.overloading.types import OverloadedMethodsContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name

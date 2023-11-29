@@ -24,7 +24,6 @@ from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast
 
 from eth_typing import ChecksumAddress, HexStr
 from hexbytes import HexBytes
-
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
@@ -82,24 +81,55 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
     return cls(**field_values)
 
 
+def rename_returned_types(return_types, raw_values) -> Any:
+    """_summary_
+
+    Parameters
+    ----------
+    return_types : _type_
+        _description_
+    raw_values : _type_
+        _description_
+
+    Returns
+    -------
+    tuple
+        _description_
+    """
+    # cover case of multiple return values
+    if isinstance(return_types, list):
+        # Ensure raw_values is a tuple for consistency
+        if not isinstance(raw_values, list):
+            raw_values = (raw_values,)
+
+        # Convert the tuple to the dataclass instance using the utility function
+        converted_values = tuple(
+            (
+                tuple_to_dataclass(return_type, value)
+                for return_type, value in zip(return_types, raw_values)
+            )
+        )
+
+        return converted_values
+
+
 class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
     """ContractFunction for the mixStructsAndPrimitives method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
-
-    def __call__(self) -> "ReturnTypesMixStructsAndPrimitivesContractFunction":
-        clone = super().__call__()
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
-
     class ReturnValues(NamedTuple):
+        """The return named tuple for MixStructsAndPrimitives."""
+
         simpleStruct: SimpleStruct
         arg2: NestedStruct
         arg3: int
         name: str
         YesOrNo: bool
+
+    def __call__(self) -> ReturnTypesMixStructsAndPrimitivesContractFunction:
+        clone = super().__call__()
+        self.kwargs = clone.kwargs
+        self.args = clone.args
+        return self
 
     def call(
         self,
@@ -107,52 +137,26 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> ReturnTypesMixStructsAndPrimitivesContractFunctionReturn:
-        """returns (SimpleStruct, NestedStruct, int, str, bool)"""
+    ) -> ReturnValues:
+        """returns ReturnValues."""
+        # Define the expected return types from the smart contract call
+
+        return_types = self.ReturnValues
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = [SimpleStruct, NestedStruct, int, str, bool]
 
-        return_values = self._call(return_types, raw_values)
         return self.ReturnValues(
-            simpleStruct=return_values[0],
-            arg2=return_values[1],
-            arg3=return_values[2],
-            name=return_values[3],
-            YesOrNo=return_values[4],
+            rename_returned_types(return_types, raw_values)
         )
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
 
 
 class ReturnTypesNamedSingleStructContractFunction(ContractFunction):
     """ContractFunction for the namedSingleStruct method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
-
-    def __call__(self) -> "ReturnTypesNamedSingleStructContractFunction":
+    def __call__(self) -> ReturnTypesNamedSingleStructContractFunction:
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -165,46 +169,25 @@ class ReturnTypesNamedSingleStructContractFunction(ContractFunction):
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> SimpleStruct:
-        """returns SimpleStruct"""
+        """returns SimpleStruct."""
+        # Define the expected return types from the smart contract call
+
+        return_types = SimpleStruct
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = SimpleStruct
 
-        return cast(SimpleStruct, self._call(return_types, raw_values))
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
+        return rename_returned_types(return_types, raw_values)
 
 
 class ReturnTypesNamedSingleValueContractFunction(ContractFunction):
     """ContractFunction for the namedSingleValue method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
-
     def __call__(
         self, x: int, y: int
-    ) -> "ReturnTypesNamedSingleValueContractFunction":
+    ) -> ReturnTypesNamedSingleValueContractFunction:
         clone = super().__call__(x, y)
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -217,112 +200,72 @@ class ReturnTypesNamedSingleValueContractFunction(ContractFunction):
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> int:
-        """returns int"""
+        """returns int."""
+        # Define the expected return types from the smart contract call
+
+        return_types = int
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = int
 
-        return cast(int, self._call(return_types, raw_values))
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
+        return rename_returned_types(return_types, raw_values)
 
 
 class ReturnTypesNamedTwoMixedStructsContractFunction(ContractFunction):
     """ContractFunction for the namedTwoMixedStructs method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
+    class ReturnValues(NamedTuple):
+        """The return named tuple for NamedTwoMixedStructs."""
 
-    def __call__(self) -> "ReturnTypesNamedTwoMixedStructsContractFunction":
+        simpleStruct: SimpleStruct
+        nestedStruct: NestedStruct
+
+    def __call__(self) -> ReturnTypesNamedTwoMixedStructsContractFunction:
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
 
-    class ReturnValues(NamedTuple):
-        simpleStruct: SimpleStruct
-        nestedStruct: NestedStruct
-
     def call(
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> ReturnTypesNamedTwoMixedStructsContractFunctionReturn:
-        """returns (SimpleStruct, NestedStruct)"""
+    ) -> ReturnValues:
+        """returns ReturnValues."""
+        # Define the expected return types from the smart contract call
+
+        return_types = self.ReturnValues
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = [SimpleStruct, NestedStruct]
 
-        return_values = self._call(return_types, raw_values)
         return self.ReturnValues(
-            simpleStruct=return_values[0],
-            nestedStruct=return_values[1],
+            rename_returned_types(return_types, raw_values)
         )
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
 
 
 class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
     """ContractFunction for the namedTwoValues method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
+    class ReturnValues(NamedTuple):
+        """The return named tuple for NamedTwoValues."""
+
+        flip: int
+        flop: int
 
     def __call__(
         self, x: int, y: int
-    ) -> "ReturnTypesNamedTwoValuesContractFunction":
+    ) -> ReturnTypesNamedTwoValuesContractFunction:
         clone = super().__call__(x, y)
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
-
-    class ReturnValues(NamedTuple):
-        flip: int
-        flop: int
 
     def call(
         self,
@@ -330,51 +273,26 @@ class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> ReturnTypesNamedTwoValuesContractFunctionReturn:
-        """returns (int, int)"""
+    ) -> ReturnValues:
+        """returns ReturnValues."""
+        # Define the expected return types from the smart contract call
+
+        return_types = self.ReturnValues
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = [int, int]
 
-        return_values = self._call(return_types, raw_values)
         return self.ReturnValues(
-            flip=return_values[0],
-            flop=return_values[1],
+            rename_returned_types(return_types, raw_values)
         )
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
 
 
 class ReturnTypesNoNameSingleValueContractFunction(ContractFunction):
     """ContractFunction for the noNameSingleValue method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
-
-    def __call__(
-        self, x: int
-    ) -> "ReturnTypesNoNameSingleValueContractFunction":
+    def __call__(self, x: int) -> ReturnTypesNoNameSingleValueContractFunction:
         clone = super().__call__(x)
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -387,52 +305,33 @@ class ReturnTypesNoNameSingleValueContractFunction(ContractFunction):
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> int:
-        """returns int"""
+        """returns int."""
+        # Define the expected return types from the smart contract call
+
+        return_types = int
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = int
 
-        return cast(int, self._call(return_types, raw_values))
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
+        return rename_returned_types(return_types, raw_values)
 
 
 class ReturnTypesNoNameTwoValuesContractFunction(ContractFunction):
     """ContractFunction for the noNameTwoValues method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
+    class ReturnValues(NamedTuple):
+        """The return named tuple for NoNameTwoValues."""
 
-    def __call__(self, s: str) -> "ReturnTypesNoNameTwoValuesContractFunction":
+        arg1: str
+        arg2: int
+
+    def __call__(self, s: str) -> ReturnTypesNoNameTwoValuesContractFunction:
         clone = super().__call__(s)
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
-
-    class ReturnValues(NamedTuple):
-        arg1: str
-        arg2: int
 
     def call(
         self,
@@ -440,49 +339,26 @@ class ReturnTypesNoNameTwoValuesContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> ReturnTypesNoNameTwoValuesContractFunctionReturn:
-        """returns (str, int)"""
+    ) -> ReturnValues:
+        """returns ReturnValues."""
+        # Define the expected return types from the smart contract call
+
+        return_types = self.ReturnValues
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = [str, int]
 
-        return_values = self._call(return_types, raw_values)
         return self.ReturnValues(
-            arg1=return_values[0],
-            arg2=return_values[1],
+            rename_returned_types(return_types, raw_values)
         )
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
 
 
 class ReturnTypesSingleNestedStructContractFunction(ContractFunction):
     """ContractFunction for the singleNestedStruct method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
-
-    def __call__(self) -> "ReturnTypesSingleNestedStructContractFunction":
+    def __call__(self) -> ReturnTypesSingleNestedStructContractFunction:
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -495,44 +371,23 @@ class ReturnTypesSingleNestedStructContractFunction(ContractFunction):
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> NestedStruct:
-        """returns NestedStruct"""
+        """returns NestedStruct."""
+        # Define the expected return types from the smart contract call
+
+        return_types = NestedStruct
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = NestedStruct
 
-        return cast(NestedStruct, self._call(return_types, raw_values))
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
+        return rename_returned_types(return_types, raw_values)
 
 
 class ReturnTypesSingleSimpleStructContractFunction(ContractFunction):
     """ContractFunction for the singleSimpleStruct method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
-
-    def __call__(self) -> "ReturnTypesSingleSimpleStructContractFunction":
+    def __call__(self) -> ReturnTypesSingleSimpleStructContractFunction:
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -545,52 +400,33 @@ class ReturnTypesSingleSimpleStructContractFunction(ContractFunction):
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> SimpleStruct:
-        """returns SimpleStruct"""
+        """returns SimpleStruct."""
+        # Define the expected return types from the smart contract call
+
+        return_types = SimpleStruct
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = SimpleStruct
 
-        return cast(SimpleStruct, self._call(return_types, raw_values))
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
+        return rename_returned_types(return_types, raw_values)
 
 
 class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
     """ContractFunction for the twoMixedStructs method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
+    class ReturnValues(NamedTuple):
+        """The return named tuple for TwoMixedStructs."""
 
-    def __call__(self) -> "ReturnTypesTwoMixedStructsContractFunction":
+        arg1: SimpleStruct
+        arg2: NestedStruct
+
+    def __call__(self) -> ReturnTypesTwoMixedStructsContractFunction:
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
-
-    class ReturnValues(NamedTuple):
-        arg1: SimpleStruct
-        arg2: NestedStruct
 
     def call(
         self,
@@ -598,57 +434,36 @@ class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> ReturnTypesTwoMixedStructsContractFunctionReturn:
-        """returns (SimpleStruct, NestedStruct)"""
+    ) -> ReturnValues:
+        """returns ReturnValues."""
+        # Define the expected return types from the smart contract call
+
+        return_types = self.ReturnValues
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = [SimpleStruct, NestedStruct]
 
-        return_values = self._call(return_types, raw_values)
         return self.ReturnValues(
-            arg1=return_values[0],
-            arg2=return_values[1],
+            rename_returned_types(return_types, raw_values)
         )
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
 
 
 class ReturnTypesTwoSimpleStructsContractFunction(ContractFunction):
     """ContractFunction for the twoSimpleStructs method."""
 
-    # super() call methods are generic, while our version adds values & types
-    # pylint: disable=arguments-differ
+    class ReturnValues(NamedTuple):
+        """The return named tuple for TwoSimpleStructs."""
 
-    def __call__(self) -> "ReturnTypesTwoSimpleStructsContractFunction":
+        arg1: SimpleStruct
+        arg2: SimpleStruct
+
+    def __call__(self) -> ReturnTypesTwoSimpleStructsContractFunction:
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
-
-    class ReturnValues(NamedTuple):
-        arg1: SimpleStruct
-        arg2: SimpleStruct
 
     def call(
         self,
@@ -656,40 +471,20 @@ class ReturnTypesTwoSimpleStructsContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> ReturnTypesTwoSimpleStructsContractFunctionReturn:
-        """returns (SimpleStruct, SimpleStruct)"""
+    ) -> ReturnValues:
+        """returns ReturnValues."""
+        # Define the expected return types from the smart contract call
+
+        return_types = self.ReturnValues
+
+        # Call the function
         raw_values = super().call(
             transaction, block_identifier, state_override, ccip_read_enabled
         )
-        # Define the expected return types from the smart contract call
-        return_types = [SimpleStruct, SimpleStruct]
 
-        return_values = self._call(return_types, raw_values)
         return self.ReturnValues(
-            arg1=return_values[0],
-            arg2=return_values[1],
+            rename_returned_types(return_types, raw_values)
         )
-
-    def _call(self, return_types, raw_values):
-        # cover case of multiple return values
-        if isinstance(return_types, list):
-            # Ensure raw_values is a tuple for consistency
-            if not isinstance(raw_values, list):
-                raw_values = (raw_values,)
-
-            # Convert the tuple to the dataclass instance using the utility function
-            converted_values = tuple(
-                (
-                    tuple_to_dataclass(return_type, value)
-                    for return_type, value in zip(return_types, raw_values)
-                )
-            )
-
-            return converted_values
-
-        # cover case of single return value
-        converted_value = tuple_to_dataclass(return_types, raw_values)
-        return converted_value
 
 
 class ReturnTypesContractFunctions(ContractFunctions):
@@ -716,123 +511,6 @@ class ReturnTypesContractFunctions(ContractFunctions):
     twoMixedStructs: ReturnTypesTwoMixedStructsContractFunction
 
     twoSimpleStructs: ReturnTypesTwoSimpleStructsContractFunction
-
-    def __init__(
-        self,
-        abi: ABI,
-        w3: "Web3",
-        address: ChecksumAddress | None = None,
-        decode_tuples: bool | None = False,
-    ) -> None:
-        super().__init__(abi, w3, address, decode_tuples)
-        self.mixStructsAndPrimitives = (
-            ReturnTypesMixStructsAndPrimitivesContractFunction.factory(
-                "mixStructsAndPrimitives",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="mixStructsAndPrimitives",
-            )
-        )
-        self.namedSingleStruct = (
-            ReturnTypesNamedSingleStructContractFunction.factory(
-                "namedSingleStruct",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="namedSingleStruct",
-            )
-        )
-        self.namedSingleValue = (
-            ReturnTypesNamedSingleValueContractFunction.factory(
-                "namedSingleValue",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="namedSingleValue",
-            )
-        )
-        self.namedTwoMixedStructs = (
-            ReturnTypesNamedTwoMixedStructsContractFunction.factory(
-                "namedTwoMixedStructs",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="namedTwoMixedStructs",
-            )
-        )
-        self.namedTwoValues = ReturnTypesNamedTwoValuesContractFunction.factory(
-            "namedTwoValues",
-            w3=w3,
-            contract_abi=abi,
-            address=address,
-            decode_tuples=decode_tuples,
-            function_identifier="namedTwoValues",
-        )
-        self.noNameSingleValue = (
-            ReturnTypesNoNameSingleValueContractFunction.factory(
-                "noNameSingleValue",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="noNameSingleValue",
-            )
-        )
-        self.noNameTwoValues = (
-            ReturnTypesNoNameTwoValuesContractFunction.factory(
-                "noNameTwoValues",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="noNameTwoValues",
-            )
-        )
-        self.singleNestedStruct = (
-            ReturnTypesSingleNestedStructContractFunction.factory(
-                "singleNestedStruct",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="singleNestedStruct",
-            )
-        )
-        self.singleSimpleStruct = (
-            ReturnTypesSingleSimpleStructContractFunction.factory(
-                "singleSimpleStruct",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="singleSimpleStruct",
-            )
-        )
-        self.twoMixedStructs = (
-            ReturnTypesTwoMixedStructsContractFunction.factory(
-                "twoMixedStructs",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="twoMixedStructs",
-            )
-        )
-        self.twoSimpleStructs = (
-            ReturnTypesTwoSimpleStructsContractFunction.factory(
-                "twoSimpleStructs",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                decode_tuples=decode_tuples,
-                function_identifier="twoSimpleStructs",
-            )
-        )
 
 
 returntypes_abi: ABI = cast(

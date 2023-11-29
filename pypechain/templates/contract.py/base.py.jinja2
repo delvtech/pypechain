@@ -20,12 +20,13 @@ https://github.com/delvtech/pypechain"""
 from __future__ import annotations
 
 from dataclasses import fields, is_dataclass
-from typing import Any, {% if has_multiple_return_values %}NamedTuple, {% endif %}Tuple, Type, TypeVar, cast
+from typing import Any, {% if has_multiple_return_values %}NamedTuple, {% endif %}Tuple, Type, TypeVar, cast{% if has_overloading %}, overload{% endif %}
 
 from eth_typing import ChecksumAddress{% if has_bytecode %}, HexStr{% endif %}
 {% if has_events %}from eth_utils.decorators import combomethod{% endif %}
 from hexbytes import HexBytes
 {% if has_overloading %}from multimethod import multimethod {% endif %}
+{% if has_bytecode %}from hexbytes import HexBytes{% endif %}
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
@@ -79,6 +80,34 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
             field_values[field_name] = value
 
     return cls(**field_values)
+
+def rename_returned_types(return_types, raw_values) -> Any:
+    """_summary_
+
+    Parameters
+    ----------
+    return_types : _type_
+        _description_
+    raw_values : _type_
+        _description_
+
+    Returns
+    -------
+    tuple
+        _description_
+    """
+    # cover case of multiple return values
+    if isinstance(return_types, list):
+        # Ensure raw_values is a tuple for consistency
+        if not isinstance(raw_values, list):
+            raw_values = (raw_values,)
+
+        # Convert the tuple to the dataclass instance using the utility function
+        converted_values = tuple(
+            (tuple_to_dataclass(return_type, value) for return_type, value in zip(return_types, raw_values))
+        )
+
+        return converted_values
 
 {{functions_block}}
 
