@@ -15,8 +15,7 @@ class {{contract_name}}Contract(Contract):
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
 
-    # TODO: add events
-    # events: ERC20ContractEvents
+    {% if has_events %}events: {{contract_name}}ContractEvents{% endif %}
 
     functions: {{contract_name}}ContractFunctions
 
@@ -26,3 +25,4 @@ class {{contract_name}}Contract(Contract):
         contract.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, w3, None)
 
         return contract
+

@@ -16,12 +16,13 @@ from pypechain.utilities.abi import (
     get_output_types,
     get_structs_for_abi,
     is_abi_constructor,
+    is_abi_event,
     is_abi_function,
     load_abi_from_file,
 )
 from pypechain.utilities.format import capitalize_first_letter_only
 from pypechain.utilities.templates import get_jinja_env
-from pypechain.utilities.types import FunctionData, SignatureData, gather_matching_types
+from pypechain.utilities.types import EventData, FunctionData, SignatureData, gather_matching_types
 
 
 def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
@@ -39,13 +40,21 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     str
         A serialized python file.
     """
+
+    # TODO: break this function up or bundle arguments to save on variables
+    # pylint: disable=too-many-locals
+
     env = get_jinja_env()
     templates = get_templates_for_contract_file(env)
 
     abi, bytecode = load_abi_from_file(abi_file_path)
     function_datas, constructor_data = get_function_datas(abi)
+    event_datas = get_event_datas(abi)
 
     has_bytecode = bool(bytecode)
+    has_events = bool(len(event_datas.values()))
+    # if any function has overloading
+    has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
 
     structs_for_abi = get_structs_for_abi(abi)
     structs_used = gather_matching_types(list(function_datas.values()), list(structs_for_abi.keys()))
@@ -58,6 +67,11 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
         constructor=constructor_data,
     )
 
+    events_block = templates.events_template.render(
+        contract_name=contract_name,
+        events=event_datas,
+    )
+
     abi_block = templates.abi_template.render(
         abi=abi,
         bytecode=bytecode,
@@ -66,12 +80,10 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
 
     contract_block = templates.contract_template.render(
         has_bytecode=has_bytecode,
+        has_events=has_events,
         contract_name=contract_name,
         functions=function_datas,
     )
-
-    # if any function has overloading
-    has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
 
     # Render the template
     return templates.base_template.render(
@@ -80,7 +92,9 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
         structs_for_abi=structs_for_abi,
         has_overloading=has_overloading,
         has_bytecode=has_bytecode,
+        has_events=has_events,
         functions_block=functions_block,
+        events_block=events_block,
         abi_block=abi_block,
         contract_block=contract_block,
         # TODO: use this data to add a typed constructor
@@ -118,6 +132,7 @@ class ContractTemplates(NamedTuple):
 
     base_template: Any
     functions_template: Any
+    events_template: Any
     abi_template: Any
     contract_template: Any
 
@@ -127,6 +142,7 @@ def get_templates_for_contract_file(env):
     return ContractTemplates(
         base_template=env.get_template("contract.py/base.py.jinja2"),
         functions_template=env.get_template("contract.py/functions.py.jinja2"),
+        events_template=env.get_template("contract.py/events.py.jinja2"),
         abi_template=env.get_template("contract.py/abi.py.jinja2"),
         contract_template=env.get_template("contract.py/contract.py.jinja2"),
     )
@@ -195,3 +211,28 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
                         signature_datas
                     )
     return GetFunctionDatasReturnValue(function_datas, constructor_data)
+
+
+def get_event_datas(abi: ABI) -> dict[str, EventData]:
+    """Gets the event datas required for the events template.
+
+    Arguments
+    ---------
+    abi : ABI
+        An application boundary interface for smart contract in json format.
+
+    Returns
+    -------
+    dict[str, EventData]
+        A dictionary of EventData's keyed by event name.
+    """
+    event_datas: dict[str, EventData] = {}
+    for abi_event in get_abi_items(abi):
+        if is_abi_event(abi_event):
+            name = abi_event.get("name", "")
+            event_data: EventData = {
+                "name": name,
+                "capitalized_name": capitalize_first_letter_only(name),
+            }
+            event_datas[name] = event_data
+    return event_datas
