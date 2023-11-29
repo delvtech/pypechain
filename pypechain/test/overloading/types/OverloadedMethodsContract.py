@@ -108,6 +108,10 @@ def rename_returned_types(return_types, raw_values) -> Any:
 
         return converted_values
 
+    # cover case of single return value
+    converted_value = tuple_to_dataclass(return_types, raw_values)
+    return converted_value
+
 
 class OverloadedMethodsDoSomethingContractFunction0(ContractFunction):
     """ContractFunction for the doSomething method."""

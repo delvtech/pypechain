@@ -112,6 +112,10 @@ def rename_returned_types(return_types, raw_values) -> Any:
 
         return converted_values
 
+    # cover case of single return value
+    converted_value = tuple_to_dataclass(return_types, raw_values)
+    return converted_value
+
 
 class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
     """ContractFunction for the mixStructsAndPrimitives method."""
