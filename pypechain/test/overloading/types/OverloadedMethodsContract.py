@@ -100,10 +100,8 @@ def rename_returned_types(return_types, raw_values) -> Any:
 
         # Convert the tuple to the dataclass instance using the utility function
         converted_values = tuple(
-            (
-                tuple_to_dataclass(return_type, value)
-                for return_type, value in zip(return_types, raw_values)
-            )
+            tuple_to_dataclass(return_type, value)
+            for return_type, value in zip(return_types, raw_values)
         )
 
         return converted_values
@@ -172,7 +170,7 @@ class OverloadedMethodsDoSomethingContractFunction1(ContractFunction):
             transaction, block_identifier, state_override, ccip_read_enabled
         )
 
-        return rename_returned_types(return_types, raw_values)
+        return cast(str, rename_returned_types(return_types, raw_values))
 
 
 class OverloadedMethodsDoSomethingContractFunction2(ContractFunction):
@@ -199,7 +197,7 @@ class OverloadedMethodsDoSomethingContractFunction2(ContractFunction):
             transaction, block_identifier, state_override, ccip_read_enabled
         )
 
-        return rename_returned_types(return_types, raw_values)
+        return cast(int, rename_returned_types(return_types, raw_values))
 
 
 class OverloadedMethodsDoSomethingContractFunction3(ContractFunction):
@@ -226,7 +224,7 @@ class OverloadedMethodsDoSomethingContractFunction3(ContractFunction):
             transaction, block_identifier, state_override, ccip_read_enabled
         )
 
-        return rename_returned_types(return_types, raw_values)
+        return cast(int, rename_returned_types(return_types, raw_values))
 
 
 class OverloadedMethodsDoSomethingContractFunction(ContractFunction):
@@ -263,6 +261,23 @@ class OverloadedMethodsContractFunctions(ContractFunctions):
     """ContractFunctions for the OverloadedMethods contract."""
 
     doSomething: OverloadedMethodsDoSomethingContractFunction
+
+    def __init__(
+        self,
+        abi: ABI,
+        w3: "Web3",
+        address: ChecksumAddress | None = None,
+        decode_tuples: bool | None = False,
+    ) -> None:
+        super().__init__(abi, w3, address, decode_tuples)
+        self.doSomething = OverloadedMethodsDoSomethingContractFunction.factory(
+            "doSomething",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="doSomething",
+        )
 
 
 overloadedmethods_abi: ABI = cast(

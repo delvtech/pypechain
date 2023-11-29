@@ -104,10 +104,8 @@ def rename_returned_types(return_types, raw_values) -> Any:
 
         # Convert the tuple to the dataclass instance using the utility function
         converted_values = tuple(
-            (
-                tuple_to_dataclass(return_type, value)
-                for return_type, value in zip(return_types, raw_values)
-            )
+            tuple_to_dataclass(return_type, value)
+            for return_type, value in zip(return_types, raw_values)
         )
 
         return converted_values
@@ -183,7 +181,9 @@ class ReturnTypesNamedSingleStructContractFunction(ContractFunction):
             transaction, block_identifier, state_override, ccip_read_enabled
         )
 
-        return rename_returned_types(return_types, raw_values)
+        return cast(
+            SimpleStruct, rename_returned_types(return_types, raw_values)
+        )
 
 
 class ReturnTypesNamedSingleValueContractFunction(ContractFunction):
@@ -214,7 +214,7 @@ class ReturnTypesNamedSingleValueContractFunction(ContractFunction):
             transaction, block_identifier, state_override, ccip_read_enabled
         )
 
-        return rename_returned_types(return_types, raw_values)
+        return cast(int, rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesNamedTwoMixedStructsContractFunction(ContractFunction):
@@ -319,7 +319,7 @@ class ReturnTypesNoNameSingleValueContractFunction(ContractFunction):
             transaction, block_identifier, state_override, ccip_read_enabled
         )
 
-        return rename_returned_types(return_types, raw_values)
+        return cast(int, rename_returned_types(return_types, raw_values))
 
 
 class ReturnTypesNoNameTwoValuesContractFunction(ContractFunction):
@@ -385,7 +385,9 @@ class ReturnTypesSingleNestedStructContractFunction(ContractFunction):
             transaction, block_identifier, state_override, ccip_read_enabled
         )
 
-        return rename_returned_types(return_types, raw_values)
+        return cast(
+            NestedStruct, rename_returned_types(return_types, raw_values)
+        )
 
 
 class ReturnTypesSingleSimpleStructContractFunction(ContractFunction):
@@ -414,7 +416,9 @@ class ReturnTypesSingleSimpleStructContractFunction(ContractFunction):
             transaction, block_identifier, state_override, ccip_read_enabled
         )
 
-        return rename_returned_types(return_types, raw_values)
+        return cast(
+            SimpleStruct, rename_returned_types(return_types, raw_values)
+        )
 
 
 class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
@@ -515,6 +519,123 @@ class ReturnTypesContractFunctions(ContractFunctions):
     twoMixedStructs: ReturnTypesTwoMixedStructsContractFunction
 
     twoSimpleStructs: ReturnTypesTwoSimpleStructsContractFunction
+
+    def __init__(
+        self,
+        abi: ABI,
+        w3: "Web3",
+        address: ChecksumAddress | None = None,
+        decode_tuples: bool | None = False,
+    ) -> None:
+        super().__init__(abi, w3, address, decode_tuples)
+        self.mixStructsAndPrimitives = (
+            ReturnTypesMixStructsAndPrimitivesContractFunction.factory(
+                "mixStructsAndPrimitives",
+                w3=w3,
+                contract_abi=abi,
+                address=address,
+                decode_tuples=decode_tuples,
+                function_identifier="mixStructsAndPrimitives",
+            )
+        )
+        self.namedSingleStruct = (
+            ReturnTypesNamedSingleStructContractFunction.factory(
+                "namedSingleStruct",
+                w3=w3,
+                contract_abi=abi,
+                address=address,
+                decode_tuples=decode_tuples,
+                function_identifier="namedSingleStruct",
+            )
+        )
+        self.namedSingleValue = (
+            ReturnTypesNamedSingleValueContractFunction.factory(
+                "namedSingleValue",
+                w3=w3,
+                contract_abi=abi,
+                address=address,
+                decode_tuples=decode_tuples,
+                function_identifier="namedSingleValue",
+            )
+        )
+        self.namedTwoMixedStructs = (
+            ReturnTypesNamedTwoMixedStructsContractFunction.factory(
+                "namedTwoMixedStructs",
+                w3=w3,
+                contract_abi=abi,
+                address=address,
+                decode_tuples=decode_tuples,
+                function_identifier="namedTwoMixedStructs",
+            )
+        )
+        self.namedTwoValues = ReturnTypesNamedTwoValuesContractFunction.factory(
+            "namedTwoValues",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="namedTwoValues",
+        )
+        self.noNameSingleValue = (
+            ReturnTypesNoNameSingleValueContractFunction.factory(
+                "noNameSingleValue",
+                w3=w3,
+                contract_abi=abi,
+                address=address,
+                decode_tuples=decode_tuples,
+                function_identifier="noNameSingleValue",
+            )
+        )
+        self.noNameTwoValues = (
+            ReturnTypesNoNameTwoValuesContractFunction.factory(
+                "noNameTwoValues",
+                w3=w3,
+                contract_abi=abi,
+                address=address,
+                decode_tuples=decode_tuples,
+                function_identifier="noNameTwoValues",
+            )
+        )
+        self.singleNestedStruct = (
+            ReturnTypesSingleNestedStructContractFunction.factory(
+                "singleNestedStruct",
+                w3=w3,
+                contract_abi=abi,
+                address=address,
+                decode_tuples=decode_tuples,
+                function_identifier="singleNestedStruct",
+            )
+        )
+        self.singleSimpleStruct = (
+            ReturnTypesSingleSimpleStructContractFunction.factory(
+                "singleSimpleStruct",
+                w3=w3,
+                contract_abi=abi,
+                address=address,
+                decode_tuples=decode_tuples,
+                function_identifier="singleSimpleStruct",
+            )
+        )
+        self.twoMixedStructs = (
+            ReturnTypesTwoMixedStructsContractFunction.factory(
+                "twoMixedStructs",
+                w3=w3,
+                contract_abi=abi,
+                address=address,
+                decode_tuples=decode_tuples,
+                function_identifier="twoMixedStructs",
+            )
+        )
+        self.twoSimpleStructs = (
+            ReturnTypesTwoSimpleStructsContractFunction.factory(
+                "twoSimpleStructs",
+                w3=w3,
+                contract_abi=abi,
+                address=address,
+                decode_tuples=decode_tuples,
+                function_identifier="twoSimpleStructs",
+            )
+        )
 
 
 returntypes_abi: ABI = cast(

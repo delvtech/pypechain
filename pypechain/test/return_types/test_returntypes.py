@@ -61,6 +61,7 @@ class TestReturnTypes:
 
     def test_single_nested_struct(self, deployed_contract: ReturnTypesContract):
         """Tests a nested struct"""
+        print("\n-----\n----\nYOOOO")
         result = deployed_contract.functions.singleNestedStruct().call()
         assert result == NestedStruct(1, "You are number 1", InnerStruct(True))
 
@@ -90,7 +91,9 @@ class TestReturnTypes:
         func = deployed_contract.functions.namedTwoMixedStructs()
         result = func.call()
         assert isinstance(result, func.ReturnValues)
-        assert result == (SimpleStruct(1, "You are number 1"), NestedStruct(2, "You are number 2", InnerStruct(True)))
+        assert result == func.ReturnValues(
+            SimpleStruct(1, "You are number 1"), NestedStruct(2, "You are number 2", InnerStruct(True))
+        )
 
     def test_mix_structs_and_primitives(self, deployed_contract: ReturnTypesContract):
         """Tests two structs, one nested, and other values returned"""

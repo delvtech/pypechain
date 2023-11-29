@@ -104,7 +104,7 @@ def rename_returned_types(return_types, raw_values) -> Any:
 
         # Convert the tuple to the dataclass instance using the utility function
         converted_values = tuple(
-            (tuple_to_dataclass(return_type, value) for return_type, value in zip(return_types, raw_values))
+            tuple_to_dataclass(return_type, value) for return_type, value in zip(return_types, raw_values)
         )
 
         return converted_values

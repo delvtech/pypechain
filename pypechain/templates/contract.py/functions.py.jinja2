@@ -40,7 +40,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction{{i}}(C
         # Call the function
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         {% if output_types|length == 1 %}
-        return rename_returned_types(return_types, raw_values)
+        return cast({{output_types[0]}}, rename_returned_types(return_types, raw_values))
         {% elif output_types|length > 1%}
         return self.{{return_type}}(*rename_returned_types(return_types, raw_values))
         {% endif %}
@@ -102,7 +102,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
         # Call the function
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         {% if output_types|length == 1 %}
-        return rename_returned_types(return_types, raw_values)
+        return cast({{output_types[0]}}, rename_returned_types(return_types, raw_values))
         {% elif output_types|length > 1%}
         return self.{{return_type}}(*rename_returned_types(return_types, raw_values))
         {% endif %}
@@ -115,3 +115,22 @@ class {{contract_name}}ContractFunctions(ContractFunctions):
 {% for function in functions.values() %}
     {{function.name}}: {{contract_name}}{{function.capitalized_name}}ContractFunction
 {% endfor %}
+    def __init__(
+         self,
+         abi: ABI,
+         w3: "Web3",
+         address: ChecksumAddress | None = None,
+         decode_tuples: bool | None = False,
+     ) -> None:
+         super().__init__(abi, w3, address, decode_tuples)
+         {% for function in functions.values() -%}
+         self.{{function.name}} = {{contract_name}}{{function.capitalized_name}}ContractFunction.factory(
+             "{{function.name}}",
+             w3=w3,
+             contract_abi=abi,
+             address=address,
+             decode_tuples=decode_tuples,
+             function_identifier="{{function.name}}",
+         )
+         {% endfor %}
+ 
