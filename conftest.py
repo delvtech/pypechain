@@ -76,7 +76,7 @@ def local_chain() -> Iterator[str]:
 
 
 @pytest.fixture(scope="session")
-def w3_init(local_chain) -> Web3:
+def w3_init(local_chain: str) -> Web3:
     """gets a Web3 instance connected to the local chain.
 
     Parameters
@@ -94,7 +94,7 @@ def w3_init(local_chain) -> Web3:
 
 
 @pytest.fixture(scope="function")
-def w3(w3_init) -> Web3:  # type: ignore
+def w3(w3_init: Web3) -> Web3:  # type: ignore
     """resets the anvil instance at the function level so each test gets a fresh chain.
 
     Parameters

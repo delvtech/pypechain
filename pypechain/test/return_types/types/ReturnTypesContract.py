@@ -23,17 +23,14 @@ from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast
 
 from eth_typing import ChecksumAddress, HexStr
-
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
-
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 
-
-from .ReturnTypesTypes import SimpleStruct, InnerStruct, NestedStruct
+from .ReturnTypesTypes import InnerStruct, NestedStruct, SimpleStruct
 
 T = TypeVar("T")
 
@@ -583,8 +580,16 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
+                        {
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "simpleStruct",
@@ -592,10 +597,24 @@ returntypes_abi: ABI = cast(
                 },
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
                         {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "bool",
+                                    "name": "boolVal",
+                                    "type": "bool",
+                                }
+                            ],
                             "internalType": "struct ReturnTypes.InnerStruct",
                             "name": "innerStruct",
                             "type": "tuple",
@@ -618,8 +637,16 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
+                        {
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "struct1",
@@ -645,8 +672,16 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
+                        {
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "simpleStruct",
@@ -654,10 +689,24 @@ returntypes_abi: ABI = cast(
                 },
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
                         {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "bool",
+                                    "name": "boolVal",
+                                    "type": "bool",
+                                }
+                            ],
                             "internalType": "struct ReturnTypes.InnerStruct",
                             "name": "innerStruct",
                             "type": "tuple",
@@ -707,10 +756,24 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
                         {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "bool",
+                                    "name": "boolVal",
+                                    "type": "bool",
+                                }
+                            ],
                             "internalType": "struct ReturnTypes.InnerStruct",
                             "name": "innerStruct",
                             "type": "tuple",
@@ -730,8 +793,16 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
+                        {
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "",
@@ -747,8 +818,16 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
+                        {
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "",
@@ -756,10 +835,24 @@ returntypes_abi: ABI = cast(
                 },
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
                         {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "bool",
+                                    "name": "boolVal",
+                                    "type": "bool",
+                                }
+                            ],
                             "internalType": "struct ReturnTypes.InnerStruct",
                             "name": "innerStruct",
                             "type": "tuple",
@@ -779,8 +872,16 @@ returntypes_abi: ABI = cast(
             "outputs": [
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
+                        {
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "",
@@ -788,8 +889,16 @@ returntypes_abi: ABI = cast(
                 },
                 {
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
+                        {
+                            "internalType": "uint256",
+                            "name": "intVal",
+                            "type": "uint256",
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "strVal",
+                            "type": "string",
+                        },
                     ],
                     "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "",
@@ -823,6 +932,28 @@ class ReturnTypesContract(Contract):
             print("Fallback function not found. Continuing...")
 
     functions: ReturnTypesContractFunctions
+
+    @classmethod
+    def deploy(cls, w3: Web3, signer: ChecksumAddress) -> Self:
+        """Deploys and instance of the contract.
+
+        Parameters
+        ----------
+        w3 : Web3
+            A web3 instance.
+        signer : ChecksumAddress
+            The address to deploy the contract from.
+
+        Returns
+        -------
+        Self
+            A deployed instance of the contract.
+        """
+        deployer = cls.factory(w3=w3)
+        tx_hash = deployer.constructor().transact({"from": signer})
+        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+        deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore
+        return deployed_contract
 
     @classmethod
     def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:

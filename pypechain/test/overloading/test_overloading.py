@@ -23,17 +23,7 @@ class TestOverloading:
         All arguments are fixtures.
         """
 
-        # TODO: add the factory to the constructor so we can do:
-        # deployed_contract = MyContract(w3=w3, address=address)
-        # or:
-        # ContractDeployer =  MyContract(w3)
-        # deployed_contract = ContractDeployer.deploy(arg1, arg2)
-        deployer = OverloadedMethodsContract.factory(w3=w3)
-
-        # TODO: put this into a deploy method and add the address automatically
-        tx_hash = deployer.constructor().transact({"from": w3.eth.accounts[0]})
-        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
-        deployed_contract = deployer(address=tx_receipt.contractAddress)
+        deployed_contract = OverloadedMethodsContract.deploy(w3=w3, signer=w3.eth.accounts[0])
 
         s = "test string"
         x = 1

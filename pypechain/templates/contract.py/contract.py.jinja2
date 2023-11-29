@@ -20,6 +20,28 @@ class {{contract_name}}Contract(Contract):
     functions: {{contract_name}}ContractFunctions
 
     @classmethod
+    def deploy(cls, w3: Web3, signer: ChecksumAddress) -> Self:
+        """Deploys and instance of the contract.
+
+        Parameters
+        ----------
+        w3 : Web3
+            A web3 instance.
+        signer : ChecksumAddress
+            The address to deploy the contract from.
+
+        Returns
+        -------
+        Self
+            A deployed instance of the contract.
+        """
+        deployer = cls.factory(w3=w3)
+        tx_hash = deployer.constructor().transact({"from": signer})
+        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+        deployed_contract = deployer(address=tx_receipt.contractAddress) # type: ignore
+        return deployed_contract
+
+    @classmethod
     def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
         contract = super().factory(w3, class_name, **kwargs)
         contract.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, w3, None)
