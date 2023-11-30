@@ -24,7 +24,6 @@ from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast, overload
 
 
 from eth_typing import ChecksumAddress, HexStr
-
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3

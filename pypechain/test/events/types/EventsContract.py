@@ -21,10 +21,9 @@ from __future__ import annotations
 
 from dataclasses import fields, is_dataclass
 from typing import Any, Tuple, Type, TypeVar, cast
-from typing import Iterable, Sequence, overload
+from typing import Iterable, Sequence
 
 from eth_typing import ChecksumAddress, HexStr
-from eth_utils.decorators import combomethod
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
@@ -134,8 +133,8 @@ class EventsEmitNoEventsContractFunction(ContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return cast(int, rename_returned_types(return_types, raw_values))
 
 
@@ -159,7 +158,6 @@ class EventsEmitOneEventContractFunction(ContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
 
 class EventsEmitTwoEventsContractFunction(ContractFunction):
@@ -182,7 +180,6 @@ class EventsEmitTwoEventsContractFunction(ContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
 
 class EventsContractFunctions(ContractFunctions):
@@ -234,7 +231,9 @@ class EventsEventAContractEvent(ContractEvent):
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
 
-    # TODO: remove pylint disable when we add a type-hint for argument_names
+    # @combomethod destroys return types, so we are redefining functions as both class and instance
+    # pylint: disable=function-redefined
+
     # pylint: disable=useless-parent-delegation
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)
@@ -322,7 +321,9 @@ class EventsEventBContractEvent(ContractEvent):
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
 
-    # TODO: remove pylint disable when we add a type-hint for argument_names
+    # @combomethod destroys return types, so we are redefining functions as both class and instance
+    # pylint: disable=function-redefined
+
     # pylint: disable=useless-parent-delegation
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)

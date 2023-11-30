@@ -2,8 +2,12 @@ class OverloadedTransferContractEvent(ContractEvent):
     """ContractEvent for Transfer."""
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
+
+    # @combomethod destroys return types, so we are redefining functions as both class and instance
+    # pylint: disable=function-redefined
+
     
-    # TODO: remove pylint disable when we add a type-hint for argument_names
+    
     # pylint: disable=useless-parent-delegation
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)
@@ -54,8 +58,12 @@ class OverloadedApprovalContractEvent(ContractEvent):
     """ContractEvent for Approval."""
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
+
+    # @combomethod destroys return types, so we are redefining functions as both class and instance
+    # pylint: disable=function-redefined
+
     
-    # TODO: remove pylint disable when we add a type-hint for argument_names
+    
     # pylint: disable=useless-parent-delegation
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)
