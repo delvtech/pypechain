@@ -7,13 +7,13 @@ import os
 import shutil
 import subprocess
 import time
-from typing import Callable, Iterator
+from typing import Iterator
 
 import pytest
 from eth_typing import URI
 from web3 import Web3
 from web3.middleware import geth_poa
-from web3.types import RPCEndpoint, RPCResponse
+from web3.types import RPCEndpoint
 
 # pylint: disable=redefined-outer-name
 
@@ -79,7 +79,7 @@ def local_chain() -> Iterator[str]:
 
 
 @pytest.fixture(scope="session")
-def w3_init(local_chain: str) -> tuple[Web3, Callable[[], RPCResponse]]:
+def w3_init(local_chain: str) -> Web3:
     """gets a Web3 instance connected to the local chain.
 
     Parameters
@@ -93,18 +93,13 @@ def w3_init(local_chain: str) -> tuple[Web3, Callable[[], RPCResponse]]:
         A web3.py instance and a reset function.
     """
 
-    _w3 = initialize_web3_with_http_provider(local_chain)
-    response = _w3.provider.make_request(method=RPCEndpoint("anvil_snapshot"), params=[])
-    snapshot_id = response.get("result")
+    w3_init = initialize_web3_with_http_provider(local_chain)
 
-    def reset():
-        return _w3.provider.make_request(method=RPCEndpoint("anvil_revert"), params=[snapshot_id])
-
-    return _w3, reset
+    return w3_init
 
 
 @pytest.fixture(scope="function")
-def w3(w3_init: tuple[Web3, Callable[[], RPCResponse]]) -> Web3:  # type: ignore
+def w3(w3_init: Web3) -> Iterator[Web3]:  # type: ignore
     """resets the anvil instance at the function level so each test gets a fresh chain.
 
     Parameters
@@ -117,11 +112,12 @@ def w3(w3_init: tuple[Web3, Callable[[], RPCResponse]]) -> Web3:  # type: ignore
     Web3
         A web3.py instance.
     """
-    _w3, reset = w3_init
-    # TODO: calling anvil_revert or evm_revert does not actually revert the chain to a previous
-    # snapshot.  Figure out why.
-    reset()
-    return _w3
+    response = w3_init.provider.make_request(method=RPCEndpoint("evm_snapshot"), params=[])
+    snapshot_id: str | None = response.get("result")
+
+    yield w3_init
+
+    w3_init.provider.make_request(method=RPCEndpoint("evm_revert"), params=[snapshot_id])
 
 
 def initialize_web3_with_http_provider(
@@ -185,7 +181,3 @@ def process_contracts(request):
 
     # Run the pypechain module after processing all contracts
     subprocess.run(f"pypechain {test_dir}/abis --output_dir={test_dir}/types", shell=True, check=True)
-
-    # Format the output directory using Black
-    output_dir = os.path.join(test_dir, "types")
-    subprocess.run(f"black --line-length=120 {output_dir}", shell=True, check=True)
