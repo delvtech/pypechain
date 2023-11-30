@@ -33,6 +33,15 @@ pip install --upgrade pypechain
 
 For development install instructions, see toplevel [INSTALL.md](https://github.com/delvtech/pypechain/blob/main/INSTALL.md)
 
+## Packages 📦
+
+| Package Name | Version | Description |
+|--------------|---------|-------------|
+| pypechain | [![](https://img.shields.io/pypi/v/pypechain.svg)]((https://pypi.org/pypi/pypechain/)) | Codegen python interfaces for web3.py contracts. |
+| flit | [![](https://img.shields.io/pypi/v/flit.svg)]((https://pypi.org/pypi/flit/)) | A simple packaging tool for simple packages. |
+| black | [![](https://img.shields.io/pypi/v/black.svg)]((https://pypi.org/pypi/black/)) | The uncompromising code formatter. |
+| jinja2 | [![](https://img.shields.io/pypi/v/jinja2.svg)]((https://pypi.org/pypi/jinja2/)) | A very fast and expressive template engine. |
+| web3 | [![](https://img.shields.io/pypi/v/web3.svg)]((https://pypi.org/pypi/web3/)) | web3.py |
 ## Usage
 
 Pypechain is primarily to be used via the CLI:

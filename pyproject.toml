@@ -25,7 +25,7 @@ pypechain = "pypechain.main:main"
 # This flag installs all dependencies and should be ran when installing this package
 all = ["pypechain[base,build,test]"]
 base = ["black", "isort", "jinja2", "web3"]
-build = ["build", "setuptools", "wheel", "twine"]
+build = ["build", "setuptools", "wheel", "twine", "toml"]
 test = ["pytest", "pytest-snapshot", "pyright", "pylint", "coverage", "isort"]
 
 [project.urls]
