@@ -92,20 +92,25 @@ from web3 import Web3
 web3 = Web3()
 base_token_address = "0xSomeAddress"
 user_address = "0xUserAddress"
+
 # Contract construction takes an ABI filepath string
 base_token_contract = web3.eth.contract(
     abi=base_contract_abi, address=web3.to_checksum_address(base_token_address)
 )
+
 # Arbitrary function arguments and names forces one to examine the ABI JSON to know the values & types
 # Additionally, the types are not specified as Python types in the ABI
 fn_args = [user_address]
 fn_kwargs = {}
-# Get the contract function, which could then be evoked by e.g. `call()` or `transact()`
+
+# HARD TO DISCOVER ALL FUNCTIONS AND THEIR ARGUMENTS
 contract_function = base_token_contract.get_function_by_name("balanceOf")(*fn_args, **fn_kwargs)
+
 # The function call also takes arbitrary args and kwargs
 call_args = []
 call_kwargs = {}
-# return_values is a dict with string keys, which minimizes discoverability & has no type assurances
+
+# UNTYPED RETURN VALUE!!
 return_values: dict[str, Any] = contract_function.call(*call_args, **call_kwargs)
 ```
 
@@ -118,8 +123,10 @@ Using Pypechain generated objects:
     web3 = Web3()
     base_token_address = "0xSomeAddress"
     user_address = "0xUserAddress"
+
     # Contracts include a factory function to initialize with your given web3 provider
-    base_token_contract: ERC20MintableContract = ERC20MintableContract.factory(w3=web3)(base_token_address)
+    base_token_contract: ERC20MintableContract = ERC20MintableContract.deploy(w3=web3, signer=user_address)
+
     # balanceOf is a class function, enabling IDE tab-completion, intuitive inspection, typed inputs and typed outputs
     user_base_balance: int = base_token_contract.functions.balanceOf(user_address).call()
 ```
@@ -128,7 +135,7 @@ Using Pypechain generated objects:
 
 Solidity files can be difficult to read for native Python programmers that have little exposure to smart contract code.
 
-```sol
+```typescript
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
