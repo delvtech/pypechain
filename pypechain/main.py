@@ -111,8 +111,8 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
     parser.add_argument(
         "--line_length",
         type=int,
-        default=80,
-        help="Optional argument for the output file's maximum line length. Defaults to 80.",
+        default=120,
+        help="Optional argument for the output file's maximum line length. Defaults to 120.",
     )
 
     # Use system arguments if none were passed

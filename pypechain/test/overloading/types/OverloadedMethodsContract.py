@@ -22,16 +22,13 @@ from __future__ import annotations
 from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast, overload
 
-
 from eth_typing import ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions
-
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
-
 
 T = TypeVar("T")
 
@@ -278,11 +275,7 @@ overloadedmethods_abi: ABI = cast(
             ],
             "name": "doSomething",
             "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "int_input",
-                    "type": "uint256",
-                },
+                {"internalType": "uint256", "name": "int_input", "type": "uint256"},
                 {"internalType": "string", "name": "", "type": "string"},
             ],
             "stateMutability": "pure",

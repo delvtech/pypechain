@@ -244,10 +244,7 @@ class EventsEventAContractEvent(ContractEvent):
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters,
-                fromBlock=fromBlock,
-                toBlock=toBlock,
-                block_hash=block_hash,
+                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
             ),
         )
 
@@ -262,10 +259,7 @@ class EventsEventAContractEvent(ContractEvent):
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters,
-                fromBlock=fromBlock,
-                toBlock=toBlock,
-                block_hash=block_hash,
+                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
             ),
         )
 
@@ -281,11 +275,7 @@ class EventsEventAContractEvent(ContractEvent):
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters,
-                fromBlock=fromBlock,
-                toBlock=toBlock,
-                address=address,
-                topics=topics,
+                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
             ),
         )
 
@@ -302,11 +292,7 @@ class EventsEventAContractEvent(ContractEvent):
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters,
-                fromBlock=fromBlock,
-                toBlock=toBlock,
-                address=address,
-                topics=topics,
+                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
             ),
         )
 
@@ -334,10 +320,7 @@ class EventsEventBContractEvent(ContractEvent):
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters,
-                fromBlock=fromBlock,
-                toBlock=toBlock,
-                block_hash=block_hash,
+                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
             ),
         )
 
@@ -352,10 +335,7 @@ class EventsEventBContractEvent(ContractEvent):
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters,
-                fromBlock=fromBlock,
-                toBlock=toBlock,
-                block_hash=block_hash,
+                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
             ),
         )
 
@@ -371,11 +351,7 @@ class EventsEventBContractEvent(ContractEvent):
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters,
-                fromBlock=fromBlock,
-                toBlock=toBlock,
-                address=address,
-                topics=topics,
+                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
             ),
         )
 
@@ -392,11 +368,7 @@ class EventsEventBContractEvent(ContractEvent):
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters,
-                fromBlock=fromBlock,
-                toBlock=toBlock,
-                address=address,
-                topics=topics,
+                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
             ),
         )
 
@@ -417,23 +389,11 @@ class EventsContractEvents(ContractEvents):
         super().__init__(abi, w3, address)
         self.EventA = cast(
             EventsEventAContractEvent,
-            EventsEventAContractEvent.factory(
-                "EventA",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                event_name="EventA",
-            ),
+            EventsEventAContractEvent.factory("EventA", w3=w3, contract_abi=abi, address=address, event_name="EventA"),
         )
         self.EventB = cast(
             EventsEventBContractEvent,
-            EventsEventBContractEvent.factory(
-                "EventB",
-                w3=w3,
-                contract_abi=abi,
-                address=address,
-                event_name="EventB",
-            ),
+            EventsEventBContractEvent.factory("EventB", w3=w3, contract_abi=abi, address=address, event_name="EventB"),
         )
 
 
@@ -443,18 +403,8 @@ events_abi: ABI = cast(
         {
             "anonymous": False,
             "inputs": [
-                {
-                    "indexed": True,
-                    "internalType": "address",
-                    "name": "who",
-                    "type": "address",
-                },
-                {
-                    "indexed": False,
-                    "internalType": "uint256",
-                    "name": "value",
-                    "type": "uint256",
-                },
+                {"indexed": True, "internalType": "address", "name": "who", "type": "address"},
+                {"indexed": False, "internalType": "uint256", "name": "value", "type": "uint256"},
             ],
             "name": "EventA",
             "type": "event",
