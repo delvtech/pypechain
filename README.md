@@ -1,16 +1,19 @@
 <p align="center">
   <img src="/docs/images/python-vaporwave.png" width="300" alt="Pypechain"><br>
   <img src="/docs/images/pypechain.svg" width="600" alt="Pypechain"><br>
-  Python bindings for Ethereum smart contracts<br><br>
+  Type-safe Python bindings for Ethereum smart contracts!<br><br>
   <i>Used by</i> <br>
-  <img src="https://github.com/delvtech/agent0/blob/main/icons/agent0-dark.svg" height="110" alt="Delv">
-</p>
+  <img src="https://github.com/delvtech/agent0/blob/main/icons/agent0-dark.svg" height="110" alt="Delv"><br><br>
 
-[![](https://codecov.io/gh/delvtech/pypechain/branch/main/graph/badge.svg?token=1S60MD42ZP)](https://app.codecov.io/gh/delvtech/pypechain?displayType=list)
-[![](https://img.shields.io/badge/license-Apache-brightgreen.svg)](https://githb.com/delvtech/pypechain/LICENSE)
-[![](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![](https://img.shields.io/badge/testing-pytest-blue.svg)](https://docs.pytest.org/en/latest/contents.html)
-<br><a href="https://app.codecov.io/gh/delvtech/pypechain?displayType=list"><img height="50px" src="https://codecov.io/gh/delvtech/pypechain/graphs/tree.svg?token=A3BTPZ02E6"><a>
+  <!-- Badges -->
+  <p align="center">
+      <a href="https://app.codecov.io/gh/delvtech/pypechain?displayType=list"><img src="https://codecov.io/gh/delvtech/pypechain/branch/main/graph/badge.svg?token=1S60MD42ZP" alt="Codecov"></a>
+      <a href="https://githb.com/delvtech/pypechain/LICENSE"><img src="https://img.shields.io/badge/license-Apache-brightgreen.svg" alt="License"></a>
+      <a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code Style: Black"></a>
+      <a href="https://docs.pytest.org/en/latest/contents.html"><img src="https://img.shields.io/badge/testing-pytest-blue.svg" alt="Testing: Pytest"></a><br>
+      <a href="https://app.codecov.io/gh/delvtech/pypechain?displayType=list"><img height="50px" src="https://codecov.io/gh/delvtech/pypechain/graphs/tree.svg?token=A3BTPZ02E6" alt="Codecov Tree"></a>
+  </p>
+</p>
 
 ## Features
 
@@ -33,13 +36,13 @@ For development install instructions, see toplevel [INSTALL.md](https://github.c
 
 ## Packages 📦
 
-| Package Name | Version                                                                                | Description                                      |
-| ------------ | -------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| pypechain    | [![](https://img.shields.io/pypi/v/pypechain.svg)]((https://pypi.org/pypi/pypechain/)) | Codegen python interfaces for web3.py contracts. |
-| flit         | [![](https://img.shields.io/pypi/v/flit.svg)]((https://pypi.org/pypi/flit/))           | A simple packaging tool for simple packages.     |
-| black        | [![](https://img.shields.io/pypi/v/black.svg)]((https://pypi.org/pypi/black/))         | The uncompromising code formatter.               |
-| jinja2       | [![](https://img.shields.io/pypi/v/jinja2.svg)]((https://pypi.org/pypi/jinja2/))       | A very fast and expressive template engine.      |
-| web3         | [![](https://img.shields.io/pypi/v/web3.svg)]((https://pypi.org/pypi/web3/))           | web3.py                                          |
+| Package Name | Version                                                                                  | Description                                      |
+| ------------ | ---------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| pypechain    | [![](https://img.shields.io/pypi/v/pypechain.svg)](<(https://pypi.org/pypi/pypechain/)>) | Codegen python interfaces for web3.py contracts. |
+| flit         | [![](https://img.shields.io/pypi/v/flit.svg)](<(https://pypi.org/pypi/flit/)>)           | A simple packaging tool for simple packages.     |
+| black        | [![](https://img.shields.io/pypi/v/black.svg)](<(https://pypi.org/pypi/black/)>)         | The uncompromising code formatter.               |
+| jinja2       | [![](https://img.shields.io/pypi/v/jinja2.svg)](<(https://pypi.org/pypi/jinja2/)>)       | A very fast and expressive template engine.      |
+| web3         | [![](https://img.shields.io/pypi/v/web3.svg)](<(https://pypi.org/pypi/web3/)>)           | web3.py                                          |
 
 ## Usage
 
