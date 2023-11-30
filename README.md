@@ -24,9 +24,35 @@ For development install instructions, see toplevel [INSTALL.md](https://github.c
 
 ## Usage
 
-```bash
-#  pypechain <OUT_DIR>          <ABI_FILE>
-❯❯ pypechain --out_dir=./build/ ./abis/ERC20.json
+Pypechain is primarily to be used via the CLI:
+
+```
+❯❯ pypechain -h
+
+usage: pypechain [-h] [--output_dir OUTPUT_DIR] [--line_length LINE_LENGTH] abi_file_path
+
+Generates class files for a given abi.
+
+positional arguments:
+  abi_file_path         Path to the abi JSON file or directory containing multiple JSON files.
+
+options:
+  -h, --help            show this help message and exit
+  --output_dir OUTPUT_DIR
+                        Path to the directory where files will be generated. Defaults to pypechain_types.
+  --line_length LINE_LENGTH
+                        Optional argument for the output file's maximum line length. Defaults to 80.
+```
+
+However, you can also run the `main` script directly from Python:
+
+```python
+from pypechain import pypechain_cli
+
+abi_dir = "some/abi/dir"
+output_dir = "some/output/dir"
+
+pypechain_cli(argv=[abi_dir, "--output_dir", output_dir])
 ```
 
 ## Examples
