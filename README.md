@@ -4,7 +4,7 @@
 
   <p align="center">
     <i>Used by</i> <br/>
-    <img src="https://github.com/delvtech/agent0/icons/agent0-dark.svg" height="110" alt="Delv" />
+    <img src="https://github.com/delvtech/agent0/blob/main/icons/agent0-dark.svg" height="110" alt="Delv" />
   </p>
 </p>
 
