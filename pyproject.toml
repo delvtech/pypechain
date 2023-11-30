@@ -26,7 +26,7 @@ pypechain = "pypechain.main:main"
 all = ["pypechain[base,build,test]"]
 base = ["black", "jinja2", "web3"]
 build = ["build", "setuptools", "wheel", "twine"]
-test = ["pytest", "pytest-snapshot", "pyright", "pylint", "coverage"]
+test = ["pytest", "pytest-snapshot", "pyright", "pylint", "coverage", "isort"]
 
 [project.urls]
 "Homepage" = "https://github.com/delvtech/pypechain"
