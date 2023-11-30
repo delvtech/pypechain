@@ -42,6 +42,7 @@ Using web3:
 from web3 import Web3
 web3 = Web3()
 base_token_address = "0xSomeAddress"
+user_address = "0xUserAddress"
 # Contract construction takes an ABI filepath string
 base_token_contract = web3.eth.contract(
     abi=base_contract_abi, address=web3.to_checksum_address(base_token_address)
@@ -55,7 +56,7 @@ contract_function = base_token_contract.get_function_by_name("balanceOf")(*fn_ar
 # The function call also takes arbitrary args and kwargs
 call_args = []
 call_kwargs = {}
-# return values is a dict with string keys, which minimizes discoverability & has no type assurances
+# return_values is a dict with string keys, which minimizes discoverability & has no type assurances
 return_values: dict[str, Any] = contract_function.call(*call_args, **call_kwargs)
 ```
 
