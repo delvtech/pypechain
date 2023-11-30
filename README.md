@@ -70,7 +70,7 @@ Using Pypechain generated objects:
     user_address = "0xUserAddress"
     # Contracts include a factory function to initialize with your given web3 provider
     base_token_contract: ERC20MintableContract = ERC20MintableContract.factory(w3=web3)(base_token_address)
-    # balanceOf is a class function, enabling IDE tab-completion, intuitive inspection, and typed outputs
+    # balanceOf is a class function, enabling IDE tab-completion, intuitive inspection, typed inputs and typed outputs
     user_base_balance: int = base_token_contract.functions.balanceOf(user_address).call()
 ```
 
@@ -78,4 +78,169 @@ Using Pypechain generated objects:
 This example will demonstrate how to Retrieve events
 
 ### Understanding contracts
-This example will demonstrate how a Python developer can use pypechain to translate and understand smart contracts.
+
+Solidity files can be difficult to read for native Python programmers that have little exposure to smart contract code.
+
+```sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ReturnTypes {
+
+    struct SimpleStruct {
+        uint intVal;
+        string strVal;
+    }
+
+    struct InnerStruct {
+        bool boolVal;
+    }
+
+    struct NestedStruct {
+        uint intVal;
+        string strVal;
+        InnerStruct innerStruct;
+    }
+
+    function mixStructsAndPrimitives() public pure returns (SimpleStruct memory simpleStruct, NestedStruct memory, uint, string memory name, bool YesOrNo) {
+        simpleStruct = SimpleStruct({
+            intVal: 1,
+            strVal: "You are number 1"
+        });
+        NestedStruct memory nestedStruct = NestedStruct({
+            intVal: 2,
+            strVal: "You are number 2",
+            innerStruct: InnerStruct({boolVal: true})
+        });
+
+        return (simpleStruct, nestedStruct, 1, "ReturnTypesContract", false);
+    }
+}
+```
+
+Running pypechain on the compiled ABI from this contract produces code that is more intuitive for Python programmers.
+
+```python
+... # imports
+
+
+@dataclass
+class SimpleStruct:
+    """SimpleStruct struct."""
+    intVal: int
+    strVal: str
+
+
+@dataclass
+class InnerStruct:
+    """InnerStruct struct."""
+    boolVal: bool
+
+
+@dataclass
+class NestedStruct:
+    """NestedStruct struct."""
+    intVal: int
+    strVal: str
+    innerStruct: InnerStruct
+
+class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
+    """ContractFunction for the mixStructsAndPrimitives method."""
+
+    class ReturnValues(NamedTuple):
+        """The return named tuple for MixStructsAndPrimitives."""
+
+        simpleStruct: SimpleStruct
+        arg2: NestedStruct
+        arg3: int
+        name: str
+        YesOrNo: bool
+
+    def __call__(self) -> ReturnTypesMixStructsAndPrimitivesContractFunction:
+        clone = super().__call__()
+        self.kwargs = clone.kwargs
+        self.args = clone.args
+        return self
+
+    def call(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier = "latest",
+        state_override: CallOverride | None = None,
+        ccip_read_enabled: bool | None = None,
+    ) -> ReturnValues:
+        """returns ReturnValues."""
+        # Define the expected return types from the smart contract call
+        return_types = [SimpleStruct, NestedStruct, int, str, bool]
+        # Call the function
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        return self.ReturnValues(*rename_returned_types(return_types, raw_values))
+
+
+class ReturnTypesContractFunctions(ContractFunctions):
+    """ContractFunctions for the ReturnTypes contract."""
+
+    mixStructsAndPrimitives: ReturnTypesMixStructsAndPrimitivesContractFunction
+
+    def __init__(
+        self,
+        abi: ABI,
+        w3: "Web3",
+        address: ChecksumAddress | None = None,
+        decode_tuples: bool | None = False,
+    ) -> None:
+        super().__init__(abi, w3, address, decode_tuples)
+        self.mixStructsAndPrimitives = ReturnTypesMixStructsAndPrimitivesContractFunction.factory(
+            "mixStructsAndPrimitives",
+            w3=w3,
+            contract_abi=abi,
+            address=address,
+            decode_tuples=decode_tuples,
+            function_identifier="mixStructsAndPrimitives",
+        )
+
+
+class ReturnTypesContract(Contract):
+    """A web3.py Contract class for the ReturnTypes contract."""
+
+    abi: ABI = returntypes_abi
+    bytecode: bytes = HexBytes(returntypes_bytecode)
+
+    def __init__(self, address: ChecksumAddress | None = None) -> None:
+        try:
+            # Initialize parent Contract class
+            super().__init__(address=address)
+            self.functions = ReturnTypesContractFunctions(returntypes_abi, self.w3, address)
+        except FallbackNotFound:
+            print("Fallback function not found. Continuing...")
+
+    functions: ReturnTypesContractFunctions
+
+    @classmethod
+    def deploy(cls, w3: Web3, signer: ChecksumAddress) -> Self:
+        """Deploys and instance of the contract.
+
+        Parameters
+        ----------
+        w3 : Web3
+            A web3 instance.
+        signer : ChecksumAddress
+            The address to deploy the contract from.
+
+        Returns
+        -------
+        Self
+            A deployed instance of the contract.
+        """
+        deployer = cls.factory(w3=w3)
+        tx_hash = deployer.constructor().transact({"from": signer})
+        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+        deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore
+        return deployed_contract
+
+    @classmethod
+    def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
+        contract = super().factory(w3, class_name, **kwargs)
+        contract.functions = ReturnTypesContractFunctions(returntypes_abi, w3, None)
+        return contract
+```
