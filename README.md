@@ -75,9 +75,6 @@ Using Pypechain generated objects:
     user_base_balance: int = base_token_contract.functions.balanceOf(user_address).call()
 ```
 
-### Retrieving events
-This example will demonstrate how to Retrieve events
-
 ### Understanding contracts
 
 Solidity files can be difficult to read for native Python programmers that have little exposure to smart contract code.
