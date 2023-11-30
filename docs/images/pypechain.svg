@@ -1,0 +1,11 @@
+<svg width="600" height="60" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color: #DA22FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color: #9733EE;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <text x="50%" y="30" dominant-baseline="middle" text-anchor="middle" font-size="48" font-family="Arial" fill="url(#gradient)">
+    Pypechain
+  </text>
+</svg>

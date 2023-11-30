@@ -21,20 +21,13 @@ class TestStructs:
         All arguments are fixtures.
         """
 
-        json_file_path = os.path.join(project_root, "example/abis/IHyperdrive.json")
+        json_file_path = os.path.join(project_root, "example/abis/Example.json")
         with open(json_file_path, "r", encoding="utf8") as file:
             data = json.load(file)
 
-        structs = get_structs_for_abi(data["abi"])
+        structs = get_structs_for_abi(data["contracts"]["example/contracts/Example.sol:Example"]["abi"])
 
         actual = list(structs)
-        expected = [
-            "Checkpoint",
-            "MarketState",
-            "Fees",
-            "PoolConfig",
-            "PoolInfo",
-            "WithdrawPool",
-        ]
+        expected = ["SimpleStruct", "InnerStruct", "NestedStruct"]
         assert actual == expected
         assert all(a == b for a, b in zip(actual, expected))

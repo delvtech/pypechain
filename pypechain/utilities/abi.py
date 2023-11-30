@@ -7,26 +7,12 @@ from pathlib import Path
 from typing import Literal, NamedTuple, Sequence, TypeGuard, cast
 
 from web3 import Web3
-from web3.types import (
-    ABI,
-    ABIElement,
-    ABIEvent,
-    ABIFunction,
-    ABIFunctionComponents,
-    ABIFunctionParams,
-)
+from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
 from pypechain.foundry.types import FoundryJson
 from pypechain.solc.types import SolcJson
-from pypechain.utilities.format import (
-    avoid_python_keywords,
-    capitalize_first_letter_only,
-)
-from pypechain.utilities.json import (
-    get_bytecode_from_json,
-    is_foundry_json,
-    is_solc_json,
-)
+from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
+from pypechain.utilities.json import get_bytecode_from_json, is_foundry_json, is_solc_json
 from pypechain.utilities.types import solidity_to_python_type
 
 
@@ -402,7 +388,7 @@ def get_param_name(
         The name of the item.
     """
 
-    return param_or_component.get("name", "")
+    return param_or_component.get("name", "").lstrip("_")
 
 
 def load_abi_from_file(file_path: Path) -> tuple[ABI, str]:

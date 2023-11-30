@@ -1,0 +1,346 @@
+{
+  "contracts": {
+    "example/contracts/Example.sol:Example": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "flip",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "flop",
+              "type": "uint256"
+            }
+          ],
+          "name": "flipFlop",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "_flop",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_flip",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "mixStructsAndPrimitives",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct Example.SimpleStruct",
+              "name": "simpleStruct",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "bool",
+                      "name": "boolVal",
+                      "type": "bool"
+                    }
+                  ],
+                  "internalType": "struct Example.InnerStruct",
+                  "name": "innerStruct",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct Example.NestedStruct",
+              "name": "",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "YesOrNo",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "namedSingleStruct",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct Example.SimpleStruct",
+              "name": "struct1",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "namedTwoMixedStructs",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct Example.SimpleStruct",
+              "name": "simpleStruct",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "bool",
+                      "name": "boolVal",
+                      "type": "bool"
+                    }
+                  ],
+                  "internalType": "struct Example.InnerStruct",
+                  "name": "innerStruct",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct Example.NestedStruct",
+              "name": "nestedStruct",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "singleNestedStruct",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "bool",
+                      "name": "boolVal",
+                      "type": "bool"
+                    }
+                  ],
+                  "internalType": "struct Example.InnerStruct",
+                  "name": "innerStruct",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct Example.NestedStruct",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "singleSimpleStruct",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct Example.SimpleStruct",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "twoMixedStructs",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct Example.SimpleStruct",
+              "name": "",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "bool",
+                      "name": "boolVal",
+                      "type": "bool"
+                    }
+                  ],
+                  "internalType": "struct Example.InnerStruct",
+                  "name": "innerStruct",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct Example.NestedStruct",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "twoSimpleStructs",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct Example.SimpleStruct",
+              "name": "",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct Example.SimpleStruct",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        }
+      ],
+      "bin": "608060405234801561000f575f80fd5b50610a118061001d5f395ff3fe608060405234801561000f575f80fd5b5060043610610086575f3560e01c8063811d9aa311610059578063811d9aa314610108578063c567c2f314610126578063cf71512c14610144578063e0f7c6041461017557610086565b806340e27b101461008a57806353fd1043146100a95780636456bc79146100c857806373b10c0f146100e6575b5f80fd5b610092610194565b6040516100a0929190610751565b60405180910390f35b6100b161024c565b6040516100bf929190610807565b60405180910390f35b6100d061031b565b6040516100dd919061083c565b60405180910390f35b6100ee610373565b6040516100ff9594939291906108c2565b60405180910390f35b610110610487565b60405161011d919061083c565b60405180910390f35b61012e6104df565b60405161013b9190610928565b60405180910390f35b61015e60048036038101906101599190610976565b61054e565b60405161016c9291906109b4565b60405180910390f35b61017d61055d565b60405161018b929190610807565b60405180910390f35b61019c610622565b6101a4610622565b5f6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d62657220310000000000000000000000000000000081525081525090505f6040518060400160405280600281526020016040518060400160405280601081526020017f596f7520617265206e756d626572203200000000000000000000000000000000815250815250905081819350935050509091565b610254610622565b61025c61063b565b5f6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d62657220310000000000000000000000000000000081525081525090505f6040518060600160405280600281526020016040518060400160405280601081526020017f596f7520617265206e756d6265722032000000000000000000000000000000008152508152602001604051806020016040528060011515815250815250905081819350935050509091565b610323610622565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d626572203100000000000000000000000000000000815250815250905090565b61037b610622565b61038361063b565b5f60605f6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d62657220310000000000000000000000000000000081525081525094505f6040518060600160405280600281526020016040518060400160405280601081526020017f596f7520617265206e756d62657220320000000000000000000000000000000081525081526020016040518060200160405280600115158152508152509050858160015f6040518060400160405280601381526020017f52657475726e5479706573436f6e7472616374000000000000000000000000008152509095509550955095509550509091929394565b61048f610622565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d626572203100000000000000000000000000000000815250815250905090565b6104e761063b565b6040518060600160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d6265722031000000000000000000000000000000008152508152602001604051806020016040528060011515815250815250905090565b5f808284915091509250929050565b610565610622565b61056d61063b565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d62657220310000000000000000000000000000000081525081525091506040518060600160405280600281526020016040518060400160405280601081526020017f596f7520617265206e756d626572203200000000000000000000000000000000815250815260200160405180602001604052806001151581525081525090509091565b60405180604001604052805f8152602001606081525090565b60405180606001604052805f81526020016060815260200161065b610661565b81525090565b60405180602001604052805f151581525090565b5f819050919050565b61068781610675565b82525050565b5f81519050919050565b5f82825260208201905092915050565b5f5b838110156106c45780820151818401526020810190506106a9565b5f8484015250505050565b5f601f19601f8301169050919050565b5f6106e98261068d565b6106f38185610697565b93506107038185602086016106a7565b61070c816106cf565b840191505092915050565b5f604083015f83015161072c5f86018261067e565b506020830151848203602086015261074482826106df565b9150508091505092915050565b5f6040820190508181035f8301526107698185610717565b9050818103602083015261077d8184610717565b90509392505050565b5f8115159050919050565b61079a81610786565b82525050565b602082015f8201516107b45f850182610791565b50505050565b5f606083015f8301516107cf5f86018261067e565b50602083015184820360208601526107e782826106df565b91505060408301516107fc60408601826107a0565b508091505092915050565b5f6040820190508181035f83015261081f8185610717565b9050818103602083015261083381846107ba565b90509392505050565b5f6020820190508181035f8301526108548184610717565b905092915050565b61086581610675565b82525050565b5f82825260208201905092915050565b5f6108858261068d565b61088f818561086b565b935061089f8185602086016106a7565b6108a8816106cf565b840191505092915050565b6108bc81610786565b82525050565b5f60a0820190508181035f8301526108da8188610717565b905081810360208301526108ee81876107ba565b90506108fd604083018661085c565b818103606083015261090f818561087b565b905061091e60808301846108b3565b9695505050505050565b5f6020820190508181035f83015261094081846107ba565b905092915050565b5f80fd5b61095581610675565b811461095f575f80fd5b50565b5f813590506109708161094c565b92915050565b5f806040838503121561098c5761098b610948565b5b5f61099985828601610962565b92505060206109aa85828601610962565b9150509250929050565b5f6040820190506109c75f83018561085c565b6109d4602083018461085c565b939250505056fea26469706673582212206a3c9ff1f74f5e10eaf7d2bd4e7ee2f0a56ab061726e9d305f065bf33259e53d64736f6c63430008170033",
+      "metadata": "{\"compiler\":{\"version\":\"0.8.23+commit.f704f362\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"flip\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"flop\",\"type\":\"uint256\"}],\"name\":\"flipFlop\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_flop\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_flip\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mixStructsAndPrimitives\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct Example.SimpleStruct\",\"name\":\"simpleStruct\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"bool\",\"name\":\"boolVal\",\"type\":\"bool\"}],\"internalType\":\"struct Example.InnerStruct\",\"name\":\"innerStruct\",\"type\":\"tuple\"}],\"internalType\":\"struct Example.NestedStruct\",\"name\":\"\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"YesOrNo\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"namedSingleStruct\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct Example.SimpleStruct\",\"name\":\"struct1\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"namedTwoMixedStructs\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct Example.SimpleStruct\",\"name\":\"simpleStruct\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"bool\",\"name\":\"boolVal\",\"type\":\"bool\"}],\"internalType\":\"struct Example.InnerStruct\",\"name\":\"innerStruct\",\"type\":\"tuple\"}],\"internalType\":\"struct Example.NestedStruct\",\"name\":\"nestedStruct\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"singleNestedStruct\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"bool\",\"name\":\"boolVal\",\"type\":\"bool\"}],\"internalType\":\"struct Example.InnerStruct\",\"name\":\"innerStruct\",\"type\":\"tuple\"}],\"internalType\":\"struct Example.NestedStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"singleSimpleStruct\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct Example.SimpleStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"twoMixedStructs\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct Example.SimpleStruct\",\"name\":\"\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"bool\",\"name\":\"boolVal\",\"type\":\"bool\"}],\"internalType\":\"struct Example.InnerStruct\",\"name\":\"innerStruct\",\"type\":\"tuple\"}],\"internalType\":\"struct Example.NestedStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"twoSimpleStructs\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct Example.SimpleStruct\",\"name\":\"\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct Example.SimpleStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"example/contracts/Example.sol\":\"Example\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"example/contracts/Example.sol\":{\"keccak256\":\"0xa084c813e9ef7c151b7c2184a25ba9376ec30771c00b19f0f3d03b8410a9803b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://26766645061acc87fd9b2420646dbfd06d6240c7fd5a3f9851d0184c5ff12200\",\"dweb:/ipfs/QmbgCSfUKet5aKkdfrNpjxwqRnPoNxvaZDETwM2BN6cGoU\"]}},\"version\":1}"
+    }
+  },
+  "version": "0.8.23+commit.f704f362.Darwin.appleclang"
+}

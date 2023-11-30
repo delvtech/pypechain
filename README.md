@@ -1,9 +1,24 @@
-[![](https://codecov.io/gh/delvtech/pypechain/branch/main/graph/badge.svg?token=1S60MD42ZP)](https://app.codecov.io/gh/delvtech/pypechain?displayType=list)
-[![](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![](https://img.shields.io/badge/testing-pytest-blue.svg)](https://docs.pytest.org/en/latest/contents.html)
-<br><a href="https://app.codecov.io/gh/delvtech/pypechain?displayType=list"><img height="50px" src="https://codecov.io/gh/delvtech/pypechain/graphs/tree.svg?token=A3BTPZ02E6"><a>
+<p align="center">
+  <img src="/docs/images/python-vaporwave.png" width="300" alt="Pypechain"><br>
+  <img src="/docs/images/pypechain.svg" width="600" alt="Pypechain"><br>
+  Type-safe Python bindings for Ethereum smart contracts!<br><br>
+  <i>Used by</i> <br>
+  <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/delvtech/agent0/blob/main/icons/agent0-dark.svg">
+  <img alt="Delv" src="https://github.com/delvtech/agent0/blob/main/icons/agent0-light.svg">
+  </picture>
 
-# Pypechain
+  <!-- Badges -->
+  <p align="center">
+      <a href="https://app.codecov.io/gh/delvtech/pypechain?displayType=list"><img src="https://codecov.io/gh/delvtech/pypechain/branch/main/graph/badge.svg?token=1S60MD42ZP" alt="Codecov"></a>
+      <a href="https://githb.com/delvtech/pypechain/LICENSE"><img src="https://img.shields.io/badge/license-Apache-brightgreen.svg" alt="License"></a>
+      <a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code Style: Black"></a>
+      <a href="https://docs.pytest.org/en/latest/contents.html"><img src="https://img.shields.io/badge/testing-pytest-blue.svg" alt="Testing: Pytest"></a><br>
+      <a href="https://app.codecov.io/gh/delvtech/pypechain?displayType=list"><img height="50px" src="https://codecov.io/gh/delvtech/pypechain/graphs/tree.svg?token=A3BTPZ02E6" alt="Codecov Tree"></a>
+  </p>
+</p>
+
+## Features
 
 Static Python bindings for ethereum smart contracts.
 
@@ -21,6 +36,16 @@ pip install --upgrade pypechain
 ```
 
 For development install instructions, see toplevel [INSTALL.md](https://github.com/delvtech/pypechain/blob/main/INSTALL.md)
+
+## Packages 📦
+
+| Package Name | Version                                                                                  | Description                                      |
+| ------------ | ---------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| pypechain    | [![](https://img.shields.io/pypi/v/pypechain.svg)](<(https://pypi.org/pypi/pypechain/)>) | Codegen python interfaces for web3.py contracts. |
+| flit         | [![](https://img.shields.io/pypi/v/flit.svg)](<(https://pypi.org/pypi/flit/)>)           | A simple packaging tool for simple packages.     |
+| black        | [![](https://img.shields.io/pypi/v/black.svg)](<(https://pypi.org/pypi/black/)>)         | The uncompromising code formatter.               |
+| jinja2       | [![](https://img.shields.io/pypi/v/jinja2.svg)](<(https://pypi.org/pypi/jinja2/)>)       | A very fast and expressive template engine.      |
+| web3         | [![](https://img.shields.io/pypi/v/web3.svg)](<(https://pypi.org/pypi/web3/)>)           | web3.py                                          |
 
 ## Usage
 
@@ -64,25 +89,31 @@ the developer experience.
 ### Accessing contract balances
 
 Using web3:
+
 ```python
 from web3 import Web3
 web3 = Web3()
 base_token_address = "0xSomeAddress"
 user_address = "0xUserAddress"
+
 # Contract construction takes an ABI filepath string
 base_token_contract = web3.eth.contract(
     abi=base_contract_abi, address=web3.to_checksum_address(base_token_address)
 )
+
 # Arbitrary function arguments and names forces one to examine the ABI JSON to know the values & types
 # Additionally, the types are not specified as Python types in the ABI
 fn_args = [user_address]
 fn_kwargs = {}
-# Get the contract function, which could then be evoked by e.g. `call()` or `transact()`
+
+# HARD TO DISCOVER ALL FUNCTIONS AND THEIR ARGUMENTS
 contract_function = base_token_contract.get_function_by_name("balanceOf")(*fn_args, **fn_kwargs)
+
 # The function call also takes arbitrary args and kwargs
 call_args = []
 call_kwargs = {}
-# return_values is a dict with string keys, which minimizes discoverability & has no type assurances
+
+# UNTYPED RETURN VALUE!!
 return_values: dict[str, Any] = contract_function.call(*call_args, **call_kwargs)
 ```
 
@@ -91,12 +122,14 @@ Using Pypechain generated objects:
 ```python
     from web3 import Web3
     from pypechain_types import ERC20MintableContract
-    
+
     web3 = Web3()
     base_token_address = "0xSomeAddress"
     user_address = "0xUserAddress"
+
     # Contracts include a factory function to initialize with your given web3 provider
-    base_token_contract: ERC20MintableContract = ERC20MintableContract.factory(w3=web3)(base_token_address)
+    base_token_contract: ERC20MintableContract = ERC20MintableContract.deploy(w3=web3, signer=user_address)
+
     # balanceOf is a class function, enabling IDE tab-completion, intuitive inspection, typed inputs and typed outputs
     user_base_balance: int = base_token_contract.functions.balanceOf(user_address).call()
 ```
@@ -105,7 +138,7 @@ Using Pypechain generated objects:
 
 Solidity files can be difficult to read for native Python programmers that have little exposure to smart contract code.
 
-```sol
+```typescript
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 

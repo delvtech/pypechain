@@ -94,7 +94,9 @@ class TestReturnTypes:
     def test_mix_structs_and_primitives(self, deployed_contract: ReturnTypesContract):
         """Tests two structs, one nested, and other values returned"""
         func = deployed_contract.functions.mixStructsAndPrimitives()
-        result = func.call()
+
+        result: ReturnTypesContract.functions.mixStructsAndPrimitives.ReturnValues = func.call()
+
         assert isinstance(result, func.ReturnValues)
         assert result == (
             SimpleStruct(1, "You are number 1"),
