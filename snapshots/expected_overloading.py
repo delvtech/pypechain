@@ -21,7 +21,7 @@ class OverloadedBalanceOfContractFunction0(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> int: 
+    ) -> int:
         """returns int."""
         # Define the expected return types from the smart contract call
         
@@ -52,7 +52,7 @@ class OverloadedBalanceOfContractFunction1(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> int: 
+    ) -> int:
         """returns int."""
         # Define the expected return types from the smart contract call
         
@@ -112,4 +112,3 @@ class OverloadedContractFunctions(ContractFunctions):
              function_identifier="balanceOf",
          )
          
- 

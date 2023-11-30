@@ -20,10 +20,10 @@ https://github.com/delvtech/pypechain"""
 from __future__ import annotations
 
 from dataclasses import fields, is_dataclass
-from typing import Any, {% if has_events %}Iterable, {% endif %}{% if has_multiple_return_values %}NamedTuple, {% endif %}Tuple, Type, TypeVar, {% if has_events %}Sequence, {% endif %}cast{% if has_overloading %}, overload{% endif %}
+from typing import Any, {% if has_multiple_return_values %}NamedTuple, {% endif %}Tuple, Type, TypeVar, cast{% if has_overloading %}, overload{% endif %}
+{% if has_events %}from typing import Iterable, Sequence {% endif %}
 
 from eth_typing import ChecksumAddress{% if has_bytecode %}, HexStr{% endif %}
-{% if has_events %}from eth_utils.decorators import combomethod{% endif %}
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3

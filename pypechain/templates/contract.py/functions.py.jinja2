@@ -29,7 +29,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction{{i}}(C
         block_identifier: BlockIdentifier = "latest",
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> {{return_type}}: 
+    ) -> {{return_type}}:
         """returns {{return_type}}."""
         # Define the expected return types from the smart contract call
         {% if output_types|length == 1 %}
@@ -84,14 +84,14 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
-    
+
     def call(
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
         state_override: CallOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> {{return_type}}: 
+    ) -> {{return_type}}:
         """returns {{return_type}}."""
         # Define the expected return types from the smart contract call
         {% if output_types|length == 1 %}
@@ -100,10 +100,11 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
         return_types = [{{output_types|join(', ')}}]
         {% endif %}
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         {% if output_types|length == 1 %}
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return cast({{output_types[0]}}, rename_returned_types(return_types, raw_values))
         {% elif output_types|length > 1%}
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return self.{{return_type}}(*rename_returned_types(return_types, raw_values))
         {% endif %}
 {% endif %} {# if function_data.has_overloading #}
@@ -133,4 +134,3 @@ class {{contract_name}}ContractFunctions(ContractFunctions):
              function_identifier="{{function.name}}",
          )
          {% endfor %}
- 

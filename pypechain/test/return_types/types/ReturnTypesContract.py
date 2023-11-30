@@ -22,8 +22,8 @@ from __future__ import annotations
 from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast
 
-from eth_typing import ChecksumAddress, HexStr
 
+from eth_typing import ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
@@ -146,8 +146,8 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
         return_types = [SimpleStruct, NestedStruct, int, str, bool]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
@@ -173,8 +173,8 @@ class ReturnTypesNamedSingleStructContractFunction(ContractFunction):
         return_types = SimpleStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return cast(SimpleStruct, rename_returned_types(return_types, raw_values))
 
 
@@ -200,8 +200,8 @@ class ReturnTypesNamedSingleValueContractFunction(ContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return cast(int, rename_returned_types(return_types, raw_values))
 
 
@@ -233,8 +233,8 @@ class ReturnTypesNamedTwoMixedStructsContractFunction(ContractFunction):
         return_types = [SimpleStruct, NestedStruct]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
@@ -266,8 +266,8 @@ class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
         return_types = [int, int]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
@@ -293,8 +293,8 @@ class ReturnTypesNoNameSingleValueContractFunction(ContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return cast(int, rename_returned_types(return_types, raw_values))
 
 
@@ -326,8 +326,8 @@ class ReturnTypesNoNameTwoValuesContractFunction(ContractFunction):
         return_types = [str, int]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
@@ -353,8 +353,8 @@ class ReturnTypesSingleNestedStructContractFunction(ContractFunction):
         return_types = NestedStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return cast(NestedStruct, rename_returned_types(return_types, raw_values))
 
 
@@ -380,8 +380,8 @@ class ReturnTypesSingleSimpleStructContractFunction(ContractFunction):
         return_types = SimpleStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return cast(SimpleStruct, rename_returned_types(return_types, raw_values))
 
 
@@ -413,8 +413,8 @@ class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
         return_types = [SimpleStruct, NestedStruct]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
@@ -446,8 +446,8 @@ class ReturnTypesTwoSimpleStructsContractFunction(ContractFunction):
         return_types = [SimpleStruct, SimpleStruct]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         return self.ReturnValues(*rename_returned_types(return_types, raw_values))
 
 
