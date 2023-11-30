@@ -118,7 +118,9 @@ def w3(w3_init: tuple[Web3, Callable[[], RPCResponse]]) -> Web3:  # type: ignore
         A web3.py instance.
     """
     _w3, reset = w3_init
-    msg = reset()
+    # TODO: calling anvil_revert or evm_revert does not actually revert the chain to a previous
+    # snapshot.  Figure out why.
+    reset()
     return _w3
 
 
