@@ -1,3 +1,17 @@
+<p align="center">
+  <img src="/docs/images/python-vaporwave.png" width="300" alt="Pypechain">
+  <p align="center">Python bindings for Ethereum smart contracts</p>
+
+  <p align="center">
+    <a href="/package.json"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
+  </p>
+
+  <p align="center">
+    <i>Used by</i> <br/>
+    <img src="https://github.com/delv/agent0/icons/agent0-dark.svg" height="110" alt="Delv" />
+  </p>
+</p>
+
 [![](https://codecov.io/gh/delvtech/pypechain/branch/main/graph/badge.svg?token=1S60MD42ZP)](https://app.codecov.io/gh/delvtech/pypechain?displayType=list)
 [![](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![](https://img.shields.io/badge/testing-pytest-blue.svg)](https://docs.pytest.org/en/latest/contents.html)
@@ -64,6 +78,7 @@ the developer experience.
 ### Accessing contract balances
 
 Using web3:
+
 ```python
 from web3 import Web3
 web3 = Web3()
@@ -91,7 +106,7 @@ Using Pypechain generated objects:
 ```python
     from web3 import Web3
     from pypechain_types import ERC20MintableContract
-    
+
     web3 = Web3()
     base_token_address = "0xSomeAddress"
     user_address = "0xUserAddress"
