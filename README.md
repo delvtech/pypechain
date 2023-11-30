@@ -3,7 +3,10 @@
   <img src="/docs/images/pypechain.svg" width="600" alt="Pypechain"><br>
   Type-safe Python bindings for Ethereum smart contracts!<br><br>
   <i>Used by</i> <br>
-  <img src="https://github.com/delvtech/agent0/blob/main/icons/agent0-dark.svg" height="110" alt="Delv"><br><br>
+  <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/delvtech/agent0/blob/main/icons/agent0-dark.svg">
+  <img alt="Delv" src="https://github.com/delvtech/agent0/blob/main/icons/agent0-light.svg">
+  </picture>
 
   <!-- Badges -->
   <p align="center">
