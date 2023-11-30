@@ -1,11 +1,9 @@
 <p align="center">
-  <img src="/docs/images/python-vaporwave.png" width="300" alt="Pypechain">
-  <p align="center">Python bindings for Ethereum smart contracts</p>
-
-  <p align="center">
-    <i>Used by</i> <br/>
-    <img src="https://github.com/delvtech/agent0/blob/main/icons/agent0-dark.svg" height="110" alt="Delv" />
-  </p>
+  <img src="/docs/images/python-vaporwave.png" width="300" alt="Pypechain"><br>
+  <img src="/docs/images/pypechain.svg" width="600" alt="Pypechain"><br>
+  Python bindings for Ethereum smart contracts<br><br>
+  <i>Used by</i> <br>
+  <img src="https://github.com/delvtech/agent0/blob/main/icons/agent0-dark.svg" height="110" alt="Delv">
 </p>
 
 [![](https://codecov.io/gh/delvtech/pypechain/branch/main/graph/badge.svg?token=1S60MD42ZP)](https://app.codecov.io/gh/delvtech/pypechain?displayType=list)
