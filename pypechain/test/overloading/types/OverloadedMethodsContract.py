@@ -275,11 +275,7 @@ overloadedmethods_abi: ABI = cast(
             ],
             "name": "doSomething",
             "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "int_input",
-                    "type": "uint256",
-                },
+                {"internalType": "uint256", "name": "int_input", "type": "uint256"},
                 {"internalType": "string", "name": "", "type": "string"},
             ],
             "stateMutability": "pure",
