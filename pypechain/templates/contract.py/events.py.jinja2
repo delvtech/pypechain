@@ -12,21 +12,29 @@ class {{contract_name}}{{event_data.capitalized_name}}ContractEvent(ContractEven
 
     {# TODO: add type-hints for argument_filters -#}
     {# TODO: add dataclass for [EventName]Data return value -#}
-    @combomethod
-    def get_logs(
-        self,
+    def get_logs( # type: ignore
+        self: "{{contract_name}}{{event_data.capitalized_name}}ContractEvent",
         argument_filters: dict[str, Any] | None = None,
         fromBlock: BlockIdentifier | None = None,
         toBlock: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
-        return super().get_logs(argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash)
+        return cast(Iterable[EventData], super().get_logs(argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash))
+
+    @classmethod
+    def get_logs( # type: ignore
+        cls: Type["{{contract_name}}{{event_data.capitalized_name}}ContractEvent"],
+        argument_filters: dict[str, Any] | None = None,
+        fromBlock: BlockIdentifier | None = None,
+        toBlock: BlockIdentifier | None = None,
+        block_hash: HexBytes | None = None,
+    ) -> Iterable[EventData]:
+        return cast(Iterable[EventData], super().get_logs(argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash))
 
     {# TODO: add type-hints for argument_filters -#}
     {# TODO: add dataclass for [EventName]Data return value -#}
-    @combomethod
-    def create_filter(
-        self,
+    def create_filter( # type: ignore
+        self: "{{contract_name}}{{event_data.capitalized_name}}ContractEvent",
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
         fromBlock: BlockIdentifier | None = None,
@@ -34,7 +42,19 @@ class {{contract_name}}{{event_data.capitalized_name}}ContractEvent(ContractEven
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
-        return super().create_filter(argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics)
+        return cast(LogFilter, super().create_filter(argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics))
+
+    @classmethod
+    def create_filter( # type: ignore
+        cls: Type["{{contract_name}}{{event_data.capitalized_name}}ContractEvent"],
+        *,  # PEP 3102
+        argument_filters: dict[str, Any] | None = None,
+        fromBlock: BlockIdentifier | None = None,
+        toBlock: BlockIdentifier = "latest",
+        address: ChecksumAddress | None = None,
+        topics: Sequence[Any] | None = None,
+    ) -> LogFilter:
+        return cast(LogFilter, super().create_filter(argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics))
 
 {% endfor %}
 
