@@ -7,13 +7,13 @@ import os
 import shutil
 import subprocess
 import time
-from typing import Iterator
+from typing import Callable, Iterator
 
 import pytest
 from eth_typing import URI
 from web3 import Web3
 from web3.middleware import geth_poa
-from web3.types import RPCEndpoint
+from web3.types import RPCEndpoint, RPCResponse
 
 # pylint: disable=redefined-outer-name
 
@@ -79,7 +79,7 @@ def local_chain() -> Iterator[str]:
 
 
 @pytest.fixture(scope="session")
-def w3_init(local_chain: str) -> Web3:
+def w3_init(local_chain: str) -> tuple[Web3, Callable[[], RPCResponse]]:
     """gets a Web3 instance connected to the local chain.
 
     Parameters
@@ -89,29 +89,37 @@ def w3_init(local_chain: str) -> Web3:
 
     Returns
     -------
-    Web3
-        A web3.py instance.
+    tuple[Web3, Callable]
+        A web3.py instance and a reset function.
     """
 
-    return initialize_web3_with_http_provider(local_chain)
+    _w3 = initialize_web3_with_http_provider(local_chain)
+    response = _w3.provider.make_request(method=RPCEndpoint("anvil_snapshot"), params=[])
+    snapshot_id = response.get("result")
+
+    def reset():
+        return _w3.provider.make_request(method=RPCEndpoint("anvil_revert"), params=[snapshot_id])
+
+    return _w3, reset
 
 
 @pytest.fixture(scope="function")
-def w3(w3_init: Web3) -> Web3:  # type: ignore
+def w3(w3_init: tuple[Web3, Callable[[], RPCResponse]]) -> Web3:  # type: ignore
     """resets the anvil instance at the function level so each test gets a fresh chain.
 
     Parameters
     ----------
-    w3_init : Web3
-        A web3.py instance.
+    w3_init : tuple[Web3, Callable]
+        A web3.py instance and a reset function.
 
     Returns
     -------
     Web3
         A web3.py instance.
     """
-    w3_init.provider.make_request(method=RPCEndpoint("anvil_reset"), params=[])
-    return w3_init
+    _w3, reset = w3_init
+    msg = reset()
+    return _w3
 
 
 def initialize_web3_with_http_provider(
