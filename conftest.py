@@ -164,7 +164,7 @@ def process_contracts(request):
     os.makedirs(abis_dir, exist_ok=True)
 
     # Process each .sol file in the contracts directory and its subdirectories
-    for root, dirs, files in os.walk(contracts_dir):
+    for root, _, files in os.walk(contracts_dir):
         for file in files:
             if file.endswith(".sol"):
                 contract_file = os.path.join(root, file)
