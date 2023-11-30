@@ -118,8 +118,8 @@ class ExampleFlipFlopContractFunction(ContractFunction):
     class ReturnValues(NamedTuple):
         """The return named tuple for FlipFlop."""
 
-        _flop: int
-        _flip: int
+        flop: int
+        flip: int
 
     def __call__(self, flip: int, flop: int) -> ExampleFlipFlopContractFunction:
         clone = super().__call__(flip, flop)
