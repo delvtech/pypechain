@@ -17,7 +17,7 @@ def render_files(abi_file_path: str, output_dir: str, line_length: int = 120) ->
     file_path = Path(abi_file_path)
     output_path = Path(output_dir)
     filename = file_path.name
-    contract_name = os.path.splitext(filename)[0]
+    contract_name = os.path.splitext(filename)[0].replace("-", "")
     contract_path = output_path.joinpath(f"{contract_name}")
 
     # render the code for each file

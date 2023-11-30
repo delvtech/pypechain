@@ -54,6 +54,7 @@ def solidity_to_python_type(solidity_type: str) -> str:
         "uint8",
         "uint16",
         "uint32",
+        "uint48",
         "uint64",
         "uint128",
         "uint256",

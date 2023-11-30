@@ -1,6 +1,7 @@
 """Functions to render Python files from an abi usng a jinja2 template."""
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any, NamedTuple
 
@@ -218,6 +219,7 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
             # handle all other functions
             else:
                 name = abi_function.get("name", "")
+                name = re.sub(r"\W|^(?=\d)", "_", name)
                 signature_data: SignatureData = {
                     "input_names_and_types": get_input_names_and_types(abi_function),
                     "input_names": get_input_names(abi_function),
