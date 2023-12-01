@@ -252,7 +252,7 @@ class OverloadedMethodsDoSomethingContractFunction(ContractFunction):
         ...
 
     def __call__(self, *args) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        clone = super().__call__(*(datclass_to_tuple(arg) for arg in args))
+        clone = super().__call__(*(dataclass_to_tuple(arg) for arg in args))
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self  # type: ignore
