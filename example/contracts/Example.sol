@@ -22,19 +22,12 @@ contract Example {
         return (flop,flip);
     }
 
-    function singleSimpleStruct() public pure returns (SimpleStruct memory) {
-        return SimpleStruct({
-            intVal: 1,
-            strVal: "You are number 1"
-        });
+    function singleSimpleStruct(SimpleStruct calldata simpleStruct) public pure returns (SimpleStruct memory) {
+        return simpleStruct;
     }
 
-    function singleNestedStruct() public pure returns (NestedStruct memory) {
-        return NestedStruct({
-            intVal: 1,
-            strVal: "You are number 1",
-            innerStruct: InnerStruct({boolVal: true})
-        });
+    function singleNestedStruct(NestedStruct calldata nestedStruct) public pure returns (NestedStruct memory) {
+        return nestedStruct;
     }
 
     function twoSimpleStructs() public pure returns (SimpleStruct memory, SimpleStruct memory) {
