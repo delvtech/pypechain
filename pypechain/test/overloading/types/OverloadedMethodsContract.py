@@ -73,6 +73,22 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
     return cls(**field_values)
 
 
+def dataclass_to_tuple(instance: Any) -> Any:
+    """Convert a dataclass instance to a tuple, handling nested dataclasses.
+    If the input is not a dataclass, return the original value.
+    """
+    if not is_dataclass(instance):
+        return instance
+
+    def convert_value(value: Any) -> Any:
+        """Convert nested dataclasses to tuples recursively, or return the original value."""
+        if is_dataclass(value):
+            return dataclass_to_tuple(value)
+        return value
+
+    return tuple(convert_value(getattr(instance, field.name)) for field in fields(instance))
+
+
 def rename_returned_types(return_types, raw_values) -> Any:
     """_summary_
 
@@ -110,7 +126,7 @@ class OverloadedMethodsDoSomethingContractFunction0(ContractFunction):
     """ContractFunction for the doSomething method."""
 
     def __call__(self, x: int, s: str) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__(x, s)
+        super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(s))
         return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     class ReturnValues(NamedTuple):
@@ -141,7 +157,7 @@ class OverloadedMethodsDoSomethingContractFunction1(ContractFunction):
     """ContractFunction for the doSomething method."""
 
     def __call__(self, s: str) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__(s)
+        super().__call__()
         return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     def call(
@@ -166,7 +182,7 @@ class OverloadedMethodsDoSomethingContractFunction2(ContractFunction):
     """ContractFunction for the doSomething method."""
 
     def __call__(self, x: int) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__(x)
+        super().__call__()
         return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     def call(
@@ -191,7 +207,7 @@ class OverloadedMethodsDoSomethingContractFunction3(ContractFunction):
     """ContractFunction for the doSomething method."""
 
     def __call__(self, x: int, y: int) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__(x, y)
+        super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(y))
         return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     def call(
@@ -236,7 +252,7 @@ class OverloadedMethodsDoSomethingContractFunction(ContractFunction):
         ...
 
     def __call__(self, *args) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        clone = super().__call__(*args)
+        clone = super().__call__(*(datclass_to_tuple(arg) for arg in args))
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self  # type: ignore
