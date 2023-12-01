@@ -79,6 +79,22 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
     return cls(**field_values)
 
 
+def dataclass_to_tuple(instance: Any) -> Any:
+    """Convert a dataclass instance to a tuple, handling nested dataclasses.
+    If the input is not a dataclass, return the original value.
+    """
+    if not is_dataclass(instance):
+        return instance
+
+    def convert_value(value: Any) -> Any:
+        """Convert nested dataclasses to tuples recursively, or return the original value."""
+        if is_dataclass(value):
+            return dataclass_to_tuple(value)
+        return value
+
+    return tuple(convert_value(getattr(instance, field.name)) for field in fields(instance))
+
+
 def rename_returned_types(return_types, raw_values) -> Any:
     """_summary_
 
@@ -179,7 +195,7 @@ class ReturnTypesNamedSingleValueContractFunction(ContractFunction):
     """ContractFunction for the namedSingleValue method."""
 
     def __call__(self, x: int, y: int) -> ReturnTypesNamedSingleValueContractFunction:
-        clone = super().__call__(x, y)
+        clone = super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(y))
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
@@ -245,7 +261,7 @@ class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
         flop: int
 
     def __call__(self, x: int, y: int) -> ReturnTypesNamedTwoValuesContractFunction:
-        clone = super().__call__(x, y)
+        clone = super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(y))
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
@@ -272,7 +288,7 @@ class ReturnTypesNoNameSingleValueContractFunction(ContractFunction):
     """ContractFunction for the noNameSingleValue method."""
 
     def __call__(self, x: int) -> ReturnTypesNoNameSingleValueContractFunction:
-        clone = super().__call__(x)
+        clone = super().__call__(dataclass_to_tuple(x))
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
@@ -305,7 +321,7 @@ class ReturnTypesNoNameTwoValuesContractFunction(ContractFunction):
         arg2: int
 
     def __call__(self, s: str) -> ReturnTypesNoNameTwoValuesContractFunction:
-        clone = super().__call__(s)
+        clone = super().__call__(dataclass_to_tuple(s))
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self

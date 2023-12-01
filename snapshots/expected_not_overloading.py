@@ -46,7 +46,7 @@ class OverloadedBalanceOfWhoContractFunction(ContractFunction):
     
 
     def __call__(self, who: str) -> OverloadedBalanceOfWhoContractFunction:
-        clone = super().__call__(who)
+        clone = super().__call__(dataclass_to_tuple(who))
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
