@@ -8,7 +8,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction{{i}}(C
     """ContractFunction for the {{function_data.name}} method."""
 
     def __call__(self{% if function_data.signature_datas[i].input_names_and_types %}, {{function_data.signature_datas[i].input_names_and_types|join(', ')}}{% endif %}) -> {{contract_name}}{{function_data.capitalized_name}}ContractFunction:{%- if function_data.signature_datas|length > 1 %} #type: ignore{% endif %}
-        super().__call__({% if function_data.signature_datas[i].input_names%}{{function_data.signature_datas[i].input_names|join(', ')}}{% endif %})
+        super().__call__({% if function_data.signature_datas[i].input_names | length > 1%}{{function_data.signature_datas[i].input_names | wrap_with_dataclass_to_tuple | join(', ')}}{% endif %})
         return cast({{contract_name}}{{function_data.capitalized_name}}ContractFunction, self)
 
     {% set output_names = function_data.signature_datas[i].outputs %}
@@ -59,7 +59,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
 {% endfor %}
 
     def __call__(self, *args) -> {{contract_name}}{{function_data.capitalized_name}}ContractFunction:  # type: ignore
-        clone = super().__call__(*args)
+        clone = super().__call__(*(datclass_to_tuple(arg) for arg in args))
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self  # type: ignore
@@ -80,7 +80,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
     {% endif %}
 
     def __call__(self{% if signature_data.input_names_and_types %}, {{signature_data.input_names_and_types|join(', ')}}{% endif %}) -> {{contract_name}}{{function_data.capitalized_name}}ContractFunction:{%- if signature_datas|length > 1 %} #type: ignore{% endif %}
-        clone = super().__call__({{signature_data.input_names|join(', ')}})
+        clone = super().__call__({{signature_data.input_names | wrap_with_dataclass_to_tuple | join(', ')}})
         self.kwargs = clone.kwargs
         self.args = clone.args
         return self
