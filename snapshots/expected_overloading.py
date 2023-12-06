@@ -6,7 +6,7 @@ class OverloadedBalanceOfContractFunction0(ContractFunction):
     """ContractFunction for the balanceOf method."""
 
     def __call__(self) -> OverloadedBalanceOfContractFunction: #type: ignore
-        super().__call__()
+        super().__call__() #type: ignore
         return cast(OverloadedBalanceOfContractFunction, self)
 
     
@@ -37,7 +37,7 @@ class OverloadedBalanceOfContractFunction1(ContractFunction):
     """ContractFunction for the balanceOf method."""
 
     def __call__(self, who: str) -> OverloadedBalanceOfContractFunction: #type: ignore
-        super().__call__()
+        super().__call__() #type: ignore
         return cast(OverloadedBalanceOfContractFunction, self)
 
     

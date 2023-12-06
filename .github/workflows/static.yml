@@ -34,7 +34,7 @@ jobs:
         run: |
           echo "files=$(git ls-files '*.py' '*.pyi' | grep -v '^snapshots/' | xargs)" >> $GITHUB_OUTPUT
 
-      - name: run Pylint on files
+      - name: run Pyright on files
         run: |
           files="${{ steps.list_files.outputs.files }}"
           if [ -n "$files" ]; then

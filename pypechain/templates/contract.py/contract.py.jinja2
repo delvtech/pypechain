@@ -10,9 +10,9 @@ class {{contract_name}}Contract(Contract):
         try:
             # Initialize parent Contract class
             super().__init__(address=address)
-            self.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, self.w3, address)
+            self.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, self.w3, address) # type: ignore
             {% if has_events -%}
-            self.events = {{contract_name}}ContractEvents({{contract_name | lower}}_abi, self.w3, address)
+            self.events = {{contract_name}}ContractEvents({{contract_name | lower}}_abi, self.w3, address) # type: ignore
             {%- endif %}
 
         except FallbackNotFound:

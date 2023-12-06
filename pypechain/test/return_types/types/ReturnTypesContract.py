@@ -830,7 +830,7 @@ class ReturnTypesContract(Contract):
         try:
             # Initialize parent Contract class
             super().__init__(address=address)
-            self.functions = ReturnTypesContractFunctions(returntypes_abi, self.w3, address)
+            self.functions = ReturnTypesContractFunctions(returntypes_abi, self.w3, address)  # type: ignore
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")

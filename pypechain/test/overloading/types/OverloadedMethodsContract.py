@@ -126,7 +126,7 @@ class OverloadedMethodsDoSomethingContractFunction0(ContractFunction):
     """ContractFunction for the doSomething method."""
 
     def __call__(self, x: int, s: str) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(s))
+        super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(s))  # type: ignore
         return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     class ReturnValues(NamedTuple):
@@ -157,7 +157,7 @@ class OverloadedMethodsDoSomethingContractFunction1(ContractFunction):
     """ContractFunction for the doSomething method."""
 
     def __call__(self, s: str) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__()
+        super().__call__()  # type: ignore
         return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     def call(
@@ -182,7 +182,7 @@ class OverloadedMethodsDoSomethingContractFunction2(ContractFunction):
     """ContractFunction for the doSomething method."""
 
     def __call__(self, x: int) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__()
+        super().__call__()  # type: ignore
         return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     def call(
@@ -207,7 +207,7 @@ class OverloadedMethodsDoSomethingContractFunction3(ContractFunction):
     """ContractFunction for the doSomething method."""
 
     def __call__(self, x: int, y: int) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(y))
+        super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(y))  # type: ignore
         return cast(OverloadedMethodsDoSomethingContractFunction, self)
 
     def call(
@@ -339,7 +339,7 @@ class OverloadedMethodsContract(Contract):
         try:
             # Initialize parent Contract class
             super().__init__(address=address)
-            self.functions = OverloadedMethodsContractFunctions(overloadedmethods_abi, self.w3, address)
+            self.functions = OverloadedMethodsContractFunctions(overloadedmethods_abi, self.w3, address)  # type: ignore
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
