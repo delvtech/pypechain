@@ -126,7 +126,7 @@ def rename_returned_types(return_types, raw_values) -> Any:
 class EventsEmitNoEventsContractFunction(ContractFunction):
     """ContractFunction for the emitNoEvents method."""
 
-    def __call__(self, x: int, y: int) -> EventsEmitNoEventsContractFunction:
+    def __call__(self, x: int, y: int) -> EventsEmitNoEventsContractFunction:  # type: ignore
         clone = super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(y))
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -153,7 +153,7 @@ class EventsEmitNoEventsContractFunction(ContractFunction):
 class EventsEmitOneEventContractFunction(ContractFunction):
     """ContractFunction for the emitOneEvent method."""
 
-    def __call__(self, value: int, who: str) -> EventsEmitOneEventContractFunction:
+    def __call__(self, value: int, who: str) -> EventsEmitOneEventContractFunction:  # type: ignore
         clone = super().__call__(dataclass_to_tuple(value), dataclass_to_tuple(who))
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -175,7 +175,7 @@ class EventsEmitOneEventContractFunction(ContractFunction):
 class EventsEmitTwoEventsContractFunction(ContractFunction):
     """ContractFunction for the emitTwoEvents method."""
 
-    def __call__(self, value: int, who: str) -> EventsEmitTwoEventsContractFunction:
+    def __call__(self, value: int, who: str) -> EventsEmitTwoEventsContractFunction:  # type: ignore
         clone = super().__call__(dataclass_to_tuple(value), dataclass_to_tuple(who))
         self.kwargs = clone.kwargs
         self.args = clone.args

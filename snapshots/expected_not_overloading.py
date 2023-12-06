@@ -9,7 +9,7 @@ class OverloadedBalanceOfContractFunction(ContractFunction):
     
     
 
-    def __call__(self) -> OverloadedBalanceOfContractFunction:
+    def __call__(self) -> OverloadedBalanceOfContractFunction: #type: ignore
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -45,7 +45,7 @@ class OverloadedBalanceOfWhoContractFunction(ContractFunction):
     
     
 
-    def __call__(self, who: str) -> OverloadedBalanceOfWhoContractFunction:
+    def __call__(self, who: str) -> OverloadedBalanceOfWhoContractFunction: #type: ignore
         clone = super().__call__(dataclass_to_tuple(who))
         self.kwargs = clone.kwargs
         self.args = clone.args

@@ -140,7 +140,7 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
         name: str
         YesOrNo: bool
 
-    def __call__(self) -> ReturnTypesMixStructsAndPrimitivesContractFunction:
+    def __call__(self) -> ReturnTypesMixStructsAndPrimitivesContractFunction:  # type: ignore
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -167,7 +167,7 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
 class ReturnTypesNamedSingleStructContractFunction(ContractFunction):
     """ContractFunction for the namedSingleStruct method."""
 
-    def __call__(self) -> ReturnTypesNamedSingleStructContractFunction:
+    def __call__(self) -> ReturnTypesNamedSingleStructContractFunction:  # type: ignore
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -194,7 +194,7 @@ class ReturnTypesNamedSingleStructContractFunction(ContractFunction):
 class ReturnTypesNamedSingleValueContractFunction(ContractFunction):
     """ContractFunction for the namedSingleValue method."""
 
-    def __call__(self, x: int, y: int) -> ReturnTypesNamedSingleValueContractFunction:
+    def __call__(self, x: int, y: int) -> ReturnTypesNamedSingleValueContractFunction:  # type: ignore
         clone = super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(y))
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -227,7 +227,7 @@ class ReturnTypesNamedTwoMixedStructsContractFunction(ContractFunction):
         simpleStruct: SimpleStruct
         nestedStruct: NestedStruct
 
-    def __call__(self) -> ReturnTypesNamedTwoMixedStructsContractFunction:
+    def __call__(self) -> ReturnTypesNamedTwoMixedStructsContractFunction:  # type: ignore
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -260,7 +260,7 @@ class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
         flip: int
         flop: int
 
-    def __call__(self, x: int, y: int) -> ReturnTypesNamedTwoValuesContractFunction:
+    def __call__(self, x: int, y: int) -> ReturnTypesNamedTwoValuesContractFunction:  # type: ignore
         clone = super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(y))
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -287,7 +287,7 @@ class ReturnTypesNamedTwoValuesContractFunction(ContractFunction):
 class ReturnTypesNoNameSingleValueContractFunction(ContractFunction):
     """ContractFunction for the noNameSingleValue method."""
 
-    def __call__(self, x: int) -> ReturnTypesNoNameSingleValueContractFunction:
+    def __call__(self, x: int) -> ReturnTypesNoNameSingleValueContractFunction:  # type: ignore
         clone = super().__call__(dataclass_to_tuple(x))
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -320,7 +320,7 @@ class ReturnTypesNoNameTwoValuesContractFunction(ContractFunction):
         arg1: str
         arg2: int
 
-    def __call__(self, s: str) -> ReturnTypesNoNameTwoValuesContractFunction:
+    def __call__(self, s: str) -> ReturnTypesNoNameTwoValuesContractFunction:  # type: ignore
         clone = super().__call__(dataclass_to_tuple(s))
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -347,7 +347,7 @@ class ReturnTypesNoNameTwoValuesContractFunction(ContractFunction):
 class ReturnTypesSingleNestedStructContractFunction(ContractFunction):
     """ContractFunction for the singleNestedStruct method."""
 
-    def __call__(self) -> ReturnTypesSingleNestedStructContractFunction:
+    def __call__(self) -> ReturnTypesSingleNestedStructContractFunction:  # type: ignore
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -374,7 +374,7 @@ class ReturnTypesSingleNestedStructContractFunction(ContractFunction):
 class ReturnTypesSingleSimpleStructContractFunction(ContractFunction):
     """ContractFunction for the singleSimpleStruct method."""
 
-    def __call__(self) -> ReturnTypesSingleSimpleStructContractFunction:
+    def __call__(self) -> ReturnTypesSingleSimpleStructContractFunction:  # type: ignore
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -407,7 +407,7 @@ class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
         arg1: SimpleStruct
         arg2: NestedStruct
 
-    def __call__(self) -> ReturnTypesTwoMixedStructsContractFunction:
+    def __call__(self) -> ReturnTypesTwoMixedStructsContractFunction:  # type: ignore
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
@@ -440,7 +440,7 @@ class ReturnTypesTwoSimpleStructsContractFunction(ContractFunction):
         arg1: SimpleStruct
         arg2: SimpleStruct
 
-    def __call__(self) -> ReturnTypesTwoSimpleStructsContractFunction:
+    def __call__(self) -> ReturnTypesTwoSimpleStructsContractFunction:  # type: ignore
         clone = super().__call__()
         self.kwargs = clone.kwargs
         self.args = clone.args
