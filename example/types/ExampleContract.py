@@ -712,7 +712,7 @@ class ExampleContract(Contract):
         try:
             # Initialize parent Contract class
             super().__init__(address=address)
-            self.functions = ExampleContractFunctions(example_abi, self.w3, address)
+            self.functions = ExampleContractFunctions(example_abi, self.w3, address)  # type: ignore
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
