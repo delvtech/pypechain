@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract ConstructorNoArgs {
-    string name;
+    string public name;
 
     constructor() {
         name = "default";

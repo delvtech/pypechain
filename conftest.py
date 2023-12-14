@@ -98,7 +98,7 @@ def w3_init(local_chain: str) -> Web3:
 
 
 @pytest.fixture(scope="function")
-def w3(w3_init: Web3) -> Iterator[Web3]:  # type: ignore
+def w3(w3_init: Web3) -> Iterator[Web3]:
     """resets the anvil instance at the function level so each test gets a fresh chain.
 
     Parameters
