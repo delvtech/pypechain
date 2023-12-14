@@ -27,7 +27,14 @@ from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3._utils.filters import LogFilter
-from web3.contract.contract import Contract, ContractEvent, ContractEvents, ContractFunction, ContractFunctions
+from web3.contract.contract import (
+    Contract,
+    ContractConstructor,
+    ContractEvent,
+    ContractEvents,
+    ContractFunction,
+    ContractFunctions,
+)
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, EventData, TxParams
 
@@ -485,7 +492,11 @@ class EventsContract(Contract):
     functions: EventsContractFunctions
 
     @classmethod
-    def deploy(cls, w3: Web3, signer: ChecksumAddress) -> Self:
+    def constructor(cls) -> ContractConstructor:
+        return super().constructor()
+
+    @classmethod
+    def deploy(cls, w3: Web3, signer: ChecksumAddress, constructorArgs: None) -> Self:
         """Deploys and instance of the contract.
 
         Parameters
@@ -501,7 +512,7 @@ class EventsContract(Contract):
             A deployed instance of the contract.
         """
         deployer = cls.factory(w3=w3)
-        tx_hash = deployer.constructor().transact({"from": signer})
+        tx_hash = deployer.constructor(*constructorArgs).transact({"from": signer})
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
         deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore
         return deployed_contract
