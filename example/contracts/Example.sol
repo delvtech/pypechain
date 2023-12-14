@@ -3,6 +3,8 @@ pragma solidity ^0.8.0;
 
 contract Example {
 
+    string contractName;
+
     struct SimpleStruct {
         uint intVal;
         string strVal;
@@ -16,6 +18,10 @@ contract Example {
         uint intVal;
         string strVal;
         InnerStruct innerStruct;
+    }
+
+    constructor(string memory name) {
+        contractName = name;
     }
 
     function flipFlop(uint flip, uint flop) public pure returns (uint _flop, uint _flip) {
@@ -77,7 +83,7 @@ contract Example {
         });
     }
 
-    function mixStructsAndPrimitives() public pure returns (SimpleStruct memory simpleStruct, NestedStruct memory, uint, string memory name, bool YesOrNo) {
+    function mixStructsAndPrimitives() public pure returns (SimpleStruct memory simpleStruct, NestedStruct memory, uint, string memory _name, bool YesOrNo) {
         simpleStruct = SimpleStruct({
             intVal: 1,
             strVal: "You are number 1"
