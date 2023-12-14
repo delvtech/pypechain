@@ -8,6 +8,8 @@ from typing import Any, NamedTuple
 from web3.types import ABI
 
 from pypechain.utilities.abi import (
+    filter_abi_items_by_type,
+    get_abi_constructor,
     get_abi_items,
     get_input_names,
     get_input_names_and_types,
@@ -83,6 +85,7 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
         has_bytecode=has_bytecode,
         has_events=has_events,
         contract_name=contract_name,
+        constructor=constructor_data,
         functions=function_datas,
     )
 
@@ -202,22 +205,21 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
         A tuple where the first value is a dictionary of FunctionData's keyed by function name and
         the second value is SignatureData for the constructor.
     """
+
+    # handle constructor
+    abi_constructor = get_abi_constructor(abi)
+    constructor_data: SignatureData | None = {
+        "input_names_and_types": get_input_names_and_types(abi_constructor),
+        "input_names": get_input_names(abi_constructor),
+        "input_types": get_input_types(abi_constructor),
+        "outputs": get_output_names(abi_constructor),
+        "output_types": get_output_names_and_types(abi_constructor),
+    } if abi_constructor else None
+
+    # handle all other functions
     function_datas: dict[str, FunctionData] = {}
-    constructor_data: SignatureData | None = None
     for abi_function in get_abi_items(abi):
         if is_abi_function(abi_function):
-            # handle constructor
-            if is_abi_constructor(abi_function):
-                constructor_data = {
-                    "input_names_and_types": get_input_names_and_types(abi_function),
-                    "input_names": get_input_names(abi_function),
-                    "input_types": get_input_types(abi_function),
-                    "outputs": get_output_names(abi_function),
-                    "output_types": get_output_names_and_types(abi_function),
-                }
-
-            # handle all other functions
-            else:
                 name = abi_function.get("name", "")
                 name = re.sub(r"\W|^(?=\d)", "_", name)
                 signature_data: SignatureData = {
