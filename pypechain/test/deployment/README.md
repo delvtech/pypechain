@@ -6,6 +6,10 @@ If pytest fails to run while editing tests, you'll need to recompile the contrac
 this directory run:
 
 ```bash
-rm abis/ReturnTypes.json
-solc contracts/ReturnTypes.sol --combined-json abi,bin,metadata >> abis/ReturnTypes.json
+rm -rf abis
+mkdir abis
+
+solc contracts/NoConstructor.sol --combined-json abi,bin,metadata >> abis/NoConstructor.json
+solc contracts/ConstructorNoArgs.sol --combined-json abi,bin,metadata >> abis/ConstructorNoArgs.json
+solc contracts/ConstructorWithArgs.sol --combined-json abi,bin,metadata >> abis/ConstructorWithArgs.json
 ```
