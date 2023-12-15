@@ -23,7 +23,7 @@ https://github.com/delvtech/pypechain"""
 from __future__ import annotations
 
 from dataclasses import fields, is_dataclass
-from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast
+from typing import Any, Tuple, Type, TypeVar, cast
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
