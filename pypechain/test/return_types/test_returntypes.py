@@ -20,7 +20,7 @@ project_root = os.path.dirname(os.path.dirname(current_path))
 @pytest.fixture
 def deployed_contract(w3: Web3):
     """Deploys a ReturnTypes contract."""
-    return ReturnTypesContract.deploy(w3=w3, signer=w3.eth.accounts[0])
+    return ReturnTypesContract.deploy(w3=w3, account=w3.eth.accounts[0])
 
 
 @pytest.mark.usefixtures("process_contracts")

@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal, NamedTuple, Sequence, TypeGuard, cast
 
-from web3 import Web3
 from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
 from pypechain.foundry.types import FoundryJson
@@ -72,6 +71,24 @@ def is_abi_function(item: ABIElement) -> TypeGuard[ABIFunction]:
     return True
 
 
+def get_abi_constructor(abi: ABI) -> ABIFunction | None:
+    """Returns the constructor item if it exists.
+
+    Arguments
+    ---------
+    abi: ABI
+        The contract's abi json to parse.
+
+    Returns
+    -------
+    ABIFunction | None
+        The constructor information returned as an abi function since they have the same pattern.
+    """
+
+    result = next((x for x in abi if x.get("type", "") == "constructor"), None)
+    return result if result and is_abi_function(result) else None
+
+
 def is_abi_constructor(item: ABIElement) -> TypeGuard[ABIFunction]:
     """Typeguard function for ABIFunction.
 
@@ -85,7 +102,7 @@ def is_abi_constructor(item: ABIElement) -> TypeGuard[ABIFunction]:
     TypeGuard[ABIFunction]
     """
     # Check if the required keys exist
-    required_keys = ["type", "name", "inputs"]
+    required_keys = ["type", "inputs"]
 
     # Check if the required keys exist
     if not all(key in item for key in required_keys):
@@ -122,6 +139,27 @@ def is_abi_event(item: ABIElement) -> TypeGuard[ABIEvent]:
         return False
 
     return True
+
+
+def filter_abi_items_by_type(item_type: str | list[str], contract_abi: ABI) -> list[ABIFunction | ABIEvent]:
+    """Filters ABIItems by type.
+
+    Parameters
+    ----------
+    _type : str | list[str]
+
+    contract_abi : ABI
+        _description_
+
+    Returns
+    -------
+    list[ABIFunction | ABIEvent]
+        _description_
+    """
+    if isinstance(item_type, str):
+        item_type = [item_type]
+
+    return [abi for abi in contract_abi if abi.get("type", "") in item_type]
 
 
 @dataclass
@@ -427,13 +465,7 @@ def get_abi_items(abi: ABI) -> list[ABIElement]:
         _description_
     """
 
-    web3 = Web3()
-    contract = web3.eth.contract(abi=abi)
-
-    # leverage the private list of ABIFunction's
-    # pylint: disable=protected-access
-    abi_functions_and_events = contract.functions._functions
-    abi_functions_and_events.extend(contract.events._events)
+    abi_functions_and_events = filter_abi_items_by_type(["function", "event"], abi)
     return abi_functions_and_events
 
 

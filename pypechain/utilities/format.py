@@ -1,8 +1,9 @@
 """Formatting utilities."""
 import keyword
+import subprocess
+from pathlib import Path
 
-import black
-from black.report import NothingChanged
+import isort
 
 
 def avoid_python_keywords(name: str) -> str:
@@ -108,26 +109,18 @@ def capitalize_first_letter_only(string: str) -> str:
     return string[0].upper() + string[1:]
 
 
-def apply_black_formatting(code: str, line_length: int = 80) -> str:
-    """Formats a code string with Black on default settings.
+def format_file(file_path: Path, line_length: int = 120) -> None:
+    """Formats a file with isort and black.
 
-    Arguments
-    ---------
-    code : str
-        A string containing Python code
-    line_length : int
-        Output file's maximum line length.
-
-    Returns
-    -------
-    str
-        A string containing the Black-formatted code
+    Parameters
+    ----------
+    file_path : Path
+        The file to be formatted.
+    line_length : int, optional
+        Black's line-length config option.
     """
-    try:
-        return black.format_file_contents(code, fast=False, mode=black.Mode(line_length=line_length))
-    except ValueError as exc:
-        print(f"cannot format with Black\n code:\n{code}")
-        print(f"{exc=}")
-        return code
-    except NothingChanged:
-        return code
+
+    print(f"autoflake --remove-all-unused-imports {file_path}")
+    subprocess.run(f"autoflake --in-place --remove-all-unused-imports {file_path}", shell=True, check=True)
+    isort.file(file_path, config=isort.Config())
+    subprocess.run(f"black --line-length={line_length} {file_path}", shell=True, check=True)

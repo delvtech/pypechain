@@ -24,7 +24,7 @@ class TestOverloading:
         All arguments are fixtures.
         """
 
-        deployed_contract = OverloadedMethodsContract.deploy(w3=w3, signer=w3.eth.accounts[0])
+        deployed_contract = OverloadedMethodsContract.deploy(w3=w3, account=w3.eth.accounts[0])
 
         s = "test string"
         x = 1

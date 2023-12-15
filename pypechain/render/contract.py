@@ -8,6 +8,7 @@ from typing import Any, NamedTuple
 from web3.types import ABI
 
 from pypechain.utilities.abi import (
+    get_abi_constructor,
     get_abi_items,
     get_input_names,
     get_input_names_and_types,
@@ -16,7 +17,6 @@ from pypechain.utilities.abi import (
     get_output_names_and_types,
     get_output_types,
     get_structs_for_abi,
-    is_abi_constructor,
     is_abi_event,
     is_abi_function,
     load_abi_from_file,
@@ -83,6 +83,7 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
         has_bytecode=has_bytecode,
         has_events=has_events,
         contract_name=contract_name,
+        constructor=constructor_data,
         functions=function_datas,
     )
 
@@ -202,53 +203,54 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
         A tuple where the first value is a dictionary of FunctionData's keyed by function name and
         the second value is SignatureData for the constructor.
     """
+
+    # handle constructor
+    abi_constructor = get_abi_constructor(abi)
+    constructor_data: SignatureData | None = (
+        {
+            "input_names_and_types": get_input_names_and_types(abi_constructor),
+            "input_names": get_input_names(abi_constructor),
+            "input_types": get_input_types(abi_constructor),
+            "outputs": get_output_names(abi_constructor),
+            "output_types": get_output_names_and_types(abi_constructor),
+        }
+        if abi_constructor
+        else None
+    )
+
+    # handle all other functions
     function_datas: dict[str, FunctionData] = {}
-    constructor_data: SignatureData | None = None
     for abi_function in get_abi_items(abi):
         if is_abi_function(abi_function):
-            # handle constructor
-            if is_abi_constructor(abi_function):
-                constructor_data = {
-                    "input_names_and_types": get_input_names_and_types(abi_function),
-                    "input_names": get_input_names(abi_function),
-                    "input_types": get_input_types(abi_function),
-                    "outputs": get_output_names(abi_function),
-                    "output_types": get_output_names_and_types(abi_function),
-                }
+            name = abi_function.get("name", "")
+            name = re.sub(r"\W|^(?=\d)", "_", name)
+            signature_data: SignatureData = {
+                "input_names_and_types": get_input_names_and_types(abi_function),
+                "input_names": get_input_names(abi_function),
+                "input_types": get_input_types(abi_function),
+                "outputs": get_output_names(abi_function),
+                "output_types": get_output_types(abi_function),
+            }
 
-            # handle all other functions
+            function_data: FunctionData = {
+                "name": name,
+                "capitalized_name": capitalize_first_letter_only(name),
+                "signature_datas": [signature_data],
+                "has_overloading": False,
+                "has_multiple_return_signatures": False,
+                "has_multiple_return_values": False,
+            }
+            if not function_datas.get(name):
+                function_datas[name] = function_data
+                function_datas[name]["has_multiple_return_values"] = get_has_multiple_return_values([signature_data])
             else:
-                name = abi_function.get("name", "")
-                name = re.sub(r"\W|^(?=\d)", "_", name)
-                signature_data: SignatureData = {
-                    "input_names_and_types": get_input_names_and_types(abi_function),
-                    "input_names": get_input_names(abi_function),
-                    "input_types": get_input_types(abi_function),
-                    "outputs": get_output_names(abi_function),
-                    "output_types": get_output_types(abi_function),
-                }
-
-                function_data: FunctionData = {
-                    "name": name,
-                    "capitalized_name": capitalize_first_letter_only(name),
-                    "signature_datas": [signature_data],
-                    "has_overloading": False,
-                    "has_multiple_return_signatures": False,
-                    "has_multiple_return_values": False,
-                }
-                if not function_datas.get(name):
-                    function_datas[name] = function_data
-                    function_datas[name]["has_multiple_return_values"] = get_has_multiple_return_values(
-                        [signature_data]
-                    )
-                else:
-                    signature_datas = function_datas[name]["signature_datas"]
-                    signature_datas.append(signature_data)
-                    function_datas[name]["has_overloading"] = len(signature_datas) > 1
-                    function_datas[name]["has_multiple_return_signatures"] = get_has_multiple_return_signatures(
-                        signature_datas
-                    )
-                    function_datas[name]["has_multiple_return_values"] = get_has_multiple_return_values(signature_datas)
+                signature_datas = function_datas[name]["signature_datas"]
+                signature_datas.append(signature_data)
+                function_datas[name]["has_overloading"] = len(signature_datas) > 1
+                function_datas[name]["has_multiple_return_signatures"] = get_has_multiple_return_signatures(
+                    signature_datas
+                )
+                function_datas[name]["has_multiple_return_values"] = get_has_multiple_return_values(signature_datas)
     return GetFunctionDatasReturnValue(function_datas, constructor_data)
 
 

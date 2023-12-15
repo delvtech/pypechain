@@ -17,17 +17,28 @@ https://github.com/delvtech/pypechain"""
 # This file is bound to get very long depending on contract sizes.
 # pylint: disable=too-many-lines
 
+# methods are overriden with specific arguments instead of generic *args, **kwargs
+# pylint: disable=arguments-differ
+
 from __future__ import annotations
 
 from dataclasses import fields, is_dataclass
 from typing import Any, Iterable, Sequence, Tuple, Type, TypeVar, cast
 
+from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3._utils.filters import LogFilter
-from web3.contract.contract import Contract, ContractEvent, ContractEvents, ContractFunction, ContractFunctions
+from web3.contract.contract import (
+    Contract,
+    ContractConstructor,
+    ContractEvent,
+    ContractEvents,
+    ContractFunction,
+    ContractFunctions,
+)
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, EventData, TxParams
 
@@ -485,15 +496,36 @@ class EventsContract(Contract):
     functions: EventsContractFunctions
 
     @classmethod
-    def deploy(cls, w3: Web3, signer: ChecksumAddress) -> Self:
+    def constructor(cls) -> ContractConstructor:  # type: ignore
+        """Creates a transaction with the contract's constructor function.
+
+        Parameters
+        ----------
+
+        w3 : Web3
+            A web3 instance.
+        account : LocalAccount
+            The account to use to deploy the contract.
+
+        Returns
+        -------
+        Self
+            A deployed instance of the contract.
+
+        """
+
+        return super().constructor()
+
+    @classmethod
+    def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress) -> Self:
         """Deploys and instance of the contract.
 
         Parameters
         ----------
         w3 : Web3
             A web3 instance.
-        signer : ChecksumAddress
-            The address to deploy the contract from.
+        account : LocalAccount
+            The account to use to deploy the contract.
 
         Returns
         -------
@@ -501,13 +533,47 @@ class EventsContract(Contract):
             A deployed instance of the contract.
         """
         deployer = cls.factory(w3=w3)
-        tx_hash = deployer.constructor().transact({"from": signer})
+        constructor_fn = deployer.constructor()
+
+        # if an address is supplied, try to use a web3 default account
+        if isinstance(account, str):
+            tx_hash = constructor_fn.transact({"from": account})
+            tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+            deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore
+            return deployed_contract
+
+        # otherwise use the account provided.
+        deployment_tx = constructor_fn.build_transaction()
+        current_nonce = w3.eth.get_transaction_count(account.address)
+        deployment_tx.update({"nonce": current_nonce})
+
+        # Sign the transaction with local account private key
+        signed_tx = account.sign_transaction(deployment_tx)
+
+        # Send the signed transaction and wait for receipt
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
         deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore
         return deployed_contract
 
     @classmethod
     def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
+        """Deploys and instance of the contract.
+
+        Parameters
+        ----------
+        w3 : Web3
+            A web3 instance.
+        class_name: str | None
+            The instance class name.
+
+        Returns
+        -------
+        Self
+            A deployed instance of the contract.
+        """
         contract = super().factory(w3, class_name, **kwargs)
         contract.functions = EventsContractFunctions(events_abi, w3, None)
 
