@@ -1,9 +1,6 @@
 """Formatting utilities."""
 import keyword
 
-import black
-from black.report import NothingChanged
-
 
 def avoid_python_keywords(name: str) -> str:
     """Make sure the variable name is not a reserved Python word.  If it is, prepend with an
@@ -106,28 +103,3 @@ def capitalize_first_letter_only(string: str) -> str:
     if len(string) < 2:
         return string
     return string[0].upper() + string[1:]
-
-
-def apply_black_formatting(code: str, line_length: int = 80) -> str:
-    """Formats a code string with Black on default settings.
-
-    Arguments
-    ---------
-    code : str
-        A string containing Python code
-    line_length : int
-        Output file's maximum line length.
-
-    Returns
-    -------
-    str
-        A string containing the Black-formatted code
-    """
-    try:
-        return black.format_file_contents(code, fast=False, mode=black.Mode(line_length=line_length))
-    except ValueError as exc:
-        print(f"cannot format with Black\n code:\n{code}")
-        print(f"{exc=}")
-        return code
-    except NothingChanged:
-        return code

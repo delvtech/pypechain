@@ -7,7 +7,6 @@ from pathlib import Path
 from pypechain.render.contract import render_contract_file
 from pypechain.render.types import render_types_file
 from pypechain.utilities.file import write_string_to_file
-from pypechain.utilities.format import apply_black_formatting
 
 
 def render_files(abi_file_path: str, output_dir: str, line_length: int = 120) -> list[str]:
@@ -29,15 +28,14 @@ def render_files(abi_file_path: str, output_dir: str, line_length: int = 120) ->
 
     contract_file_path = Path(f"{contract_path}Contract.py")
     write_string_to_file(contract_file_path, rendered_contract_code)
-    format_file(contract_file_path)
+    format_file(contract_file_path, line_length)
     file_names.append(f"{contract_name}Contract")
 
     # TODO: write tests for this conditional write.
     if rendered_types_code:
         types_file_path = Path(f"{contract_path}Types.py")
-        formatted_types_code = apply_black_formatting(rendered_types_code, line_length)
-        write_string_to_file(types_file_path, formatted_types_code)
-        format_file(types_file_path)
+        write_string_to_file(types_file_path, rendered_types_code)
+        format_file(types_file_path, line_length)
         file_names.append(f"{contract_name}Types")
 
     return file_names

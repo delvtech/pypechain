@@ -17,6 +17,9 @@ https://github.com/delvtech/pypechain"""
 # This file is bound to get very long depending on contract sizes.
 # pylint: disable=too-many-lines
 
+# methods are overriden with specific arguments instead of generic *args, **kwargs
+# pylint: disable=arguments-differ
+
 from __future__ import annotations
 
 from dataclasses import fields, is_dataclass
