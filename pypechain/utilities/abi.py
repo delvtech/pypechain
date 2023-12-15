@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal, NamedTuple, Sequence, TypeGuard, cast
 
-from web3 import Web3
 from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
 from pypechain.foundry.types import FoundryJson
@@ -86,7 +85,8 @@ def get_abi_constructor(abi: ABI) -> ABIFunction | None:
         The constructor information returned as an abi function since they have the same pattern.
     """
 
-    return next((x for x in abi if x['type'] == "constructor"), None)
+    result = next((x for x in abi if x.get("type", "") == "constructor"), None)
+    return result if result and is_abi_function(result) else None
 
 
 def is_abi_constructor(item: ABIElement) -> TypeGuard[ABIFunction]:
@@ -140,11 +140,26 @@ def is_abi_event(item: ABIElement) -> TypeGuard[ABIEvent]:
 
     return True
 
-def filter_abi_items_by_type(_type: str | list[str], contract_abi: ABI) -> list[ABIFunction | ABIEvent]:
-    if isinstance(_type, str):
-        _type = [type]
 
-    return [abi for abi in contract_abi if abi["type"] in _type]
+def filter_abi_items_by_type(item_type: str | list[str], contract_abi: ABI) -> list[ABIFunction | ABIEvent]:
+    """Filters ABIItems by type.
+
+    Parameters
+    ----------
+    _type : str | list[str]
+
+    contract_abi : ABI
+        _description_
+
+    Returns
+    -------
+    list[ABIFunction | ABIEvent]
+        _description_
+    """
+    if isinstance(item_type, str):
+        item_type = [item_type]
+
+    return [abi for abi in contract_abi if abi.get("type", "") in item_type]
 
 
 @dataclass
@@ -450,10 +465,7 @@ def get_abi_items(abi: ABI) -> list[ABIElement]:
         _description_
     """
 
-    web3 = Web3()
-    contract = web3.eth.contract(abi=abi)
-
-    abi_functions_and_events = filter_abi_items_by_type(['function', 'event'], abi)
+    abi_functions_and_events = filter_abi_items_by_type(["function", "event"], abi)
     return abi_functions_and_events
 
 
