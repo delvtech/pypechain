@@ -256,6 +256,8 @@ class ConstructorWithArgsContract(Contract):
     functions: ConstructorWithArgsContractFunctions
 
     class ConstructorArgs(NamedTuple):
+        """Arguments to pass the contract's constructor function."""
+
         name: str
 
     @classmethod

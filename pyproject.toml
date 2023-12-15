@@ -24,7 +24,7 @@ pypechain = "pypechain.main:main"
 [project.optional-dependencies]
 # This flag installs all dependencies and should be ran when installing this package
 all = ["pypechain[base,build,test]"]
-base = ["black", "isort", "jinja2", "web3"]
+base = ["black", "isort", "jinja2", "web3", "autoflake"]
 build = ["build", "setuptools", "wheel", "twine", "toml"]
 test = [
     "pytest",

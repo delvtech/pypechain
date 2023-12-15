@@ -1,5 +1,9 @@
 """Formatting utilities."""
 import keyword
+import subprocess
+from pathlib import Path
+
+import isort
 
 
 def avoid_python_keywords(name: str) -> str:
@@ -103,3 +107,20 @@ def capitalize_first_letter_only(string: str) -> str:
     if len(string) < 2:
         return string
     return string[0].upper() + string[1:]
+
+
+def format_file(file_path: Path, line_length: int = 120) -> None:
+    """Formats a file with isort and black.
+
+    Parameters
+    ----------
+    file_path : Path
+        The file to be formatted.
+    line_length : int, optional
+        Black's line-length config option.
+    """
+
+    print(f"autoflake --remove-all-unused-imports {file_path}")
+    subprocess.run(f"autoflake --in-place --remove-all-unused-imports {file_path}", shell=True, check=True)
+    isort.file(file_path, config=isort.Config())
+    subprocess.run(f"black --line-length={line_length} {file_path}", shell=True, check=True)

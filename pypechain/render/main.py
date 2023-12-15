@@ -1,12 +1,12 @@
 """Functions to render Python files from an abi usng a jinja2 template."""
 
 import os
-import subprocess
 from pathlib import Path
 
 from pypechain.render.contract import render_contract_file
 from pypechain.render.types import render_types_file
 from pypechain.utilities.file import write_string_to_file
+from pypechain.utilities.format import format_file
 
 
 def render_files(abi_file_path: str, output_dir: str, line_length: int = 120) -> list[str]:
@@ -31,7 +31,6 @@ def render_files(abi_file_path: str, output_dir: str, line_length: int = 120) ->
     format_file(contract_file_path, line_length)
     file_names.append(f"{contract_name}Contract")
 
-    # TODO: write tests for this conditional write.
     if rendered_types_code:
         types_file_path = Path(f"{contract_path}Types.py")
         write_string_to_file(types_file_path, rendered_types_code)
@@ -39,18 +38,3 @@ def render_files(abi_file_path: str, output_dir: str, line_length: int = 120) ->
         file_names.append(f"{contract_name}Types")
 
     return file_names
-
-
-def format_file(file_path: Path, line_length: int = 120) -> None:
-    """Formats a file with isort and black.
-
-    Parameters
-    ----------
-    file_path : Path
-        The file to be formatted.
-    line_length : int, optional
-        Black's line-length config option.
-    """
-
-    subprocess.run(f"isort {file_path}", shell=True, check=True)
-    subprocess.run(f"black --line-length={line_length} {file_path}", shell=True, check=True)

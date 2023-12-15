@@ -729,6 +729,8 @@ class ExampleContract(Contract):
     functions: ExampleContractFunctions
 
     class ConstructorArgs(NamedTuple):
+        """Arguments to pass the contract's constructor function."""
+
         name: str
 
     @classmethod

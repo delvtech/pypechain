@@ -27,6 +27,7 @@ class {{contract_name}}Contract(Contract):
 {% set has_constructor_args = constructor.input_names_and_types|length > 0 %}
 {% if has_constructor_args %}
     class ConstructorArgs(NamedTuple):
+        """Arguments to pass the contract's constructor function."""
 {% for name_and_type in constructor.input_names_and_types %}
         {{name_and_type}}
 {% endfor %}
