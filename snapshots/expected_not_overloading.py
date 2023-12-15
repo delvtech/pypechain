@@ -30,7 +30,7 @@ class OverloadedBalanceOfContractFunction(ContractFunction):
         # Call the function
         
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(int, rename_returned_types(return_types, raw_values))
+        return cast(int, rename_returned_types(structs, return_types, raw_values))
         
  
 
@@ -66,7 +66,7 @@ class OverloadedBalanceOfWhoContractFunction(ContractFunction):
         # Call the function
         
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(bool, rename_returned_types(return_types, raw_values))
+        return cast(bool, rename_returned_types(structs, return_types, raw_values))
         
  
 
