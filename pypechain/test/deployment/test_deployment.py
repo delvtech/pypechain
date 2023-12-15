@@ -9,8 +9,7 @@ from eth_account.signers.local import LocalAccount
 from web3 import Web3
 from web3.types import RPCEndpoint
 
-from .types import (ConstructorNoArgsContract, ConstructorWithArgsContract,
-                    NoConstructorContract)
+from .types import ConstructorNoArgsContract, ConstructorWithArgsContract, NoConstructorContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
