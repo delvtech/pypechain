@@ -6,6 +6,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
+from shutil import copy2
 from typing import NamedTuple, Sequence
 
 from web3.exceptions import NoABIFunctionsFound
@@ -58,8 +59,14 @@ def main(argv: Sequence[str] | None = None) -> None:
             print(f"Error creating types for {json_file}")
             raise err
 
-    # Finally, render the __init__.py file
+    # Render the __init__.py file
     render_init_file(output_dir, file_names, line_length)
+
+    # Copy utilities.py to the output_dir
+    # Get the path to `utilities.py` (assuming it's in the same directory as your script)
+    utilities_path = Path(__file__).parent / "templates/utilities.py"
+    # Copy the file to the output directory
+    copy2(utilities_path, output_dir)
 
 
 def gather_json_files(directory: str) -> list:

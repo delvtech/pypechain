@@ -190,7 +190,7 @@ class GetFunctionDatasReturnValue(NamedTuple):
 
 
 def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
-    """TODO fill me in
+    """Gets the information needed for the generated Contract file.
 
     Arguments
     ---------
