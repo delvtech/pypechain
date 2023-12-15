@@ -34,7 +34,7 @@ class {{contract_name}}Contract(Contract):
 {% endif %}
 
     @classmethod
-    def constructor(cls{{', ' + constructor.input_names_and_types|join(' ') if has_constructor_args else ''}}) -> ContractConstructor: # type: ignore
+    def constructor(cls{{', ' + constructor.input_names_and_types|join(', ') if has_constructor_args else ''}}) -> ContractConstructor: # type: ignore
       """Creates a transaction with the contract's constructor function.
 
         Parameters
