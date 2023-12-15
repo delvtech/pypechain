@@ -20,7 +20,7 @@ class TestEvents:
     @pytest.mark.skip()
     def test_process_receipt(self, w3: Web3):
         """Test that we can use event filters."""
-        deployed_contract = EventsContract.deploy(w3=w3, signer=w3.eth.accounts[0])
+        deployed_contract = EventsContract.deploy(w3=w3, account=w3.eth.accounts[0])
         hash_a = deployed_contract.functions.emitOneEvent(0, "0x0000000000000000000000000000000000000000").transact()
         receipt_a = w3.eth.get_transaction_receipt(hash_a)
         hash_b = deployed_contract.functions.emitTwoEvents(0, "0x0000000000000000000000000000000000000000").transact()
@@ -31,7 +31,7 @@ class TestEvents:
 
     def test_get_logs(self, w3):
         """Test that we can use event filters."""
-        deployed_contract = EventsContract.deploy(w3=w3, signer=w3.eth.accounts[0])
+        deployed_contract = EventsContract.deploy(w3=w3, account=w3.eth.accounts[0])
         deployed_contract.functions.emitOneEvent(0, "0x0000000000000000000000000000000000000000").transact()
         deployed_contract.functions.emitTwoEvents(0, "0x0000000000000000000000000000000000000000").transact()
 
@@ -47,7 +47,7 @@ class TestEvents:
 
     def test_create_filter(self, w3):
         """Test that we can use event filters."""
-        deployed_contract = EventsContract.deploy(w3=w3, signer=w3.eth.accounts[0])
+        deployed_contract = EventsContract.deploy(w3=w3, account=w3.eth.accounts[0])
         tx_hash = deployed_contract.functions.emitOneEvent(0, "0x0000000000000000000000000000000000000000").transact()
         w3.eth.wait_for_transaction_receipt(tx_hash)
 

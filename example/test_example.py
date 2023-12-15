@@ -42,7 +42,7 @@ class TestExampleContract:
         ExampleContract = w3.eth.contract(abi=abi, bytecode=bytecode)
 
         # Submit the transaction that deploys the contract
-        tx_hash = ExampleContract.constructor('example').transact()
+        tx_hash = ExampleContract.constructor("example").transact()
         # Wait for the transaction to be mined, and get the transaction receipt
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
@@ -57,7 +57,9 @@ class TestExampleContract:
     def test_flip_flop(self, w3):
         """Tests single value"""
 
-        deployed_contract = ExampleContract.deploy(w3=w3, signer=w3.eth.accounts[0], constructorArgs=ExampleContract.ConstructorArgs('example'))
+        deployed_contract = ExampleContract.deploy(
+            w3=w3, account=w3.eth.accounts[0], constructorArgs=ExampleContract.ConstructorArgs("example")
+        )
 
         flip = 1
         flop = 2
@@ -70,7 +72,9 @@ class TestExampleContract:
     def test_simple_structs(self, w3):
         """Tests single value"""
 
-        deployed_contract = ExampleContract.deploy(w3=w3, signer=w3.eth.accounts[0], constructorArgs=ExampleContract.ConstructorArgs('example'))
+        deployed_contract = ExampleContract.deploy(
+            w3=w3, account=w3.eth.accounts[0], constructorArgs=ExampleContract.ConstructorArgs("example")
+        )
 
         input_struct: SimpleStruct = SimpleStruct(1, "string")
         output_struct = deployed_contract.functions.singleSimpleStruct(input_struct).call()
@@ -81,7 +85,9 @@ class TestExampleContract:
     def test_nested_structs(self, w3):
         """Tests single value"""
 
-        deployed_contract = ExampleContract.deploy(w3=w3, signer=w3.eth.accounts[0], constructorArgs=ExampleContract.ConstructorArgs('example'))
+        deployed_contract = ExampleContract.deploy(
+            w3=w3, account=w3.eth.accounts[0], constructorArgs=ExampleContract.ConstructorArgs("example")
+        )
 
         input_struct = NestedStruct(1, "string", InnerStruct(True))
         output_struct: NestedStruct = deployed_contract.functions.singleNestedStruct(input_struct).call()
