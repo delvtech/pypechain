@@ -40,9 +40,9 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction{{i}}(C
         # Call the function
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
         {% if output_types|length == 1 %}
-        return cast({{output_types[0]}}, rename_returned_types(return_types, raw_values))
+        return cast({{output_types[0]}}, rename_returned_types(structs, return_types, raw_values))
         {% elif output_types|length > 1%}
-        return self.{{return_type}}(*rename_returned_types(return_types, raw_values))
+        return self.{{return_type}}(*rename_returned_types(structs, return_types, raw_values))
         {% endif %}
 {% endfor %}
 class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(ContractFunction):
@@ -102,10 +102,10 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
         # Call the function
         {% if output_types|length == 1 %}
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast({{output_types[0]}}, rename_returned_types(return_types, raw_values))
+        return cast({{output_types[0]}}, rename_returned_types(structs, return_types, raw_values))
         {% elif output_types|length > 1%}
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return self.{{return_type}}(*rename_returned_types(return_types, raw_values))
+        return self.{{return_type}}(*rename_returned_types(structs, return_types, raw_values))
         {% endif %}
 {% endif %} {# if function_data.has_overloading #}
 
