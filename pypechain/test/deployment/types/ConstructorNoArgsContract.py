@@ -22,6 +22,7 @@ from __future__ import annotations
 from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast
 
+from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
@@ -248,11 +249,28 @@ class ConstructorNoArgsContract(Contract):
     functions: ConstructorNoArgsContractFunctions
 
     @classmethod
-    def constructor(cls) -> ContractConstructor:
+    def constructor(cls) -> ContractConstructor:  # type: ignore
+        """Creates a transaction with the contract's constructor function.
+
+        Parameters
+        ----------
+
+        w3 : Web3
+            A web3 instance.
+        account : LocalAccount
+            The account to use to deploy the contract.
+
+        Returns
+        -------
+        Self
+            A deployed instance of the contract.
+
+        """
+
         return super().constructor()
 
     @classmethod
-    def deploy(cls, w3: Web3, account: LocalAccount) -> Self:
+    def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress) -> Self:
         """Deploys and instance of the contract.
 
         Parameters
@@ -268,7 +286,18 @@ class ConstructorNoArgsContract(Contract):
             A deployed instance of the contract.
         """
         deployer = cls.factory(w3=w3)
-        deployment_tx = deployer.constructor().build_transaction()
+        constructor_fn = deployer.constructor()
+
+        # if an address is supplied, try to use a web3 default account
+        if isinstance(account, str):
+            tx_hash = constructor_fn.transact({"from": account})
+            tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+            deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore
+            return deployed_contract
+
+        # otherwise use the account provided.
+        deployment_tx = constructor_fn.build_transaction()
         current_nonce = w3.eth.get_transaction_count(account.address)
         deployment_tx.update({"nonce": current_nonce})
 
@@ -284,6 +313,20 @@ class ConstructorNoArgsContract(Contract):
 
     @classmethod
     def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
+        """Deploys and instance of the contract.
+
+        Parameters
+        ----------
+        w3 : Web3
+            A web3 instance.
+        class_name: str | None
+            The instance class name.
+
+        Returns
+        -------
+        Self
+            A deployed instance of the contract.
+        """
         contract = super().factory(w3, class_name, **kwargs)
         contract.functions = ConstructorNoArgsContractFunctions(constructornoargs_abi, w3, None)
 
