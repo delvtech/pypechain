@@ -9,6 +9,9 @@ from eth_account.signers.local import LocalAccount
 from web3 import Web3
 from web3.types import RPCEndpoint
 
+from pypechain.test.deployment.types import ConstructorWithStructArgsContract
+from pypechain.test.deployment.types.ConstructorWithStructArgsTypes import Config, Items
+
 from .types import ConstructorNoArgsContract, ConstructorWithArgsContract, NoConstructorContract
 
 # using pytest fixtures necessitates this.
@@ -123,7 +126,7 @@ class TestConstructorNoArgs:
 
 
 class TestConstructorWithArgs:
-    """Tests deployment methods for contracts with a constructor that has no arguments."""
+    """Tests deployment methods for contracts with a constructor that has arguments."""
 
     def test_deployment_with_constructor_and_default_signer(self, w3):
         """Tests deployment using the constructor method instead of the deploy method."""
@@ -167,3 +170,52 @@ class TestConstructorWithArgs:
 
         name = deployed_contract.functions.name().call()
         assert name == "not default"
+
+
+class TestConstructorWithStructArgs:
+    """Tests deployment methods for contracts with a constructor that has complex arguments."""
+
+    def test_deployment_with_constructor_and_default_signer(self, w3):
+        """Tests deployment using the constructor method instead of the deploy method."""
+        # transact() uses the default signer in the web3 instance
+        config = Config(name="name", items=Items(thing="thang", yesOrNo=True))
+        tx_hash = ConstructorWithStructArgsContract.factory(w3).constructor(config).transact()
+        receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+        assert receipt["status"] == 1
+
+    def test_deployment_with_constructor_and_local_signer(self, w3: Web3, local_account: LocalAccount):
+        """Tests deployment using the constructor method instead of the deploy method."""
+        # Get the deployment transaction
+        config = Config(name="name", items=Items(thing="thang", yesOrNo=True))
+        deployment_tx = ConstructorWithStructArgsContract.factory(w3).constructor(config).build_transaction()
+        current_nonce = w3.eth.get_transaction_count(local_account.address)
+        deployment_tx.update({"nonce": current_nonce})
+
+        # Sign the transaction with local account private key
+        signed_tx = local_account.sign_transaction(deployment_tx)
+
+        # Send the signed transaction and wait for receipt
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+        # Assert deployment success based on receipt
+        assert receipt["status"] == 1  # or other relevant assertion
+
+    def test_deploy_method_with_default_signer(self, w3, local_account):
+        """Tests deployment using the constructor method instead of the deploy method."""
+        # transact() uses the default signer in the web3 instance
+        config = Config(name="name", items=Items(thing="thang", yesOrNo=True))
+        args = ConstructorWithStructArgsContract.ConstructorArgs(config)
+        deployed_contract = ConstructorWithStructArgsContract.deploy(w3, local_account, constructorArgs=args)
+        name = deployed_contract.functions.name().call()
+        assert name == "name"
+
+    def test_deploy_method_with_local_signer(self, w3: Web3, local_account: LocalAccount):
+        """Tests deployment using the constructor method instead of the deploy method."""
+        # Get the deployment transaction
+        config = Config(name="name", items=Items(thing="thang", yesOrNo=True))
+        args = ConstructorWithStructArgsContract.ConstructorArgs(config)
+        deployed_contract = ConstructorWithStructArgsContract.deploy(w3, local_account, constructorArgs=args)
+
+        name = deployed_contract.functions.name().call()
+        assert name == "name"
