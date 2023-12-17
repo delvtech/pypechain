@@ -52,7 +52,7 @@ class {{contract_name}}Contract(Contract):
 
       """
 
-      return super().constructor({{constructor.input_names|join(', ')}})
+      return super().constructor({{constructor.input_names | wrap_with_dataclass_to_tuple | join(', ')}})
 
 
     @classmethod
