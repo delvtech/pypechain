@@ -23,17 +23,7 @@ pypechain = "pypechain.main:main"
 
 [project.optional-dependencies]
 # This flag installs all dependencies and should be ran when installing this package
-all = ["pypechain[build,test]"]
-build = [
-    "build",
-    "flit",
-    "request",
-    "setuptools",
-    "toml",
-    "toml",
-    "twine",
-    "wheel",
-]
+all = ["pypechain[test,build]"]
 test = [
     "coverage",
     "factory-boy",
@@ -42,6 +32,7 @@ test = [
     "pytest",
     "pytest-snapshot",
 ]
+build = ["build", "flit", "request", "setuptools", "toml", "twine", "wheel"]
 
 [project.urls]
 "Homepage" = "https://github.com/delvtech/pypechain"

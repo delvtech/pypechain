@@ -27,7 +27,7 @@ jobs:
 
       - name: install requirements
         run: |
-          python -m pip install --upgrade .[all]
+          python -m pip install --upgrade .[test]
 
       - name: get all Python files
         id: list_files
