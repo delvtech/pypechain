@@ -116,17 +116,17 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
     """Parses input arguments"""
     parser = argparse.ArgumentParser(description="Generates class files for a given abi.")
     parser.add_argument(
-        "abi_file_path",
+        "abi-file-path",
         help="Path to the abi JSON file or directory containing multiple JSON files.",
     )
 
     parser.add_argument(
-        "--output_dir",
+        "--output-dir",
         default="pypechain_types",
         help="Path to the directory where files will be generated. Defaults to pypechain_types.",
     )
     parser.add_argument(
-        "--line_length",
+        "--line-length",
         type=int,
         default=120,
         help="Optional argument for the output file's maximum line length. Defaults to 120.",
