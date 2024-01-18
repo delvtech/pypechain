@@ -16,6 +16,18 @@ from pypechain.render.main import render_files
 
 
 def main(argv: Sequence[str] | None = None) -> None:
+    """Main entrypoint for pypechain cli.
+
+    Arguments
+    ---------
+    argv : Sequence[str] | None, optional
+        _description_, by default None
+    """
+    abi_file_path, output_dir, line_length = parse_arguments(argv)
+    pypechain(abi_file_path, output_dir, line_length)
+
+
+def pypechain(abi_file_path: str, output_dir: str, line_length: int = 120):
     """Generates class files for a given abi.
 
     Arguments
@@ -25,10 +37,8 @@ def main(argv: Sequence[str] | None = None) -> None:
     output_dir: str
         Path to the directory where files will be generated.
     line_length : int
-        Optional argument for the output file's maximum line length. Defaults to 80.
+        Optional argument for the output file's maximum line length. Defaults to 120.
     """
-
-    abi_file_path, output_dir, line_length = parse_arguments(argv)
 
     # TODO: move to end of main() so that files aren't cleared if something breaks during script
     # execution. Create/clear the output directory
