@@ -1,7 +1,7 @@
 [project]
 
 name = "pypechain"
-version = "0.0.23"
+version = "0.0.24"
 authors = [
     { name = "Matthew Brown", email = "matt@delv.tech" },
     { name = "Dylan Paiton", email = "dylan@delv.tech" },

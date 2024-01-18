@@ -14,6 +14,8 @@ from web3 import Web3
 from web3.middleware import geth_poa
 from web3.types import RPCEndpoint
 
+from pypechain import pypechain
+
 # pylint: disable=redefined-outer-name
 
 # IMPORTANT NOTE!!!!!
@@ -181,5 +183,5 @@ def process_contracts(request):
                 with open(output_file, "w", encoding="utf-8") as file:
                     json.dump(data, file, ensure_ascii=False, indent=2)
 
-    # Run the pypechain module after processing all contracts
-    subprocess.run(f"pypechain {test_dir}/abis --output_dir={test_dir}/types", shell=True, check=True)
+    # # Run the pypechain module after processing all contracts
+    pypechain(f"{test_dir}/abis", f"{test_dir}/types")
