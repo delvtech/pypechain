@@ -27,16 +27,16 @@ def main(argv: Sequence[str] | None = None) -> None:
     pypechain(abi_file_path, output_dir, line_length)
 
 
-def pypechain(abi_file_path: str, output_dir: str, line_length: int = 120):
+def pypechain(abi_file_path: str, output_dir: str = "pypechain_types", line_length: int = 120):
     """Generates class files for a given abi.
 
     Arguments
     ---------
     abi_file_path : str
         Path to the abi JSON file.
-    output_dir: str
+    output_dir: str, optional
         Path to the directory where files will be generated.
-    line_length : int
+    line_length : int, optional
         Optional argument for the output file's maximum line length. Defaults to 120.
     """
 
