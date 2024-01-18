@@ -35,7 +35,7 @@ def pypechain(abi_file_path: str, output_dir: str = "pypechain_types", line_leng
     abi_file_path : str
         Path to the abi JSON file.
     output_dir: str, optional
-        Path to the directory where files will be generated.
+        Path to the directory where files will be generated. Defaults to 'pypechain_types'.
     line_length : int, optional
         Optional argument for the output file's maximum line length. Defaults to 120.
     """
