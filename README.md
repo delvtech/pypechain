@@ -39,14 +39,15 @@ For development install instructions, see toplevel [INSTALL.md](https://github.c
 
 ## Packages 📦
 
-| Package Name | Version | Description |
-|--------------|---------|-------------|
-| pypechain | [![](https://img.shields.io/pypi/v/pypechain.svg)]((https://pypi.org/pypi/pypechain/)) | Codegen python interfaces for web3.py contracts. |
-| autoflake | [![](https://img.shields.io/pypi/v/autoflake.svg)]((https://pypi.org/pypi/autoflake/)) | Removes unused imports and unused variables |
-| black | [![](https://img.shields.io/pypi/v/black.svg)]((https://pypi.org/pypi/black/)) | The uncompromising code formatter. |
-| isort | [![](https://img.shields.io/pypi/v/isort.svg)]((https://pypi.org/pypi/isort/)) | A Python utility / library to sort Python imports. |
-| jinja2 | [![](https://img.shields.io/pypi/v/jinja2.svg)]((https://pypi.org/pypi/jinja2/)) | A very fast and expressive template engine. |
-| web3 | [![](https://img.shields.io/pypi/v/web3.svg)]((https://pypi.org/pypi/web3/)) | web3.py |
+| Package Name | Version                                                                                  | Description                                        |
+| ------------ | ---------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| pypechain    | [![](https://img.shields.io/pypi/v/pypechain.svg)](<(https://pypi.org/pypi/pypechain/)>) | Codegen python interfaces for web3.py contracts.   |
+| autoflake    | [![](https://img.shields.io/pypi/v/autoflake.svg)](<(https://pypi.org/pypi/autoflake/)>) | Removes unused imports and unused variables        |
+| black        | [![](https://img.shields.io/pypi/v/black.svg)](<(https://pypi.org/pypi/black/)>)         | The uncompromising code formatter.                 |
+| isort        | [![](https://img.shields.io/pypi/v/isort.svg)](<(https://pypi.org/pypi/isort/)>)         | A Python utility / library to sort Python imports. |
+| jinja2       | [![](https://img.shields.io/pypi/v/jinja2.svg)](<(https://pypi.org/pypi/jinja2/)>)       | A very fast and expressive template engine.        |
+| web3         | [![](https://img.shields.io/pypi/v/web3.svg)](<(https://pypi.org/pypi/web3/)>)           | web3.py                                            |
+
 ## Usage
 
 Pypechain is primarily to be used via the CLI:
@@ -54,7 +55,7 @@ Pypechain is primarily to be used via the CLI:
 ```
 ❯❯ pypechain -h
 
-usage: pypechain [-h] [--output_dir OUTPUT_DIR] [--line_length LINE_LENGTH] abi_file_path
+usage: pypechain [-h] [--output-dir OUTPUT_DIR] [--line-length LINE_LENGTH] abi_file_path
 
 Generates class files for a given abi.
 
@@ -63,21 +64,21 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  --output_dir OUTPUT_DIR
+  --output-dir OUTPUT_DIR
                         Path to the directory where files will be generated. Defaults to pypechain_types.
-  --line_length LINE_LENGTH
+  --line-length LINE_LENGTH
                         Optional argument for the output file's maximum line length. Defaults to 80.
 ```
 
 However, you can also run the `main` script directly from Python:
 
 ```python
-from pypechain import pypechain_cli
+from pypechain import pypechain
 
 abi_dir = "some/abi/dir"
 output_dir = "some/output/dir"
 
-pypechain_cli(argv=[abi_dir, "--output_dir", output_dir])
+pypechain(abi_dir, output_dir)
 ```
 
 ## Examples
