@@ -39,14 +39,14 @@ For development install instructions, see toplevel [INSTALL.md](https://github.c
 
 ## Packages 📦
 
-| Package Name | Version                                                                                  | Description                                      |
-| ------------ | ---------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| pypechain    | [![](https://img.shields.io/pypi/v/pypechain.svg)](<(https://pypi.org/pypi/pypechain/)>) | Codegen python interfaces for web3.py contracts. |
-| flit         | [![](https://img.shields.io/pypi/v/flit.svg)](<(https://pypi.org/pypi/flit/)>)           | A simple packaging tool for simple packages.     |
-| black        | [![](https://img.shields.io/pypi/v/black.svg)](<(https://pypi.org/pypi/black/)>)         | The uncompromising code formatter.               |
-| jinja2       | [![](https://img.shields.io/pypi/v/jinja2.svg)](<(https://pypi.org/pypi/jinja2/)>)       | A very fast and expressive template engine.      |
-| web3         | [![](https://img.shields.io/pypi/v/web3.svg)](<(https://pypi.org/pypi/web3/)>)           | web3.py                                          |
-
+| Package Name | Version | Description |
+|--------------|---------|-------------|
+| pypechain | [![](https://img.shields.io/pypi/v/pypechain.svg)]((https://pypi.org/pypi/pypechain/)) | Codegen python interfaces for web3.py contracts. |
+| autoflake | [![](https://img.shields.io/pypi/v/autoflake.svg)]((https://pypi.org/pypi/autoflake/)) | Removes unused imports and unused variables |
+| black | [![](https://img.shields.io/pypi/v/black.svg)]((https://pypi.org/pypi/black/)) | The uncompromising code formatter. |
+| isort | [![](https://img.shields.io/pypi/v/isort.svg)]((https://pypi.org/pypi/isort/)) | A Python utility / library to sort Python imports. |
+| jinja2 | [![](https://img.shields.io/pypi/v/jinja2.svg)]((https://pypi.org/pypi/jinja2/)) | A very fast and expressive template engine. |
+| web3 | [![](https://img.shields.io/pypi/v/web3.svg)]((https://pypi.org/pypi/web3/)) | web3.py |
 ## Usage
 
 Pypechain is primarily to be used via the CLI:
