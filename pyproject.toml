@@ -1,7 +1,7 @@
 [project]
 
 name = "pypechain"
-version = "0.0.21"
+version = "0.0.23"
 authors = [
     { name = "Matthew Brown", email = "matt@delv.tech" },
     { name = "Dylan Paiton", email = "dylan@delv.tech" },
@@ -10,30 +10,37 @@ authors = [
 ]
 description = "Codegen python interfaces for web3.py contracts."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["flit", "black", "jinja2", "web3"]
+dependencies = ["autoflake", "black", "isort", "jinja2", "web3"]
 
 [project.scripts]
 pypechain = "pypechain.main:main"
 
 [project.optional-dependencies]
 # This flag installs all dependencies and should be ran when installing this package
-all = ["pypechain[base,build,test]"]
-base = ["black", "isort", "jinja2", "web3", "autoflake"]
-build = ["build", "setuptools", "wheel", "twine", "toml"]
+all = ["pypechain[build,test]"]
+build = [
+    "build",
+    "flit",
+    "request",
+    "setuptools",
+    "toml",
+    "toml",
+    "twine",
+    "wheel",
+]
 test = [
+    "coverage",
+    "factory-boy",
+    "pylint",
+    "pyright",
     "pytest",
     "pytest-snapshot",
-    "pyright",
-    "pylint",
-    "coverage",
-    "isort",
-    "factory-boy",
 ]
 
 [project.urls]
