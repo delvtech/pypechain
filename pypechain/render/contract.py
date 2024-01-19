@@ -16,7 +16,7 @@ from pypechain.utilities.abi import (
     get_output_names,
     get_output_names_and_types,
     get_output_types,
-    get_structs_by_name_for_abi,
+    get_structs_for_abi,
     is_abi_event,
     is_abi_function,
     load_abi_from_file,
@@ -57,8 +57,8 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     # if any function has overloading
     has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
 
-    structs_for_abi = get_structs_by_name_for_abi(abi)
-    structs_used = gather_matching_types(list(function_datas.values()), list(structs_for_abi.keys()))
+    struct_names = [struct.name for struct in get_structs_for_abi(abi)]
+    structs_used = gather_matching_types(list(function_datas.values()), struct_names)
 
     functions_block = templates.functions_template.render(
         abi=abi,
@@ -97,7 +97,7 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     return templates.base_template.render(
         contract_name=contract_name,
         structs_used=structs_used,
-        structs_for_abi=structs_for_abi,
+        struct_names=struct_names,
         has_overloading=has_overloading,
         has_multiple_return_values=has_multiple_return_values,
         has_bytecode=has_bytecode,

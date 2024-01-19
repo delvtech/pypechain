@@ -203,7 +203,7 @@ class EventParams:
 
 def get_structs(
     function_params: Sequence[ABIFunctionParams] | Sequence[ABIFunctionComponents],
-    structs: dict[str, StructInfo] | None = None,
+    structs: list[StructInfo] | None = None,
 ) -> dict[str, StructInfo]:
     """Recursively gets all the structs for a contract by walking all function parameters.
 
@@ -282,34 +282,6 @@ def get_structs(
 
             # lastly, add the struct to the dict
             structs[struct_name] = StructInfo(name=struct_name, file_name=struct_file_name, values=struct_values)
-    return structs
-
-
-def get_structs_by_name_for_abi(abi: ABI) -> dict[str, StructInfo]:
-    """Gets all the structs for a given abi.
-    These are found by parsing function inputs and outputs for internalType's.
-
-    Arguments
-    ---------
-    abi : ABI
-        An Application Boundary Interface object.
-
-    Returns
-    -------
-    dict[str, StructInfo]
-        A dictionary of StructInfos keyed by name.
-    """
-    structs: dict[str, StructInfo] = {}
-    for item in abi:
-        if is_abi_function(item):
-            fn_inputs = item.get("inputs")
-            fn_outputs = item.get("outputs")
-            if fn_inputs:
-                input_structs = get_structs(fn_inputs, structs)
-                structs.update(input_structs)
-            if fn_outputs:
-                output_structs = get_structs(fn_outputs, structs)
-                structs.update(output_structs)
     return structs
 
 

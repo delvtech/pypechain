@@ -37,12 +37,12 @@ from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 from web3.types import EventData
 from web3._utils.filters import LogFilter
-{% if structs_for_abi|length > 0 %}from .{{contract_name}}Types import {{ structs_for_abi|join(', ')}}{% endif %}
+{% if struct_names|length > 0 %}from .{{contract_name}}Types import {{ struct_names|join(', ')}}{% endif %}
 from .utilities import tuple_to_dataclass, dataclass_to_tuple, rename_returned_types
 
 
 structs = {
-{%- for struct_name in structs_for_abi %}
+{%- for struct_name in struct_names %}
     "{{struct_name}}": {{struct_name}},
 {%- endfor %}}
 
