@@ -2,7 +2,7 @@
 import json
 import os
 
-from .abi import get_structs_for_abi
+from pypechain.utilities.abi import get_structs_for_abi
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
@@ -26,8 +26,7 @@ class TestStructs:
             data = json.load(file)
 
         structs = get_structs_for_abi(data["contracts"]["example/contracts/Example.sol:Example"]["abi"])
-
-        actual = list(structs)
+        actual = [struct.name for struct in structs]
         expected = ["SimpleStruct", "InnerStruct", "NestedStruct"]
         assert actual == expected
         assert all(a == b for a, b in zip(actual, expected))

@@ -167,6 +167,7 @@ class StructInfo:
     """Solidity struct information needed for codegen."""
 
     name: str
+    file_name: str
     values: list[StructValue]
 
 
@@ -255,6 +256,7 @@ def get_structs(
         # if we find a struct, we'll add it to the dict of StructInfo's
         if is_struct(internal_type) and components:
             struct_name = get_struct_name(param)
+            struct_file_name = get_struct_file_name(param)
             struct_values: list[StructValue] = []
 
             # walk over the components of the struct
@@ -279,11 +281,11 @@ def get_structs(
                 )
 
             # lastly, add the struct to the dict
-            structs[struct_name] = StructInfo(name=struct_name, values=struct_values)
+            structs[struct_name] = StructInfo(name=struct_name, file_name=struct_file_name, values=struct_values)
     return structs
 
 
-def get_structs_for_abi(abi: ABI) -> dict[str, StructInfo]:
+def get_structs_by_name_for_abi(abi: ABI) -> dict[str, StructInfo]:
     """Gets all the structs for a given abi.
     These are found by parsing function inputs and outputs for internalType's.
 
@@ -309,6 +311,34 @@ def get_structs_for_abi(abi: ABI) -> dict[str, StructInfo]:
                 output_structs = get_structs(fn_outputs, structs)
                 structs.update(output_structs)
     return structs
+
+
+def get_structs_for_abi(abi: ABI) -> list[StructInfo]:
+    """Gets all the structs for a given abi.
+    These are found by parsing function inputs and outputs for internalType's.
+
+    Arguments
+    ---------
+    abi : ABI
+        An Application Boundary Interface object.
+
+    Returns
+    -------
+    dict[str, StructInfo]
+        A dictionary of StructInfos keyed by name.
+    """
+    structs: dict[str, StructInfo] = {}
+    for item in abi:
+        if is_abi_function(item):
+            fn_inputs = item.get("inputs")
+            fn_outputs = item.get("outputs")
+            if fn_inputs:
+                input_structs = get_structs(fn_inputs, structs)
+                structs.update(input_structs)
+            if fn_outputs:
+                output_structs = get_structs(fn_outputs, structs)
+                structs.update(output_structs)
+    return list(structs.values())
 
 
 def is_struct(internal_type: str) -> bool:
@@ -403,8 +433,31 @@ def get_struct_name(
         The name of the item.
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
-    string_type = internal_type.split(".").pop()
-    return capitalize_first_letter_only(string_type)
+    struct_name = internal_type.split(".").pop()
+    return capitalize_first_letter_only(struct_name)
+
+
+def get_struct_file_name(
+    param_or_component: ABIFunctionParams | ABIFunctionComponents,
+) -> str:
+    """Returns the name for a given ABIFunctionParams or ABIFunctionComponents.
+
+    If the item is a struct, then we pull the name from the internalType attribute, otherwise we use
+    the name if available.
+
+    Arguments
+    ---------
+    param : ABIFunctionParams | ABIFunctionComponents
+
+
+    Returns
+    -------
+    str
+        The name of the item.
+    """
+    internal_type = cast(str, param_or_component.get("internalType", ""))
+    file_name = internal_type.split(".")[0]
+    return capitalize_first_letter_only(file_name)
 
 
 def get_param_name(

@@ -30,9 +30,7 @@ def render_types_file(contract_name: str, abi_file_path: Path) -> str | None:
 
     abi, _ = load_abi_from_file(abi_file_path)
 
-    structs_by_name = get_structs_for_abi(abi)
-    structs_list = list(structs_by_name.values())
-    structs = [asdict(struct) for struct in structs_list]
+    structs = get_structs_for_abi(abi)
     events = [asdict(event) for event in get_events_for_abi(abi)]
     has_events = bool(events)
     has_structs = bool(structs)
