@@ -663,7 +663,7 @@ class ExampleContract(Contract):
 
         """
 
-        return super().constructor(name)
+        return super().constructor(dataclass_to_tuple(name))
 
     @classmethod
     def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress, constructorArgs: ConstructorArgs) -> Self:
