@@ -23,22 +23,6 @@ from web3.types import ABIEvent, ABIEventParams
 
 
 @dataclass
-class Items:
-    """Items struct."""
-
-    thing: str
-    yesOrNo: bool
-
-
-@dataclass
-class Config:
-    """Config struct."""
-
-    name: str
-    items: Items
-
-
-@dataclass
 class SimpleStruct:
     """SimpleStruct struct."""
 
@@ -60,6 +44,22 @@ class NestedStruct:
     intVal: int
     strVal: str
     innerStruct: InnerStruct
+
+
+@dataclass
+class Items:
+    """Items struct."""
+
+    thing: str
+    yesOrNo: bool
+
+
+@dataclass
+class Config:
+    """Config struct."""
+
+    name: str
+    items: Items
 
 
 EventA = ABIEvent(
