@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract ConstructorNoArgs {
+contract ConstructorWithStructArgs {
     string public name;
     string public thing;
     bool yesOrNo = false;
