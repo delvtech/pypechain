@@ -120,7 +120,6 @@ def format_file(file_path: Path, line_length: int = 120) -> None:
         Black's line-length config option.
     """
 
-    print(f"autoflake --remove-all-unused-imports {file_path}")
-    subprocess.run(f"autoflake --in-place --remove-all-unused-imports {file_path}", shell=True, check=True)
+    subprocess.run(f"autoflake --in-place --quiet --remove-all-unused-imports {file_path}", shell=True, check=True)
     isort.file(file_path, config=isort.Config())
     subprocess.run(f"black --line-length={line_length} {file_path}", shell=True, check=True)

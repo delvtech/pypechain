@@ -9,9 +9,12 @@ from typing import Literal, NamedTuple, Sequence, TypeGuard, cast
 from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
 from pypechain.foundry.types import FoundryJson
+from pypechain.hardhat.types import HardhatJson
+from pypechain.hardhat.utilities import is_hardhat_json
 from pypechain.solc.types import SolcJson
+from pypechain.solc.utilities import is_solc_json
 from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
-from pypechain.utilities.json import get_bytecode_from_json, is_foundry_json, is_solc_json
+from pypechain.utilities.json import get_bytecode_from_json, is_foundry_json
 from pypechain.utilities.types import solidity_to_python_type
 
 
@@ -167,7 +170,7 @@ class StructInfo:
     """Solidity struct information needed for codegen."""
 
     name: str
-    file_name: str
+    contract_name: str
     values: list[StructValue]
 
 
@@ -203,7 +206,7 @@ class EventParams:
 
 def get_structs(
     function_params: Sequence[ABIFunctionParams] | Sequence[ABIFunctionComponents],
-    structs: list[StructInfo] | None = None,
+    structs: dict[str, StructInfo] | None = None,
 ) -> dict[str, StructInfo]:
     """Recursively gets all the structs for a contract by walking all function parameters.
 
@@ -256,7 +259,7 @@ def get_structs(
         # if we find a struct, we'll add it to the dict of StructInfo's
         if is_struct(internal_type) and components:
             struct_name = get_struct_name(param)
-            struct_file_name = get_struct_file_name(param)
+            struct_file_name = get_struct_contract_name(param)
             struct_values: list[StructValue] = []
 
             # walk over the components of the struct
@@ -271,7 +274,9 @@ def get_structs(
                 component_type = (
                     get_struct_name(component) if is_struct(component_internal_type) else component.get("type", "")
                 )
-                python_type = solidity_to_python_type(component_type)
+                python_type = solidity_to_python_type(
+                    component_type, custom_types=[struct.name for struct in structs.values()]
+                )
                 struct_values.append(
                     StructValue(
                         name=component_name,
@@ -281,7 +286,10 @@ def get_structs(
                 )
 
             # lastly, add the struct to the dict
-            structs[struct_name] = StructInfo(name=struct_name, file_name=struct_file_name, values=struct_values)
+            structs[f"{struct_file_name}.{struct_name}"] = StructInfo(
+                name=struct_name, contract_name=struct_file_name, values=struct_values
+            )
+
     return structs
 
 
@@ -389,10 +397,23 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
 def get_struct_name(
     param_or_component: ABIFunctionParams | ABIFunctionComponents,
 ) -> str:
-    """Returns the name for a given ABIFunctionParams or ABIFunctionComponents.
+    """Returns the name of the given struct.
 
-    If the item is a struct, then we pull the name from the internalType attribute, otherwise we use
-    the name if available.
+    For example, a struct in an abi json will look like:
+
+    {
+    "components": [
+      # components listed here
+    ],
+    "internalType": "struct ContractName.SimpleStruct",
+    "name": "simpleStruct",
+    "type": "tuple"
+    }
+
+    We are assuming 'internalType's value to have the form:
+    'struct [ContractName].[StructName]'
+
+    If there is no ContractName, then this code will break on purpose.
 
     Arguments
     ---------
@@ -405,17 +426,28 @@ def get_struct_name(
         The name of the item.
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
-    struct_name = internal_type.split(".").pop()
+    struct_name = internal_type.split(".")[1]
     return capitalize_first_letter_only(struct_name)
 
 
-def get_struct_file_name(
+def get_struct_contract_name(
     param_or_component: ABIFunctionParams | ABIFunctionComponents,
 ) -> str:
-    """Returns the name for a given ABIFunctionParams or ABIFunctionComponents.
+    """Returns the contract name that the given struct is defined in.
 
-    If the item is a struct, then we pull the name from the internalType attribute, otherwise we use
-    the name if available.
+    For example, a struct in an abi json will look like:
+
+    {
+    "components": [
+      # components listed here
+    ],
+    "internalType": "struct ContractName.SimpleStruct",
+    "name": "simpleStruct",
+    "type": "tuple"
+    }
+
+    We are assuming 'internalType's value to have the form:
+    'struct [ContractName].[StructName]'
 
     Arguments
     ---------
@@ -428,8 +460,9 @@ def get_struct_file_name(
         The name of the item.
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
-    file_name = internal_type.split(".")[0]
-    return capitalize_first_letter_only(file_name)
+    contract_name_and_struct_name = internal_type.replace("struct ", "")
+    contract_name = contract_name_and_struct_name.split(".")[0]
+    return capitalize_first_letter_only(contract_name)
 
 
 def get_param_name(
@@ -444,7 +477,6 @@ def get_param_name(
     ---------
     param : ABIFunctionParams | ABIFunctionComponents
 
-
     Returns
     -------
     str
@@ -454,7 +486,16 @@ def get_param_name(
     return param_or_component.get("name", "").lstrip("_")
 
 
-def load_abi_from_file(file_path: Path) -> tuple[ABI, str]:
+@dataclass
+class AbiInfo:
+    """Information about an ABI"""
+
+    abi: ABI
+    bytecode: str
+    contract_name: str
+
+
+def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
     """Loads a contract ABI from a file.
 
     Arguments
@@ -471,9 +512,26 @@ def load_abi_from_file(file_path: Path) -> tuple[ABI, str]:
 
     with open(file_path, "r", encoding="utf-8") as file:
         json_file = json.load(file)
-        abi = get_abi_from_json(json_file)
-        bytecode = get_bytecode_from_json(json_file)
-        return abi, bytecode
+
+        # solc jsons list all the contracts and their abis in one file, so we process it first.
+        if is_solc_json(json_file):
+            return _get_abis_from_solc_json(json_file)
+
+        if is_hardhat_json(json_file):
+            abi = get_abi_from_json(json_file)
+            bytecode = get_bytecode_from_json(json_file)
+            # hardhat jsons have the contract name as a field.
+            contract_name = json_file.get("contractName")
+            return [AbiInfo(abi=abi, bytecode=bytecode, contract_name=contract_name)]
+
+        if is_foundry_json(json_file):
+            abi = get_abi_from_json(json_file)
+            bytecode = get_bytecode_from_json(json_file)
+            # foundry saves contracts to self-named files.
+            contract_name = file_path.name.removesuffix(".json")
+            return [AbiInfo(abi=abi, bytecode=bytecode, contract_name=contract_name)]
+
+        raise ValueError("Unknown ABI Json format")
 
 
 def get_abi_items(abi: ABI) -> list[ABIElement]:
@@ -717,12 +775,12 @@ def get_param_type(param: ABIFunctionParams):
     return python_type
 
 
-def get_abi_from_json(json_abi: FoundryJson | SolcJson | ABI) -> ABI:
+def get_abi_from_json(json_abi: FoundryJson | HardhatJson | ABI) -> ABI:
     """Gets the ABI from a supported json format."""
     if is_foundry_json(json_abi):
         return _get_abi_from_foundry_json(json_abi)
-    if is_solc_json(json_abi):
-        return _get_abi_from_solc_json(json_abi)
+    if is_hardhat_json(json_abi):
+        return _get_abi_from_hardhat_json(json_abi)
     if is_abi(json_abi):
         return json_abi
 
@@ -746,7 +804,19 @@ def _get_abi_from_foundry_json(json_abi: FoundryJson) -> ABI:
     return json_abi.get("abi")
 
 
-def _get_abi_from_solc_json(json_abi: SolcJson) -> ABI:
-    # assume one contract right now
-    contract = list(json_abi.get("contracts").values())[0]
-    return contract.get("abi")
+def _get_abi_from_hardhat_json(json_abi: HardhatJson) -> ABI:
+    return json_abi.get("abi")
+
+
+def _get_abis_from_solc_json(json_abi: SolcJson) -> list[AbiInfo]:
+    contracts = json_abi.get("contracts")
+    infos: list[AbiInfo] = []
+
+    for key, value in contracts.items():
+        contract_name = key.split(":")[1]
+        abi = value.get("abi")
+        binary = value.get("bin")
+        bytecode = f"0x{binary}"
+        infos.append(AbiInfo(abi=abi, contract_name=contract_name, bytecode=bytecode))
+
+    return infos

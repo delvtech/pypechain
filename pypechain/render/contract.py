@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 import re
-from pathlib import Path
 from typing import Any, NamedTuple
 
 from web3.types import ABI
 
 from pypechain.utilities.abi import (
+    AbiInfo,
+    EventInfo,
+    StructInfo,
     get_abi_constructor,
     get_abi_items,
     get_input_names,
@@ -19,14 +21,80 @@ from pypechain.utilities.abi import (
     get_structs_for_abi,
     is_abi_event,
     is_abi_function,
-    load_abi_from_file,
 )
 from pypechain.utilities.format import capitalize_first_letter_only
 from pypechain.utilities.templates import get_jinja_env
-from pypechain.utilities.types import EventData, FunctionData, SignatureData, gather_matching_types
+from pypechain.utilities.types import EventData, FunctionData, SignatureData
 
 
-def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
+class ContractInfo(dict):
+    """Contract Entry"""
+
+    structs: dict[str, StructInfo] = {}
+    events: dict[str, EventInfo] = {}
+    abi: ABI
+    bytecode: str
+    contract_name: str
+
+
+class ContractInfosByName(dict[str, ContractInfo]):
+    """Contract Types"""
+
+    def get(self, key: str) -> ContractInfo:
+        info = super().get(key)
+        if info is None:
+            new_info = ContractInfo()
+            self.update({key: new_info})
+            return new_info
+        return info
+
+    def add_structs(self, structs: StructInfo | list[StructInfo]):
+        """_summary_
+
+        Parameters
+        ----------
+        structs : StructInfo | list[StructInfo]
+            _description_
+        """
+        if not isinstance(structs, list):
+            structs = [structs]
+        for struct in structs:
+            info = self.get(struct.contract_name)
+            info.structs[struct.name] = struct
+
+    def add_events(self, events: EventInfo | list[EventInfo], contract_name: str):
+        """_summary_
+
+        Parameters
+        ----------
+        events : EventInfo | list[EventInfo]
+            _description_
+        contract_name : str
+            _description_
+        """
+        if not isinstance(events, list):
+            events = [events]
+        for event in events:
+            info = self.get(contract_name)
+            info.events[event.name] = event
+
+    def add_abi_info(self, abi_info: AbiInfo, contract_name: str):
+        """_summary_
+
+        Parameters
+        ----------
+        abi_info : AbiInfo
+            _description_
+        contract_name : str
+            _description_
+        """
+        entry = self.get(contract_name)
+        entry.contract_name = contract_name
+        entry.abi = abi_info.abi
+        entry.bytecode = abi_info.bytecode
+
+
+def render_contract_file(contract_info: ContractInfo) -> str:
     """Returns the serialized code of the contract file to be generated.
 
     Arguments
@@ -48,41 +116,39 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
     env = get_jinja_env()
     templates = get_templates_for_contract_file(env)
 
-    abi, bytecode = load_abi_from_file(abi_file_path)
-    function_datas, constructor_data = get_function_datas(abi)
-    event_datas = get_event_datas(abi)
+    function_datas, constructor_data = get_function_datas(contract_info.abi)
+    event_datas = get_event_datas(contract_info.abi)
 
-    has_bytecode = bool(bytecode)
+    has_bytecode = bool(contract_info.bytecode)
     has_events = bool(len(event_datas.values()))
     # if any function has overloading
     has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
 
-    struct_names = [struct.name for struct in get_structs_for_abi(abi)]
-    structs_used = gather_matching_types(list(function_datas.values()), struct_names)
+    structs_used = get_structs_for_abi(contract_info.abi)
 
     functions_block = templates.functions_template.render(
-        abi=abi,
-        contract_name=contract_name,
+        abi=contract_info.abi,
+        contract_name=contract_info.contract_name,
         functions=function_datas,
         # TODO: use this data to add a typed constructor
         constructor=constructor_data,
     )
 
     events_block = templates.events_template.render(
-        contract_name=contract_name,
+        contract_name=contract_info.contract_name,
         events=event_datas,
     )
 
     abi_block = templates.abi_template.render(
-        abi=abi,
-        bytecode=bytecode,
-        contract_name=contract_name,
+        abi=contract_info.abi,
+        bytecode=contract_info.bytecode,
+        contract_name=contract_info.contract_name,
     )
 
     contract_block = templates.contract_template.render(
         has_bytecode=has_bytecode,
         has_events=has_events,
-        contract_name=contract_name,
+        contract_name=contract_info.contract_name,
         constructor=constructor_data,
         functions=function_datas,
     )
@@ -95,9 +161,8 @@ def render_contract_file(contract_name: str, abi_file_path: Path) -> str:
 
     # Render the template
     return templates.base_template.render(
-        contract_name=contract_name,
+        contract_name=contract_info.contract_name,
         structs_used=structs_used,
-        struct_names=struct_names,
         has_overloading=has_overloading,
         has_multiple_return_values=has_multiple_return_values,
         has_bytecode=has_bytecode,

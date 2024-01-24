@@ -4,17 +4,17 @@ from typing import TypeGuard
 from pypechain.solc.types import SolcJson
 
 
-def is_solc_json(val: object) -> TypeGuard[SolcJson]:
+def is_solc_json(obj: object) -> TypeGuard[SolcJson]:
     """Determines whether a json object is a SolcJson."""
     return (
-        isinstance(val, dict)
-        and "contracts" in val
-        and isinstance(val["contracts"], dict)
+        isinstance(obj, dict)
+        and "contracts" in obj
+        and isinstance(obj["contracts"], dict)
         and all(
             isinstance(contract, dict) and "abi" in contract and "bin" in contract and "metadata" in contract
-            for contract in val["contracts"].values()
+            for contract in obj["contracts"].values()
         )
-        and "version" in val
+        and "version" in obj
     )
 
 

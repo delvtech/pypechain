@@ -33,7 +33,8 @@ class EventData(TypedDict):
     capitalized_name: str
 
 
-def solidity_to_python_type(solidity_type: str) -> str:
+# pylint: disable=dangerous-default-value
+def solidity_to_python_type(solidity_type: str, custom_types: list[str] = []) -> str:
     """Returns the stringfied python type for the gien solidity type.
 
     Arguments
@@ -158,6 +159,8 @@ def solidity_to_python_type(solidity_type: str) -> str:
     if solidity_type == "tuple":
         return "tuple"
 
+    if solidity_type in custom_types:
+        return solidity_type
     # If the Solidity type isn't recognized, make a warning.  This can happen when an internal type
     # is expeected for an input parameter or returned in an output.
     logging.warning("Unknown Solidity type: %s", solidity_type)

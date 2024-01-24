@@ -6,7 +6,7 @@ from web3.types import ABI
 
 
 class SolcContract(TypedDict):
-    """Foundry"""
+    """SolcContract"""
 
     abi: ABI
     bin: str
@@ -14,7 +14,7 @@ class SolcContract(TypedDict):
 
 
 class SolcJson(TypedDict):
-    """Foundry"""
+    """SolcJson"""
 
     contracts: dict[str, SolcContract]
     version: str

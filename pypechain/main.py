@@ -9,10 +9,9 @@ from pathlib import Path
 from shutil import copy2
 from typing import NamedTuple, Sequence
 
-from web3.exceptions import NoABIFunctionsFound
-
 from pypechain.render.init import render_init_file
 from pypechain.render.main import render_files
+from pypechain.utilities.abi import AbiInfo, load_abi_infos_from_file
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -55,19 +54,16 @@ def pypechain(abi_file_path: str, output_dir: str = "pypechain_types", line_leng
         # Otherwise, add the single file to the list
         json_files_to_process.append(Path(abi_file_path))
 
+    # parse the files and gather AbiInfos.
+    abi_infos: list[AbiInfo] = []
+    for json_file in json_files_to_process:
+        infos = load_abi_infos_from_file(json_file)
+        abi_infos.extend(infos)
+
     file_names: list[str] = []
 
     # Now process all gathered files
-    for json_file in json_files_to_process:
-        try:
-            rendered_file_names = render_files(str(json_file), output_dir, line_length)
-            file_names.extend(rendered_file_names)
-        except NoABIFunctionsFound:
-            # TODO: use logging
-            print(f"No ABI Functions found in {json_file}, skipping...")
-        except BaseException as err:
-            print(f"Error creating types for {json_file}")
-            raise err
+    file_names = render_files(abi_infos, output_dir, line_length)
 
     # Render the __init__.py file
     render_init_file(output_dir, file_names, line_length)
@@ -116,7 +112,7 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
     """Parses input arguments"""
     parser = argparse.ArgumentParser(description="Generates class files for a given abi.")
     parser.add_argument(
-        "abi-file-path",
+        "abi_file_path",
         help="Path to the abi JSON file or directory containing multiple JSON files.",
     )
 
