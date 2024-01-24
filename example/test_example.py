@@ -1,8 +1,8 @@
 """Example showcasing pypechain."""
 from __future__ import annotations
 
-import json
 import os
+from pathlib import Path
 
 import pytest
 from web3 import Web3
@@ -10,8 +10,7 @@ from web3.contract.contract import Contract
 
 from example.types import ExampleContract
 from example.types.ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
-from pypechain.utilities.abi import get_abi_from_json
-from pypechain.utilities.json import get_bytecode_from_json
+from pypechain.utilities.abi import load_abi_infos_from_file
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
@@ -32,22 +31,18 @@ class TestExampleContract:
         # Get the directory of the current script
         script_dir = os.path.dirname(os.path.abspath(__file__))
         # Construct the path to the file relative to the script directory
-        file_path = os.path.join(script_dir, "abis", "Example.json")
+        file_path = Path(os.path.join(script_dir, "abis", "Example.json"))
         # Open the json and grab the abi and bytecode
-        with open(file_path, "r", encoding="utf-8") as file:
-            json_file = json.load(file)
-            abi = get_abi_from_json(json_file)
-            abi = abi.pop() if isinstance(abi, list) else abi
-            bytecode = get_bytecode_from_json(json_file)
+        abi_info = load_abi_infos_from_file(file_path)[0]
 
-        ExampleContract = w3.eth.contract(abi=abi, bytecode=bytecode)
+        ExampleContract = w3.eth.contract(abi=abi_info.abi, bytecode=abi_info.bytecode)
 
         # Submit the transaction that deploys the contract
         tx_hash = ExampleContract.constructor("example").transact()
         # Wait for the transaction to be mined, and get the transaction receipt
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
-        deployed_contract: Contract = w3.eth.contract(address=tx_receipt.contractAddress, abi=abi)  # type: ignore
+        deployed_contract: Contract = w3.eth.contract(address=tx_receipt.contractAddress, abi=abi_info.abi)  # type: ignore
 
         result = deployed_contract.functions.flipFlop(1, 2).call()
         assert result == [2, 1]
