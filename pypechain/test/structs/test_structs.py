@@ -2,13 +2,12 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
 import pytest
 from web3 import Web3
 
-from pypechain.test.return_types.types.ReturnTypesTypes import InnerStruct, NestedStruct, SimpleStruct
-
-from .types import ReturnTypesContract
+from .types import StructsAContract, StructsBContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
@@ -18,90 +17,32 @@ project_root = os.path.dirname(os.path.dirname(current_path))
 
 
 @pytest.fixture
-def deployed_contract(w3: Web3):
-    """Deploys a ReturnTypes contract."""
-    return ReturnTypesContract.deploy(w3=w3, account=w3.eth.accounts[0])
+def deployed_contracts(w3: Web3) -> tuple[StructsAContract, StructsBContract]:
+    """Deploys a StructsA contract and StructsB."""
+    structs_a = StructsAContract.deploy(w3=w3, account=w3.eth.accounts[0])
+    structs_b = StructsBContract.deploy(w3=w3, account=w3.eth.accounts[0])
+    return structs_a, structs_b
 
 
 @pytest.mark.usefixtures("process_contracts")
-class TestReturnTypes:
+class TestStructs:
     """Tests pipeline from bots making trades to viewing the trades in the db"""
 
-    def test_no_name_single_value(self, deployed_contract: ReturnTypesContract):
-        """Tests single value"""
-        result: int = deployed_contract.functions.noNameSingleValue(1).call()
-        assert result == 1
+    def test_correct_files_exit(self):
+        """StructsA and StructsB both inherit from IStructs.  StructsA also declares it's own
+        struct.  Therefore we should expect to see types files for IStructs and StructsA, but not
+        for StructsB since it doesn't declare its own.  IStructs is an interface file though, there
+        is no ABI for it, so we shouldn't create a contract file."""
 
-    def test_no_name_two_values(self, deployed_contract: ReturnTypesContract):
-        """Tests two values"""
-        func = deployed_contract.functions.noNameTwoValues("a string")
-        result = func.call()
-        assert isinstance(result, func.ReturnValues)
-        assert result == func.ReturnValues("a string", 2)
+        expected_files = [
+            "types/__init__.py",
+            "types/IStructsTypes.py",
+            "types/StructsAContract.py",
+            "types/StructsATypes.py",
+            "types/StructsBContract.py",
+            "types/utilities.py",
+        ]
 
-    def test_named_single_value(self, deployed_contract: ReturnTypesContract):
-        """Tests named single value"""
-        result: int = deployed_contract.functions.namedSingleValue(1, 2).call()
-        assert result == 3
-
-    def test_named_two_values(self, deployed_contract: ReturnTypesContract):
-        """Tests two named values"""
-        func = deployed_contract.functions.namedTwoValues(1, 2)
-        result = func.call()
-        assert isinstance(result, func.ReturnValues)
-        assert result == func.ReturnValues(2, 1)
-
-    def test_single_simple_struct(self, deployed_contract: ReturnTypesContract):
-        """Tests a struct"""
-        result = deployed_contract.functions.singleSimpleStruct().call()
-        assert result == SimpleStruct(1, "You are number 1")
-
-    def test_single_nested_struct(self, deployed_contract: ReturnTypesContract):
-        """Tests a nested struct"""
-        result = deployed_contract.functions.singleNestedStruct().call()
-        assert result == NestedStruct(1, "You are number 1", InnerStruct(True))
-
-    def test_two_simple_structs(self, deployed_contract: ReturnTypesContract):
-        """Tests two structs"""
-        func = deployed_contract.functions.twoSimpleStructs()
-        result = func.call()
-        assert isinstance(result, func.ReturnValues)
-        assert result == func.ReturnValues(SimpleStruct(1, "You are number 1"), SimpleStruct(2, "You are number 2"))
-
-    def test_two_mixed_structs(self, deployed_contract: ReturnTypesContract):
-        """Tests two structs, one nested"""
-        func = deployed_contract.functions.twoMixedStructs()
-        result = func.call()
-        assert isinstance(result, func.ReturnValues)
-        assert result == func.ReturnValues(
-            SimpleStruct(1, "You are number 1"), NestedStruct(2, "You are number 2", InnerStruct(True))
-        )
-
-    def test_named_single_struct(self, deployed_contract: ReturnTypesContract):
-        """Tests a named struct"""
-        result = deployed_contract.functions.namedSingleStruct().call()
-        assert result == SimpleStruct(1, "You are number 1")
-
-    def test_named_two_mixed_structs(self, deployed_contract: ReturnTypesContract):
-        """Tests two named structs, one nested"""
-        func = deployed_contract.functions.namedTwoMixedStructs()
-        result = func.call()
-        assert isinstance(result, func.ReturnValues)
-        assert result == func.ReturnValues(
-            SimpleStruct(1, "You are number 1"), NestedStruct(2, "You are number 2", InnerStruct(True))
-        )
-
-    def test_mix_structs_and_primitives(self, deployed_contract: ReturnTypesContract):
-        """Tests two structs, one nested, and other values returned"""
-        func = deployed_contract.functions.mixStructsAndPrimitives()
-
-        result: ReturnTypesContract.functions.mixStructsAndPrimitives.ReturnValues = func.call()
-
-        assert isinstance(result, func.ReturnValues)
-        assert result == (
-            SimpleStruct(1, "You are number 1"),
-            NestedStruct(2, "You are number 2", InnerStruct(True)),
-            1,
-            "ReturnTypesContract",
-            False,
-        )
+        for file_path in expected_files:
+            full_path = Path(current_path) / file_path
+            assert full_path.exists(), f"File does not exist: {full_path}"

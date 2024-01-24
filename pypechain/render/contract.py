@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass
 from typing import Any, NamedTuple
 
 from web3.types import ABI
@@ -12,6 +13,7 @@ from pypechain.utilities.abi import (
     StructInfo,
     get_abi_constructor,
     get_abi_items,
+    get_events_for_abi,
     get_input_names,
     get_input_names_and_types,
     get_input_types,
@@ -27,74 +29,92 @@ from pypechain.utilities.templates import get_jinja_env
 from pypechain.utilities.types import EventData, FunctionData, SignatureData
 
 
-class ContractInfo(dict):
-    """Contract Entry"""
+@dataclass
+class ContractInfo:
+    """Contract Information."""
 
-    structs: dict[str, StructInfo] = {}
-    events: dict[str, EventInfo] = {}
     abi: ABI
     bytecode: str
     contract_name: str
+    structs: dict[str, StructInfo]
+    events: dict[str, EventInfo]
 
 
-class ContractInfosByName(dict[str, ContractInfo]):
-    """Contract Types"""
+def get_contract_infos(abi_infos: list[AbiInfo]) -> dict[str, ContractInfo]:
+    """Get a dictionary of ContractInfos from an AbiInfos list.
 
-    def get(self, key: str) -> ContractInfo:
-        info = super().get(key)
-        if info is None:
-            new_info = ContractInfo()
-            self.update({key: new_info})
-            return new_info
-        return info
+     This helps us organize structs and events by the contracts they are defined
+     in. Because structs can be defined in one file, and used in another, we
+     need to avoid duplication of the definitions.
 
-    def add_structs(self, structs: StructInfo | list[StructInfo]):
-        """_summary_
+    Parameters
+    ----------
+    abi_infos : list[AbiInfo]
+        _description_
 
-        Parameters
-        ----------
-        structs : StructInfo | list[StructInfo]
-            _description_
-        """
-        if not isinstance(structs, list):
-            structs = [structs]
-        for struct in structs:
-            info = self.get(struct.contract_name)
+    Returns
+    -------
+    dict[str, ContractInfo]
+        _description_
+    """
+    contract_infos: dict[str, ContractInfo] = {}
+
+    # Populate contract_infos with all the structs, events, whole ABIs, bytecodes and contract names.
+    for abi_info in abi_infos:
+        structs = get_structs_for_abi(abi_info.abi)
+        events = get_events_for_abi(abi_info.abi)
+        contract_infos[abi_info.contract_name] = ContractInfo(
+            abi=abi_info.abi, bytecode=abi_info.bytecode, contract_name=abi_info.contract_name, structs={}, events={}
+        )
+        add_structs(contract_infos, structs)
+        add_events(contract_infos, events, abi_info.contract_name)
+
+    return contract_infos
+
+
+def add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | list[StructInfo]):
+    """_summary_
+
+    Parameters
+    ----------
+    structs : StructInfo | list[StructInfo]
+        _description_
+    """
+    if not isinstance(structs, list):
+        structs = [structs]
+    for struct in structs:
+        info = contract_infos.get(struct.contract_name)
+        if info:
             info.structs[struct.name] = struct
+        else:
+            contract_infos[struct.contract_name] = ContractInfo(
+                abi=[],
+                bytecode="",
+                contract_name=struct.contract_name,
+                structs={struct.name: struct},
+                events={},
+            )
 
-    def add_events(self, events: EventInfo | list[EventInfo], contract_name: str):
-        """_summary_
 
-        Parameters
-        ----------
-        events : EventInfo | list[EventInfo]
-            _description_
-        contract_name : str
-            _description_
-        """
-        if not isinstance(events, list):
-            events = [events]
-        for event in events:
-            info = self.get(contract_name)
+def add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | list[EventInfo], contract_name: str):
+    """_summary_
+
+    Parameters
+    ----------
+    events : EventInfo | list[EventInfo]
+        _description_
+    contract_name : str
+        _description_
+    """
+    if not isinstance(events, list):
+        events = [events]
+    for event in events:
+        info = contract_infos.get(contract_name)
+        if info:
             info.events[event.name] = event
 
-    def add_abi_info(self, abi_info: AbiInfo, contract_name: str):
-        """_summary_
 
-        Parameters
-        ----------
-        abi_info : AbiInfo
-            _description_
-        contract_name : str
-            _description_
-        """
-        entry = self.get(contract_name)
-        entry.contract_name = contract_name
-        entry.abi = abi_info.abi
-        entry.bytecode = abi_info.bytecode
-
-
-def render_contract_file(contract_info: ContractInfo) -> str:
+def render_contract_file(contract_info: ContractInfo) -> str | None:
     """Returns the serialized code of the contract file to be generated.
 
     Arguments
@@ -109,7 +129,10 @@ def render_contract_file(contract_info: ContractInfo) -> str:
     str
         A serialized python file.
     """
-
+    # if the abi is empty, then we are dealing with an interface or library so we don't want to
+    # create a contract file for it.
+    if contract_info.abi == []:
+        return
     # TODO: break this function up or bundle arguments to save on variables
     # pylint: disable=too-many-locals
 
