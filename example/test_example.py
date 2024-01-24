@@ -37,6 +37,7 @@ class TestExampleContract:
         with open(file_path, "r", encoding="utf-8") as file:
             json_file = json.load(file)
             abi = get_abi_from_json(json_file)
+            abi = abi.pop() if isinstance(abi, list) else abi
             bytecode = get_bytecode_from_json(json_file)
 
         ExampleContract = w3.eth.contract(abi=abi, bytecode=bytecode)

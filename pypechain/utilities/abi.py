@@ -775,12 +775,15 @@ def get_param_type(param: ABIFunctionParams):
     return python_type
 
 
-def get_abi_from_json(json_abi: FoundryJson | HardhatJson | ABI) -> ABI:
+def get_abi_from_json(json_abi: FoundryJson | HardhatJson | ABI) -> ABI | list[ABI]:
     """Gets the ABI from a supported json format."""
     if is_foundry_json(json_abi):
         return _get_abi_from_foundry_json(json_abi)
     if is_hardhat_json(json_abi):
         return _get_abi_from_hardhat_json(json_abi)
+    if is_solc_json(json_abi):
+        abi_infos = _get_abis_from_solc_json(json_abi)
+        return [info.abi for info in abi_infos]
     if is_abi(json_abi):
         return json_abi
 
