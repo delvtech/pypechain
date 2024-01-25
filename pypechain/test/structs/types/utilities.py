@@ -15,8 +15,8 @@ def tuple_to_dataclass(cls: type[T], structs: dict[str, Any], tuple_data: Any | 
     Converts a tuple (including nested tuples) to a dataclass instance.  If cls is not a dataclass,
     then the data will just be passed through this function.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     cls: type[T]
         The dataclass type to which the tuple data is to be converted.
     tuple_data: Any | Tuple[Any, ...]

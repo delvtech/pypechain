@@ -126,8 +126,8 @@ def initialize_web3_with_http_provider(
 ) -> Web3:
     """Initialize a Web3 instance using an HTTP provider and inject a geth Proof of Authority (poa) middleware.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     ethereum_node: URI | str
         Address of the http provider
     request_kwargs: dict

@@ -37,8 +37,8 @@ class EventData(TypedDict):
 def solidity_to_python_type(solidity_type: str, custom_types: list[str] = []) -> str:
     """Returns the stringfied python type for the gien solidity type.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     solidity_type : str
         A solidity variable type string, i.e. 'uint8'...'uint256', 'bool', 'address',
         'bytes2'...'bytes32' etc.

@@ -356,8 +356,8 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
 def get_event_datas(abi: ABI) -> dict[str, EventData]:
     """Gets the event datas required for the events template.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     abi : ABI
         An application boundary interface for smart contract in json format.
 

@@ -8,8 +8,8 @@ from pypechain.utilities.templates import get_jinja_env
 def render_types_file(contract_info: ContractInfo) -> str | None:
     """Returns the serialized code of the types file to be generated.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     contract_name : str
         The name of the contract to be parsed.
     types_template : Template

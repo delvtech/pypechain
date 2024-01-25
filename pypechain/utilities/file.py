@@ -7,8 +7,8 @@ import os
 def write_string_to_file(path: str | os.PathLike, code: str) -> None:
     """Writes a string to a file.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     path : str | os.PathLike
         The location of the output file.
     code : str

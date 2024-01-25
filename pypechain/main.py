@@ -17,8 +17,8 @@ from pypechain.utilities.abi import AbiInfo, load_abi_infos_from_file
 def main(argv: Sequence[str] | None = None) -> None:
     """Main entrypoint for pypechain cli.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     argv : Sequence[str] | None, optional
         Command line arguments
     """
@@ -29,8 +29,8 @@ def main(argv: Sequence[str] | None = None) -> None:
 def pypechain(abi_file_path: str, output_dir: str = "pypechain_types", line_length: int = 120):
     """Generates class files for a given abi.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     abi_file_path : str
         Path to the abi JSON file.
     output_dir: str, optional

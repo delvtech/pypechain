@@ -27,8 +27,8 @@ class AbiJson(NamedTuple):
 def load_abi(abi_path: str) -> AbiJson:
     """Loads the abi file into a json.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     abi_path : str
         Where the abi json is location.
 
@@ -51,8 +51,8 @@ def load_abi(abi_path: str) -> AbiJson:
 def is_abi_function(item: ABIElement) -> TypeGuard[ABIFunction]:
     """Typeguard function for ABIFunction.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     item:  Any
         The item we are confirming is an ABIFunction
 
@@ -77,8 +77,8 @@ def is_abi_function(item: ABIElement) -> TypeGuard[ABIFunction]:
 def get_abi_constructor(abi: ABI) -> ABIFunction | None:
     """Returns the constructor item if it exists.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     abi: ABI
         The contract's abi json to parse.
 
@@ -95,8 +95,8 @@ def get_abi_constructor(abi: ABI) -> ABIFunction | None:
 def is_abi_constructor(item: ABIElement) -> TypeGuard[ABIFunction]:
     """Typeguard function for ABIFunction.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     item:  Any
         The item we are confirming is an ABIFunction
 
@@ -121,8 +121,8 @@ def is_abi_constructor(item: ABIElement) -> TypeGuard[ABIFunction]:
 def is_abi_event(item: ABIElement) -> TypeGuard[ABIEvent]:
     """Typeguard function for ABIEvent.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     item:  Any
         The item we are confirming is an ABIFunction
 
@@ -298,8 +298,8 @@ def get_structs_for_abi(abi: ABI) -> list[StructInfo]:
     """Gets all the structs for a given abi.
     These are found by parsing function inputs and outputs for internalType's.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     abi : ABI
         An Application Boundary Interface object.
 
@@ -325,8 +325,8 @@ def get_structs_for_abi(abi: ABI) -> list[StructInfo]:
 def is_struct(internal_type: str) -> bool:
     """Returns True if the internal type of the parameter is a solidity struct.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     internal_type : str
         The internalType attribute of an ABIFunctionParams or ABIFunctionComponents.  If the
         internal type has the form 'struct ContractName.StructName' then we know we are dealing with
@@ -416,8 +416,8 @@ def get_struct_name(
 
     If there is no ContractName, then this code will break on purpose.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     param : ABIFunctionParams | ABIFunctionComponents
 
 
@@ -450,8 +450,8 @@ def get_struct_contract_name(
     We are assuming 'internalType's value to have the form:
     'struct [ContractName].[StructName]'
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     param : ABIFunctionParams | ABIFunctionComponents
 
 
@@ -474,8 +474,8 @@ def get_param_name(
     If the item is a struct, then we pull the name from the internalType attribute, otherwise we use
     the name if available.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     param : ABIFunctionParams | ABIFunctionComponents
 
     Returns
@@ -499,8 +499,8 @@ class AbiInfo:
 def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
     """Loads a contract ABI from a file.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     file_path : Path
         The path to the ABI file.
 
@@ -580,8 +580,8 @@ def get_input_names(function: ABIFunction) -> list[str]:
     the following list would be returned:
     ['who', 'amount', 'flag', 'extraData']
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     function : ABIFunction
         A web3 dict of an ABI function description.
 
@@ -601,8 +601,8 @@ def get_output_names(function: ABIFunction) -> list[str]:
 
     the following list would be returned: ['who', 'amount', 'flag', 'extraData']
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     function : ABIFunction
         A web3 dict of an ABI function description.
 
@@ -626,8 +626,8 @@ def get_input_names_and_types(function: ABIFunction) -> list[str]:
     the following list would be returned: ['who: str', 'amount: int', 'flag: bool', 'extraData:
     bytes']
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     function : ABIFunction
         A web3 dict of an ABI function description.
 
@@ -647,8 +647,8 @@ def get_input_types(function: ABIFunction) -> list[str]:
 
     the following list would be returned: ['str', 'int', 'bool', 'bytes']
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     function : ABIFunction
         A web3 dict of an ABI function description.
 
@@ -668,8 +668,8 @@ def get_output_types(function: ABIFunction) -> list[str]:
 
     the following list would be returned: ['str', 'int', 'bool', 'bytes']
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     function : ABIFunction
         A web3 dict of an ABI function description.
 
@@ -690,8 +690,8 @@ def get_output_names_and_types(function: ABIFunction) -> list[str]:
     the following list would be returned: ['who: str', 'amount: int', 'flag: bool', 'extraData:
     bytes']
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     function : ABIFunction
         A web3 dict of an ABI function description.
 
@@ -712,8 +712,8 @@ def _get_names_and_types(function: ABIFunction, parameters_type: Literal["inputs
     the following list would be returned: ['who: str', 'amount: int', 'flag: bool', 'extraData:
     bytes']
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     function : ABIFunction
         A web3 dict of an ABI function description.
     parameters_type : Literal["inputs", "outputs"]
@@ -743,8 +743,8 @@ def _get_param_types(function: ABIFunction, parameters_type: Literal["inputs", "
     the following list would be returned: ['who: str', 'amount: int', 'flag: bool', 'extraData:
     bytes']
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     function : ABIFunction
         A web3 dict of an ABI function description.
     parameters_type : Literal["inputs", "outputs"]
