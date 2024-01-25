@@ -88,8 +88,8 @@ def rename_returned_types(
 
     Returns
     -------
-    tup
-        _description_
+    tuple
+        The return types.
     """
     # cover case of multiple return values
     if isinstance(return_types, list):

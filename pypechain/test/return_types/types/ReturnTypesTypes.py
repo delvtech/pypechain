@@ -19,8 +19,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from web3.types import ABIEvent, ABIEventParams
-
 
 @dataclass
 class SimpleStruct:
@@ -44,37 +42,3 @@ class NestedStruct:
     intVal: int
     strVal: str
     innerStruct: InnerStruct
-
-
-@dataclass
-class Items:
-    """Items struct."""
-
-    thing: str
-    yesOrNo: bool
-
-
-@dataclass
-class Config:
-    """Config struct."""
-
-    name: str
-    items: Items
-
-
-EventA = ABIEvent(
-    anonymous=False,
-    inputs=[
-        ABIEventParams(indexed=True, name="who", type="address"),
-        ABIEventParams(indexed=False, name="value", type="uint256"),
-    ],
-    name="EventA",
-    type="event",
-)
-
-EventB = ABIEvent(
-    anonymous=False,
-    inputs=[],
-    name="EventB",
-    type="event",
-)

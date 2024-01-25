@@ -17,50 +17,7 @@ https://github.com/delvtech/pypechain """
 # pylint: disable=no-else-return
 from __future__ import annotations
 
-from dataclasses import dataclass
-
 from web3.types import ABIEvent, ABIEventParams
-
-
-@dataclass
-class SimpleStruct:
-    """SimpleStruct struct."""
-
-    intVal: int
-    strVal: str
-
-
-@dataclass
-class InnerStruct:
-    """InnerStruct struct."""
-
-    boolVal: bool
-
-
-@dataclass
-class NestedStruct:
-    """NestedStruct struct."""
-
-    intVal: int
-    strVal: str
-    innerStruct: InnerStruct
-
-
-@dataclass
-class Items:
-    """Items struct."""
-
-    thing: str
-    yesOrNo: bool
-
-
-@dataclass
-class Config:
-    """Config struct."""
-
-    name: str
-    items: Items
-
 
 EventA = ABIEvent(
     anonymous=False,

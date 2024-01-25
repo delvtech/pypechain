@@ -21,30 +21,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class SimpleStruct:
-    """SimpleStruct struct."""
-
-    intVal: int
-    strVal: str
-
-
-@dataclass
-class InnerStruct:
-    """InnerStruct struct."""
-
-    boolVal: bool
-
-
-@dataclass
-class NestedStruct:
-    """NestedStruct struct."""
-
-    intVal: int
-    strVal: str
-    innerStruct: InnerStruct
-
-
-@dataclass
 class Items:
     """Items struct."""
 
