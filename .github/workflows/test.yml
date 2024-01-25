@@ -44,7 +44,7 @@ jobs:
 
       - name: run pytest with coverage
         run: |
-          IN_CI=true coverage run -m pytest
+          IN_CI=true coverage run -m pytest pypechain
 
       - name: generate coverage report
         run: |
