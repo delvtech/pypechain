@@ -184,6 +184,8 @@ class StructValue:
     # mapping from solidity to python types?
     solidity_type: str
     python_type: str
+    is_struct: bool
+    contract_name: str
 
 
 @dataclass
@@ -268,8 +270,10 @@ def get_structs(
                 component_internal_type = cast(str, component.get("internalType", ""))
 
                 # do recursion if nested struct
+                contract_name: str | None = None
                 if is_struct(component_internal_type):
                     get_structs([component], structs)
+                    contract_name = get_struct_contract_name(component)
 
                 component_name = get_param_name(component)
                 component_type = (
@@ -283,6 +287,8 @@ def get_structs(
                         name=component_name,
                         solidity_type=component_type,
                         python_type=python_type,
+                        is_struct=is_struct(component_internal_type),
+                        contract_name=contract_name,
                     )
                 )
 
@@ -319,6 +325,7 @@ def get_structs_for_abi(abi: ABI) -> list[StructInfo]:
             if fn_outputs:
                 output_structs = get_structs(fn_outputs, structs)
                 structs.update(output_structs)
+    print(f"{structs.keys()=}")
     return list(structs.values())
 
 

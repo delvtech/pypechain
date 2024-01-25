@@ -1,0 +1,317 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/IStructs.sol\":\"IStructs\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/IStructs.sol\":{\"keccak256\":\"0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68\",\"dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.19+commit.7dd6d404"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/IStructs.sol": "IStructs"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/IStructs.sol": {
+        "keccak256": "0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9",
+        "urls": [
+          "bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68",
+          "dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "contracts/IStructs.sol",
+    "id": 19,
+    "exportedSymbols": {
+      "IStructs": [
+        18
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:288:0",
+    "nodes": [
+      {
+        "id": 1,
+        "nodeType": "PragmaDirective",
+        "src": "32:23:0",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ]
+      },
+      {
+        "id": 18,
+        "nodeType": "ContractDefinition",
+        "src": "57:263:0",
+        "nodes": [
+          {
+            "id": 6,
+            "nodeType": "StructDefinition",
+            "src": "83:71:0",
+            "nodes": [],
+            "canonicalName": "IStructs.SimpleStruct",
+            "members": [
+              {
+                "constant": false,
+                "id": 3,
+                "mutability": "mutable",
+                "name": "intVal",
+                "nameLocation": "118:6:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 6,
+                "src": "113:11:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 2,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "113:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5,
+                "mutability": "mutable",
+                "name": "strVal",
+                "nameLocation": "141:6:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 6,
+                "src": "134:13:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 4,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "134:6:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "SimpleStruct",
+            "nameLocation": "90:12:0",
+            "scope": 18,
+            "visibility": "public"
+          },
+          {
+            "id": 9,
+            "nodeType": "StructDefinition",
+            "src": "160:48:0",
+            "nodes": [],
+            "canonicalName": "IStructs.InnerStruct",
+            "members": [
+              {
+                "constant": false,
+                "id": 8,
+                "mutability": "mutable",
+                "name": "boolVal",
+                "nameLocation": "194:7:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 9,
+                "src": "189:12:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 7,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "189:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "InnerStruct",
+            "nameLocation": "167:11:0",
+            "scope": 18,
+            "visibility": "public"
+          },
+          {
+            "id": 17,
+            "nodeType": "StructDefinition",
+            "src": "214:104:0",
+            "nodes": [],
+            "canonicalName": "IStructs.NestedStruct",
+            "members": [
+              {
+                "constant": false,
+                "id": 11,
+                "mutability": "mutable",
+                "name": "intVal",
+                "nameLocation": "249:6:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 17,
+                "src": "244:11:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 10,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "244:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 13,
+                "mutability": "mutable",
+                "name": "strVal",
+                "nameLocation": "272:6:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 17,
+                "src": "265:13:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 12,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "265:6:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 16,
+                "mutability": "mutable",
+                "name": "innerStruct",
+                "nameLocation": "300:11:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 17,
+                "src": "288:23:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_InnerStruct_$9_storage_ptr",
+                  "typeString": "struct IStructs.InnerStruct"
+                },
+                "typeName": {
+                  "id": 15,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 14,
+                    "name": "InnerStruct",
+                    "nameLocations": [
+                      "288:11:0"
+                    ],
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 9,
+                    "src": "288:11:0"
+                  },
+                  "referencedDeclaration": 9,
+                  "src": "288:11:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_InnerStruct_$9_storage_ptr",
+                    "typeString": "struct IStructs.InnerStruct"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "NestedStruct",
+            "nameLocation": "221:12:0",
+            "scope": 18,
+            "visibility": "public"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IStructs",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          18
+        ],
+        "name": "IStructs",
+        "nameLocation": "67:8:0",
+        "scope": 19,
+        "usedErrors": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 0
+}

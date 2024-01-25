@@ -1,0 +1,980 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "name": "singleNestedStruct",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "intVal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "strVal",
+              "type": "string"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bool",
+                  "name": "boolVal",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct IStructs.InnerStruct",
+              "name": "innerStruct",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct IStructs.NestedStruct",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "singleSimpleStruct",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "intVal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "strVal",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct IStructs.SimpleStruct",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "structA",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "intVal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "strVal",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct StructsA.AStruct",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x608060405234801561001057600080fd5b5061024e806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806311ba731f146100465780636456bc7914610046578063c567c2f3146100a5575b600080fd5b604080518082018252600081526060602091820152815180830183526001815282518084018452601081526f596f7520617265206e756d626572203160801b8184015291810191909152905161009c91906101bf565b60405180910390f35b6100ad6100ba565b60405161009c91906101d9565b6100c261011c565b6040518060600160405280600181526020016040518060400160405280601081526020016f596f7520617265206e756d626572203160801b8152508152602001604051806020016040528060011515815250815250905090565b6040518060600160405280600081526020016060815260200161014d60405180602001604052806000151581525090565b905290565b6000815180845260005b818110156101785760208185018101518683018201520161015c565b506000602082860101526020601f19601f83011685010191505092915050565b8051825260006020820151604060208501526101b76040850182610152565b949350505050565b6020815260006101d26020830184610198565b9392505050565b602081528151602082015260006020830151606060408401526101ff6080840182610152565b905060408401515115156060840152809150509291505056fea2646970667358221220bbfce7f992a11416e0c39bc0daa1950a6d041ef725a2bfc5047d7f20b881d68364736f6c63430008130033",
+    "sourceMap": "101:706:1:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c806311ba731f146100465780636456bc7914610046578063c567c2f3146100a5575b600080fd5b604080518082018252600081526060602091820152815180830183526001815282518084018452601081526f596f7520617265206e756d626572203160801b8184015291810191909152905161009c91906101bf565b60405180910390f35b6100ad6100ba565b60405161009c91906101d9565b6100c261011c565b6040518060600160405280600181526020016040518060400160405280601081526020016f596f7520617265206e756d626572203160801b8152508152602001604051806020016040528060011515815250815250905090565b6040518060600160405280600081526020016060815260200161014d60405180602001604052806000151581525090565b905290565b6000815180845260005b818110156101785760208185018101518683018201520161015c565b506000602082860101526020601f19601f83011685010191505092915050565b8051825260006020820151604060208501526101b76040850182610152565b949350505050565b6020815260006101d26020830184610198565b9392505050565b602081528151602082015260006020830151606060408401526101ff6080840182610152565b905060408401515115156060840152809150509291505056fea2646970667358221220bbfce7f992a11416e0c39bc0daa1950a6d041ef725a2bfc5047d7f20b881d68364736f6c63430008130033",
+    "sourceMap": "101:706:1:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;198:129;-1:-1:-1;;;;;;;;;;;;;;;;;271:49:1;;;;;;;289:1;271:49;;;;;;;;;;;;-1:-1:-1;;;271:49:1;;;;;;;;;;;198:129;;;;271:49;198:129;:::i;:::-;;;;;;;;540:265;;;:::i;:::-;;;;;;;:::i;:::-;591:28;;:::i;:::-;638:160;;;;;;;;682:1;638:160;;;;;;;;;;;;;;;;;-1:-1:-1;;;638:160:1;;;;;;;750:37;;;;;;;;781:4;750:37;;;;;638:160;;;631:167;;540:265;:::o;-1:-1:-1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;14:423:4:-;56:3;94:5;88:12;121:6;116:3;109:19;146:1;156:162;170:6;167:1;164:13;156:162;;;232:4;288:13;;;284:22;;278:29;260:11;;;256:20;;249:59;185:12;156:162;;;160:3;363:1;356:4;347:6;342:3;338:16;334:27;327:38;426:4;419:2;415:7;410:2;402:6;398:15;394:29;389:3;385:39;381:50;374:57;;;14:423;;;;:::o;442:251::-;528:5;522:12;517:3;510:25;492:3;581:4;574:5;570:16;564:23;619:4;612;607:3;603:14;596:28;640:47;681:4;676:3;672:14;658:12;640:47;:::i;:::-;633:54;442:251;-1:-1:-1;;;;442:251:4:o;698:254::-;873:2;862:9;855:21;836:4;893:53;942:2;931:9;927:18;919:6;893:53;:::i;:::-;885:61;698:254;-1:-1:-1;;;698:254:4:o;1224:518::-;1409:2;1398:9;1391:21;1454:6;1448:13;1443:2;1432:9;1428:18;1421:41;1372:4;1509:2;1501:6;1497:15;1491:22;1549:4;1544:2;1533:9;1529:18;1522:32;1577:52;1624:3;1613:9;1609:19;1595:12;1577:52;:::i;:::-;1563:66;;1705:2;1697:6;1693:15;1687:22;1681:29;1674:37;1667:45;1660:4;1649:9;1645:20;1638:75;1730:6;1722:14;;;1224:518;;;;:::o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "singleNestedStruct()": "c567c2f3",
+    "singleSimpleStruct()": "6456bc79",
+    "structA()": "11ba731f"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"singleNestedStruct\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"bool\",\"name\":\"boolVal\",\"type\":\"bool\"}],\"internalType\":\"struct IStructs.InnerStruct\",\"name\":\"innerStruct\",\"type\":\"tuple\"}],\"internalType\":\"struct IStructs.NestedStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"singleSimpleStruct\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct IStructs.SimpleStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"structA\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct StructsA.AStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/StructsA.sol\":\"StructsA\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/IStructs.sol\":{\"keccak256\":\"0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68\",\"dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR\"]},\"contracts/StructsA.sol\":{\"keccak256\":\"0x9d2e2cbb0bf6bdd619849081e6cc05f17a342ccf1e25789448de586b0fa288bb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://dd6336eb2b8ab147a7945ab23994dfd21c7355c6664bc150f889764df50effd3\",\"dweb:/ipfs/QmZsXTbGmcHiKVhHnmE8kHomPVNHeJTtTSBo9pQJEyBB3v\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.19+commit.7dd6d404"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "singleNestedStruct",
+          "outputs": [
+            {
+              "internalType": "struct IStructs.NestedStruct",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                },
+                {
+                  "internalType": "struct IStructs.InnerStruct",
+                  "name": "innerStruct",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "bool",
+                      "name": "boolVal",
+                      "type": "bool"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "singleSimpleStruct",
+          "outputs": [
+            {
+              "internalType": "struct IStructs.SimpleStruct",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "structA",
+          "outputs": [
+            {
+              "internalType": "struct StructsA.AStruct",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/StructsA.sol": "StructsA"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/IStructs.sol": {
+        "keccak256": "0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9",
+        "urls": [
+          "bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68",
+          "dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR"
+        ],
+        "license": "MIT"
+      },
+      "contracts/StructsA.sol": {
+        "keccak256": "0x9d2e2cbb0bf6bdd619849081e6cc05f17a342ccf1e25789448de586b0fa288bb",
+        "urls": [
+          "bzz-raw://dd6336eb2b8ab147a7945ab23994dfd21c7355c6664bc150f889764df50effd3",
+          "dweb:/ipfs/QmZsXTbGmcHiKVhHnmE8kHomPVNHeJTtTSBo9pQJEyBB3v"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "contracts/StructsA.sol",
+    "id": 71,
+    "exportedSymbols": {
+      "IStructs": [
+        18
+      ],
+      "StructsA": [
+        70
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:775:1",
+    "nodes": [
+      {
+        "id": 20,
+        "nodeType": "PragmaDirective",
+        "src": "32:23:1",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ]
+      },
+      {
+        "id": 22,
+        "nodeType": "ImportDirective",
+        "src": "57:42:1",
+        "nodes": [],
+        "absolutePath": "contracts/IStructs.sol",
+        "file": "./IStructs.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 71,
+        "sourceUnit": 19,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 21,
+              "name": "IStructs",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 18,
+              "src": "66:8:1",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 70,
+        "nodeType": "ContractDefinition",
+        "src": "101:706:1",
+        "nodes": [
+          {
+            "id": 27,
+            "nodeType": "StructDefinition",
+            "src": "126:66:1",
+            "nodes": [],
+            "canonicalName": "StructsA.AStruct",
+            "members": [
+              {
+                "constant": false,
+                "id": 24,
+                "mutability": "mutable",
+                "name": "intVal",
+                "nameLocation": "156:6:1",
+                "nodeType": "VariableDeclaration",
+                "scope": 27,
+                "src": "151:11:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 23,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "151:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 26,
+                "mutability": "mutable",
+                "name": "strVal",
+                "nameLocation": "179:6:1",
+                "nodeType": "VariableDeclaration",
+                "scope": 27,
+                "src": "172:13:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 25,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "172:6:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "AStruct",
+            "nameLocation": "133:7:1",
+            "scope": 70,
+            "visibility": "public"
+          },
+          {
+            "id": 39,
+            "nodeType": "FunctionDefinition",
+            "src": "198:129:1",
+            "nodes": [],
+            "body": {
+              "id": 38,
+              "nodeType": "Block",
+              "src": "254:73:1",
+              "nodes": [],
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "hexValue": "31",
+                        "id": 34,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "number",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "289:1:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_rational_1_by_1",
+                          "typeString": "int_const 1"
+                        },
+                        "value": "1"
+                      },
+                      {
+                        "hexValue": "596f7520617265206e756d6265722031",
+                        "id": 35,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "300:18:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_2d74795bd9825b8c9c79b85e0e3ea1d0337391de14d62cf0f9d09e2cda930af2",
+                          "typeString": "literal_string \"You are number 1\""
+                        },
+                        "value": "You are number 1"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_rational_1_by_1",
+                          "typeString": "int_const 1"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_2d74795bd9825b8c9c79b85e0e3ea1d0337391de14d62cf0f9d09e2cda930af2",
+                          "typeString": "literal_string \"You are number 1\""
+                        }
+                      ],
+                      "id": 33,
+                      "name": "AStruct",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 27,
+                      "src": "271:7:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_struct$_AStruct_$27_storage_ptr_$",
+                        "typeString": "type(struct StructsA.AStruct storage pointer)"
+                      }
+                    },
+                    "id": 36,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "structConstructorCall",
+                    "lValueRequested": false,
+                    "nameLocations": [
+                      "281:6:1",
+                      "292:6:1"
+                    ],
+                    "names": [
+                      "intVal",
+                      "strVal"
+                    ],
+                    "nodeType": "FunctionCall",
+                    "src": "271:49:1",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_AStruct_$27_memory_ptr",
+                      "typeString": "struct StructsA.AStruct memory"
+                    }
+                  },
+                  "functionReturnParameters": 32,
+                  "id": 37,
+                  "nodeType": "Return",
+                  "src": "264:56:1"
+                }
+              ]
+            },
+            "functionSelector": "11ba731f",
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "structA",
+            "nameLocation": "207:7:1",
+            "parameters": {
+              "id": 28,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "214:2:1"
+            },
+            "returnParameters": {
+              "id": 32,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 31,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 39,
+                  "src": "238:14:1",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_AStruct_$27_memory_ptr",
+                    "typeString": "struct StructsA.AStruct"
+                  },
+                  "typeName": {
+                    "id": 30,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 29,
+                      "name": "AStruct",
+                      "nameLocations": [
+                        "238:7:1"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 27,
+                      "src": "238:7:1"
+                    },
+                    "referencedDeclaration": 27,
+                    "src": "238:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_AStruct_$27_storage_ptr",
+                      "typeString": "struct StructsA.AStruct"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "237:16:1"
+            },
+            "scope": 70,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "id": 52,
+            "nodeType": "FunctionDefinition",
+            "src": "333:201:1",
+            "nodes": [],
+            "body": {
+              "id": 51,
+              "nodeType": "Block",
+              "src": "414:120:1",
+              "nodes": [],
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "hexValue": "31",
+                        "id": 47,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "number",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "475:1:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_rational_1_by_1",
+                          "typeString": "int_const 1"
+                        },
+                        "value": "1"
+                      },
+                      {
+                        "hexValue": "596f7520617265206e756d6265722031",
+                        "id": 48,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "498:18:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_2d74795bd9825b8c9c79b85e0e3ea1d0337391de14d62cf0f9d09e2cda930af2",
+                          "typeString": "literal_string \"You are number 1\""
+                        },
+                        "value": "You are number 1"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_rational_1_by_1",
+                          "typeString": "int_const 1"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_2d74795bd9825b8c9c79b85e0e3ea1d0337391de14d62cf0f9d09e2cda930af2",
+                          "typeString": "literal_string \"You are number 1\""
+                        }
+                      ],
+                      "expression": {
+                        "id": 45,
+                        "name": "IStructs",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 18,
+                        "src": "431:8:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_IStructs_$18_$",
+                          "typeString": "type(contract IStructs)"
+                        }
+                      },
+                      "id": 46,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberLocation": "440:12:1",
+                      "memberName": "SimpleStruct",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 6,
+                      "src": "431:21:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_struct$_SimpleStruct_$6_storage_ptr_$",
+                        "typeString": "type(struct IStructs.SimpleStruct storage pointer)"
+                      }
+                    },
+                    "id": 49,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "structConstructorCall",
+                    "lValueRequested": false,
+                    "nameLocations": [
+                      "467:6:1",
+                      "490:6:1"
+                    ],
+                    "names": [
+                      "intVal",
+                      "strVal"
+                    ],
+                    "nodeType": "FunctionCall",
+                    "src": "431:96:1",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_SimpleStruct_$6_memory_ptr",
+                      "typeString": "struct IStructs.SimpleStruct memory"
+                    }
+                  },
+                  "functionReturnParameters": 44,
+                  "id": 50,
+                  "nodeType": "Return",
+                  "src": "424:103:1"
+                }
+              ]
+            },
+            "functionSelector": "6456bc79",
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "singleSimpleStruct",
+            "nameLocation": "342:18:1",
+            "parameters": {
+              "id": 40,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "360:2:1"
+            },
+            "returnParameters": {
+              "id": 44,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 43,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 52,
+                  "src": "384:28:1",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_SimpleStruct_$6_memory_ptr",
+                    "typeString": "struct IStructs.SimpleStruct"
+                  },
+                  "typeName": {
+                    "id": 42,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 41,
+                      "name": "IStructs.SimpleStruct",
+                      "nameLocations": [
+                        "384:8:1",
+                        "393:12:1"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 6,
+                      "src": "384:21:1"
+                    },
+                    "referencedDeclaration": 6,
+                    "src": "384:21:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_SimpleStruct_$6_storage_ptr",
+                      "typeString": "struct IStructs.SimpleStruct"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "383:30:1"
+            },
+            "scope": 70,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "id": 69,
+            "nodeType": "FunctionDefinition",
+            "src": "540:265:1",
+            "nodes": [],
+            "body": {
+              "id": 68,
+              "nodeType": "Block",
+              "src": "621:184:1",
+              "nodes": [],
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "hexValue": "31",
+                        "id": 60,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "number",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "682:1:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_rational_1_by_1",
+                          "typeString": "int_const 1"
+                        },
+                        "value": "1"
+                      },
+                      {
+                        "hexValue": "596f7520617265206e756d6265722031",
+                        "id": 61,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "705:18:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_2d74795bd9825b8c9c79b85e0e3ea1d0337391de14d62cf0f9d09e2cda930af2",
+                          "typeString": "literal_string \"You are number 1\""
+                        },
+                        "value": "You are number 1"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "hexValue": "74727565",
+                            "id": 64,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "bool",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "781:4:1",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            },
+                            "value": "true"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            }
+                          ],
+                          "expression": {
+                            "id": 62,
+                            "name": "IStructs",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 18,
+                            "src": "750:8:1",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_contract$_IStructs_$18_$",
+                              "typeString": "type(contract IStructs)"
+                            }
+                          },
+                          "id": 63,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberLocation": "759:11:1",
+                          "memberName": "InnerStruct",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 9,
+                          "src": "750:20:1",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_struct$_InnerStruct_$9_storage_ptr_$",
+                            "typeString": "type(struct IStructs.InnerStruct storage pointer)"
+                          }
+                        },
+                        "id": 65,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "structConstructorCall",
+                        "lValueRequested": false,
+                        "nameLocations": [
+                          "772:7:1"
+                        ],
+                        "names": [
+                          "boolVal"
+                        ],
+                        "nodeType": "FunctionCall",
+                        "src": "750:37:1",
+                        "tryCall": false,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_InnerStruct_$9_memory_ptr",
+                          "typeString": "struct IStructs.InnerStruct memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_rational_1_by_1",
+                          "typeString": "int_const 1"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_2d74795bd9825b8c9c79b85e0e3ea1d0337391de14d62cf0f9d09e2cda930af2",
+                          "typeString": "literal_string \"You are number 1\""
+                        },
+                        {
+                          "typeIdentifier": "t_struct$_InnerStruct_$9_memory_ptr",
+                          "typeString": "struct IStructs.InnerStruct memory"
+                        }
+                      ],
+                      "expression": {
+                        "id": 58,
+                        "name": "IStructs",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 18,
+                        "src": "638:8:1",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_IStructs_$18_$",
+                          "typeString": "type(contract IStructs)"
+                        }
+                      },
+                      "id": 59,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberLocation": "647:12:1",
+                      "memberName": "NestedStruct",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 17,
+                      "src": "638:21:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_struct$_NestedStruct_$17_storage_ptr_$",
+                        "typeString": "type(struct IStructs.NestedStruct storage pointer)"
+                      }
+                    },
+                    "id": 66,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "structConstructorCall",
+                    "lValueRequested": false,
+                    "nameLocations": [
+                      "674:6:1",
+                      "697:6:1",
+                      "737:11:1"
+                    ],
+                    "names": [
+                      "intVal",
+                      "strVal",
+                      "innerStruct"
+                    ],
+                    "nodeType": "FunctionCall",
+                    "src": "638:160:1",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_NestedStruct_$17_memory_ptr",
+                      "typeString": "struct IStructs.NestedStruct memory"
+                    }
+                  },
+                  "functionReturnParameters": 57,
+                  "id": 67,
+                  "nodeType": "Return",
+                  "src": "631:167:1"
+                }
+              ]
+            },
+            "functionSelector": "c567c2f3",
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "singleNestedStruct",
+            "nameLocation": "549:18:1",
+            "parameters": {
+              "id": 53,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "567:2:1"
+            },
+            "returnParameters": {
+              "id": 57,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 56,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 69,
+                  "src": "591:28:1",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_NestedStruct_$17_memory_ptr",
+                    "typeString": "struct IStructs.NestedStruct"
+                  },
+                  "typeName": {
+                    "id": 55,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 54,
+                      "name": "IStructs.NestedStruct",
+                      "nameLocations": [
+                        "591:8:1",
+                        "600:12:1"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 17,
+                      "src": "591:21:1"
+                    },
+                    "referencedDeclaration": 17,
+                    "src": "591:21:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_NestedStruct_$17_storage_ptr",
+                      "typeString": "struct IStructs.NestedStruct"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "590:30:1"
+            },
+            "scope": 70,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "StructsA",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          70
+        ],
+        "name": "StructsA",
+        "nameLocation": "110:8:1",
+        "scope": 71,
+        "usedErrors": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 1
+}
