@@ -42,7 +42,9 @@ class TestExampleContract:
         # Wait for the transaction to be mined, and get the transaction receipt
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
-        deployed_contract: Contract = w3.eth.contract(address=tx_receipt.contractAddress, abi=abi_info.abi)  # type: ignore
+        deployed_contract: Contract = w3.eth.contract(
+            address=tx_receipt.contractAddress, abi=abi_info.abi  # type: ignore
+        )
 
         result = deployed_contract.functions.flipFlop(1, 2).call()
         assert result == [2, 1]
