@@ -155,6 +155,11 @@ def initialize_web3_with_http_provider(
 @pytest.fixture(scope="class")
 def process_contracts(request):
     """Generates abis for all contracts and pypechain types from those abis."""
+
+    # don't regenerate files in CI, it can cause things to break in weird ways.
+    if os.environ.get("IN_CI"):
+        return
+
     # Define the contracts and abis directories
     test_dir = os.path.dirname(os.path.abspath(request.fspath))
     contracts_dir = os.path.join(test_dir, "contracts")
