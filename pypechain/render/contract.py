@@ -84,7 +84,8 @@ def _add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | 
     contract_infos : dict[str, ContractInfo] structs : StructInfo | list[StructInfo]
         A dictionary of ContractInfos keyed by the contract names.
     structs : StructInfo | list[StructInfo]
-        The structs to add to the contract infos.  This is a deduping process since we key by contract name then struct name.
+        The structs to add to the contract infos.  This is a deduping process since we key by
+        contract name then struct name.
     """
     if not isinstance(structs, list):
         structs = [structs]
@@ -143,7 +144,7 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
     # if the abi is empty, then we are dealing with an interface or library so we don't want to
     # create a contract file for it.
     if contract_info.abi == []:
-        return
+        return None
     # TODO: break this function up or bundle arguments to save on variables
     # pylint: disable=too-many-locals
 

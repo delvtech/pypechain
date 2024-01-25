@@ -48,7 +48,9 @@ def solidity_to_python_type(solidity_type: str, custom_types: list[str] = []) ->
         A python variable type string, i.e. 'int', 'bool', 'address'
     """
     # TODO: use an exhaustive match statement to cover all cases.
+    # This isn't worth breaking up into smaller functions, its easy to parse the if statements.
     # pylint: disable=too-many-return-statements
+    # pylint: disable=too-many-branches
 
     # uints and ints
 

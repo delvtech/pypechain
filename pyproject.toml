@@ -32,7 +32,7 @@ test = [
     "pytest",
     "pytest-snapshot",
 ]
-build = ["build", "flit", "request", "setuptools", "toml", "twine", "wheel"]
+build = ["build", "flit", "requests", "setuptools", "toml", "twine", "wheel"]
 
 [project.urls]
 "Homepage" = "https://github.com/delvtech/pypechain"
