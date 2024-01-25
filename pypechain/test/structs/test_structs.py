@@ -43,6 +43,11 @@ class TestStructs:
             "types/utilities.py",
         ]
 
+        results: list[tuple[bool, Path]] = []
         for file_path in expected_files:
             full_path = Path(current_path) / file_path
-            assert full_path.exists(), f"File does not exist: {full_path}"
+            results.append((full_path.exists(), full_path))
+
+        failed_tests = [full_path for exists, full_path in results if not exists]
+
+        assert len(failed_tests), failed_tests
