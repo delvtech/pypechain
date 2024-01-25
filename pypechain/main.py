@@ -20,7 +20,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     Arguments
     ---------
     argv : Sequence[str] | None, optional
-        _description_, by default None
+        Command line arguments
     """
     abi_file_path, output_dir, line_length = parse_arguments(argv)
     pypechain(abi_file_path, output_dir, line_length)

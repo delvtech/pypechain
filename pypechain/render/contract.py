@@ -31,7 +31,8 @@ from pypechain.utilities.types import EventData, FunctionData, SignatureData
 
 @dataclass
 class ContractInfo:
-    """Contract Information."""
+    """Contract Information.  This is the set of information needed to populate both the Contact.py
+    and Types.py file for each solidity contract."""
 
     abi: ABI
     bytecode: str
@@ -41,7 +42,7 @@ class ContractInfo:
 
 
 def get_contract_infos(abi_infos: list[AbiInfo]) -> dict[str, ContractInfo]:
-    """Get a dictionary of ContractInfos from an AbiInfos list.
+    """Gets a dictionary of ContractInfos keyed by contract name from an AbiInfos list.
 
      This helps us organize structs and events by the contracts they are defined
      in. Because structs can be defined in one file, and used in another, we
@@ -50,12 +51,12 @@ def get_contract_infos(abi_infos: list[AbiInfo]) -> dict[str, ContractInfo]:
     Parameters
     ----------
     abi_infos : list[AbiInfo]
-        _description_
+        A list of AbiInfos, which contain the ABI itself along with the contract name and the bytecode.
 
     Returns
     -------
     dict[str, ContractInfo]
-        _description_
+        A dictionary of ContractInfos keyed by the contract names.
     """
     contract_infos: dict[str, ContractInfo] = {}
 
@@ -66,19 +67,24 @@ def get_contract_infos(abi_infos: list[AbiInfo]) -> dict[str, ContractInfo]:
         contract_infos[abi_info.contract_name] = ContractInfo(
             abi=abi_info.abi, bytecode=abi_info.bytecode, contract_name=abi_info.contract_name, structs={}, events={}
         )
-        add_structs(contract_infos, structs)
-        add_events(contract_infos, events, abi_info.contract_name)
+        _add_structs(contract_infos, structs)
+        _add_events(contract_infos, events, abi_info.contract_name)
 
     return contract_infos
 
 
-def add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | list[StructInfo]):
-    """_summary_
+def _add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | list[StructInfo]):
+    """Adds structs in-place to contract_infos.
+
+    Because we know from the ABI json the contract name that a struct is defined in, we can avoid
+    creating duplicate definitions in the generated pypechain types.
 
     Parameters
     ----------
+    contract_infos : dict[str, ContractInfo] structs : StructInfo | list[StructInfo]
+        A dictionary of ContractInfos keyed by the contract names.
     structs : StructInfo | list[StructInfo]
-        _description_
+        The structs to add to the contract infos.  This is a deduping process since we key by contract name then struct name.
     """
     if not isinstance(structs, list):
         structs = [structs]
@@ -96,15 +102,20 @@ def add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | l
             )
 
 
-def add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | list[EventInfo], contract_name: str):
-    """_summary_
+def _add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | list[EventInfo], contract_name: str):
+    """Adds events in-place to contract_infos.
 
     Parameters
     ----------
+    contract_infos : dict[str, ContractInfo] structs : StructInfo | list[StructInfo]
+        A dictionary of ContractInfos keyed by the contract names.
     events : EventInfo | list[EventInfo]
-        _description_
+        The events to add to the contract infos.  There isn't enough information in the ABI jsons to
+        know if a contract is using an interface imported event, so there may be duplicates.  This
+        is not as big of an issue for events though since we never pass them as inputs, which python
+        would complain about.
     contract_name : str
-        _description_
+        The name of the contract for the abi the events were found in.
     """
     if not isinstance(events, list):
         events = [events]
@@ -117,8 +128,8 @@ def add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | list
 def render_contract_file(contract_info: ContractInfo) -> str | None:
     """Returns the serialized code of the contract file to be generated.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     contract_template : Template
         A jinja template containging types for all structs within an abi.
     abi_file_path : Path
@@ -280,8 +291,8 @@ class GetFunctionDatasReturnValue(NamedTuple):
 def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
     """Gets the information needed for the generated Contract file.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     abi : ABI
         An application boundary interface for smart contract in json format.
 

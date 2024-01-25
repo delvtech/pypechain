@@ -149,16 +149,17 @@ def filter_abi_items_by_type(item_type: str | list[str], contract_abi: ABI) -> l
 
     Parameters
     ----------
-    _type : str | list[str]
-
+    item_type : str | list[str]
+        Item or list of items to filter by
     contract_abi : ABI
-        _description_
+        The ABI to filter
 
     Returns
     -------
     list[ABIFunction | ABIEvent]
-        _description_
+
     """
+
     if isinstance(item_type, str):
         item_type = [item_type]
 
@@ -237,18 +238,18 @@ def get_structs(
         },
     ]
 
-    Arguments
-    ---------
-    file_path : Path
-        the file path to the ABI.
+    Parameters
+    ----------
+    function_params : Sequence[ABIFunctionParams] | Sequence[ABIFunctionComponents]
+        The function parameter lists to parse structs from.
 
-    structs : dict[str, StructInfo]
-        empty initialized return value.
+    structs : dict[str, StructInfo] | None = None
+         A dictionary of StructInfos keyed by struct name that is populated during recursion.
 
     Returns
     -------
-    List[Union[ABIFunction, ABIEvent]]
-        _description_
+    dict[str, StructInfo]
+        The completed dictionary of StructInfos keyed by struct name.
     """
     if structs is None:
         structs = {}
@@ -537,15 +538,15 @@ def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
 def get_abi_items(abi: ABI) -> list[ABIElement]:
     """Gets all of the functions and events in the ABI.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     file_path : Path
         the file path to the ABI.
 
     Returns
     -------
-    List[Union[ABIFunction, ABIEvent]]
-        _description_
+    List[ABIElement]
+        A list of all the ABI elements.
     """
 
     abi_functions_and_events = filter_abi_items_by_type(["function", "event"], abi)
