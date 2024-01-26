@@ -1,4 +1,5 @@
 """Tests for rendering the init file."""
+
 import os
 
 from pypechain.utilities.templates import get_jinja_env

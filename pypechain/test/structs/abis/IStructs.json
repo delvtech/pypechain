@@ -1,0 +1,10 @@
+{
+  "contracts": {
+    "pypechain/test/structs/contracts/IStructs.sol:IStructs": {
+      "abi": [],
+      "bin": "",
+      "metadata": "{\"compiler\":{\"version\":\"0.8.23+commit.f704f362\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/structs/contracts/IStructs.sol\":\"IStructs\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/structs/contracts/IStructs.sol\":{\"keccak256\":\"0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68\",\"dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR\"]}},\"version\":1}"
+    }
+  },
+  "version": "0.8.23+commit.f704f362.Darwin.appleclang"
+}

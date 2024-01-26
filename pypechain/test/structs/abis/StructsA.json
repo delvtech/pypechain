@@ -1,0 +1,103 @@
+{
+  "contracts": {
+    "pypechain/test/structs/contracts/IStructs.sol:IStructs": {
+      "abi": [],
+      "bin": "",
+      "metadata": "{\"compiler\":{\"version\":\"0.8.23+commit.f704f362\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/structs/contracts/IStructs.sol\":\"IStructs\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/structs/contracts/IStructs.sol\":{\"keccak256\":\"0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68\",\"dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR\"]}},\"version\":1}"
+    },
+    "pypechain/test/structs/contracts/StructsA.sol:StructsA": {
+      "abi": [
+        {
+          "inputs": [],
+          "name": "singleNestedStruct",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "bool",
+                      "name": "boolVal",
+                      "type": "bool"
+                    }
+                  ],
+                  "internalType": "struct IStructs.InnerStruct",
+                  "name": "innerStruct",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct IStructs.NestedStruct",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "singleSimpleStruct",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct IStructs.SimpleStruct",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "structA",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct StructsA.AStruct",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        }
+      ],
+      "bin": "608060405234801561000f575f80fd5b506104558061001d5f395ff3fe608060405234801561000f575f80fd5b506004361061003f575f3560e01c806311ba731f146100435780636456bc7914610061578063c567c2f31461007f575b5f80fd5b61004b61009d565b6040516100589190610304565b60405180910390f35b6100696100f5565b604051610076919061035e565b60405180910390f35b61008761014d565b60405161009491906103ff565b60405180910390f35b6100a56101bc565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d626572203100000000000000000000000000000000815250815250905090565b6100fd6101d5565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d626572203100000000000000000000000000000000815250815250905090565b6101556101ee565b6040518060600160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d6265722031000000000000000000000000000000008152508152602001604051806020016040528060011515815250815250905090565b60405180604001604052805f8152602001606081525090565b60405180604001604052805f8152602001606081525090565b60405180606001604052805f81526020016060815260200161020e610214565b81525090565b60405180602001604052805f151581525090565b5f819050919050565b61023a81610228565b82525050565b5f81519050919050565b5f82825260208201905092915050565b5f5b8381101561027757808201518184015260208101905061025c565b5f8484015250505050565b5f601f19601f8301169050919050565b5f61029c82610240565b6102a6818561024a565b93506102b681856020860161025a565b6102bf81610282565b840191505092915050565b5f604083015f8301516102df5f860182610231565b50602083015184820360208601526102f78282610292565b9150508091505092915050565b5f6020820190508181035f83015261031c81846102ca565b905092915050565b5f604083015f8301516103395f860182610231565b50602083015184820360208601526103518282610292565b9150508091505092915050565b5f6020820190508181035f8301526103768184610324565b905092915050565b5f8115159050919050565b6103928161037e565b82525050565b602082015f8201516103ac5f850182610389565b50505050565b5f606083015f8301516103c75f860182610231565b50602083015184820360208601526103df8282610292565b91505060408301516103f46040860182610398565b508091505092915050565b5f6020820190508181035f83015261041781846103b2565b90509291505056fea264697066735822122083246da06bca51bffc4bf245d9e0f6c1c617d3e52709030d0f1f175dbc881b5a64736f6c63430008170033",
+      "metadata": "{\"compiler\":{\"version\":\"0.8.23+commit.f704f362\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"singleNestedStruct\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"bool\",\"name\":\"boolVal\",\"type\":\"bool\"}],\"internalType\":\"struct IStructs.InnerStruct\",\"name\":\"innerStruct\",\"type\":\"tuple\"}],\"internalType\":\"struct IStructs.NestedStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"singleSimpleStruct\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct IStructs.SimpleStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"structA\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct StructsA.AStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/structs/contracts/StructsA.sol\":\"StructsA\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/structs/contracts/IStructs.sol\":{\"keccak256\":\"0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68\",\"dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR\"]},\"pypechain/test/structs/contracts/StructsA.sol\":{\"keccak256\":\"0x9d2e2cbb0bf6bdd619849081e6cc05f17a342ccf1e25789448de586b0fa288bb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://dd6336eb2b8ab147a7945ab23994dfd21c7355c6664bc150f889764df50effd3\",\"dweb:/ipfs/QmZsXTbGmcHiKVhHnmE8kHomPVNHeJTtTSBo9pQJEyBB3v\"]}},\"version\":1}"
+    }
+  },
+  "version": "0.8.23+commit.f704f362.Darwin.appleclang"
+}

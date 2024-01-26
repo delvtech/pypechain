@@ -1,4 +1,5 @@
 """Test fixture for deploying local anvil chain."""
+
 from __future__ import annotations
 
 import json
@@ -126,8 +127,8 @@ def initialize_web3_with_http_provider(
 ) -> Web3:
     """Initialize a Web3 instance using an HTTP provider and inject a geth Proof of Authority (poa) middleware.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     ethereum_node: URI | str
         Address of the http provider
     request_kwargs: dict
@@ -155,6 +156,11 @@ def initialize_web3_with_http_provider(
 @pytest.fixture(scope="class")
 def process_contracts(request):
     """Generates abis for all contracts and pypechain types from those abis."""
+
+    # don't regenerate files in CI, it can cause things to break in weird ways.
+    if os.environ.get("IN_CI"):
+        return
+
     # Define the contracts and abis directories
     test_dir = os.path.dirname(os.path.abspath(request.fspath))
     contracts_dir = os.path.join(test_dir, "contracts")

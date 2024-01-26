@@ -1,4 +1,5 @@
 """Script to generate typed web3.py classes for solidity contracts."""
+
 from __future__ import annotations
 
 import argparse
@@ -9,35 +10,38 @@ from pathlib import Path
 from shutil import copy2
 from typing import NamedTuple, Sequence
 
-from web3.exceptions import NoABIFunctionsFound
-
 from pypechain.render.init import render_init_file
 from pypechain.render.main import render_files
+from pypechain.utilities.abi import AbiInfo, load_abi_infos_from_file
 
 
 def main(argv: Sequence[str] | None = None) -> None:
     """Main entrypoint for pypechain cli.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     argv : Sequence[str] | None, optional
-        _description_, by default None
+        Command line arguments
     """
-    abi_file_path, output_dir, line_length = parse_arguments(argv)
-    pypechain(abi_file_path, output_dir, line_length)
+    abi_file_path, output_dir, line_length, apply_formatting = parse_arguments(argv)
+    pypechain(abi_file_path, output_dir, line_length, apply_formatting)
 
 
-def pypechain(abi_file_path: str, output_dir: str = "pypechain_types", line_length: int = 120):
+def pypechain(
+    abi_file_path: str, output_dir: str = "pypechain_types", line_length: int = 120, apply_formatting: bool = True
+):
     """Generates class files for a given abi.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     abi_file_path : str
         Path to the abi JSON file.
     output_dir: str, optional
         Path to the directory where files will be generated. Defaults to 'pypechain_types'.
     line_length : int, optional
         Optional argument for the output file's maximum line length. Defaults to 120.
+    apply_formatting : bool, optional
+        If True, autoflake, isort and black will be applied to the file in that order, by default True.
     """
 
     # TODO: move to end of main() so that files aren't cleared if something breaks during script
@@ -55,19 +59,16 @@ def pypechain(abi_file_path: str, output_dir: str = "pypechain_types", line_leng
         # Otherwise, add the single file to the list
         json_files_to_process.append(Path(abi_file_path))
 
+    # parse the files and gather AbiInfos.
+    abi_infos: list[AbiInfo] = []
+    for json_file in json_files_to_process:
+        infos = load_abi_infos_from_file(json_file)
+        abi_infos.extend(infos)
+
     file_names: list[str] = []
 
     # Now process all gathered files
-    for json_file in json_files_to_process:
-        try:
-            rendered_file_names = render_files(str(json_file), output_dir, line_length)
-            file_names.extend(rendered_file_names)
-        except NoABIFunctionsFound:
-            # TODO: use logging
-            print(f"No ABI Functions found in {json_file}, skipping...")
-        except BaseException as err:
-            print(f"Error creating types for {json_file}")
-            raise err
+    file_names = render_files(abi_infos, output_dir, line_length, apply_formatting)
 
     # Render the __init__.py file
     render_init_file(output_dir, file_names, line_length)
@@ -101,6 +102,7 @@ class Args(NamedTuple):
     abi_file_path: str
     output_dir: str
     line_length: int
+    apply_formatting: bool
 
 
 def namespace_to_args(namespace: argparse.Namespace) -> Args:
@@ -109,6 +111,7 @@ def namespace_to_args(namespace: argparse.Namespace) -> Args:
         abi_file_path=namespace.abi_file_path,
         output_dir=namespace.output_dir,
         line_length=namespace.line_length,
+        apply_formatting=namespace.apply_formatting,
     )
 
 
@@ -116,7 +119,7 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
     """Parses input arguments"""
     parser = argparse.ArgumentParser(description="Generates class files for a given abi.")
     parser.add_argument(
-        "abi-file-path",
+        "abi_file_path",
         help="Path to the abi JSON file or directory containing multiple JSON files.",
     )
 
@@ -130,6 +133,12 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
         type=int,
         default=120,
         help="Optional argument for the output file's maximum line length. Defaults to 120.",
+    )
+    parser.add_argument(
+        "--apply-formatting",
+        type=bool,
+        default=True,
+        help="Optional argument to apply formatting to each file. Defaults to True.",
     )
 
     # Use system arguments if none were passed

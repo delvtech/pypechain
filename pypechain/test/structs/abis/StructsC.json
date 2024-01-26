@@ -1,0 +1,77 @@
+{
+  "contracts": {
+    "pypechain/test/structs/contracts/IStructs.sol:IStructs": {
+      "abi": [],
+      "bin": "",
+      "metadata": "{\"compiler\":{\"version\":\"0.8.23+commit.f704f362\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/structs/contracts/IStructs.sol\":\"IStructs\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/structs/contracts/IStructs.sol\":{\"keccak256\":\"0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68\",\"dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR\"]}},\"version\":1}"
+    },
+    "pypechain/test/structs/contracts/StructsC.sol:StructsC": {
+      "abi": [
+        {
+          "inputs": [],
+          "name": "allStructsInternal",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "innerVal",
+                          "type": "uint256"
+                        }
+                      ],
+                      "internalType": "struct StructsC.InnyStruct",
+                      "name": "inner",
+                      "type": "tuple"
+                    }
+                  ],
+                  "internalType": "struct StructsC.NestedStruct",
+                  "name": "nested",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct StructsC.OuterStruct",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "innerStructIsExternal",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "internalType": "bool",
+                      "name": "boolVal",
+                      "type": "bool"
+                    }
+                  ],
+                  "internalType": "struct IStructs.InnerStruct",
+                  "name": "inner",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct StructsC.CStruct",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        }
+      ],
+      "bin": "608060405234801561000f575f80fd5b506102668061001d5f395ff3fe608060405234801561000f575f80fd5b5060043610610034575f3560e01c80638012d82614610038578063fc0db1de14610056575b5f80fd5b610040610074565b60405161004d9190610198565b60405180910390f35b61005e6100a0565b60405161006b9190610217565b60405180910390f35b61007c6100d9565b604051806020016040528060405180602001604052805f1515815250815250905090565b6100a86100f2565b6040518060200160405280604051806020016040528060405180602001604052806001815250815250815250905090565b60405180602001604052806100ec61010b565b81525090565b604051806020016040528061010561011f565b81525090565b60405180602001604052805f151581525090565b6040518060200160405280610132610138565b81525090565b60405180602001604052805f81525090565b5f8115159050919050565b61015e8161014a565b82525050565b602082015f8201516101785f850182610155565b50505050565b602082015f8201516101925f850182610164565b50505050565b5f6020820190506101ab5f83018461017e565b92915050565b5f819050919050565b6101c3816101b1565b82525050565b602082015f8201516101dd5f8501826101ba565b50505050565b602082015f8201516101f75f8501826101c9565b50505050565b602082015f8201516102115f8501826101e3565b50505050565b5f60208201905061022a5f8301846101fd565b9291505056fea264697066735822122089f306237bbcaea04a1ee36f6612e404d2f6c694143dc292e96232c5c33ee04264736f6c63430008170033",
+      "metadata": "{\"compiler\":{\"version\":\"0.8.23+commit.f704f362\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"allStructsInternal\",\"outputs\":[{\"components\":[{\"components\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"innerVal\",\"type\":\"uint256\"}],\"internalType\":\"struct StructsC.InnyStruct\",\"name\":\"inner\",\"type\":\"tuple\"}],\"internalType\":\"struct StructsC.NestedStruct\",\"name\":\"nested\",\"type\":\"tuple\"}],\"internalType\":\"struct StructsC.OuterStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"innerStructIsExternal\",\"outputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"boolVal\",\"type\":\"bool\"}],\"internalType\":\"struct IStructs.InnerStruct\",\"name\":\"inner\",\"type\":\"tuple\"}],\"internalType\":\"struct StructsC.CStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/structs/contracts/StructsC.sol\":\"StructsC\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/structs/contracts/IStructs.sol\":{\"keccak256\":\"0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68\",\"dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR\"]},\"pypechain/test/structs/contracts/StructsC.sol\":{\"keccak256\":\"0x35668001edb3f19b87b11c8738d01eb51762cbdd10399dc8658ac3eeda9a2865\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ae78611b865cbd41163475e8e1995f60a280956c725d4ae0751103c0e3ce1d96\",\"dweb:/ipfs/QmQv1B5cBovEzT2GqRhh2vVmSoJEuZ2psePsi8XiiGNm1A\"]}},\"version\":1}"
+    }
+  },
+  "version": "0.8.23+commit.f704f362.Darwin.appleclang"
+}

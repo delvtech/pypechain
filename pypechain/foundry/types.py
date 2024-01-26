@@ -1,4 +1,5 @@
 """Types for foundry-rs."""
+
 from typing import Any, Literal, TypedDict
 
 from web3.types import ABI

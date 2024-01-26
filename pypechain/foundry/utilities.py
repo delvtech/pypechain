@@ -1,4 +1,5 @@
 """Utilities for working with foundry-rs."""
+
 from typing import TypeGuard
 
 from pypechain.foundry.types import FoundryJson

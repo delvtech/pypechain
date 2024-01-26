@@ -1,0 +1,60 @@
+{
+  "contracts": {
+    "pypechain/test/structs/contracts/IStructs.sol:IStructs": {
+      "abi": [],
+      "bin": "",
+      "metadata": "{\"compiler\":{\"version\":\"0.8.23+commit.f704f362\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/structs/contracts/IStructs.sol\":\"IStructs\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/structs/contracts/IStructs.sol\":{\"keccak256\":\"0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68\",\"dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR\"]}},\"version\":1}"
+    },
+    "pypechain/test/structs/contracts/StructsB.sol:StructsB": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "x",
+              "type": "uint256"
+            }
+          ],
+          "name": "noNameSingleValue",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "singleSimpleStruct",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "intVal",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "strVal",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct IStructs.SimpleStruct",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        }
+      ],
+      "bin": "608060405234801561000f575f80fd5b506102b38061001d5f395ff3fe608060405234801561000f575f80fd5b5060043610610034575f3560e01c8063389e9102146100385780636456bc7914610068575b5f80fd5b610052600480360381019061004d9190610137565b610086565b60405161005f9190610171565b60405180910390f35b61007061008f565b60405161007d919061025d565b60405180910390f35b5f819050919050565b6100976100e7565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d626572203100000000000000000000000000000000815250815250905090565b60405180604001604052805f8152602001606081525090565b5f80fd5b5f819050919050565b61011681610104565b8114610120575f80fd5b50565b5f813590506101318161010d565b92915050565b5f6020828403121561014c5761014b610100565b5b5f61015984828501610123565b91505092915050565b61016b81610104565b82525050565b5f6020820190506101845f830184610162565b92915050565b61019381610104565b82525050565b5f81519050919050565b5f82825260208201905092915050565b5f5b838110156101d05780820151818401526020810190506101b5565b5f8484015250505050565b5f601f19601f8301169050919050565b5f6101f582610199565b6101ff81856101a3565b935061020f8185602086016101b3565b610218816101db565b840191505092915050565b5f604083015f8301516102385f86018261018a565b506020830151848203602086015261025082826101eb565b9150508091505092915050565b5f6020820190508181035f8301526102758184610223565b90509291505056fea264697066735822122083fc34c74e95902d047bd636648dd476b82838e3cf5193bf769c9272dee0c39064736f6c63430008170033",
+      "metadata": "{\"compiler\":{\"version\":\"0.8.23+commit.f704f362\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"noNameSingleValue\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"singleSimpleStruct\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct IStructs.SimpleStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/structs/contracts/StructsB.sol\":\"StructsB\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/structs/contracts/IStructs.sol\":{\"keccak256\":\"0xb8fcef7985e0751b13a0f54d1825f3cfc441e16b825b7bc662f0aafd6f3448a9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://32c4f2f59180124e2029364e308de18c18824c7ea2b53706736a30b4cb8f3f68\",\"dweb:/ipfs/QmSxWkn9MLa9s9rmBPGwzj6qfRtErHuMFuj6eP3WJW1jiR\"]},\"pypechain/test/structs/contracts/StructsB.sol\":{\"keccak256\":\"0x48b4e44304f812fb04a209373cc72e5f0adab54da7fb465c2d3139430780432f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b75967d7e9793cf548400f2c80f256cd4a39bea8076778c8efe5b2a513877f05\",\"dweb:/ipfs/QmRoNAyWqjA2uWpLsu24ZWnTBrGLxwnqqk2xc7Zqrtg9Va\"]}},\"version\":1}"
+    }
+  },
+  "version": "0.8.23+commit.f704f362.Darwin.appleclang"
+}

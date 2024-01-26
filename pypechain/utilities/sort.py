@@ -7,8 +7,8 @@ def get_intersection_and_unique(lists: list[list[str]]) -> tuple[set[str], set[s
     The intersection is a set of strings that occur in all sub-lists.
     The unique values are strings that only occur in one sub-list.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     lists : list[list[str]]
         A list of lists of strings, where each sub-list is an entity to compute sets over.
 

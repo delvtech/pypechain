@@ -1,6 +1,5 @@
 """Utilities to help with Solidity types."""
 
-
 import logging
 from typing import TypedDict
 
@@ -33,11 +32,12 @@ class EventData(TypedDict):
     capitalized_name: str
 
 
-def solidity_to_python_type(solidity_type: str) -> str:
+# pylint: disable=dangerous-default-value
+def solidity_to_python_type(solidity_type: str, custom_types: list[str] = []) -> str:
     """Returns the stringfied python type for the gien solidity type.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     solidity_type : str
         A solidity variable type string, i.e. 'uint8'...'uint256', 'bool', 'address',
         'bytes2'...'bytes32' etc.
@@ -47,7 +47,9 @@ def solidity_to_python_type(solidity_type: str) -> str:
         A python variable type string, i.e. 'int', 'bool', 'address'
     """
     # TODO: use an exhaustive match statement to cover all cases.
+    # This isn't worth breaking up into smaller functions, its easy to parse the if statements.
     # pylint: disable=too-many-return-statements
+    # pylint: disable=too-many-branches
 
     # uints and ints
 
@@ -158,6 +160,8 @@ def solidity_to_python_type(solidity_type: str) -> str:
     if solidity_type == "tuple":
         return "tuple"
 
+    if solidity_type in custom_types:
+        return solidity_type
     # If the Solidity type isn't recognized, make a warning.  This can happen when an internal type
     # is expeected for an input parameter or returned in an output.
     logging.warning("Unknown Solidity type: %s", solidity_type)

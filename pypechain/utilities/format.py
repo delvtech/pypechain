@@ -1,4 +1,5 @@
 """Formatting utilities."""
+
 import keyword
 import subprocess
 from pathlib import Path
@@ -10,8 +11,8 @@ def avoid_python_keywords(name: str) -> str:
     """Make sure the variable name is not a reserved Python word.  If it is, prepend with an
     underscore.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     name : str
        unsafe variable name.
 
@@ -109,7 +110,7 @@ def capitalize_first_letter_only(string: str) -> str:
     return string[0].upper() + string[1:]
 
 
-def format_file(file_path: Path, line_length: int = 120) -> None:
+def format_file(file_path: Path, line_length: int = 120, quiet=True) -> None:
     """Formats a file with isort and black.
 
     Parameters
@@ -120,7 +121,7 @@ def format_file(file_path: Path, line_length: int = 120) -> None:
         Black's line-length config option.
     """
 
-    print(f"autoflake --remove-all-unused-imports {file_path}")
-    subprocess.run(f"autoflake --in-place --remove-all-unused-imports {file_path}", shell=True, check=True)
-    isort.file(file_path, config=isort.Config())
-    subprocess.run(f"black --line-length={line_length} {file_path}", shell=True, check=True)
+    quiet_flag = "--quiet" if quiet else ""
+    subprocess.run(f"autoflake --in-place {quiet_flag} --remove-all-unused-imports {file_path}", shell=True, check=True)
+    isort.file(file_path, config=isort.Config(quiet=quiet))
+    subprocess.run(f"black {quiet_flag} --line-length={line_length} {file_path}", shell=True, check=True)
