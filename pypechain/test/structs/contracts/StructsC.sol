@@ -9,14 +9,17 @@ contract StructsC {
         IStructs.InnerStruct inner;
     }
 
+    // TODO: this will cause naming colision with IStructs if it has the same name and both are used
+    // in CStructsContract.py.  Fix ASAP
+
     // testing against naming collisions from IStructs
-    struct InnerStruct {
+    struct InnyStruct {
         uint256 innerVal;
     }
 
     // testing against naming collisions from IStructs
     struct NestedStruct {
-        InnerStruct inner;
+        InnyStruct inner;
     }
 
     struct OuterStruct {
@@ -26,7 +29,7 @@ contract StructsC {
     function allStructsInternal() public pure returns (OuterStruct memory) {
         return OuterStruct({
             nested: NestedStruct({
-                inner: InnerStruct({
+                inner: InnyStruct({
                     innerVal: 1
                 })
             })

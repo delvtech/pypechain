@@ -19,7 +19,6 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
     str | None
         A serialized python file.
     """
-    print(f"{contract_info.contract_name=}")
     env = get_jinja_env()
     types_template = env.get_template("types.py.jinja2")
 
@@ -33,7 +32,6 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
     types_files_imported = {
         struct.contract_name for struct in structs_used if struct.contract_name != contract_info.contract_name
     }
-    print(f"\n{types_files_imported=}")
 
     if not has_events and not has_structs:
         return None

@@ -23,8 +23,8 @@ from . import IStructsTypes as IStructs
 
 
 @dataclass
-class InnerStruct:
-    """InnerStruct struct."""
+class InnyStruct:
+    """InnyStruct struct."""
 
     innerVal: int
 
@@ -33,7 +33,7 @@ class InnerStruct:
 class NestedStruct:
     """NestedStruct struct."""
 
-    inner: InnerStruct
+    inner: InnyStruct
 
 
 @dataclass

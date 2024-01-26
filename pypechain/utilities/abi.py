@@ -325,7 +325,6 @@ def get_structs_for_abi(abi: ABI) -> list[StructInfo]:
             if fn_outputs:
                 output_structs = get_structs(fn_outputs, structs)
                 structs.update(output_structs)
-    print(f"{structs.keys()=}")
     return list(structs.values())
 
 
