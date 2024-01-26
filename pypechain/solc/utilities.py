@@ -1,4 +1,5 @@
 """Utilities for working with solc."""
+
 from typing import TypeGuard
 
 from pypechain.solc.types import SolcJson

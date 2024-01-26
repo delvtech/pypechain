@@ -1,4 +1,5 @@
 """Utilities for working with hardhat."""
+
 from typing import TypeGuard
 
 from pypechain.hardhat.types import HardhatJson

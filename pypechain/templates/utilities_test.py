@@ -1,4 +1,5 @@
 """Tests for utility functions """
+
 from dataclasses import dataclass
 from typing import TypeVar
 

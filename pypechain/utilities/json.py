@@ -1,4 +1,5 @@
 """Utilities for working with json's that contain smart contract information."""
+
 from __future__ import annotations
 
 from pypechain.foundry.types import FoundryJson

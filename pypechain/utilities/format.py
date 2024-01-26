@@ -1,4 +1,5 @@
 """Formatting utilities."""
+
 import keyword
 import subprocess
 from pathlib import Path

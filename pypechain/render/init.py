@@ -1,4 +1,5 @@
 """Functions to render __init__.py from a list of filenames usng a jinja2 template."""
+
 import subprocess
 from pathlib import Path
 

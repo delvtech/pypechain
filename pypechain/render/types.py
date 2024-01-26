@@ -1,4 +1,5 @@
 """Functions to render Python types from an abi usng a jinja2 template."""
+
 from __future__ import annotations
 
 from pypechain.render.contract import ContractInfo

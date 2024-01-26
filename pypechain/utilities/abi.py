@@ -1,4 +1,5 @@
 """Utilities for solidity contract ABIs."""
+
 from __future__ import annotations
 
 import json

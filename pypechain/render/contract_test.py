@@ -1,4 +1,5 @@
 """Tests for rendering the contract file."""
+
 import json
 import os
 

@@ -1,6 +1,5 @@
 """Utilities to help with Solidity types."""
 
-
 import logging
 from typing import TypedDict
 

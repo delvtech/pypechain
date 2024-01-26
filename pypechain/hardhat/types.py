@@ -1,4 +1,5 @@
 """Types for Hardhat."""
+
 from typing import Any, TypedDict
 
 from web3.types import ABI

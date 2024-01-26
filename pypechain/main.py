@@ -1,4 +1,5 @@
 """Script to generate typed web3.py classes for solidity contracts."""
+
 from __future__ import annotations
 
 import argparse
