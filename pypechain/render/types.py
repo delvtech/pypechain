@@ -11,33 +11,29 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
 
     Parameters
     ----------
-    contract_name : str
-        The name of the contract to be parsed.
-    types_template : Template
-        A jinja template containging types for all structs within an abi.
-    abi_file_path : Path
-        The path to the abi file to parse.
+    contract_info: ContractInfo
+        Information related to the solidity contract.
 
     Returns
     -------
-    str
+    str | None
         A serialized python file.
     """
+    print(f"{contract_info.contract_name=}")
     env = get_jinja_env()
     types_template = env.get_template("types.py.jinja2")
 
     structs = contract_info.structs.values()
-    print(f"\n{structs=}")
     events = contract_info.events.values()
     has_events = bool(events)
     has_structs = bool(structs)
     has_event_params = any(len(event.inputs) > 0 for event in events)
 
     structs_used = get_structs_for_abi(contract_info.abi)
-    print(f"{structs_used=}")
     types_files_imported = {
         struct.contract_name for struct in structs_used if struct.contract_name != contract_info.contract_name
     }
+    print(f"\n{types_files_imported=}")
 
     if not has_events and not has_structs:
         return None

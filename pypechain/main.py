@@ -22,11 +22,13 @@ def main(argv: Sequence[str] | None = None) -> None:
     argv : Sequence[str] | None, optional
         Command line arguments
     """
-    abi_file_path, output_dir, line_length = parse_arguments(argv)
-    pypechain(abi_file_path, output_dir, line_length)
+    abi_file_path, output_dir, line_length, apply_formatting = parse_arguments(argv)
+    pypechain(abi_file_path, output_dir, line_length, apply_formatting)
 
 
-def pypechain(abi_file_path: str, output_dir: str = "pypechain_types", line_length: int = 120):
+def pypechain(
+    abi_file_path: str, output_dir: str = "pypechain_types", line_length: int = 120, apply_formatting: bool = True
+):
     """Generates class files for a given abi.
 
     Parameters
@@ -37,6 +39,8 @@ def pypechain(abi_file_path: str, output_dir: str = "pypechain_types", line_leng
         Path to the directory where files will be generated. Defaults to 'pypechain_types'.
     line_length : int, optional
         Optional argument for the output file's maximum line length. Defaults to 120.
+    apply_formatting : bool, optional
+        If True, autoflake, isort and black will be applied to the file in that order, by default True.
     """
 
     # TODO: move to end of main() so that files aren't cleared if something breaks during script
@@ -63,7 +67,7 @@ def pypechain(abi_file_path: str, output_dir: str = "pypechain_types", line_leng
     file_names: list[str] = []
 
     # Now process all gathered files
-    file_names = render_files(abi_infos, output_dir, line_length)
+    file_names = render_files(abi_infos, output_dir, line_length, apply_formatting)
 
     # Render the __init__.py file
     render_init_file(output_dir, file_names, line_length)
@@ -97,6 +101,7 @@ class Args(NamedTuple):
     abi_file_path: str
     output_dir: str
     line_length: int
+    apply_formatting: bool
 
 
 def namespace_to_args(namespace: argparse.Namespace) -> Args:
@@ -105,6 +110,7 @@ def namespace_to_args(namespace: argparse.Namespace) -> Args:
         abi_file_path=namespace.abi_file_path,
         output_dir=namespace.output_dir,
         line_length=namespace.line_length,
+        apply_formatting=namespace.apply_formatting,
     )
 
 
@@ -126,6 +132,12 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
         type=int,
         default=120,
         help="Optional argument for the output file's maximum line length. Defaults to 120.",
+    )
+    parser.add_argument(
+        "--apply-formatting",
+        type=bool,
+        default=True,
+        help="Optional argument to apply formatting to each file. Defaults to True.",
     )
 
     # Use system arguments if none were passed
