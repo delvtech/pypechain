@@ -1,4 +1,5 @@
 """Test fixture for deploying local anvil chain."""
+
 from __future__ import annotations
 
 import json
