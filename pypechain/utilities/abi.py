@@ -185,7 +185,7 @@ class StructValue:
     solidity_type: str
     python_type: str
     is_struct: bool
-    contract_name: str
+    contract_name: str | None
 
 
 @dataclass
