@@ -5,5 +5,7 @@ https://github.com/delvtech/pypechain"""
 
 from .IStructsTypes import *
 from .StructsBContract import *
+from .StructsCContract import *
+from .StructsCTypes import *
 from .StructsAContract import *
 from .StructsATypes import *
