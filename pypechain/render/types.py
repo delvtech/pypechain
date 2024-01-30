@@ -25,6 +25,7 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
 
     structs = contract_info.structs.values()
     events = contract_info.events.values()
+    errors = contract_info.errors.values()
     has_events = bool(events)
     has_structs = bool(structs)
     has_event_params = any(len(event.inputs) > 0 for event in events)
@@ -42,6 +43,7 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
         structs=structs,
         types_files_imported=list(types_files_imported),
         events=events,
+        errors=errors,
         has_events=has_events,
         has_event_params=has_event_params,
     )

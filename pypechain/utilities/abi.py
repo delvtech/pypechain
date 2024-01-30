@@ -5,8 +5,10 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal, NamedTuple, Sequence, TypeGuard, cast
+from typing import Any, Literal, NamedTuple, Sequence, TypedDict, TypeGuard, cast
 
+from eth_utils.abi import collapse_if_tuple, function_abi_to_4byte_selector
+from eth_utils.hexadecimal import encode_hex
 from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
 from pypechain.foundry.types import FoundryJson
@@ -17,6 +19,18 @@ from pypechain.solc.utilities import is_solc_json
 from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
 from pypechain.utilities.json import get_bytecode_from_json, is_foundry_json
 from pypechain.utilities.types import solidity_to_python_type
+
+# These are exactly the same sowe just rename.
+ABIErrorParams = ABIFunctionParams
+
+
+class ABIError(TypedDict):
+    """Custom error abi item."""
+
+    # Exactly the same as
+    inputs: Sequence[ABIErrorParams]
+    name: str
+    type: Literal["event"]
 
 
 class AbiJson(NamedTuple):
@@ -49,7 +63,7 @@ def load_abi(abi_path: str) -> AbiJson:
         return AbiJson(abi=abi_items)
 
 
-def is_abi_function(item: ABIElement) -> TypeGuard[ABIFunction]:
+def is_abi_function(item: ABIElement | ABIError) -> TypeGuard[ABIFunction]:
     """Typeguard function for ABIFunction.
 
     Parameters
@@ -119,7 +133,7 @@ def is_abi_constructor(item: ABIElement) -> TypeGuard[ABIFunction]:
     return True
 
 
-def is_abi_event(item: ABIElement) -> TypeGuard[ABIEvent]:
+def is_abi_event(item: ABIElement | ABIError) -> TypeGuard[ABIEvent]:
     """Typeguard function for ABIEvent.
 
     Parameters
@@ -145,7 +159,33 @@ def is_abi_event(item: ABIElement) -> TypeGuard[ABIEvent]:
     return True
 
 
-def filter_abi_items_by_type(item_type: str | list[str], contract_abi: ABI) -> list[ABIFunction | ABIEvent]:
+def is_abi_error(item: ABIElement) -> TypeGuard[ABIError]:
+    """Typeguard function for ABIError.
+
+    Parameters
+    ----------
+    item:  Any
+        The item we are confirming is an ABIError
+
+    Returns
+    -------
+    TypeGuard[ABIError]
+    """
+    # Check if the required keys exist
+    required_keys = ["type", "name", "inputs"]
+
+    # Check if the required keys exist
+    if not all(key in item for key in required_keys):
+        return False
+
+    # Check if the type is "event"
+    if item.get("type") != "error":
+        return False
+
+    return True
+
+
+def filter_abi_items_by_type(item_type: str | list[str], contract_abi: ABI) -> list[ABIFunction | ABIEvent | ABIError]:
     """Filters ABIItems by type.
 
     Parameters
@@ -203,6 +243,25 @@ class EventParams:
     """Solidity struct information needed for codegen."""
 
     indexed: bool
+    name: str
+    solidity_type: str
+    python_type: str
+
+
+@dataclass
+class ErrorInfo:
+    """Solidity struct information needed for codegen."""
+
+    name: str
+    selector: str
+    signature: str
+    inputs: list[ErrorParams]
+
+
+@dataclass
+class ErrorParams:
+    """Solidity struct information needed for codegen."""
+
     name: str
     solidity_type: str
     python_type: str
@@ -402,6 +461,62 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
     return events
 
 
+def get_errors_for_abi(abi: ABI) -> list[ErrorInfo]:
+    """Gets all the errors for a given abi.
+
+    Parameters
+    ----------
+    abi : ABI
+        An Application Boundary Interface object.
+
+    Returns
+    -------
+    list[ErrorInfo]
+        A dictionary of StructInfos keyed by name.
+    """
+
+    errors: list[ErrorInfo] = []
+
+    for item in abi:
+        if is_abi_error(item):
+            error_inputs = item.get("inputs", [])
+            inputs: list[ErrorParams] = []
+
+            for i in error_inputs:
+                name = i.get("name", "")
+                solidity_type = i.get("type")
+                if not solidity_type:
+                    raise ValueError("Type not known for event input.")
+
+                python_type = solidity_to_python_type(solidity_type)
+                error_input = ErrorParams(
+                    name=name,
+                    solidity_type=solidity_type,
+                    python_type=python_type,
+                )
+
+                inputs.append(error_input)
+
+            selector = encode_hex(function_abi_to_4byte_selector(dict(item)))
+            signature = _abi_to_signature(dict(item))
+            errors.append(
+                ErrorInfo(
+                    name=item.get("name"),
+                    selector=selector,
+                    signature=signature,
+                    inputs=inputs,
+                )
+            )
+
+    return errors
+
+
+def _abi_to_signature(abi: dict[str, Any]) -> str:
+    fn_input_types = ",".join([collapse_if_tuple(abi_input) for abi_input in abi.get("inputs", [])])
+    function_signature = f"{abi['name']}({fn_input_types})"
+    return function_signature
+
+
 def get_struct_name(
     param_or_component: ABIFunctionParams | ABIFunctionComponents,
 ) -> str:
@@ -542,7 +657,7 @@ def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
         raise ValueError("Unknown ABI Json format")
 
 
-def get_abi_items(abi: ABI) -> list[ABIElement]:
+def get_abi_items(abi: ABI) -> list[ABIElement | ABIError]:
     """Gets all of the functions and events in the ABI.
 
     Parameters
