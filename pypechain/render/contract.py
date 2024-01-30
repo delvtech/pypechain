@@ -10,10 +10,12 @@ from web3.types import ABI
 
 from pypechain.utilities.abi import (
     AbiInfo,
+    ErrorInfo,
     EventInfo,
     StructInfo,
     get_abi_constructor,
     get_abi_items,
+    get_errors_for_abi,
     get_events_for_abi,
     get_input_names,
     get_input_names_and_types,
@@ -40,6 +42,7 @@ class ContractInfo:
     contract_name: str
     structs: dict[str, StructInfo]
     events: dict[str, EventInfo]
+    errors: dict[str, ErrorInfo]
 
 
 def get_contract_infos(abi_infos: list[AbiInfo]) -> dict[str, ContractInfo]:
@@ -65,11 +68,18 @@ def get_contract_infos(abi_infos: list[AbiInfo]) -> dict[str, ContractInfo]:
     for abi_info in abi_infos:
         structs = get_structs_for_abi(abi_info.abi)
         events = get_events_for_abi(abi_info.abi)
+        errors = get_errors_for_abi(abi_info.abi)
         contract_infos[abi_info.contract_name] = ContractInfo(
-            abi=abi_info.abi, bytecode=abi_info.bytecode, contract_name=abi_info.contract_name, structs={}, events={}
+            abi=abi_info.abi,
+            bytecode=abi_info.bytecode,
+            contract_name=abi_info.contract_name,
+            structs={},
+            events={},
+            errors={},
         )
         _add_structs(contract_infos, structs)
         _add_events(contract_infos, events, abi_info.contract_name)
+        _add_errors(contract_infos, errors, abi_info.contract_name)
 
     return contract_infos
 
@@ -101,6 +111,7 @@ def _add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | 
                 contract_name=struct.contract_name,
                 structs={struct.name: struct},
                 events={},
+                errors={},
             )
 
 
@@ -125,6 +136,47 @@ def _add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | lis
         info = contract_infos.get(contract_name)
         if info:
             info.events[event.name] = event
+        else:
+            contract_infos[contract_name] = ContractInfo(
+                abi=[],
+                bytecode="",
+                contract_name=contract_name,
+                structs={},
+                events={event.name: event},
+                errors={},
+            )
+
+
+def _add_errors(contract_infos: dict[str, ContractInfo], errors: ErrorInfo | list[ErrorInfo], contract_name: str):
+    """Adds events in-place to contract_infos.
+
+    Parameters
+    ----------
+    contract_infos : dict[str, ContractInfo] structs : StructInfo | list[StructInfo]
+        A dictionary of ContractInfos keyed by the contract names.
+    events : EventInfo | list[EventInfo]
+        The events to add to the contract infos.  There isn't enough information in the ABI jsons to
+        know if a contract is using an interface imported event, so there may be duplicates.  This
+        is not as big of an issue for events though since we never pass them as inputs, which python
+        would complain about.
+    contract_name : str
+        The name of the contract for the abi the events were found in.
+    """
+    if not isinstance(errors, list):
+        errors = [errors]
+    for error in errors:
+        info = contract_infos.get(contract_name)
+        if info:
+            info.errors[error.name] = error
+        else:
+            contract_infos[contract_name] = ContractInfo(
+                abi=[],
+                bytecode="",
+                contract_name=contract_name,
+                structs={},
+                events={},
+                errors={error.name: error},
+            )
 
 
 def render_contract_file(contract_info: ContractInfo) -> str | None:

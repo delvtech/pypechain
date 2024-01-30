@@ -5,6 +5,9 @@ contract Example {
 
     string contractName;
 
+    enum Letters { A, B, C }
+    error WrongChoice(Letters answer, string errorMessage);
+
     struct SimpleStruct {
         uint intVal;
         string strVal;
@@ -22,6 +25,13 @@ contract Example {
 
     constructor(string memory name) {
         contractName = name;
+    }
+
+
+    function guessALetter(Letters guess) public pure {
+        Letters answer = Letters((uint8(guess) + uint8(1)) % 3);
+
+        revert WrongChoice(answer, "Thank you for playing, but you chose the wrong letter");
     }
 
     function flipFlop(uint flip, uint flop) public pure returns (uint _flop, uint _flip) {
