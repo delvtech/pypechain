@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import os
+from typing import cast
 
 import pytest
 from eth_abi.codec import ABICodec
 from eth_abi.registry import registry as default_registry
 from hexbytes import HexBytes
 from web3.exceptions import ContractCustomError
+from web3.types import ABIFunction
+
+from pypechain.templates.utilities import get_abi_input_types
 
 from .types import ErrorsContract
 
@@ -29,12 +33,15 @@ class TestErrors:
             assert err.message
 
             selector = err.message[:10]
+            data = err.message[10:]
             assert selector == ErrorsContract.errors.One.selector
 
-            data = err.message[10:]
-            assert data == ""
-
-            types = ()
+            error_abi = cast(
+                ABIFunction,
+                [item for item in ErrorsContract.abi if item.get("name") == "One" and item.get("type") == "error"][0],
+            )
+            types = get_abi_input_types(error_abi)
+            assert types == ()
             abi_codec = ABICodec(default_registry)
             decoded = abi_codec.decode(types, HexBytes(data))
             assert not decoded
@@ -48,11 +55,15 @@ class TestErrors:
             assert err.message
 
             selector = err.message[:10]
+            data = err.message[10:]
             assert selector == ErrorsContract.errors.Two.selector
 
-            data = err.message[10:]
-
-            types = ("string", "address", "uint8")
+            error_abi = cast(
+                ABIFunction,
+                [item for item in ErrorsContract.abi if item.get("name") == "Two" and item.get("type") == "error"][0],
+            )
+            types = get_abi_input_types(error_abi)
+            assert types == ("string", "address", "uint8")
             abi_codec = ABICodec(default_registry)
             decoded = abi_codec.decode(types, HexBytes(data))
             assert decoded == (
@@ -70,11 +81,16 @@ class TestErrors:
             assert err.message
 
             selector = err.message[:10]
+            data = err.message[10:]
             assert selector == ErrorsContract.errors.Three.selector
 
-            data = err.message[10:]
+            error_abi = cast(
+                ABIFunction,
+                [item for item in ErrorsContract.abi if item.get("name") == "Three" and item.get("type") == "error"][0],
+            )
+            types = get_abi_input_types(error_abi)
+            assert types == ("bool", "(uint256,uint256,uint256,uint256)", "uint8")
 
-            types = ("bool", "(uint256,uint256,uint256,uint256)", "uint8")
             abi_codec = ABICodec(default_registry)
             decoded = abi_codec.decode(types, HexBytes(data))
             assert decoded == (False, (1, 2, 3, 4), 0)
