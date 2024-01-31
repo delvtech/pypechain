@@ -3,6 +3,9 @@ pragma solidity ^0.8.0;
 
 contract Example {
 
+    event Flip(uint flip);
+    event Flop(uint flop);
+
     string contractName;
 
     enum Letters { A, B, C }
@@ -34,7 +37,9 @@ contract Example {
         revert WrongChoice(answer, "Thank you for playing, but you chose the wrong letter");
     }
 
-    function flipFlop(uint flip, uint flop) public pure returns (uint _flop, uint _flip) {
+    function flipFlop(uint flip, uint flop) public returns (uint _flop, uint _flip) {
+        emit Flip(flip);
+        emit Flop(flop);
         return (flop,flip);
     }
 

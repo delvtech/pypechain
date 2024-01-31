@@ -53,6 +53,8 @@ structs = {
 
 {% if has_events %}{{ events_block }}{% endif %}
 
+{% if has_errors %}{{ errors_block }}{% endif %}
+
 {{abi_block}}
 
 {{contract_block}}
