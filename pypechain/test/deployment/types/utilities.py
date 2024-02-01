@@ -133,5 +133,4 @@ def get_abi_input_types(abi: ABIFunction) -> list[str]:
 
     if "inputs" not in abi and (abi.get("type") == "fallback" or abi.get("type") == "receive"):
         return []
-    else:
-        return [collapse_if_tuple(cast(dict[str, Any], arg)) for arg in abi.get("inputs", [])]
+    return [collapse_if_tuple(cast(dict[str, Any], arg)) for arg in abi.get("inputs", [])]
