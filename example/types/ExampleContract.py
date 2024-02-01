@@ -20,10 +20,16 @@ https://github.com/delvtech/pypechain"""
 # methods are overriden with specific arguments instead of generic *args, **kwargs
 # pylint: disable=arguments-differ
 
+# consumers have too many opinions on line length
+# pylint: disable=line-too-long
+
+
 from __future__ import annotations
 
 from typing import Any, Iterable, NamedTuple, Sequence, Type, cast
 
+from eth_abi.codec import ABICodec
+from eth_abi.registry import registry as default_registry
 from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
 from hexbytes import HexBytes
@@ -39,10 +45,10 @@ from web3.contract.contract import (
     ContractFunctions,
 )
 from web3.exceptions import FallbackNotFound
-from web3.types import ABI, BlockIdentifier, CallOverride, EventData, TxParams
+from web3.types import ABI, ABIFunction, BlockIdentifier, CallOverride, EventData, TxParams
 
 from .ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
-from .utilities import dataclass_to_tuple, rename_returned_types
+from .utilities import dataclass_to_tuple, get_abi_input_types, rename_returned_types
 
 structs = {
     "SimpleStruct": SimpleStruct,
@@ -622,17 +628,32 @@ class ExampleWrongChoiceContractError:
     def decode_error_data(  # type: ignore
         self: "ExampleWrongChoiceContractError",
         data: HexBytes,
-        # TODO: get the return type here
-    ) -> str:
-        # do the decoding
-        return "data goes here."
+        # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
+    ) -> tuple[Any, ...]:
+        """Decodes error data returns from a smart contract."""
+        error_abi = cast(
+            ABIFunction,
+            [item for item in example_abi if item.get("name") == "WrongChoice" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, data)
+        return decoded
 
     @classmethod
     def decode_error_data(  # type: ignore
         cls: Type["ExampleWrongChoiceContractError"],
         data: HexBytes,
-    ) -> str:
-        return "data goes here."
+    ) -> tuple[Any, ...]:
+        """Decodes error data returns from a smart contract."""
+        error_abi = cast(
+            ABIFunction,
+            [item for item in example_abi if item.get("name") == "WrongChoice" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, data)
+        return decoded
 
 
 class ExampleContractErrors:
@@ -644,6 +665,19 @@ class ExampleContractErrors:
         self,
     ) -> None:
         self.WrongChoice = ExampleWrongChoiceContractError()
+
+        self._all = [
+            self.WrongChoice,
+        ]
+
+    def decode_custom_error(self, data: str) -> tuple[Any, ...]:
+        """Decodes a custom contract error."""
+        selector = data[:10]
+        for err in self._all:
+            if err.selector == selector:
+                return err.decode_error_data(HexBytes(data[10:]))
+
+        raise ValueError(f"Example does not have a selector matching {selector}")
 
 
 example_abi: ABI = cast(
@@ -929,7 +963,7 @@ class ExampleContract(Contract):
 
     events: ExampleContractEvents
 
-    errors: ExampleContractErrors
+    errors: ExampleContractErrors = ExampleContractErrors()
 
     functions: ExampleContractFunctions
 
@@ -1019,5 +1053,6 @@ class ExampleContract(Contract):
         """
         contract = super().factory(w3, class_name, **kwargs)
         contract.functions = ExampleContractFunctions(example_abi, w3, None)
+        contract.errors = ExampleContractErrors()
 
         return contract

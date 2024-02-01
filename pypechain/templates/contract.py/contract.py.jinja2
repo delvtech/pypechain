@@ -122,7 +122,9 @@ class {{contract_name}}Contract(Contract):
         """
         contract = super().factory(w3, class_name, **kwargs)
         contract.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, w3, None)
+        {% if has_errors -%}
         contract.errors = {{contract_name}}ContractErrors()
+        {%- endif %}
 
         return contract
 

@@ -70,7 +70,7 @@ class TestErrors:
             abi_codec = ABICodec(default_registry)
             decoded = abi_codec.decode(types, HexBytes(data))
             assert decoded == (
-                "I will not pledge allegiance to Bart. I will not pledge allegiance to Bart. I will not pledge allegiance to Bart.",
+                "I will not pledge allegiance to Bart. I will not pledge allegiance to Bart. I will not pledge allegiance to Bart.",  # pylint: disable=line-too-long
                 "0x0000000000000000000000000000000000000000",
                 255,
             )

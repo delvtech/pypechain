@@ -194,12 +194,12 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
     str
         A serialized python file.
     """
+    # pylint: disable=too-many-locals
     # if the abi is empty, then we are dealing with an interface or library so we don't want to
     # create a contract file for it.
     if contract_info.abi == []:
         return None
     # TODO: break this function up or bundle arguments to save on variables
-    # pylint: disable=too-many-locals
 
     env = get_jinja_env()
     templates = get_templates_for_contract_file(env)
