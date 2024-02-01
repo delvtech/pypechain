@@ -24,6 +24,8 @@ from __future__ import annotations
 
 from typing import Any, Type, cast
 
+from eth_abi.codec import ABICodec
+from eth_abi.registry import registry as default_registry
 from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
 from hexbytes import HexBytes
@@ -31,7 +33,9 @@ from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
 from web3.exceptions import FallbackNotFound
-from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
+from web3.types import ABI, ABIFunction, BlockIdentifier, CallOverride, TxParams
+
+from .utilities import get_abi_input_types
 
 structs = {}
 
@@ -166,19 +170,32 @@ class ErrorsOneContractError:
     def decode_error_data(  # type: ignore
         self: "ErrorsOneContractError",
         data: HexBytes,
-        # TODO: get the return type here
-    ) -> str:
+        # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
+    ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
-        # do the decoding
-        return "data goes here."
+        error_abi = cast(
+            ABIFunction,
+            [item for item in errors_abi if item.get("name") == "One" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, HexBytes(data))
+        return decoded
 
     @classmethod
     def decode_error_data(  # type: ignore
         cls: Type["ErrorsOneContractError"],
         data: HexBytes,
-    ) -> str:
+    ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
-        return "data goes here."
+        error_abi = cast(
+            ABIFunction,
+            [item for item in errors_abi if item.get("name") == "One" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, HexBytes(data))
+        return decoded
 
 
 class ErrorsThreeContractError:
@@ -202,19 +219,32 @@ class ErrorsThreeContractError:
     def decode_error_data(  # type: ignore
         self: "ErrorsThreeContractError",
         data: HexBytes,
-        # TODO: get the return type here
-    ) -> str:
+        # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
+    ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
-        # do the decoding
-        return "data goes here."
+        error_abi = cast(
+            ABIFunction,
+            [item for item in errors_abi if item.get("name") == "Three" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, HexBytes(data))
+        return decoded
 
     @classmethod
     def decode_error_data(  # type: ignore
         cls: Type["ErrorsThreeContractError"],
         data: HexBytes,
-    ) -> str:
+    ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
-        return "data goes here."
+        error_abi = cast(
+            ABIFunction,
+            [item for item in errors_abi if item.get("name") == "Three" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, HexBytes(data))
+        return decoded
 
 
 class ErrorsTwoContractError:
@@ -238,19 +268,32 @@ class ErrorsTwoContractError:
     def decode_error_data(  # type: ignore
         self: "ErrorsTwoContractError",
         data: HexBytes,
-        # TODO: get the return type here
-    ) -> str:
+        # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
+    ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
-        # do the decoding
-        return "data goes here."
+        error_abi = cast(
+            ABIFunction,
+            [item for item in errors_abi if item.get("name") == "Two" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, HexBytes(data))
+        return decoded
 
     @classmethod
     def decode_error_data(  # type: ignore
         cls: Type["ErrorsTwoContractError"],
         data: HexBytes,
-    ) -> str:
+    ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
-        return "data goes here."
+        error_abi = cast(
+            ABIFunction,
+            [item for item in errors_abi if item.get("name") == "Two" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, HexBytes(data))
+        return decoded
 
 
 class ErrorsContractErrors:

@@ -21,19 +21,34 @@ class {{contract_name}}{{error_info.name}}ContractError:
     def decode_error_data( # type: ignore
         self: "{{contract_name}}{{error_info.name}}ContractError",
         data: HexBytes,
-        # TODO: get the return type here
-    ) -> str:
+        # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
+    ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
-        # do the decoding
-        return "data goes here."
+        error_abi = cast(
+            ABIFunction,
+            [item for item in {{contract_name | lower}}_abi if item.get("name") == "{{error_info.name}}" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, HexBytes(data))
+        return decoded
 
     @classmethod
     def decode_error_data( # type: ignore
         cls: Type["{{contract_name}}{{error_info.name}}ContractError"],
         data: HexBytes,
-    ) -> str:
+    ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
-        return "data goes here."
+        error_abi = cast(
+            ABIFunction,
+            [item for item in {{contract_name | lower}}_abi if item.get("name") == "{{error_info.name}}" and item.get("type") == "error"][0],
+
+
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, HexBytes(data))
+        return decoded
 {% endfor %}
 
 class {{contract_name}}ContractErrors:

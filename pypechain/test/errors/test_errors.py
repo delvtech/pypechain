@@ -41,10 +41,12 @@ class TestErrors:
                 [item for item in ErrorsContract.abi if item.get("name") == "One" and item.get("type") == "error"][0],
             )
             types = get_abi_input_types(error_abi)
-            assert types == ()
+            assert types == []
             abi_codec = ABICodec(default_registry)
             decoded = abi_codec.decode(types, HexBytes(data))
             assert not decoded
+
+            assert deployed_contract.errors.One.decode_error_data(HexBytes(data)) == decoded
 
     def test_error_two(self, w3):
         """Test that we can decode strings."""
@@ -63,7 +65,7 @@ class TestErrors:
                 [item for item in ErrorsContract.abi if item.get("name") == "Two" and item.get("type") == "error"][0],
             )
             types = get_abi_input_types(error_abi)
-            assert types == ("string", "address", "uint8")
+            assert types == ["string", "address", "uint8"]
             abi_codec = ABICodec(default_registry)
             decoded = abi_codec.decode(types, HexBytes(data))
             assert decoded == (
@@ -71,6 +73,7 @@ class TestErrors:
                 "0x0000000000000000000000000000000000000000",
                 255,
             )
+            assert deployed_contract.errors.Two.decode_error_data(HexBytes(data)) == decoded
 
     def test_error_three(self, w3):
         """Test that we can decode structs and enums."""
@@ -89,8 +92,10 @@ class TestErrors:
                 [item for item in ErrorsContract.abi if item.get("name") == "Three" and item.get("type") == "error"][0],
             )
             types = get_abi_input_types(error_abi)
-            assert types == ("bool", "(uint256,uint256,uint256,uint256)", "uint8")
+            assert types == ["bool", "(uint256,uint256,uint256,uint256)", "uint8"]
 
             abi_codec = ABICodec(default_registry)
             decoded = abi_codec.decode(types, HexBytes(data))
             assert decoded == (False, (1, 2, 3, 4), 0)
+
+            assert deployed_contract.errors.Three.decode_error_data(HexBytes(data)) == decoded

@@ -114,6 +114,23 @@ def rename_returned_types(
 
 
 def get_abi_input_types(abi: ABIFunction) -> list[str]:
+    """Gets all the solidity input types for a function or error.
+
+    Cribbed from web3._utils.abi.py file.
+
+    Parameters
+    ----------
+
+    abi: ABIFunction
+        The ABIFunction or ABIError that we want to get input types for.
+
+    Returns
+    -------
+    list[str]
+        A list of solidity input types.
+
+    """
+
     if "inputs" not in abi and (abi.get("type") == "fallback" or abi.get("type") == "receive"):
         return []
     else:
