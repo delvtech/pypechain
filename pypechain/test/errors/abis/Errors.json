@@ -1,0 +1,101 @@
+{
+  "contracts": {
+    "pypechain/test/errors/contracts/Errors.sol:Errors": {
+      "abi": [
+        {
+          "inputs": [],
+          "name": "One",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "trueOrFalse",
+              "type": "bool"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "bart",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lisa",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "homer",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "marge",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Errors.Ages",
+              "name": "theSimpsons",
+              "type": "tuple"
+            },
+            {
+              "internalType": "enum Errors.Simpsons",
+              "name": "who",
+              "type": "uint8"
+            }
+          ],
+          "name": "Three",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "message",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            },
+            {
+              "internalType": "uint8",
+              "name": "value",
+              "type": "uint8"
+            }
+          ],
+          "name": "Two",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "revertWithErrorOne",
+          "outputs": [],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "revertWithErrorThree",
+          "outputs": [],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "revertWithErrorTwo",
+          "outputs": [],
+          "stateMutability": "pure",
+          "type": "function"
+        }
+      ],
+      "bin": "608060405234801561000f575f80fd5b506104328061001d5f395ff3fe608060405234801561000f575f80fd5b506004361061003f575f3560e01c806349cbdbf514610043578063a13e7b711461004d578063dc785aeb14610057575b5f80fd5b61004b610061565b005b6100556100ca565b005b61005f6100fc565b005b5f6040518060800160405280600181526020016002815260200160038152602001600481525090505f815f6040517f09b8b9890000000000000000000000000000000000000000000000000000000081526004016100c193929190610234565b60405180910390fd5b6040517fbe0c211000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b5f60ff6040517f01e3e2f60000000000000000000000000000000000000000000000000000000081526004016101339291906103c2565b60405180910390fd5b5f8115159050919050565b6101508161013c565b82525050565b5f819050919050565b61016881610156565b82525050565b608082015f8201516101825f85018261015f565b506020820151610195602085018261015f565b5060408201516101a8604085018261015f565b5060608201516101bb606085018261015f565b50505050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52602160045260245ffd5b600481106101ff576101fe6101c1565b5b50565b5f81905061020f826101ee565b919050565b5f61021e82610202565b9050919050565b61022e81610214565b82525050565b5f60c0820190506102475f830186610147565b610254602083018561016e565b61026160a0830184610225565b949350505050565b5f82825260208201905092915050565b7f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f205f8201527f426172742e20492077696c6c206e6f7420706c6564676520616c6c656769616e60208201527f636520746f20426172742e20492077696c6c206e6f7420706c6564676520616c60408201527f6c656769616e636520746f20426172742e000000000000000000000000000000606082015250565b5f61031f607183610269565b915061032a82610279565b608082019050919050565b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f61035e82610335565b9050919050565b61036e81610354565b82525050565b5f819050919050565b5f60ff82169050919050565b5f819050919050565b5f6103ac6103a76103a284610374565b610389565b61037d565b9050919050565b6103bc81610392565b82525050565b5f6060820190508181035f8301526103d981610313565b90506103e86020830185610365565b6103f560408301846103b3565b939250505056fea2646970667358221220d2ccb335b1907f8c97ee5b43958fd13ff523a48524e48710094939c1728f158b64736f6c63430008170033",
+      "metadata": "{\"compiler\":{\"version\":\"0.8.23+commit.f704f362\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"One\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"trueOrFalse\",\"type\":\"bool\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"bart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lisa\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"homer\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"marge\",\"type\":\"uint256\"}],\"internalType\":\"struct Errors.Ages\",\"name\":\"theSimpsons\",\"type\":\"tuple\"},{\"internalType\":\"enum Errors.Simpsons\",\"name\":\"who\",\"type\":\"uint8\"}],\"name\":\"Three\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"message\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"value\",\"type\":\"uint8\"}],\"name\":\"Two\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"revertWithErrorOne\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"revertWithErrorThree\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"revertWithErrorTwo\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/errors/contracts/Errors.sol\":\"Errors\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/errors/contracts/Errors.sol\":{\"keccak256\":\"0x577eaff061dd738d75c5280b9531655f1e99924f76ac490784a4006b25cc30b4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2b39a1bdaffc240ce98baf5c4dc4fd5648e11959727d63e0f986db3b44508355\",\"dweb:/ipfs/QmXLqkC5db1zwf7zmwYQyRAWJgRyV69LDcsQC2cQjLF9fJ\"]}},\"version\":1}"
+    }
+  },
+  "version": "0.8.23+commit.f704f362.Darwin.appleclang"
+}

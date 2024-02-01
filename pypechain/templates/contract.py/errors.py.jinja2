@@ -1,0 +1,74 @@
+{# loop over all errors and create types for each #}
+{%- for error_info in errors -%}
+class {{contract_name}}{{error_info.name}}ContractError:
+    """ContractError for {{error_info.name}}."""
+    # @combomethod destroys return types, so we are redefining functions as both class and instance
+    # pylint: disable=function-redefined
+
+    # 4 byte error selector
+    selector: str
+    # error signature, i.e. CustomError(uint256,bool)
+    signature: str
+
+    {# TODO: remove pylint disable when we add a type-hint for argument_names #}
+    # pylint: disable=useless-parent-delegation
+    def __init__(
+        self: "{{contract_name}}{{error_info.name}}ContractError",
+    ) -> None:
+        self.selector = "{{error_info.selector}}"
+        self.signature = "{{error_info.signature}}"
+
+    def decode_error_data( # type: ignore
+        self: "{{contract_name}}{{error_info.name}}ContractError",
+        data: HexBytes,
+        # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
+    ) -> tuple[Any, ...]:
+        """Decodes error data returns from a smart contract."""
+        error_abi = cast(
+            ABIFunction,
+            [item for item in {{contract_name | lower}}_abi if item.get("name") == "{{error_info.name}}" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, data)
+        return decoded
+
+    @classmethod
+    def decode_error_data( # type: ignore
+        cls: Type["{{contract_name}}{{error_info.name}}ContractError"],
+        data: HexBytes,
+    ) -> tuple[Any, ...]:
+        """Decodes error data returns from a smart contract."""
+        error_abi = cast(
+            ABIFunction,
+            [item for item in {{contract_name | lower}}_abi if item.get("name") == "{{error_info.name}}" and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
+        abi_codec = ABICodec(default_registry)
+        decoded = abi_codec.decode(types, data)
+        return decoded
+{% endfor %}
+
+class {{contract_name}}ContractErrors:
+    """ContractErrors for the {{contract_name}} contract."""
+{% for error_info in errors %}
+    {{error_info.name}}: {{contract_name}}{{error_info.name}}ContractError
+{% endfor %}
+
+    def __init__(
+        self,
+    ) -> None:
+        {% for error_info in errors -%}
+        self.{{error_info.name}} = {{contract_name}}{{error_info.name}}ContractError()
+        {% endfor %}
+        self._all = [{%  for error_info in errors -%}self.{{error_info.name}},{%- endfor %}]
+
+    def decode_custom_error(self, data: str) -> tuple[Any, ...]:
+        """Decodes a custom contract error."""
+        selector = data[:10]
+        for err in self._all:
+             if err.selector == selector:
+                 return err.decode_error_data(HexBytes(data[10:]))
+
+        raise ValueError(f"{{contract_name}} does not have a selector matching {selector}")
+

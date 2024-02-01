@@ -20,12 +20,18 @@ https://github.com/delvtech/pypechain"""
 # methods are overriden with specific arguments instead of generic *args, **kwargs
 # pylint: disable=arguments-differ
 
+# consumers have too many opinions on line length
+# pylint: disable=line-too-long
+
+
 from __future__ import annotations
 
 from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast, overload
 from typing import Iterable, Sequence
 
+from eth_abi.codec import ABICodec
+from eth_abi.registry import registry as default_registry
 from eth_typing import ChecksumAddress, HexStr
 from eth_account.signers.local import LocalAccount
 from hexbytes import HexBytes
@@ -34,13 +40,13 @@ from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions, ContractConstructor
 from web3.contract.contract import ContractEvent, ContractEvents
 from web3.exceptions import FallbackNotFound
-from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
+from web3.types import ABI, BlockIdentifier, CallOverride, TxParams, ABIFunction
 from web3.types import EventData
 from web3._utils.filters import LogFilter
 {% for struct_info in structs_used %}
 from .{{struct_info.contract_name}}Types import {{struct_info.name}}
 {% endfor %}
-from .utilities import tuple_to_dataclass, dataclass_to_tuple, rename_returned_types
+from .utilities import dataclass_to_tuple, get_abi_input_types, rename_returned_types, tuple_to_dataclass
 
 
 structs = {
@@ -52,6 +58,8 @@ structs = {
 {{functions_block}}
 
 {% if has_events %}{{ events_block }}{% endif %}
+
+{% if has_errors %}{{ errors_block }}{% endif %}
 
 {{abi_block}}
 

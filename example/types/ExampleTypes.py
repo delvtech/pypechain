@@ -20,6 +20,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from web3.types import ABIEvent, ABIEventParams
+
 
 @dataclass
 class SimpleStruct:
@@ -43,6 +45,25 @@ class NestedStruct:
     intVal: int
     strVal: str
     innerStruct: InnerStruct
+
+
+Flip = ABIEvent(
+    anonymous=False,
+    inputs=[
+        ABIEventParams(indexed=False, name="flip", type="uint256"),
+    ],
+    name="Flip",
+    type="event",
+)
+
+Flop = ABIEvent(
+    anonymous=False,
+    inputs=[
+        ABIEventParams(indexed=False, name="flop", type="uint256"),
+    ],
+    name="Flop",
+    type="event",
+)
 
 
 @dataclass

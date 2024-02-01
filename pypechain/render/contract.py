@@ -194,18 +194,19 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
     str
         A serialized python file.
     """
+    # pylint: disable=too-many-locals
     # if the abi is empty, then we are dealing with an interface or library so we don't want to
     # create a contract file for it.
     if contract_info.abi == []:
         return None
     # TODO: break this function up or bundle arguments to save on variables
-    # pylint: disable=too-many-locals
 
     env = get_jinja_env()
     templates = get_templates_for_contract_file(env)
 
     function_datas, constructor_data = get_function_datas(contract_info.abi)
     event_datas = get_event_datas(contract_info.abi)
+    error_infos = contract_info.errors.values()
 
     has_bytecode = bool(contract_info.bytecode)
     has_events = bool(len(event_datas.values()))
@@ -227,6 +228,12 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
         events=event_datas,
     )
 
+    has_errors = bool(len(error_infos))
+    errors_block = templates.errors_template.render(
+        contract_name=contract_info.contract_name,
+        errors=error_infos,
+    )
+
     abi_block = templates.abi_template.render(
         abi=contract_info.abi,
         bytecode=contract_info.bytecode,
@@ -236,6 +243,7 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
     contract_block = templates.contract_template.render(
         has_bytecode=has_bytecode,
         has_events=has_events,
+        has_errors=has_errors,
         contract_name=contract_info.contract_name,
         constructor=constructor_data,
         functions=function_datas,
@@ -254,9 +262,11 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
         has_overloading=has_overloading,
         has_multiple_return_values=has_multiple_return_values,
         has_bytecode=has_bytecode,
-        has_events=has_events,
         functions_block=functions_block,
+        has_events=has_events,
         events_block=events_block,
+        has_errors=has_errors,
+        errors_block=errors_block,
         abi_block=abi_block,
         contract_block=contract_block,
         # TODO: use this data to add a typed constructor
@@ -320,6 +330,7 @@ class ContractTemplates(NamedTuple):
     base_template: Any
     functions_template: Any
     events_template: Any
+    errors_template: Any
     abi_template: Any
     contract_template: Any
 
@@ -330,6 +341,7 @@ def get_templates_for_contract_file(env):
         base_template=env.get_template("contract.py/base.py.jinja2"),
         functions_template=env.get_template("contract.py/functions.py.jinja2"),
         events_template=env.get_template("contract.py/events.py.jinja2"),
+        errors_template=env.get_template("contract.py/errors.py.jinja2"),
         abi_template=env.get_template("contract.py/abi.py.jinja2"),
         contract_template=env.get_template("contract.py/contract.py.jinja2"),
     )

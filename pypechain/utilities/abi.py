@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal, NamedTuple, Sequence, TypedDict, TypeGuard, cast
 
-from eth_utils.abi import collapse_if_tuple, function_abi_to_4byte_selector
+from eth_utils.abi import collapse_if_tuple, function_signature_to_4byte_selector
 from eth_utils.hexadecimal import encode_hex
 from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
@@ -159,7 +159,7 @@ def is_abi_event(item: ABIElement | ABIError) -> TypeGuard[ABIEvent]:
     return True
 
 
-def is_abi_error(item: ABIElement) -> TypeGuard[ABIError]:
+def is_abi_error(item: ABIElement | ABIError) -> TypeGuard[ABIError]:
     """Typeguard function for ABIError.
 
     Parameters
@@ -497,8 +497,9 @@ def get_errors_for_abi(abi: ABI) -> list[ErrorInfo]:
 
                 inputs.append(error_input)
 
-            selector = encode_hex(function_abi_to_4byte_selector(dict(item)))
-            signature = _abi_to_signature(dict(item))
+            signature = _abi_to_signature(dict(item)).replace(" ", "")
+            selector = encode_hex(function_signature_to_4byte_selector(signature))
+
             errors.append(
                 ErrorInfo(
                     name=item.get("name"),

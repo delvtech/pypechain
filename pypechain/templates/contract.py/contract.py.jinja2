@@ -14,12 +14,19 @@ class {{contract_name}}Contract(Contract):
             {% if has_events -%}
             self.events = {{contract_name}}ContractEvents({{contract_name | lower}}_abi, self.w3, address) # type: ignore
             {%- endif %}
+            {% if has_errors -%}
+            self.errors = {{contract_name}}ContractErrors()
+            {%- endif %}
 
         except FallbackNotFound:
             print("Fallback function not found. Continuing...")
 
     {% if has_events -%}
     events: {{contract_name}}ContractEvents
+    {%- endif %}
+
+    {% if has_errors -%}
+    errors: {{contract_name}}ContractErrors = {{contract_name}}ContractErrors()
     {%- endif %}
 
     functions: {{contract_name}}ContractFunctions
@@ -115,6 +122,9 @@ class {{contract_name}}Contract(Contract):
         """
         contract = super().factory(w3, class_name, **kwargs)
         contract.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, w3, None)
+        {% if has_errors -%}
+        contract.errors = {{contract_name}}ContractErrors()
+        {%- endif %}
 
         return contract
 
