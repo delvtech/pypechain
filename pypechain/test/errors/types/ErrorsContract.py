@@ -318,12 +318,12 @@ class ErrorsContractErrors:
             self.Two,
         ]
 
-    def decode_custom_error(self, data: HexBytes) -> tuple[Any, ...]:
+    def decode_custom_error(self, data: str) -> tuple[Any, ...]:
         """Decodes a custom contract error."""
-        selector = data.hex()[:10]
+        selector = data[:10]
         for err in self._all:
             if err.selector == selector:
-                return err.decode_error_data(data)
+                return err.decode_error_data(HexBytes(data[10:]))
 
         raise ValueError(f"Errors does not have a selector matching {selector}")
 
@@ -473,5 +473,6 @@ class ErrorsContract(Contract):
         """
         contract = super().factory(w3, class_name, **kwargs)
         contract.functions = ErrorsContractFunctions(errors_abi, w3, None)
+        contract.errors = ErrorsContractErrors()
 
         return contract

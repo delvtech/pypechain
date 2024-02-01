@@ -46,8 +46,8 @@ class TestErrors:
             decoded = abi_codec.decode(types, HexBytes(data))
             assert not decoded
 
-            assert deployed_contract.errors.One.decode_error_data(HexBytes(data)) == decoded
-            assert deployed_contract.errors.decode_custom_error(HexBytes(err.message)) == decoded
+            assert ErrorsContract.errors.One.decode_error_data(HexBytes(data)) == decoded
+            assert ErrorsContract.errors.decode_custom_error(err.message) == decoded
 
     def test_error_two(self, w3):
         """Test that we can decode strings."""
@@ -74,8 +74,8 @@ class TestErrors:
                 "0x0000000000000000000000000000000000000000",
                 255,
             )
-            assert deployed_contract.errors.Two.decode_error_data(HexBytes(data)) == decoded
-            assert deployed_contract.errors.decode_custom_error(HexBytes(err.message)) == decoded
+            assert ErrorsContract.errors.Two.decode_error_data(HexBytes(data)) == decoded
+            assert ErrorsContract.errors.decode_custom_error(err.message) == decoded
 
     def test_error_three(self, w3):
         """Test that we can decode structs and enums."""
@@ -100,5 +100,5 @@ class TestErrors:
             decoded = abi_codec.decode(types, HexBytes(data))
             assert decoded == (False, (1, 2, 3, 4), 0)
 
-            assert deployed_contract.errors.Three.decode_error_data(HexBytes(data)) == decoded
-            assert deployed_contract.errors.decode_custom_error(HexBytes(err.message)) == decoded
+            assert ErrorsContract.errors.Three.decode_error_data(HexBytes(data)) == decoded
+            assert ErrorsContract.errors.decode_custom_error(err.message) == decoded

@@ -63,12 +63,12 @@ class {{contract_name}}ContractErrors:
         {% endfor %}
         self._all = [{%  for error_info in errors -%}self.{{error_info.name}},{%- endfor %}]
 
-    def decode_custom_error(self, data: HexBytes) -> tuple[Any, ...]:
+    def decode_custom_error(self, data: str) -> tuple[Any, ...]:
         """Decodes a custom contract error."""
-        selector = data.hex()[:10]
+        selector = data[:10]
         for err in self._all:
              if err.selector == selector:
-                 return err.decode_error_data(data)
+                 return err.decode_error_data(HexBytes(data[10:]))
 
         raise ValueError(f"{{contract_name}} does not have a selector matching {selector}")
 
