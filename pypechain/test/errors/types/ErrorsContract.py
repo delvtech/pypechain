@@ -179,7 +179,7 @@ class ErrorsOneContractError:
         )
         types = get_abi_input_types(error_abi)
         abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, HexBytes(data))
+        decoded = abi_codec.decode(types, data)
         return decoded
 
     @classmethod
@@ -194,7 +194,7 @@ class ErrorsOneContractError:
         )
         types = get_abi_input_types(error_abi)
         abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, HexBytes(data))
+        decoded = abi_codec.decode(types, data)
         return decoded
 
 
@@ -228,7 +228,7 @@ class ErrorsThreeContractError:
         )
         types = get_abi_input_types(error_abi)
         abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, HexBytes(data))
+        decoded = abi_codec.decode(types, data)
         return decoded
 
     @classmethod
@@ -243,7 +243,7 @@ class ErrorsThreeContractError:
         )
         types = get_abi_input_types(error_abi)
         abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, HexBytes(data))
+        decoded = abi_codec.decode(types, data)
         return decoded
 
 
@@ -277,7 +277,7 @@ class ErrorsTwoContractError:
         )
         types = get_abi_input_types(error_abi)
         abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, HexBytes(data))
+        decoded = abi_codec.decode(types, data)
         return decoded
 
     @classmethod
@@ -292,7 +292,7 @@ class ErrorsTwoContractError:
         )
         types = get_abi_input_types(error_abi)
         abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, HexBytes(data))
+        decoded = abi_codec.decode(types, data)
         return decoded
 
 
@@ -311,6 +311,21 @@ class ErrorsContractErrors:
         self.One = ErrorsOneContractError()
         self.Three = ErrorsThreeContractError()
         self.Two = ErrorsTwoContractError()
+
+        self._all = [
+            self.One,
+            self.Three,
+            self.Two,
+        ]
+
+    def decode_custom_error(self, data: HexBytes) -> tuple[Any, ...]:
+        """Decodes a custom contract error."""
+        selector = data.hex()[:10]
+        for err in self._all:
+            if err.selector == selector:
+                return err.decode_error_data(data)
+
+        raise ValueError(f"Errors does not have a selector matching {selector}")
 
 
 errors_abi: ABI = cast(

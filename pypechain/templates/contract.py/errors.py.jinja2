@@ -30,7 +30,7 @@ class {{contract_name}}{{error_info.name}}ContractError:
         )
         types = get_abi_input_types(error_abi)
         abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, HexBytes(data))
+        decoded = abi_codec.decode(types, data)
         return decoded
 
     @classmethod
@@ -42,12 +42,10 @@ class {{contract_name}}{{error_info.name}}ContractError:
         error_abi = cast(
             ABIFunction,
             [item for item in {{contract_name | lower}}_abi if item.get("name") == "{{error_info.name}}" and item.get("type") == "error"][0],
-
-
         )
         types = get_abi_input_types(error_abi)
         abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, HexBytes(data))
+        decoded = abi_codec.decode(types, data)
         return decoded
 {% endfor %}
 
@@ -63,3 +61,14 @@ class {{contract_name}}ContractErrors:
         {% for error_info in errors -%}
         self.{{error_info.name}} = {{contract_name}}{{error_info.name}}ContractError()
         {% endfor %}
+        self._all = [{%  for error_info in errors -%}self.{{error_info.name}},{%- endfor %}]
+
+    def decode_custom_error(self, data: HexBytes) -> tuple[Any, ...]:
+        """Decodes a custom contract error."""
+        selector = data.hex()[:10]
+        for err in self._all:
+             if err.selector == selector:
+                 return err.decode_error_data(data)
+
+        raise ValueError(f"{{contract_name}} does not have a selector matching {selector}")
+
