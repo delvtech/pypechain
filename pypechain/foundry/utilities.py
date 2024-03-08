@@ -7,7 +7,7 @@ from pypechain.foundry.types import FoundryJson
 
 def is_foundry_json(val: object) -> TypeGuard[FoundryJson]:
     """Determines whether a json object is a FoundryJson."""
-    required_keys = {"abi", "bytecode", "deployedBytecode", "methodIdentifiers", "rawMetadata", "metadata", "ast", "id"}
+    required_keys = {"abi", "bytecode", "deployedBytecode", "methodIdentifiers", "rawMetadata", "metadata", "id"}
     return isinstance(val, dict) and required_keys.issubset(val.keys())
 
 
