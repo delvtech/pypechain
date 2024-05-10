@@ -3,10 +3,17 @@ class {{contract_name}}Contract(Contract):
 
     abi: ABI = {{contract_name | lower}}_abi
     {%- if has_bytecode %}
-    bytecode: bytes = HexBytes({{contract_name | lower}}_bytecode)
+    bytecode: bytes
     {%- endif %}
 
-    def __init__(self, address: ChecksumAddress | None = None) -> None:
+    def __init__(self, address: ChecksumAddress | None = None, bytecode: str | bytes | None = None) -> None:
+        if bytes is None:
+            self.bytecode = HexBytes({{contract_name | lower}}_bytecode)
+        elif isinstance(bytecode, bytes):
+            self.bytecode = bytecode
+        elif isinstance(bytecode, str):
+            self.bytecode = HexBytes(bytecode)
+
         try:
             # Initialize parent Contract class
             super().__init__(address=address)
