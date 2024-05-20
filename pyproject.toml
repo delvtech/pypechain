@@ -1,7 +1,7 @@
 [project]
 
 name = "pypechain"
-version = "0.0.29"
+version = "0.0.30"
 authors = [
     { name = "Matthew Brown", email = "matt@delv.tech" },
     { name = "Dylan Paiton", email = "dylan@delv.tech" },
@@ -16,7 +16,7 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["autoflake", "black", "isort", "jinja2", "web3"]
+dependencies = ["autoflake", "black", "eth-account", "isort", "jinja2", "web3"]
 
 [project.scripts]
 pypechain = "pypechain.main:main"
