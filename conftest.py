@@ -1,4 +1,4 @@
-"""Test fixture for deploying local anvil chain."""
+"""Pypechain test fixtures."""
 
 from __future__ import annotations
 
@@ -82,7 +82,7 @@ def local_chain() -> Iterator[str]:
 
 @pytest.fixture(scope="session")
 def w3_init(local_chain: str) -> Web3:
-    """gets a Web3 instance connected to the local chain.
+    """Get a Web3 instance connected to the local chain.
 
     Parameters
     ----------
@@ -102,7 +102,7 @@ def w3_init(local_chain: str) -> Web3:
 
 @pytest.fixture(scope="function")
 def w3(w3_init: Web3) -> Iterator[Web3]:
-    """resets the anvil instance at the function level so each test gets a fresh chain.
+    """Reset the anvil instance at the function level so each test gets a fresh chain.
 
     Parameters
     ----------
@@ -155,9 +155,9 @@ def initialize_web3_with_http_provider(
 
 @pytest.fixture(scope="class")
 def process_contracts(request):
-    """Generates abis for all contracts and pypechain types from those abis."""
+    """Generate ABIs for all contracts and pypechain types from those abis."""
 
-    # don't regenerate files in CI, it can cause things to break in weird ways.
+    # Don't regenerate files in CI, it can cause things to break in weird ways.
     if os.environ.get("IN_CI"):
         return
 
@@ -189,5 +189,5 @@ def process_contracts(request):
                 with open(output_file, "w", encoding="utf-8") as file:
                     json.dump(data, file, ensure_ascii=False, indent=2)
 
-    # # Run the pypechain module after processing all contracts
+    # Run the pypechain module after processing all contracts
     pypechain(f"{test_dir}/abis", f"{test_dir}/types")

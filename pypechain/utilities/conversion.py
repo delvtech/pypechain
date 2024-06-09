@@ -17,7 +17,7 @@ def tuple_to_dataclass(cls: type[T], tuple_data: Any | Tuple[Any, ...]) -> T:
     ----------
     cls: type[T]
         The dataclass type to which the tuple data is to be converted.
-    tuple_data: Any | Typle[Any, ...]
+    tuple_data: Any | Tuple[Any, ...]
         A tuple (or nested tuple) of values to convert into a dataclass instance.
 
     Returns

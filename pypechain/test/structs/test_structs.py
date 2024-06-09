@@ -51,4 +51,4 @@ class TestStructs:
 
         failed_tests = [full_path for exists, full_path in results if not exists]
 
-        assert len(failed_tests) == 0, f"Several files doen't exist: {failed_tests=}"
+        assert len(failed_tests) == 0, f"Several files don't exist: {failed_tests=}"
