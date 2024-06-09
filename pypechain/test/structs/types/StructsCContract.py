@@ -30,7 +30,6 @@ from typing import Any, Type, cast
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
-from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
@@ -39,7 +38,7 @@ from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 
 from .IStructsTypes import InnerStruct
 from .StructsCTypes import CStruct, InnyStruct, NestedStruct, OuterStruct
-from .utilities import rename_returned_types
+from .utilities import rename_returned_types, try_bytecode_hexbytes
 
 structs = {
     "InnyStruct": InnyStruct,
@@ -201,7 +200,7 @@ class StructsCContract(Contract):
     """A web3.py Contract class for the StructsC contract."""
 
     abi: ABI = structsc_abi
-    bytecode: bytes = HexBytes(structsc_bytecode)
+    bytecode: bytes | None = try_bytecode_hexbytes(structsc_bytecode, "structsc")
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
         try:

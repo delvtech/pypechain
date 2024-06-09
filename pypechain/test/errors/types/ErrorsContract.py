@@ -39,7 +39,7 @@ from web3.contract.contract import Contract, ContractConstructor, ContractFuncti
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, ABIFunction, BlockIdentifier, CallOverride, TxParams
 
-from .utilities import get_abi_input_types
+from .utilities import get_abi_input_types, try_bytecode_hexbytes
 
 structs = {}
 
@@ -379,7 +379,7 @@ class ErrorsContract(Contract):
     """A web3.py Contract class for the Errors contract."""
 
     abi: ABI = errors_abi
-    bytecode: bytes = HexBytes(errors_bytecode)
+    bytecode: bytes | None = try_bytecode_hexbytes(errors_bytecode, "errors")
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
         try:

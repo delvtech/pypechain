@@ -48,7 +48,7 @@ from web3.exceptions import FallbackNotFound
 from web3.types import ABI, ABIFunction, BlockIdentifier, CallOverride, EventData, TxParams
 
 from .ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
-from .utilities import dataclass_to_tuple, get_abi_input_types, rename_returned_types
+from .utilities import dataclass_to_tuple, get_abi_input_types, rename_returned_types, try_bytecode_hexbytes
 
 structs = {
     "SimpleStruct": SimpleStruct,
@@ -948,7 +948,7 @@ class ExampleContract(Contract):
     """A web3.py Contract class for the Example contract."""
 
     abi: ABI = example_abi
-    bytecode: bytes = HexBytes(example_bytecode)
+    bytecode: bytes | None = try_bytecode_hexbytes(example_bytecode, "example")
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
         try:
