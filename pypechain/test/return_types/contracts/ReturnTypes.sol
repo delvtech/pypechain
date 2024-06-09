@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 contract ReturnTypes {
-
     struct SimpleStruct {
         uint intVal;
         string strVal;
@@ -22,7 +21,9 @@ contract ReturnTypes {
         return x;
     }
 
-    function noNameTwoValues(string memory s) public pure returns (string memory, uint) {
+    function noNameTwoValues(
+        string memory s
+    ) public pure returns (string memory, uint) {
         return (s, 2);
     }
 
@@ -30,26 +31,31 @@ contract ReturnTypes {
         return x + y;
     }
 
-    function namedTwoValues(uint x, uint y) public pure returns (uint flip, uint flop) {
-        return (y,x);
+    function namedTwoValues(
+        uint x,
+        uint y
+    ) public pure returns (uint flip, uint flop) {
+        return (y, x);
     }
 
     function singleSimpleStruct() public pure returns (SimpleStruct memory) {
-        return SimpleStruct({
-            intVal: 1,
-            strVal: "You are number 1"
-        });
+        return SimpleStruct({ intVal: 1, strVal: "You are number 1" });
     }
 
     function singleNestedStruct() public pure returns (NestedStruct memory) {
-        return NestedStruct({
-            intVal: 1,
-            strVal: "You are number 1",
-            innerStruct: InnerStruct({boolVal: true})
-        });
+        return
+            NestedStruct({
+                intVal: 1,
+                strVal: "You are number 1",
+                innerStruct: InnerStruct({ boolVal: true })
+            });
     }
 
-    function twoSimpleStructs() public pure returns (SimpleStruct memory, SimpleStruct memory) {
+    function twoSimpleStructs()
+        public
+        pure
+        returns (SimpleStruct memory, SimpleStruct memory)
+    {
         SimpleStruct memory simpleStruct1 = SimpleStruct({
             intVal: 1,
             strVal: "You are number 1"
@@ -63,7 +69,11 @@ contract ReturnTypes {
         return (simpleStruct1, simpleStruct2);
     }
 
-    function twoMixedStructs() public pure returns (SimpleStruct memory, NestedStruct memory) {
+    function twoMixedStructs()
+        public
+        pure
+        returns (SimpleStruct memory, NestedStruct memory)
+    {
         SimpleStruct memory simpleStruct = SimpleStruct({
             intVal: 1,
             strVal: "You are number 1"
@@ -71,40 +81,52 @@ contract ReturnTypes {
         NestedStruct memory nestedtStruct = NestedStruct({
             intVal: 2,
             strVal: "You are number 2",
-            innerStruct: InnerStruct({boolVal: true})
+            innerStruct: InnerStruct({ boolVal: true })
         });
 
         return (simpleStruct, nestedtStruct);
     }
 
-    function namedSingleStruct() public pure returns (SimpleStruct memory struct1) {
-        return SimpleStruct({
-            intVal: 1,
-            strVal: "You are number 1"
-        });
+    function namedSingleStruct()
+        public
+        pure
+        returns (SimpleStruct memory struct1)
+    {
+        return SimpleStruct({ intVal: 1, strVal: "You are number 1" });
     }
 
-    function namedTwoMixedStructs() public pure returns (SimpleStruct memory simpleStruct, NestedStruct memory nestedStruct) {
-        simpleStruct = SimpleStruct({
-            intVal: 1,
-            strVal: "You are number 1"
-        });
+    function namedTwoMixedStructs()
+        public
+        pure
+        returns (
+            SimpleStruct memory simpleStruct,
+            NestedStruct memory nestedStruct
+        )
+    {
+        simpleStruct = SimpleStruct({ intVal: 1, strVal: "You are number 1" });
         nestedStruct = NestedStruct({
             intVal: 2,
             strVal: "You are number 2",
-            innerStruct: InnerStruct({boolVal: true})
+            innerStruct: InnerStruct({ boolVal: true })
         });
     }
 
-    function mixStructsAndPrimitives() public pure returns (SimpleStruct memory simpleStruct, NestedStruct memory, uint, string memory name, bool YesOrNo) {
-        simpleStruct = SimpleStruct({
-            intVal: 1,
-            strVal: "You are number 1"
-        });
+    function mixStructsAndPrimitives()
+        public
+        pure
+        returns (
+            SimpleStruct memory simpleStruct,
+            NestedStruct memory,
+            uint,
+            string memory name,
+            bool YesOrNo
+        )
+    {
+        simpleStruct = SimpleStruct({ intVal: 1, strVal: "You are number 1" });
         NestedStruct memory nestedStruct = NestedStruct({
             intVal: 2,
             strVal: "You are number 2",
-            innerStruct: InnerStruct({boolVal: true})
+            innerStruct: InnerStruct({ boolVal: true })
         });
 
         return (simpleStruct, nestedStruct, 1, "ReturnTypesContract", false);

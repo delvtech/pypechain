@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import { IStructs } from "./IStructs.sol";
 
 contract StructsC {
-
     struct CStruct {
         IStructs.InnerStruct inner;
     }
@@ -27,20 +26,13 @@ contract StructsC {
     }
 
     function allStructsInternal() public pure returns (OuterStruct memory) {
-        return OuterStruct({
-            nested: NestedStruct({
-                inner: InnyStruct({
-                    innerVal: 1
-                })
-            })
-        });
+        return
+            OuterStruct({
+                nested: NestedStruct({ inner: InnyStruct({ innerVal: 1 }) })
+            });
     }
 
     function innerStructIsExternal() public pure returns (CStruct memory) {
-        return CStruct({
-            inner: IStructs.InnerStruct({
-                boolVal: false
-            })
-        });
+        return CStruct({ inner: IStructs.InnerStruct({ boolVal: false }) });
     }
 }

@@ -9,7 +9,12 @@ contract Errors {
         uint256 marge;
     }
 
-    enum Simpsons { BART, LISA, HOMER, MARGE }
+    enum Simpsons {
+        BART,
+        LISA,
+        HOMER,
+        MARGE
+    }
 
     error One();
     error Two(string message, address who, uint8 value);
@@ -20,7 +25,11 @@ contract Errors {
     }
 
     function revertWithErrorTwo() public pure {
-        revert Two("I will not pledge allegiance to Bart. I will not pledge allegiance to Bart. I will not pledge allegiance to Bart.", address(0), 255);
+        revert Two(
+            "I will not pledge allegiance to Bart. I will not pledge allegiance to Bart. I will not pledge allegiance to Bart.",
+            address(0),
+            255
+        );
     }
 
     function revertWithErrorThree() public pure {
