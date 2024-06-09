@@ -319,29 +319,32 @@ def get_structs(
         components = param.get("components")
         internal_type = cast(str, param.get("internalType", ""))
 
-        # if we find a struct, we'll add it to the dict of StructInfo's
+        # If we find a struct, we'll add it to the dict of StructInfo's
         if is_struct(internal_type) and components:
             struct_name = get_struct_name(param)
             struct_file_name = get_struct_contract_name(param)
             struct_values: list[StructValue] = []
 
-            # walk over the components of the struct
+            # Walk over the components of the struct
             for component in components:
                 component_internal_type = cast(str, component.get("internalType", ""))
 
-                # do recursion if nested struct
+                # Do recursion if nested struct
                 contract_name: str | None = None
                 if is_struct(component_internal_type):
-                    get_structs([component], structs)
+                    structs = get_structs([component], structs)
                     contract_name = get_struct_contract_name(component)
 
-                component_name = get_param_name(component)
+                # Get the component name and type
+                component_name = get_param_name(component)  # strip [] if it is an array
                 component_type = (
-                    get_struct_name(component) if is_struct(component_internal_type) else component.get("type", "")
+                    get_struct_type(component) if is_struct(component_internal_type) else component.get("type", "")
                 )
                 python_type = solidity_to_python_type(
                     component_type, custom_types=[struct.name for struct in structs.values()]
                 )
+
+                # Collect information
                 struct_values.append(
                     StructValue(
                         name=component_name,
@@ -352,7 +355,7 @@ def get_structs(
                     )
                 )
 
-            # lastly, add the struct to the dict
+            # Add the struct to the dict
             structs[f"{struct_file_name}.{struct_name}"] = StructInfo(
                 name=struct_name, contract_name=struct_file_name, values=struct_values
             )
@@ -541,7 +544,7 @@ def get_struct_name(
 
     Parameters
     ----------
-    param : ABIFunctionParams | ABIFunctionComponents
+    param_or_component: ABIFunctionParams | ABIFunctionComponents
 
 
     Returns
@@ -550,8 +553,32 @@ def get_struct_name(
         The name of the item.
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
-    struct_name = internal_type.split(".")[1]
+    struct_name = internal_type.split(".")[1].rstrip("[]")
     return capitalize_first_letter_only(struct_name)
+
+
+def get_struct_type(
+    param_or_component: ABIFunctionParams | ABIFunctionComponents,
+) -> str:
+    """Returns the type of the given struct.
+
+    This works the same as `get_struct_name`, except that we account for arrays by
+    wrapping the name in `list[...]`.
+
+    Parameters
+    ----------
+    param_or_component: ABIFunctionParams | ABIFunctionComponents
+
+    Returns
+    -------
+    str
+        The type of the item.
+    """
+    internal_type = cast(str, param_or_component.get("internalType", ""))
+    struct_full_name = internal_type.split(".")[1]
+    if struct_full_name[-2:] == "[]":  # ends with [] indicates an array
+        return "list[" + get_struct_name(param_or_component) + "]"
+    return get_struct_name(param_or_component)
 
 
 def get_struct_contract_name(
@@ -606,8 +633,7 @@ def get_param_name(
     str
         The name of the item.
     """
-
-    return param_or_component.get("name", "").lstrip("_")
+    return param_or_component.get("name", "").lstrip("_").rstrip("[]")
 
 
 @dataclass
@@ -888,12 +914,12 @@ def _get_param_types(function: ABIFunction, parameters_type: Literal["inputs", "
     return stringified_function_parameters
 
 
-def get_param_type(param: ABIFunctionParams):
+def get_param_type(param: ABIFunctionParams | ABIFunctionComponents):
     """Gets the associated python type, including generated dataclasses"""
     internal_type = cast(str, param.get("internalType", ""))
     # if we find a struct, we'll add it to the dict of StructInfo's
     if is_struct(internal_type):
-        python_type = get_struct_name(param)
+        python_type = get_struct_type(param)
     else:
         python_type = solidity_to_python_type(param.get("type", "unknown"))
     return python_type
