@@ -143,4 +143,10 @@ contract Example {
 
         return (simpleStruct, nestedStruct, 1, "ReturnTypesContract", false);
     }
+
+    function vecOfStruct(
+        SimpleStruct[] memory inVecSimpleStruct
+    ) public pure returns (SimpleStruct[] memory vecSimpleStruct) {
+        return inVecSimpleStruct;
+    }
 }

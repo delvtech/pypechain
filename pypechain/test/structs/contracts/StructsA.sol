@@ -33,4 +33,18 @@ contract StructsA {
                 innerStruct: IStructs.InnerStruct({ boolVal: true })
             });
     }
+
+    function singleNestedStructArray()
+        public
+        pure
+        returns (IStructs.NestedStruct[] memory)
+    {
+        IStructs.NestedStruct[] memory out = new IStructs.NestedStruct[](1);
+        out[0] = IStructs.NestedStruct({
+            intVal: 1,
+            strVal: "You are number 1",
+            innerStruct: IStructs.InnerStruct({ boolVal: true })
+        });
+        return out;
+    }
 }
