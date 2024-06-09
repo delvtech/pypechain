@@ -1,4 +1,4 @@
-"""Script to generate typed web3.py classes for solidity contracts."""
+"""Script to generate typed web3.py classes for Solidity contracts."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ def main(argv: Sequence[str] | None = None) -> None:
 def pypechain(
     abi_file_path: str, output_dir: str = "pypechain_types", line_length: int = 120, apply_formatting: bool = True
 ):
-    """Generates class files for a given abi.
+    """Generate class files for a given abi.
 
     Parameters
     ----------
@@ -43,11 +43,6 @@ def pypechain(
     apply_formatting : bool, optional
         If True, autoflake, isort and black will be applied to the file in that order, by default True.
     """
-
-    # TODO: move to end of main() so that files aren't cleared if something breaks during script
-    # execution. Create/clear the output directory
-    setup_directory(output_dir)
-
     # List to store all JSON ABI files to be processed
     json_files_to_process: list[Path] = []
 
@@ -59,29 +54,30 @@ def pypechain(
         # Otherwise, add the single file to the list
         json_files_to_process.append(Path(abi_file_path))
 
-    # parse the files and gather AbiInfos.
+    # Parse the files and gather AbiInfos
     abi_infos: list[AbiInfo] = []
     for json_file in json_files_to_process:
         infos = load_abi_infos_from_file(json_file)
         abi_infos.extend(infos)
 
-    file_names: list[str] = []
+    # Create/clear the output directory
+    setup_directory(output_dir)
 
     # Now process all gathered files
-    file_names = render_files(abi_infos, output_dir, line_length, apply_formatting)
+    file_names: list[str] = render_files(abi_infos, output_dir, line_length, apply_formatting)
 
     # Render the __init__.py file
     render_init_file(output_dir, file_names, line_length)
 
-    # Copy utilities.py to the output_dir
     # Get the path to `utilities.py` (assuming it's in the same directory as your script)
     utilities_path = Path(__file__).parent / "templates/utilities.py"
+
     # Copy the file to the output directory
     copy2(utilities_path, output_dir)
 
 
 def gather_json_files(directory: str) -> list:
-    """Gathers all JSON files in the specified directory and its subdirectories."""
+    """Gather all JSON files in the specified directory and its subdirectories."""
     return list(Path(directory).rglob("*.json"))
 
 
@@ -106,7 +102,7 @@ class Args(NamedTuple):
 
 
 def namespace_to_args(namespace: argparse.Namespace) -> Args:
-    """Converts argprase.Namespace to Args."""
+    """Convert argprase.Namespace to Args."""
     return Args(
         abi_file_path=namespace.abi_file_path,
         output_dir=namespace.output_dir,
@@ -116,7 +112,7 @@ def namespace_to_args(namespace: argparse.Namespace) -> Args:
 
 
 def parse_arguments(argv: Sequence[str] | None = None) -> Args:
-    """Parses input arguments"""
+    """Parse input arguments."""
     parser = argparse.ArgumentParser(description="Generates class files for a given abi.")
     parser.add_argument(
         "abi_file_path",
