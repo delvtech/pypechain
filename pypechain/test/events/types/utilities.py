@@ -119,7 +119,7 @@ def rename_returned_types(
     if type(return_types) == type(list[Any]):  # pylint: disable=unidiomatic-typecheck
         inner_types = get_args(return_types)
         # make sure there is only one inner type
-        if len(inner_types) > 1:
+        if len(inner_types) != 1:
             raise NotImplementedError("Only a single inner type in list[...] is supported")
         inner_type = inner_types[0]
         # make sure the type is not also a list
