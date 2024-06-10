@@ -137,10 +137,15 @@ contract ReturnTypes {
         pure
         returns (NestedStruct[] memory)
     {
-        NestedStruct[] memory out = new NestedStruct[](1);
+        NestedStruct[] memory out = new NestedStruct[](2);
         out[0] = NestedStruct({
             intVal: 1,
             strVal: "You are number 1",
+            innerStruct: InnerStruct({ boolVal: true })
+        });
+        out[1] = NestedStruct({
+            intVal: 2,
+            strVal: "You are number 2",
             innerStruct: InnerStruct({ boolVal: true })
         });
         return out;
