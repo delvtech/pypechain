@@ -34,7 +34,7 @@ class EventData(TypedDict):
 
 # pylint: disable=dangerous-default-value
 def solidity_to_python_type(solidity_type: str, custom_types: list[str] = []) -> str:
-    """Returns the stringfied python type for the gien solidity type.
+    """Returns the stringified Python type for the given Solidity type.
 
     Parameters
     ----------
@@ -159,11 +159,17 @@ def solidity_to_python_type(solidity_type: str, custom_types: list[str] = []) ->
     # tuple
     if solidity_type == "tuple":
         return "tuple"
+    if solidity_type == "tuple[]":
+        return "list[tuple]"
 
+    # custom types
     if solidity_type in custom_types:
+        if solidity_type[-2:] == "[]":
+            return "list[" + solidity_type[:-2] + "]"
         return solidity_type
+
     # If the Solidity type isn't recognized, make a warning.  This can happen when an internal type
-    # is expeected for an input parameter or returned in an output.
+    # is expected for an input parameter or returned in an output.
     logging.warning("Unknown Solidity type: %s", solidity_type)
 
     return solidity_type

@@ -45,7 +45,7 @@ from web3.contract.contract import (
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, EventData, TxParams
 
-from .utilities import dataclass_to_tuple, rename_returned_types
+from .utilities import dataclass_to_tuple, rename_returned_types, try_bytecode_hexbytes
 
 structs = {}
 
@@ -395,7 +395,7 @@ class EventsContract(Contract):
     """A web3.py Contract class for the Events contract."""
 
     abi: ABI = events_abi
-    bytecode: bytes = HexBytes(events_bytecode)
+    bytecode: bytes | None = try_bytecode_hexbytes(events_bytecode, "events")
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
         try:

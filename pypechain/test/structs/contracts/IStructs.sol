@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 interface IStructs {
-
     struct SimpleStruct {
         uint intVal;
         string strVal;
