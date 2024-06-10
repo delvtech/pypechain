@@ -112,8 +112,6 @@ class TestReturnTypes:
         func = deployed_contract.functions.singleNestedStructArray()
 
         result: ReturnTypesContract.functions.singleNestedStructArray.ReturnValues = func.call()
-        print(f"{result=}")
-        print(f"{type(result)=}")
 
-        assert isinstance(result, list[NestedStruct])
-        assert False
+        assert len(result) == 1
+        assert isinstance(result[0], NestedStruct)
