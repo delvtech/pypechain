@@ -131,4 +131,18 @@ contract ReturnTypes {
 
         return (simpleStruct, nestedStruct, 1, "ReturnTypesContract", false);
     }
+
+    function singleNestedStructArray()
+        public
+        pure
+        returns (NestedStruct[] memory)
+    {
+        NestedStruct[] memory out = new NestedStruct[](1);
+        out[0] = NestedStruct({
+            intVal: 1,
+            strVal: "You are number 1",
+            innerStruct: InnerStruct({ boolVal: true })
+        });
+        return out;
+    }
 }

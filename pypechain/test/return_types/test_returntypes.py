@@ -106,3 +106,14 @@ class TestReturnTypes:
             "ReturnTypesContract",
             False,
         )
+
+    def test_list_of_dataclass(self, deployed_contract: ReturnTypesContract):
+        """Tests a function that returns list[Struct]."""
+        func = deployed_contract.functions.singleNestedStructArray()
+
+        result: ReturnTypesContract.functions.singleNestedStructArray.ReturnValues = func.call()
+        print(f"{result=}")
+        print(f"{type(result)=}")
+
+        assert isinstance(result, list[NestedStruct])
+        assert False
