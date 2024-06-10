@@ -113,5 +113,5 @@ class TestReturnTypes:
 
         result: ReturnTypesContract.functions.singleNestedStructArray.ReturnValues = func.call()
 
-        assert len(result) == 1
+        assert len(result) == 2
         assert isinstance(result[0], NestedStruct)
