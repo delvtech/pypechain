@@ -54,7 +54,7 @@ class TestNoConstructorContract:
         """Tests deployment using the constructor method instead of the deploy method."""
         # Get the deployment transaction
         deployment_tx = NoConstructorContract.factory(w3).constructor().build_transaction()
-        current_nonce = w3.eth.get_transaction_count(local_account.address)
+        current_nonce = w3.eth.get_transaction_count(local_account.address, "pending")
         deployment_tx.update({"nonce": current_nonce})
 
         # Sign the transaction with local account private key
@@ -97,7 +97,7 @@ class TestConstructorNoArgs:
         """Tests deployment using the constructor method instead of the deploy method."""
         # Get the deployment transaction
         deployment_tx = ConstructorNoArgsContract.factory(w3).constructor().build_transaction()
-        current_nonce = w3.eth.get_transaction_count(local_account.address)
+        current_nonce = w3.eth.get_transaction_count(local_account.address, "pending")
         deployment_tx.update({"nonce": current_nonce})
 
         # Sign the transaction with local account private key
@@ -140,7 +140,7 @@ class TestConstructorWithArgs:
         """Tests deployment using the constructor method instead of the deploy method."""
         # Get the deployment transaction
         deployment_tx = ConstructorWithArgsContract.factory(w3).constructor("name").build_transaction()
-        current_nonce = w3.eth.get_transaction_count(local_account.address)
+        current_nonce = w3.eth.get_transaction_count(local_account.address, "pending")
         deployment_tx.update({"nonce": current_nonce})
 
         # Sign the transaction with local account private key
@@ -189,7 +189,7 @@ class TestConstructorWithStructArgs:
         # Get the deployment transaction
         config = Config(name="name", items=Items(thing="thang", yesOrNo=True))
         deployment_tx = ConstructorWithStructArgsContract.factory(w3).constructor(config).build_transaction()
-        current_nonce = w3.eth.get_transaction_count(local_account.address)
+        current_nonce = w3.eth.get_transaction_count(local_account.address, "pending")
         deployment_tx.update({"nonce": current_nonce})
 
         # Sign the transaction with local account private key
