@@ -13,6 +13,8 @@ from example.types import ExampleContract
 from example.types.ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
 from pypechain.utilities.abi import load_abi_infos_from_file
 
+# it exists, we promise
+# pylint: disable=no-name-in-module
 from .types import ExampleFlipFlopContractFunction
 
 # using pytest fixtures necessitates this.
