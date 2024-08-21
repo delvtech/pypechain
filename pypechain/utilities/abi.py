@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal, NamedTuple, Sequence, TypedDict, TypeGuard, cast
+from typing import Any, Literal, NamedTuple, Sequence, TypeGuard, cast
 
 from eth_utils.abi import collapse_if_tuple, function_signature_to_4byte_selector
 from eth_utils.hexadecimal import encode_hex
