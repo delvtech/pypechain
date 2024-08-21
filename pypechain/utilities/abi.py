@@ -36,7 +36,7 @@ class ABIError(TypedDict):
 class AbiJson(NamedTuple):
     """A JSON representation of a solidity contract's Application Boundary Interface."""
 
-    abi: ABI
+    abi: Sequence[ABIElement]
 
 
 def load_abi(abi_path: str) -> AbiJson:
