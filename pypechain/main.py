@@ -57,7 +57,12 @@ def pypechain(
     # Parse the files and gather AbiInfos
     abi_infos: list[AbiInfo] = []
     for json_file in json_files_to_process:
-        infos = load_abi_infos_from_file(json_file)
+        # Skip failing files
+        try:
+            infos = load_abi_infos_from_file(json_file)
+        except:
+            print(f"Skipping {json_file} due to error")
+            pass
         abi_infos.extend(infos)
 
     # Create/clear the output directory

@@ -544,7 +544,10 @@ def get_struct_name(
         The name of the item.
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
-    struct_name = internal_type.split(".")[1].rstrip("[]")
+    # grab subtype if there is one
+    if "." in internal_type:
+        internal_type = internal_type.split(".")[1]
+    struct_name = internal_type.rstrip("[]")
     return capitalize_first_letter_only(struct_name)
 
 

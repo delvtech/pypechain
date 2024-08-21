@@ -155,6 +155,14 @@ def solidity_to_python_type(solidity_type: str, custom_types: list[str] = []) ->
         return "str"
     if solidity_type == "string[]":
         return "list[str]"
+    if solidity_type.startswith("string") and solidity_type.endswith("]"):
+        # possible to have e.g. "string[2][]" as the type
+        list_depth = solidity_type.count("[")
+        out_type_string = ""
+        for _ in range(list_depth):
+            out_type_string += "list["
+        out_type_string += "str" + "]" * list_depth
+        return out_type_string
 
     # tuple
     if solidity_type == "tuple":
