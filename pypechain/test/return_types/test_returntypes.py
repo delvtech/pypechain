@@ -9,7 +9,7 @@ from web3 import Web3
 
 from pypechain.test.return_types.types.ReturnTypesTypes import InnerStruct, NestedStruct, SimpleStruct
 
-from .types import ReturnTypesContract
+from .types import ReturnTypesContract, ReturnTypesMixStructsAndPrimitivesContractFunction
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
@@ -96,7 +96,7 @@ class TestReturnTypes:
         """Tests two structs, one nested, and other values returned"""
         func = deployed_contract.functions.mixStructsAndPrimitives()
 
-        result: ReturnTypesContract.functions.mixStructsAndPrimitives.ReturnValues = func.call()
+        result: ReturnTypesMixStructsAndPrimitivesContractFunction.ReturnValues = func.call()
 
         assert isinstance(result, func.ReturnValues)
         assert result == (

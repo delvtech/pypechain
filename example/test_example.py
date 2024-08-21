@@ -13,13 +13,16 @@ from example.types import ExampleContract
 from example.types.ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
 from pypechain.utilities.abi import load_abi_infos_from_file
 
+# it exists, we promise
+# pylint: disable=no-name-in-module
+from .types import ExampleFlipFlopContractFunction
+
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
+# pylint: disable=invalid-name
 
 current_path = os.path.abspath(os.path.dirname(__file__))
 project_root = os.path.dirname(os.path.dirname(current_path))
-
-# pylint: disable=invalid-name
 
 
 @pytest.mark.usefixtures("process_contracts")
@@ -62,9 +65,7 @@ class TestExampleContract:
 
         flip = 1
         flop = 2
-        result: ExampleContract.functions.flipFlop.ReturnValues = deployed_contract.functions.flipFlop(
-            flip, flop
-        ).call()
+        result: ExampleFlipFlopContractFunction.ReturnValues = deployed_contract.functions.flipFlop(flip, flop).call()
 
         assert result == (flop, flip)
 

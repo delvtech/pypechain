@@ -5,11 +5,11 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal, NamedTuple, Sequence, TypedDict, TypeGuard, cast
+from typing import Any, Literal, NamedTuple, Sequence, TypeGuard, cast
 
 from eth_utils.abi import collapse_if_tuple, function_signature_to_4byte_selector
 from eth_utils.hexadecimal import encode_hex
-from web3.types import ABI, ABIElement, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
+from web3.types import ABI, ABIElement, ABIError, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
 from pypechain.foundry.types import FoundryJson
 from pypechain.hardhat.types import HardhatJson
@@ -24,19 +24,10 @@ from pypechain.utilities.types import solidity_to_python_type
 ABIErrorParams = ABIFunctionParams
 
 
-class ABIError(TypedDict):
-    """Custom error abi item."""
-
-    # Exactly the same as
-    inputs: Sequence[ABIErrorParams]
-    name: str
-    type: Literal["event"]
-
-
 class AbiJson(NamedTuple):
     """A JSON representation of a solidity contract's Application Boundary Interface."""
 
-    abi: ABI
+    abi: Sequence[ABIElement]
 
 
 def load_abi(abi_path: str) -> AbiJson:
@@ -63,7 +54,7 @@ def load_abi(abi_path: str) -> AbiJson:
         return AbiJson(abi=abi_items)
 
 
-def is_abi_function(item: ABIElement | ABIError) -> TypeGuard[ABIFunction]:
+def is_abi_function(item: ABIElement) -> TypeGuard[ABIFunction]:
     """Typeguard function for ABIFunction.
 
     Parameters
@@ -133,7 +124,7 @@ def is_abi_constructor(item: ABIElement) -> TypeGuard[ABIFunction]:
     return True
 
 
-def is_abi_event(item: ABIElement | ABIError) -> TypeGuard[ABIEvent]:
+def is_abi_event(item: ABIElement) -> TypeGuard[ABIEvent]:
     """Typeguard function for ABIEvent.
 
     Parameters
@@ -159,7 +150,7 @@ def is_abi_event(item: ABIElement | ABIError) -> TypeGuard[ABIEvent]:
     return True
 
 
-def is_abi_error(item: ABIElement | ABIError) -> TypeGuard[ABIError]:
+def is_abi_error(item: ABIElement) -> TypeGuard[ABIError]:
     """Typeguard function for ABIError.
 
     Parameters
@@ -185,7 +176,7 @@ def is_abi_error(item: ABIElement | ABIError) -> TypeGuard[ABIError]:
     return True
 
 
-def filter_abi_items_by_type(item_type: str | list[str], contract_abi: ABI) -> list[ABIFunction | ABIEvent | ABIError]:
+def filter_abi_items_by_type(item_type: str | list[str], contract_abi: ABI) -> list[ABIElement]:
     """Filters ABIItems by type.
 
     Parameters
@@ -684,7 +675,7 @@ def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
         raise ValueError("Unknown ABI Json format")
 
 
-def get_abi_items(abi: ABI) -> list[ABIElement | ABIError]:
+def get_abi_items(abi: ABI) -> list[ABIElement]:
     """Gets all of the functions and events in the ABI.
 
     Parameters
