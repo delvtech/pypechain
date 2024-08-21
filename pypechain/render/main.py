@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
 import os
+from concurrent.futures import ProcessPoolExecutor
+from functools import partial
 from pathlib import Path
 
 from pypechain.render.contract import get_contract_infos, render_contract_file
@@ -46,25 +49,42 @@ def render_files(
     #    2. [ContractName]Types.py
     #  The Contract file defines the Contract class and functions.
     #  The Types file has the structs and events defined in the solidity contract.
-    for contract_info in contract_infos.values():
-        file_path = Path(output_dir)
-
-        rendered_contract_code = render_contract_file(contract_info)
-        if rendered_contract_code:
-            contract_file_name = contract_info.contract_name + "Contract.py"
-            contract_file_path = Path(os.path.join(file_path, contract_file_name))
-            write_string_to_file(contract_file_path, rendered_contract_code)
-            if apply_formatting is True:
-                format_file(contract_file_path, line_length)
-            file_names.append(f"{contract_info.contract_name}Contract")
-
-        rendered_types_code = render_types_file(contract_info)
-        if rendered_types_code:
-            types_file_name = contract_info.contract_name + "Types.py"
-            types_file_path = Path(os.path.join(file_path, types_file_name))
-            write_string_to_file(types_file_path, rendered_types_code)
-            if apply_formatting is True:
-                format_file(types_file_path, line_length)
-            file_names.append(f"{contract_info.contract_name}Types")
+    asyncio.run(render_files_runner(output_dir, line_length, apply_formatting, file_names, contract_infos))
 
     return file_names
+
+
+async def async_render_files(output_dir, line_length, apply_formatting, file_names, contract_info) -> None:
+    file_path = Path(output_dir)
+
+    rendered_contract_code = render_contract_file(contract_info)
+    if rendered_contract_code:
+        contract_file_name = contract_info.contract_name + "Contract.py"
+        contract_file_path = Path(os.path.join(file_path, contract_file_name))
+        write_string_to_file(contract_file_path, rendered_contract_code)
+        if apply_formatting is True:
+            format_file(contract_file_path, line_length)
+        file_names.append(f"{contract_info.contract_name}Contract")
+
+    rendered_types_code = render_types_file(contract_info)
+    if rendered_types_code:
+        types_file_name = contract_info.contract_name + "Types.py"
+        types_file_path = Path(os.path.join(file_path, types_file_name))
+        write_string_to_file(types_file_path, rendered_types_code)
+        if apply_formatting is True:
+            format_file(types_file_path, line_length)
+        file_names.append(f"{contract_info.contract_name}Types")
+
+
+async def render_files_runner(output_dir, line_length, apply_formatting, file_names, contract_infos):
+    # Create a ProcessPoolExecutor
+    # Schedule the async_render_files tasks to run in the ProcessPoolExecutor
+    async with asyncio.TaskGroup() as task_group:
+        tasks = [
+            task_group.create_task(
+                async_render_files(output_dir, line_length, apply_formatting, file_names, contract_info)
+            )
+            for contract_info in contract_infos.values()
+        ]
+        # Wait for all tasks to complete
+        await asyncio.gather(*tasks)
