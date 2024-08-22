@@ -529,9 +529,7 @@ def get_struct_name(
     }
 
     We are assuming 'internalType's value to have the form:
-    'struct [ContractName].[StructName]'
-
-    If there is no ContractName, then this code will break on purpose.
+    'struct [ContractName].[StructName]' or 'struct [StructName]'
 
     Parameters
     ----------
@@ -544,7 +542,13 @@ def get_struct_name(
         The name of the item.
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
-    struct_name = internal_type.split(".")[1].rstrip("[]")
+    # grab subtype if there is one
+    if "." in internal_type:
+        internal_type = internal_type.split(".")[1]
+    # it is possible that the internal type has a "struct" label
+    # we want to strip that to only include the struct name itself
+    internal_type = internal_type.replace("struct ", "")
+    struct_name = internal_type.rstrip("[]")
     return capitalize_first_letter_only(struct_name)
 
 
@@ -566,8 +570,13 @@ def get_struct_type(
         The type of the item.
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
-    struct_full_name = internal_type.split(".")[1]
-    if struct_full_name[-2:] == "[]":  # ends with [] indicates an array
+    # grab subtype if there is one
+    if "." in internal_type:
+        internal_type = internal_type.split(".")[1]
+    # it is possible that the internal type has a "struct" label
+    # we want to strip that to only include the struct name itself
+    internal_type = internal_type.replace("struct ", "")
+    if internal_type[-2:] == "[]":  # ends with [] indicates an array
         return "list[" + get_struct_name(param_or_component) + "]"
     return get_struct_name(param_or_component)
 
