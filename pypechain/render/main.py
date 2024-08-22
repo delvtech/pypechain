@@ -57,20 +57,39 @@ def render_files(
     #  The Types file has the structs and events defined in the solidity contract.
 
     # make a parallel pool; defaults to the number of available CPUs
-    pool = Pool()
-    # chunksize should be increased with the number of iterables
-    chunksize = len(contract_infos) // 10
-    for file_name_sublist in pool.imap(
-        partial(get_file_names, output_dir=output_dir, line_length=line_length, apply_formatting=apply_formatting),
-        list(contract_infos.values()),
-        chunksize=chunksize,
-    ):
-        file_names.extend(file_name_sublist)
+    with Pool() as pool:
+        # chunksize should be increased with the number of iterables
+        chunksize = len(contract_infos) // 10
+        for file_name_sublist in pool.imap(
+            partial(get_file_names, output_dir=output_dir, line_length=line_length, apply_formatting=apply_formatting),
+            list(contract_infos.values()),
+            chunksize=chunksize,
+        ):
+            file_names.extend(file_name_sublist)
 
     return file_names
 
 
 def get_file_names(contract_info: ContractInfo, output_dir: str, line_length: int, apply_formatting: bool) -> list[str]:
+    """Get the file name for a single ContractInfo object
+
+
+    Parameters
+    ----------
+    contract_info : ContractInfo
+        A ContractInfo object created from an ABI.
+    output_dir : str
+        The directory where files will be written to.
+    line_length : int, optional
+        Black's line-length config option.
+    apply_formatting : bool, optional
+        If True, autoflake, isort and black will be applied to the file in that order, by default True.
+
+    Returns
+    -------
+    list[str]
+        A list of filenames for the generated Contract and Types files.
+    """
     file_names: list[str] = []
     file_path = Path(output_dir)
 
