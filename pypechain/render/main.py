@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-import asyncio
 import os
-from concurrent.futures import ProcessPoolExecutor
 from functools import partial
+from multiprocessing import Pool
 from pathlib import Path
 
-from pypechain.render.contract import get_contract_infos, render_contract_file
+from pypechain.render.contract import ContractInfo, get_contract_infos, render_contract_file
 from pypechain.render.types import render_types_file
 from pypechain.utilities.abi import AbiInfo
 from pypechain.utilities.file import write_string_to_file
@@ -16,7 +15,11 @@ from pypechain.utilities.format import format_file
 
 
 def render_files(
-    abi_infos: list[AbiInfo], output_dir: str, line_length: int = 120, apply_formatting: bool = True
+    abi_infos: list[AbiInfo],
+    output_dir: str,
+    line_length: int = 120,
+    apply_formatting: bool = True,
+    chunksize: int | None = None,
 ) -> list[str]:
     """Processes a single JSON file to generate class and types files.
 
@@ -31,6 +34,10 @@ def render_files(
         Black's line-length config option.
     apply_formatting : bool, optional
         If True, autoflake, isort and black will be applied to the file in that order, by default True.
+    chunksize: int, optional
+        If set, abis are processed in approximately groups of chunksize.
+        Use 1 for one process per ABI.
+        Defaults to the number of ABIs // 10.
 
     Returns
     -------
@@ -40,21 +47,31 @@ def render_files(
 
     contract_infos = get_contract_infos(abi_infos)
 
-    # This is what we return.
+    # this is what we are returning
     file_names: list[str] = []
 
-    # Now, for every [ContractName]
-    # generate a:
+    # for every [ContractName] generate a:
     #    1. [ContractName]Contract.py
     #    2. [ContractName]Types.py
     #  The Contract file defines the Contract class and functions.
     #  The Types file has the structs and events defined in the solidity contract.
-    asyncio.run(render_files_runner(output_dir, line_length, apply_formatting, file_names, contract_infos))
+
+    # make a parallel pool; defaults to the number of available CPUs
+    pool = Pool()
+    # chunksize should be increased with the number of iterables
+    chunksize = len(contract_infos) // 10
+    for file_name_sublist in pool.imap(
+        partial(get_file_names, output_dir=output_dir, line_length=line_length, apply_formatting=apply_formatting),
+        list(contract_infos.values()),
+        chunksize=chunksize,
+    ):
+        file_names.extend(file_name_sublist)
 
     return file_names
 
 
-async def async_render_files(output_dir, line_length, apply_formatting, file_names, contract_info) -> None:
+def get_file_names(contract_info: ContractInfo, output_dir: str, line_length: int, apply_formatting: bool) -> list[str]:
+    file_names: list[str] = []
     file_path = Path(output_dir)
 
     rendered_contract_code = render_contract_file(contract_info)
@@ -75,16 +92,4 @@ async def async_render_files(output_dir, line_length, apply_formatting, file_nam
             format_file(types_file_path, line_length)
         file_names.append(f"{contract_info.contract_name}Types")
 
-
-async def render_files_runner(output_dir, line_length, apply_formatting, file_names, contract_infos):
-    # Create a ProcessPoolExecutor
-    # Schedule the async_render_files tasks to run in the ProcessPoolExecutor
-    async with asyncio.TaskGroup() as task_group:
-        tasks = [
-            task_group.create_task(
-                async_render_files(output_dir, line_length, apply_formatting, file_names, contract_info)
-            )
-            for contract_info in contract_infos.values()
-        ]
-        # Wait for all tasks to complete
-        await asyncio.gather(*tasks)
+    return file_names
