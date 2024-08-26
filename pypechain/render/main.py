@@ -19,6 +19,7 @@ def render_files(
     output_dir: str,
     line_length: int = 120,
     apply_formatting: bool = True,
+    parallel: bool = False,
     chunksize: int | None = None,
 ) -> list[str]:
     """Processes a single JSON file to generate class and types files.
@@ -34,6 +35,8 @@ def render_files(
         Black's line-length config option.
     apply_formatting : bool, optional
         If True, autoflake, isort and black will be applied to the file in that order, by default True.
+    parallel : bool, optional
+        If True, multiple processes will be used to process the ABIs in parallel.
     chunksize: int, optional
         If set, abis are processed in approximately groups of chunksize.
         Use 1 for one process per ABI.
@@ -44,6 +47,7 @@ def render_files(
     list[str]
         A list of filenames for the generated files.
     """
+    # pylint: disable=too-many-arguments
 
     contract_infos = get_contract_infos(abi_infos)
 
@@ -56,16 +60,30 @@ def render_files(
     #  The Contract file defines the Contract class and functions.
     #  The Types file has the structs and events defined in the solidity contract.
 
-    # make a parallel pool; defaults to the number of available CPUs
-    with Pool() as pool:
-        # chunksize should be increased with the number of iterables
-        chunksize = len(contract_infos) // 10
-        for file_name_sublist in pool.imap(
-            partial(get_file_names, output_dir=output_dir, line_length=line_length, apply_formatting=apply_formatting),
-            list(contract_infos.values()),
-            chunksize=chunksize,
-        ):
-            file_names.extend(file_name_sublist)
+    if parallel:
+        # make a parallel pool; defaults to the number of available CPUs
+        with Pool() as pool:
+            # chunksize should be increased with the number of iterables
+            chunksize = len(contract_infos) // 10
+            for file_name_sublist in pool.imap(
+                partial(
+                    get_file_names, output_dir=output_dir, line_length=line_length, apply_formatting=apply_formatting
+                ),
+                list(contract_infos.values()),
+                chunksize=chunksize,
+            ):
+                file_names.extend(file_name_sublist)
+    # Sequential mode
+    else:
+        for contract_info in contract_infos.values():
+            file_names.extend(
+                get_file_names(
+                    contract_info=contract_info,
+                    output_dir=output_dir,
+                    line_length=line_length,
+                    apply_formatting=apply_formatting,
+                )
+            )
 
     return file_names
 
