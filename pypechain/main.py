@@ -23,12 +23,16 @@ def main(argv: Sequence[str] | None = None) -> None:
     argv : Sequence[str] | None, optional
         Command line arguments
     """
-    abi_file_path, output_dir, line_length, apply_formatting = parse_arguments(argv)
-    pypechain(abi_file_path, output_dir, line_length, apply_formatting)
+    abi_file_path, output_dir, line_length, apply_formatting, parallel = parse_arguments(argv)
+    pypechain(abi_file_path, output_dir, line_length, apply_formatting, parallel)
 
 
 def pypechain(
-    abi_file_path: str, output_dir: str = "pypechain_types", line_length: int = 120, apply_formatting: bool = True
+    abi_file_path: str,
+    output_dir: str = "pypechain_types",
+    line_length: int = 120,
+    apply_formatting: bool = True,
+    parallel: bool = False,
 ):
     """Generate class files for a given abi.
 
@@ -68,7 +72,7 @@ def pypechain(
     setup_directory(output_dir)
 
     # Now process all gathered files
-    file_names: list[str] = render_files(abi_infos, output_dir, line_length, apply_formatting)
+    file_names: list[str] = render_files(abi_infos, output_dir, line_length, apply_formatting, parallel=parallel)
 
     # Render the __init__.py file
     render_init_file(output_dir, file_names, line_length)
@@ -103,6 +107,7 @@ class Args(NamedTuple):
     output_dir: str
     line_length: int
     apply_formatting: bool
+    parallel: bool = False
 
 
 def namespace_to_args(namespace: argparse.Namespace) -> Args:
@@ -112,6 +117,7 @@ def namespace_to_args(namespace: argparse.Namespace) -> Args:
         output_dir=namespace.output_dir,
         line_length=namespace.line_length,
         apply_formatting=namespace.apply_formatting,
+        parallel=namespace.parallel,
     )
 
 
@@ -136,6 +142,12 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
     )
     parser.add_argument(
         "--apply-formatting",
+        type=bool,
+        default=True,
+        help="Optional argument to apply formatting to each file. Defaults to True.",
+    )
+    parser.add_argument(
+        "--parallel",
         type=bool,
         default=True,
         help="Optional argument to apply formatting to each file. Defaults to True.",
