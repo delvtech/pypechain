@@ -150,7 +150,6 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
     )
     parser.add_argument(
         "--parallel",
-        type=bool,
         default=False,
         action="store_true",
         help="Flag controlling building in parallel. Defaults to False",
