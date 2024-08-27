@@ -152,7 +152,16 @@ def _add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | lis
     for event in events:
         info = contract_infos.get(contract_name)
         if info:
-            info.events[event.name] = event
+            # Sanity check, if this event already exists, we compare the two and ensure
+            # it's the same event
+            if event.name in info.events:
+                assert info.events[event.name] == event, (
+                    "Existing event for contract "
+                    f"{contract_name}:{event.name} {info.events[event.name]} "
+                    f"does not match defined event {event}."
+                )
+            else:
+                info.events[event.name] = event
         else:
             contract_infos[contract_name] = ContractInfo(
                 abi=[],
@@ -184,7 +193,16 @@ def _add_errors(contract_infos: dict[str, ContractInfo], errors: ErrorInfo | lis
     for error in errors:
         info = contract_infos.get(contract_name)
         if info:
-            info.errors[error.name] = error
+            # Sanity check, if this event already exists, we compare the two and ensure
+            # it's the same event
+            if error.name in info.errors:
+                assert info.errors[error.name] == error, (
+                    "Existing error for contract "
+                    f"{contract_name}:{error.name} {info.errors[error.name]} "
+                    f"does not match defined event {error}."
+                )
+            else:
+                info.errors[error.name] = error
         else:
             contract_infos[contract_name] = ContractInfo(
                 abi=[],
