@@ -204,8 +204,8 @@ def _add_errors(contract_infos: dict[str, ContractInfo], errors: ErrorInfo | lis
     for error in errors:
         info = contract_infos.get(contract_name)
         if info:
-            # Sanity check, if this event already exists, we compare the two and ensure
-            # it's the same event
+            # Sanity check, if this error already exists, we compare the two and ensure
+            # it's the same error
             if error.name in info.errors:
                 assert info.errors[error.name] == error, (
                     "Existing error for contract "
