@@ -69,14 +69,22 @@ def get_contract_infos(abi_infos: list[AbiInfo]) -> dict[str, ContractInfo]:
         structs = get_structs_for_abi(abi_info.abi)
         events = get_events_for_abi(abi_info.abi)
         errors = get_errors_for_abi(abi_info.abi)
-        contract_infos[abi_info.contract_name] = ContractInfo(
-            abi=abi_info.abi,
-            bytecode=abi_info.bytecode,
-            contract_name=abi_info.contract_name,
-            structs={},
-            events={},
-            errors={},
-        )
+        if abi_info.contract_name not in contract_infos:
+            contract_infos[abi_info.contract_name] = ContractInfo(
+                abi=abi_info.abi,
+                bytecode=abi_info.bytecode,
+                contract_name=abi_info.contract_name,
+                structs={},
+                events={},
+                errors={},
+            )
+        # If the contract was already referenced, we want to keep all the structs, events, and errors,
+        # but we want to add in the now known abi and bytecode.
+        else:
+            contract_infos[abi_info.contract_name].abi = abi_info.abi
+            contract_infos[abi_info.contract_name].bytecode = abi_info.bytecode
+            # Sanity check, contract_name should be identical
+            assert contract_infos[abi_info.contract_name].contract_name == abi_info.contract_name
         _add_structs(contract_infos, structs)
         _add_events(contract_infos, events, abi_info.contract_name)
         _add_errors(contract_infos, errors, abi_info.contract_name)
@@ -103,7 +111,16 @@ def _add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | 
     for struct in structs:
         info = contract_infos.get(struct.contract_name)
         if info:
-            info.structs[struct.name] = struct
+            # Sanity check, if this structure already exists, we compare the two and ensure
+            # it's the same structure
+            if struct.name in info.structs:
+                assert info.structs[struct.name] == struct, (
+                    "Existing structure for contract "
+                    f"{struct.contract_name}:{struct.name} {info.structs[struct.name]} "
+                    f"does not match defined structure {struct}."
+                )
+            else:
+                info.structs[struct.name] = struct
         else:
             contract_infos[struct.contract_name] = ContractInfo(
                 abi=[],
