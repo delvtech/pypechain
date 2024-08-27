@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass
 from typing import Any, NamedTuple
@@ -30,6 +31,9 @@ from pypechain.utilities.abi import (
 from pypechain.utilities.format import capitalize_first_letter_only
 from pypechain.utilities.templates import get_jinja_env
 from pypechain.utilities.types import EventData, FunctionData, SignatureData
+
+# Flag for warning this case only once
+OVERLOAD_EVENT_WARN = False
 
 
 @dataclass
@@ -155,13 +159,23 @@ def _add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | lis
             # Sanity check, if this event already exists, we compare the two and ensure
             # it's the same event
             if event.name in info.events:
-                assert info.events[event.name] == event, (
-                    "Existing event for contract "
-                    f"{contract_name}:{event.name} {info.events[event.name]} "
-                    f"does not match defined event {event}."
-                )
-            else:
-                info.events[event.name] = event
+                # TODO events can be overloaded with different types.
+                # We don't support this yet.
+                # https://github.com/delvtech/pypechain/issues/124
+
+                # We use the global flag to only warn once
+                global OVERLOAD_EVENT_WARN  # pylint: disable=global-statement
+                if not OVERLOAD_EVENT_WARN and info.events[event.name] != event:
+                    log_str = (
+                        "Detected the use of the same event with different signatures. "
+                        "Pypechain does not yet support overloaded events. "
+                        "Will only use the last definition."
+                    )
+                    logging.warning(log_str)
+                    # Dont warn again.
+                    OVERLOAD_EVENT_WARN = True
+
+            info.events[event.name] = event
         else:
             contract_infos[contract_name] = ContractInfo(
                 abi=[],
