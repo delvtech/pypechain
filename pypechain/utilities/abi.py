@@ -669,6 +669,8 @@ def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
 
         if is_hardhat_json(json_file):
             abi = get_abi_from_json(json_file)
+            if len(abi) == 0:
+                raise ValueError("Hardhat ABI field is empty.")
             bytecode = get_bytecode_from_json(json_file)
             # hardhat jsons have the contract name as a field.
             contract_name = json_file.get("contractName")
@@ -676,6 +678,8 @@ def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
 
         if is_foundry_json(json_file):
             abi = get_abi_from_json(json_file)
+            if len(abi) == 0:
+                raise ValueError("Foundry ABI field is empty.")
             bytecode = get_bytecode_from_json(json_file)
             # foundry saves contracts to self-named files.
             contract_name = file_path.name.removesuffix(".json")

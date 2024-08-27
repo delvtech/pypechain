@@ -8,10 +8,7 @@ from pypechain.foundry.types import FoundryJson
 def is_foundry_json(val: object) -> TypeGuard[FoundryJson]:
     """Determines whether a json object is a FoundryJson."""
     required_keys = {"abi", "bytecode", "deployedBytecode", "methodIdentifiers", "rawMetadata", "metadata", "id"}
-    if isinstance(val, dict) and required_keys.issubset(val.keys()):
-        # Only support files with abis
-        return len(val["abi"]) > 0
-    return False
+    return isinstance(val, dict) and required_keys.issubset(val.keys())
 
 
 def get_bytecode_from_foundry_json(json_abi: FoundryJson) -> str:
