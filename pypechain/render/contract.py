@@ -156,13 +156,10 @@ def _add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | lis
     for event in events:
         info = contract_infos.get(contract_name)
         if info:
-            # Sanity check, if this event already exists, we compare the two and ensure
-            # it's the same event
+            # TODO events can be overloaded with different types.
+            # We don't support this yet.
+            # https://github.com/delvtech/pypechain/issues/124
             if event.name in info.events:
-                # TODO events can be overloaded with different types.
-                # We don't support this yet.
-                # https://github.com/delvtech/pypechain/issues/124
-
                 # We use the global flag to only warn once
                 global OVERLOAD_EVENT_WARN  # pylint: disable=global-statement
                 if not OVERLOAD_EVENT_WARN and info.events[event.name] != event:
