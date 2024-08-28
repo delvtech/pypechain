@@ -37,7 +37,7 @@ def local_account(w3) -> LocalAccount:
 
 
 @pytest.mark.usefixtures("process_contracts")
-class TestContractLinking:
+class TestDeployLinking:
     """Tests deployment methods for contracts with no constructor"""
 
     def test_deployment_requires_contract_linking(self, w3: Web3, local_account: LocalAccount):

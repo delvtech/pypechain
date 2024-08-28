@@ -4,6 +4,13 @@ import logging
 from typing import TypedDict
 
 
+class LinkReferences(TypedDict):
+    """Define the structure of the link_references dictionary"""
+
+    contract_name: str
+    placeholder_code: str
+
+
 class SignatureData(TypedDict):
     """Define the structure of the signature_datas dictionary"""
 
