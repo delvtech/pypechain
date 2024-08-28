@@ -1,0 +1,149 @@
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "add",
+      "inputs": [
+        {
+          "name": "a",
+          "type": "int256",
+          "internalType": "int256"
+        },
+        {
+          "name": "b",
+          "type": "int256",
+          "internalType": "int256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "int256",
+          "internalType": "int256"
+        }
+      ],
+      "stateMutability": "pure"
+    }
+  ],
+  "bytecode": {
+    "object": "0x608060405234801561001057600080fd5b5061014b806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063a5f3c23b14610030575b600080fd5b61004361003e3660046100da565b610055565b60405190815260200160405180910390f35b60405163a5f3c23b60e01b8152600481018390526024810182905260009073__$81c732ea87169659ae18eec7be97daeb59$__9063a5f3c23b90604401602060405180830381865af41580156100af573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906100d391906100fc565b9392505050565b600080604083850312156100ed57600080fd5b50508035926020909101359150565b60006020828403121561010e57600080fd5b505191905056fea26469706673582212203e385201b901c32fa0479ef9dd1325389f0f2975f8a784d655f0e38b1b98e6e064736f6c63430008160033",
+    "sourceMap": "100:160:0:-:0;;;124:21;;;;;;;;;;100:160;;;;;;",
+    "linkReferences": {
+      "pypechain/test/deploy_linking/contracts/MyLibrary.sol": {
+        "MyLibrary": [
+          {
+            "start": 149,
+            "length": 20
+          }
+        ]
+      }
+    }
+  },
+  "deployedBytecode": {
+    "object": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063a5f3c23b14610030575b600080fd5b61004361003e3660046100da565b610055565b60405190815260200160405180910390f35b60405163a5f3c23b60e01b8152600481018390526024810182905260009073__$81c732ea87169659ae18eec7be97daeb59$__9063a5f3c23b90604401602060405180830381865af41580156100af573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906100d391906100fc565b9392505050565b600080604083850312156100ed57600080fd5b50508035926020909101359150565b60006020828403121561010e57600080fd5b505191905056fea26469706673582212203e385201b901c32fa0479ef9dd1325389f0f2975f8a784d655f0e38b1b98e6e064736f6c63430008160033",
+    "sourceMap": "100:160:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;151:106;;;;;;:::i;:::-;;:::i;:::-;;;409:25:2;;;397:2;382:18;151:106:0;;;;;;;;231:19;;-1:-1:-1;;;231:19:0;;;;;623:25:2;;;664:18;;;657:34;;;207:6:0;;231:9;;:13;;596:18:2;;231:19:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;224:26;151:106;-1:-1:-1;;;151:106:0:o;14:246:2:-;80:6;88;141:2;129:9;120:7;116:23;112:32;109:52;;;157:1;154;147:12;109:52;-1:-1:-1;;180:23:2;;;250:2;235:18;;;222:32;;-1:-1:-1;14:246:2:o;702:183::-;771:6;824:2;812:9;803:7;799:23;795:32;792:52;;;840:1;837;830:12;792:52;-1:-1:-1;863:16:2;;702:183;-1:-1:-1;702:183:2:o",
+    "linkReferences": {
+      "pypechain/test/deploy_linking/contracts/MyLibrary.sol": {
+        "MyLibrary": [
+          {
+            "start": 117,
+            "length": 20
+          }
+        ]
+      }
+    }
+  },
+  "methodIdentifiers": {
+    "add(int256,int256)": "a5f3c23b"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"int256\",\"name\":\"a\",\"type\":\"int256\"},{\"internalType\":\"int256\",\"name\":\"b\",\"type\":\"int256\"}],\"name\":\"add\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/deploy_linking/contracts/Contract.sol\":\"Contract\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/deploy_linking/contracts/Contract.sol\":{\"keccak256\":\"0x9d393eb21f3d561611a3a241c936365440892c6647df762f1c79844933affb76\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://289ff943cfbc35ff3ad8f53a4f1167f506b07dbf5e4299a54d7e6af475dbac21\",\"dweb:/ipfs/QmNZYyFux6aPQrGAbVWY8Hxv5hBcNM1Pw419y1nk4s1WJq\"]},\"pypechain/test/deploy_linking/contracts/MyLibrary.sol\":{\"keccak256\":\"0xe593c008763077149438d86bda63b88b4ddfe985f02901a39a34d3a2800f3644\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://dba5635b184528ac30eadc0be78ea69e8d6240055fcf471fc33ea9076f6821fb\",\"dweb:/ipfs/QmNuFXV9fHkQmZf1T3pGAJZYjt1LJWJwQYzckvbxCBt1DN\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.22+commit.4fc1097e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "a",
+              "type": "int256"
+            },
+            {
+              "internalType": "int256",
+              "name": "b",
+              "type": "int256"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "add",
+          "outputs": [
+            {
+              "internalType": "int256",
+              "name": "",
+              "type": "int256"
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "pypechain/test/deploy_linking/contracts/Contract.sol": "Contract"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "pypechain/test/deploy_linking/contracts/Contract.sol": {
+        "keccak256": "0x9d393eb21f3d561611a3a241c936365440892c6647df762f1c79844933affb76",
+        "urls": [
+          "bzz-raw://289ff943cfbc35ff3ad8f53a4f1167f506b07dbf5e4299a54d7e6af475dbac21",
+          "dweb:/ipfs/QmNZYyFux6aPQrGAbVWY8Hxv5hBcNM1Pw419y1nk4s1WJq"
+        ],
+        "license": "MIT"
+      },
+      "pypechain/test/deploy_linking/contracts/MyLibrary.sol": {
+        "keccak256": "0xe593c008763077149438d86bda63b88b4ddfe985f02901a39a34d3a2800f3644",
+        "urls": [
+          "bzz-raw://dba5635b184528ac30eadc0be78ea69e8d6240055fcf471fc33ea9076f6821fb",
+          "dweb:/ipfs/QmNuFXV9fHkQmZf1T3pGAJZYjt1LJWJwQYzckvbxCBt1DN"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 0
+}
