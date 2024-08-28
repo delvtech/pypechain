@@ -5,12 +5,7 @@ from typing import TypeVar
 
 from hexbytes import HexBytes
 
-from pypechain.templates.utilities import (
-    dataclass_to_tuple,
-    rename_returned_types,
-    try_bytecode_hexbytes,
-    tuple_to_dataclass,
-)
+from pypechain.templates.utilities import dataclass_to_tuple, rename_returned_types, tuple_to_dataclass
 
 T = TypeVar("T")
 
@@ -125,17 +120,3 @@ class TestDataclassToTuple:
         assert result == "not a dataclass"
 
     # Add any additional test cases here
-
-
-class TestTryHexbytes:
-    def test_correct_hexbytes_return(self):
-        """Test that try hexbytes converts to HexBytes if possible."""
-        str_bytes = "1234"
-        expected = HexBytes(str_bytes)
-        out = try_bytecode_hexbytes(expected)
-        assert expected == out
-
-    def test_incorrect_hexbytes_return(self):
-        str_bytes = "asdf"
-        out = try_bytecode_hexbytes(str_bytes)
-        assert out is None
