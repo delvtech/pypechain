@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass
 from typing import Any, NamedTuple
@@ -30,6 +31,9 @@ from pypechain.utilities.abi import (
 from pypechain.utilities.format import capitalize_first_letter_only
 from pypechain.utilities.templates import get_jinja_env
 from pypechain.utilities.types import EventData, FunctionData, SignatureData
+
+# Flag for warning this case only once
+OVERLOAD_EVENT_WARN = False
 
 
 @dataclass
@@ -69,14 +73,22 @@ def get_contract_infos(abi_infos: list[AbiInfo]) -> dict[str, ContractInfo]:
         structs = get_structs_for_abi(abi_info.abi)
         events = get_events_for_abi(abi_info.abi)
         errors = get_errors_for_abi(abi_info.abi)
-        contract_infos[abi_info.contract_name] = ContractInfo(
-            abi=abi_info.abi,
-            bytecode=abi_info.bytecode,
-            contract_name=abi_info.contract_name,
-            structs={},
-            events={},
-            errors={},
-        )
+        if abi_info.contract_name not in contract_infos:
+            contract_infos[abi_info.contract_name] = ContractInfo(
+                abi=abi_info.abi,
+                bytecode=abi_info.bytecode,
+                contract_name=abi_info.contract_name,
+                structs={},
+                events={},
+                errors={},
+            )
+        # If the contract was already referenced, we want to keep all the structs, events, and errors,
+        # but we want to add in the now known abi and bytecode.
+        else:
+            contract_infos[abi_info.contract_name].abi = abi_info.abi
+            contract_infos[abi_info.contract_name].bytecode = abi_info.bytecode
+            # Sanity check, contract_name should be identical
+            assert contract_infos[abi_info.contract_name].contract_name == abi_info.contract_name
         _add_structs(contract_infos, structs)
         _add_events(contract_infos, events, abi_info.contract_name)
         _add_errors(contract_infos, errors, abi_info.contract_name)
@@ -103,7 +115,16 @@ def _add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | 
     for struct in structs:
         info = contract_infos.get(struct.contract_name)
         if info:
-            info.structs[struct.name] = struct
+            # Sanity check, if this structure already exists, we compare the two and ensure
+            # it's the same structure
+            if struct.name in info.structs:
+                assert info.structs[struct.name] == struct, (
+                    "Existing structure for contract "
+                    f"{struct.contract_name}:{struct.name} {info.structs[struct.name]} "
+                    f"does not match defined structure {struct}."
+                )
+            else:
+                info.structs[struct.name] = struct
         else:
             contract_infos[struct.contract_name] = ContractInfo(
                 abi=[],
@@ -135,6 +156,22 @@ def _add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | lis
     for event in events:
         info = contract_infos.get(contract_name)
         if info:
+            # TODO events can be overloaded with different types.
+            # We don't support this yet.
+            # https://github.com/delvtech/pypechain/issues/124
+            if event.name in info.events:
+                # We use the global flag to only warn once
+                global OVERLOAD_EVENT_WARN  # pylint: disable=global-statement
+                if not OVERLOAD_EVENT_WARN and info.events[event.name] != event:
+                    log_str = (
+                        "Detected the use of the same event with different signatures. "
+                        "Pypechain does not yet support overloaded events. "
+                        "Will only use the last definition."
+                    )
+                    logging.warning(log_str)
+                    # Dont warn again.
+                    OVERLOAD_EVENT_WARN = True
+
             info.events[event.name] = event
         else:
             contract_infos[contract_name] = ContractInfo(
@@ -167,7 +204,16 @@ def _add_errors(contract_infos: dict[str, ContractInfo], errors: ErrorInfo | lis
     for error in errors:
         info = contract_infos.get(contract_name)
         if info:
-            info.errors[error.name] = error
+            # Sanity check, if this error already exists, we compare the two and ensure
+            # it's the same error
+            if error.name in info.errors:
+                assert info.errors[error.name] == error, (
+                    "Existing error for contract "
+                    f"{contract_name}:{error.name} {info.errors[error.name]} "
+                    f"does not match defined event {error}."
+                )
+            else:
+                info.errors[error.name] = error
         else:
             contract_infos[contract_name] = ContractInfo(
                 abi=[],
