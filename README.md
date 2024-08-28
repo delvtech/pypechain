@@ -309,3 +309,4 @@ using [Foundry](https://book.getfoundry.sh/getting-started/installation), as wel
 pypechain on the output abis.
 
 TODO add in instructions for snapshotting.
+TODO also add in tests compiled via solc. See `conftest.py` for more information.

@@ -153,7 +153,7 @@ def initialize_web3_with_http_provider(
     return web3
 
 
-def format_json_dir(json_dir):
+def _format_json_dir(json_dir):
     for root, dirs, files in os.walk(json_dir):
         # Format any outer json files
         for file in files:
@@ -166,7 +166,7 @@ def format_json_dir(json_dir):
                     json.dump(data, file, ensure_ascii=False, indent=2)
 
         for d in dirs:
-            format_json_dir(d)
+            _format_json_dir(d)
 
 
 @pytest.fixture(scope="class")
@@ -192,7 +192,6 @@ def process_contracts(request):
     subprocess.run(command, shell=True, check=True)
 
     # TODO also test when building with solc
-
     # # Process each .sol file in the contracts directory and its subdirectories
     # for root, _, files in os.walk(contracts_dir):
     #     for file in files:
@@ -208,7 +207,7 @@ def process_contracts(request):
     #             subprocess.run(command, shell=True, check=True)
 
     # Format the output json files
-    format_json_dir(abis_dir)
+    _format_json_dir(abis_dir)
 
     # Run the pypechain module after processing all contracts
     pypechain(f"{test_dir}/abis", f"{test_dir}/types")
