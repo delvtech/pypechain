@@ -159,28 +159,3 @@ def get_abi_input_types(abi: ABIFunction) -> list[str]:
     if "inputs" not in abi and (abi.get("type") == "fallback" or abi.get("type") == "receive"):
         return []
     return [collapse_if_tuple(cast(dict[str, Any], arg)) for arg in abi.get("inputs", [])]
-
-
-def try_bytecode_hexbytes(in_bytecode: Any, contract_name: str | None = None) -> HexBytes | None:
-    """Attempts to convert bytecode input to HexBytes. Returns None if it fails.
-
-    Parameters
-    ----------
-    in_bytecode : Any
-        The bytecode to attempt to convert to HexBytes
-    contract_name : str | None, optional
-        The name of the contract being deployed. Used for better warning printing.
-
-    Returns
-    -------
-    HexBytes | None
-        The HexBytes if it succeeds, otherwise None
-    """
-    try:
-        return HexBytes(in_bytecode)
-    except Exception as e:  # pylint: disable=broad-except
-        if contract_name is None:
-            print(f"Warning: failed to convert bytecode to HexBytes: {e}")
-        else:
-            print(f"Warning: failed to convert bytecode for {contract_name} to HexBytes: {e}")
-        return None

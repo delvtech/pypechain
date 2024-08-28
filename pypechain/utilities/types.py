@@ -21,6 +21,15 @@ class SignatureData(TypedDict):
     output_types: list[str]
 
 
+class LinkReferencesData(TypedDict):
+    """Define the structure of the link_references_data dictionary"""
+
+    contract_name_keys: list[str]
+    contract_name_key_and_types: list[str]
+    contract_types: list[str]
+    contract_name_key_to_placeholder_lookup: list[str]
+
+
 class FunctionData(TypedDict):
     """Define the structure of the function_data dictionary"""
 

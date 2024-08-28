@@ -30,13 +30,14 @@ from typing import Any, Type, cast
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
+from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 
-from .utilities import dataclass_to_tuple, rename_returned_types, try_bytecode_hexbytes
+from .utilities import dataclass_to_tuple, rename_returned_types
 
 structs = {}
 
@@ -106,17 +107,18 @@ mylibrary_abi: ABI = cast(
         }
     ],
 )
-# pylint: disable=line-too-long
-mylibrary_bytecode = HexStr(
-    "0x60f6610039600b82828239805160001a60731461002c57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe730000000000000000000000000000000000000000301460806040526004361060335760003560e01c8063a5f3c23b146038575b600080fd5b60476043366004606a565b6059565b60405190815260200160405180910390f35b600060638284608b565b9392505050565b60008060408385031215607c57600080fd5b50508035926020909101359150565b808201828112600083128015821682158216171560b857634e487b7160e01b600052601160045260246000fd5b50509291505056fea264697066735822122005a4ed8899d0d0b37e2e1469b5fa9e841609aeb03530a92c9c31c0993e8364b864736f6c63430008160033"
-)
 
 
 class MyLibraryContract(Contract):
     """A web3.py Contract class for the MyLibrary contract."""
 
     abi: ABI = mylibrary_abi
-    bytecode: bytes | None = try_bytecode_hexbytes(mylibrary_bytecode, "mylibrary")
+    # We change `bytecode` as needed for linking, but keep
+    # `_raw_bytecode` unchanged as an original copy.
+    # pylint: disable=line-too-long
+    _raw_bytecode: HexStr | None = HexStr(
+        "0x60f6610039600b82828239805160001a60731461002c57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe730000000000000000000000000000000000000000301460806040526004361060335760003560e01c8063a5f3c23b146038575b600080fd5b60476043366004606a565b6059565b60405190815260200160405180910390f35b600060638284608b565b9392505050565b60008060408385031215607c57600080fd5b50508035926020909101359150565b808201828112600083128015821682158216171560b857634e487b7160e01b600052601160045260246000fd5b50509291505056fea264697066735822122005a4ed8899d0d0b37e2e1469b5fa9e841609aeb03530a92c9c31c0993e8364b864736f6c63430008160033"
+    )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
         try:
@@ -147,6 +149,11 @@ class MyLibraryContract(Contract):
             A deployed instance of the contract.
 
         """
+        cls.bytecode = cls._raw_bytecode
+        if cls.bytecode is not None:
+
+            # bytecode needs to be in hex for web3
+            cls.bytecode = HexBytes(cls.bytecode)
 
         return super().constructor()
 

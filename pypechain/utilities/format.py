@@ -1,6 +1,7 @@
 """Formatting utilities."""
 
 import keyword
+import re
 import subprocess
 from pathlib import Path
 
@@ -108,6 +109,32 @@ def capitalize_first_letter_only(string: str) -> str:
     if len(string) < 2:
         return string
     return string[0].upper() + string[1:]
+
+
+def camel_to_snake(camel_string: str) -> str:
+    """Convert camel case string to snake case string.
+
+    NOTE this takes care of strings containing multiple capital letters in a row.
+    Examples:
+    camel_to_snake("myLibrary")
+    >>> "my_library"
+    camel_to_snake("MyLibrary")
+    >>> "my_library"
+    camel_to_snake("LPMath")
+    >>> "lp_math"
+
+
+    Arguments
+    ---------
+    camel_string: str
+        The string to convert.
+
+    Returns
+    -------
+    str
+        The snake case string.
+    """
+    return re.sub("((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))", r"_\1", camel_string).lower()
 
 
 def format_file(file_path: Path, line_length: int = 120, quiet=True) -> None:

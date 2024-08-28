@@ -26,17 +26,19 @@ https://github.com/delvtech/pypechain"""
 
 from __future__ import annotations
 
-from typing import Any, Type, cast
+from typing import Any, NamedTuple, Type, cast
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
+from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
 from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 
-from .utilities import dataclass_to_tuple, rename_returned_types, try_bytecode_hexbytes
+from .MyLibraryContract import MyLibraryContract
+from .utilities import dataclass_to_tuple, rename_returned_types
 
 structs = {}
 
@@ -107,17 +109,18 @@ contract_abi: ABI = cast(
         },
     ],
 )
-# pylint: disable=line-too-long
-contract_bytecode = HexStr(
-    "0x608060405234801561001057600080fd5b5061014b806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063a5f3c23b14610030575b600080fd5b61004361003e3660046100da565b610055565b60405190815260200160405180910390f35b60405163a5f3c23b60e01b8152600481018390526024810182905260009073__$81c732ea87169659ae18eec7be97daeb59$__9063a5f3c23b90604401602060405180830381865af41580156100af573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906100d391906100fc565b9392505050565b600080604083850312156100ed57600080fd5b50508035926020909101359150565b60006020828403121561010e57600080fd5b505191905056fea26469706673582212203e385201b901c32fa0479ef9dd1325389f0f2975f8a784d655f0e38b1b98e6e064736f6c63430008160033"
-)
 
 
 class ContractContract(Contract):
     """A web3.py Contract class for the Contract contract."""
 
     abi: ABI = contract_abi
-    bytecode: bytes | None = try_bytecode_hexbytes(contract_bytecode, "contract")
+    # We change `bytecode` as needed for linking, but keep
+    # `_raw_bytecode` unchanged as an original copy.
+    # pylint: disable=line-too-long
+    _raw_bytecode: HexStr | None = HexStr(
+        "0x608060405234801561001057600080fd5b5061014b806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063a5f3c23b14610030575b600080fd5b61004361003e3660046100da565b610055565b60405190815260200160405180910390f35b60405163a5f3c23b60e01b8152600481018390526024810182905260009073__$81c732ea87169659ae18eec7be97daeb59$__9063a5f3c23b90604401602060405180830381865af41580156100af573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906100d391906100fc565b9392505050565b600080604083850312156100ed57600080fd5b50508035926020909101359150565b60006020828403121561010e57600080fd5b505191905056fea26469706673582212203e385201b901c32fa0479ef9dd1325389f0f2975f8a784d655f0e38b1b98e6e064736f6c63430008160033"
+    )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
         try:
@@ -130,8 +133,15 @@ class ContractContract(Contract):
 
     functions: ContractContractFunctions
 
+    class LinkReferences(NamedTuple):
+        """Link references required when deploying."""
+
+        my_library: MyLibraryContract
+
+    link_references_placeholder_lookup: dict[str, str] = {"my_library": "__$81c732ea87169659ae18eec7be97daeb59$__"}
+
     @classmethod
-    def constructor(cls) -> ContractConstructor:  # type: ignore
+    def constructor(cls, link_references: LinkReferences) -> ContractConstructor:  # type: ignore
         """Creates a transaction with the contract's constructor function.
 
         Parameters
@@ -148,11 +158,20 @@ class ContractContract(Contract):
             A deployed instance of the contract.
 
         """
+        cls.bytecode = cls._raw_bytecode
+        if cls.bytecode is not None:
+
+            cls.bytecode = cls.bytecode.replace(
+                cls.link_references_placeholder_lookup["my_library"], link_references.my_library.address[2:].lower()
+            )
+
+            # bytecode needs to be in hex for web3
+            cls.bytecode = HexBytes(cls.bytecode)
 
         return super().constructor()
 
     @classmethod
-    def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress) -> Self:
+    def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress, link_references: LinkReferences) -> Self:
         """Deploys and instance of the contract.
 
         Parameters
@@ -168,7 +187,7 @@ class ContractContract(Contract):
             A deployed instance of the contract.
         """
         deployer = cls.factory(w3=w3)
-        constructor_fn = deployer.constructor()
+        constructor_fn = deployer.constructor(link_references)
 
         # if an address is supplied, try to use a web3 default account
         if isinstance(account, str):

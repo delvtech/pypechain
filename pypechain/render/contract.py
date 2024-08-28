@@ -28,9 +28,9 @@ from pypechain.utilities.abi import (
     is_abi_event,
     is_abi_function,
 )
-from pypechain.utilities.format import capitalize_first_letter_only
+from pypechain.utilities.format import camel_to_snake, capitalize_first_letter_only
 from pypechain.utilities.templates import get_jinja_env
-from pypechain.utilities.types import EventData, FunctionData, SignatureData
+from pypechain.utilities.types import EventData, FunctionData, LinkReferences, LinkReferencesData, SignatureData
 
 # Flag for warning this case only once
 OVERLOAD_EVENT_WARN = False
@@ -44,6 +44,7 @@ class ContractInfo:
     abi: ABI
     bytecode: str
     contract_name: str
+    link_references: list[LinkReferences]
     structs: dict[str, StructInfo]
     events: dict[str, EventInfo]
     errors: dict[str, ErrorInfo]
@@ -78,6 +79,7 @@ def get_contract_infos(abi_infos: list[AbiInfo]) -> dict[str, ContractInfo]:
                 abi=abi_info.abi,
                 bytecode=abi_info.bytecode,
                 contract_name=abi_info.contract_name,
+                link_references=abi_info.bytecode_link_references,
                 structs={},
                 events={},
                 errors={},
@@ -87,6 +89,7 @@ def get_contract_infos(abi_infos: list[AbiInfo]) -> dict[str, ContractInfo]:
         else:
             contract_infos[abi_info.contract_name].abi = abi_info.abi
             contract_infos[abi_info.contract_name].bytecode = abi_info.bytecode
+            contract_infos[abi_info.contract_name].link_references = abi_info.bytecode_link_references
             # Sanity check, contract_name should be identical
             assert contract_infos[abi_info.contract_name].contract_name == abi_info.contract_name
         _add_structs(contract_infos, structs)
@@ -130,6 +133,7 @@ def _add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | 
                 abi=[],
                 bytecode="",
                 contract_name=struct.contract_name,
+                link_references=[],
                 structs={struct.name: struct},
                 events={},
                 errors={},
@@ -178,6 +182,7 @@ def _add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | lis
                 abi=[],
                 bytecode="",
                 contract_name=contract_name,
+                link_references=[],
                 structs={},
                 events={event.name: event},
                 errors={},
@@ -219,6 +224,7 @@ def _add_errors(contract_infos: dict[str, ContractInfo], errors: ErrorInfo | lis
                 abi=[],
                 bytecode="",
                 contract_name=contract_name,
+                link_references=[],
                 structs={},
                 events={},
                 errors={error.name: error},
@@ -261,6 +267,8 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
 
     structs_used = get_structs_for_abi(contract_info.abi)
 
+    link_reference_data = get_link_reference_data(contract_info.link_references)
+
     functions_block = templates.functions_template.render(
         abi=contract_info.abi,
         contract_name=contract_info.contract_name,
@@ -282,16 +290,16 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
 
     abi_block = templates.abi_template.render(
         abi=contract_info.abi,
-        bytecode=contract_info.bytecode,
         contract_name=contract_info.contract_name,
     )
 
     contract_block = templates.contract_template.render(
-        has_bytecode=has_bytecode,
+        bytecode=contract_info.bytecode,
         has_events=has_events,
         has_errors=has_errors,
         contract_name=contract_info.contract_name,
         constructor=constructor_data,
+        link_references=link_reference_data,
         functions=function_datas,
     )
 
@@ -315,6 +323,7 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
         errors_block=errors_block,
         abi_block=abi_block,
         contract_block=contract_block,
+        link_references=link_reference_data,
         # TODO: use this data to add a typed constructor
         # constructor_data=constructor_data,
     )
@@ -410,7 +419,7 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
 
     Returns
     -------
-    tuple[dict[str, FunctionData], SignatureData | None]
+    GetFunctionDataReturnValue
         A tuple where the first value is a dictionary of FunctionData's keyed by function name and
         the second value is SignatureData for the constructor.
     """
@@ -488,3 +497,42 @@ def get_event_datas(abi: ABI) -> dict[str, EventData]:
             }
             event_datas[name] = event_data
     return event_datas
+
+
+def get_link_reference_data(link_references: list[LinkReferences]) -> LinkReferencesData:
+    """Gets the link reference data required for the contract template.
+
+    Parameters
+    ----------
+    link_references: list[LinkReferences]
+        A list of LinkReferences to be used in the contract template
+
+    Returns
+    -------
+    LinkReferencesData
+        A data structure containing the link reference data
+    """
+    contract_name_keys = []
+    contract_name_key_and_types = []
+    contract_types = []
+    contract_name_key_to_placeholder_lookup = []
+    for link in link_references:
+        contract_name = link["contract_name"]
+        # The contract_name_key is reformatting the contract name to be snake case
+        contract_name_key = camel_to_snake(contract_name)
+        placeholder_code = link["placeholder_code"]
+
+        # Add quotes to keys
+        contract_name_keys.append(contract_name_key)
+        contract_name_key_and_types.append(f"{contract_name_key}: {contract_name}Contract")
+        contract_types.append(f"{contract_name}Contract")
+        contract_name_key_to_placeholder_lookup.append(f'"{contract_name_key}": "{placeholder_code}"')
+
+    return LinkReferencesData(
+        contract_name_keys=contract_name_keys,
+        contract_name_key_and_types=contract_name_key_and_types,
+        contract_types=contract_types,
+        contract_name_key_to_placeholder_lookup=contract_name_key_to_placeholder_lookup,
+    )
+
+    pass

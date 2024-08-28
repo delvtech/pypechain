@@ -43,7 +43,8 @@ class TestDeployLinking:
     def test_deployment_requires_contract_linking(self, w3: Web3, local_account: LocalAccount):
         """Tests contract deployment fails if contract linking is not provided."""
         # This should fail: Contract requires linked references
-        contract = ContractContract.deploy(w3, local_account)
+        with pytest.raises(TypeError):
+            _ = ContractContract.deploy(w3, local_account)  # type: ignore # pylint: disable=no-value-for-parameter
 
     def test_deployment_with_contract_linking(self, w3: Web3, local_account: LocalAccount):
         """Tests deployment using contract linking in deploy."""
@@ -55,7 +56,7 @@ class TestDeployLinking:
         contract = ContractContract.deploy(
             w3,
             local_account,
-            link_references=ContractContract.LinkedReferences(
+            link_references=ContractContract.LinkReferences(
                 my_library=library_contract,
             ),
         )
