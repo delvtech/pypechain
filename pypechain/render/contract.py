@@ -534,5 +534,3 @@ def get_link_reference_data(link_references: list[LinkReferences]) -> LinkRefere
         contract_types=contract_types,
         contract_name_key_to_placeholder_lookup=contract_name_key_to_placeholder_lookup,
     )
-
-    pass

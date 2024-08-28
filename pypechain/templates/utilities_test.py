@@ -3,8 +3,6 @@
 from dataclasses import dataclass
 from typing import TypeVar
 
-from hexbytes import HexBytes
-
 from pypechain.templates.utilities import dataclass_to_tuple, rename_returned_types, tuple_to_dataclass
 
 T = TypeVar("T")

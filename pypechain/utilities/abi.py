@@ -980,6 +980,6 @@ def _get_abis_from_solc_json(json_abi: SolcJson) -> list[AbiInfo]:
         abi = value.get("abi")
         binary = value.get("bin")
         bytecode = f"0x{binary}"
-        infos.append(AbiInfo(abi=abi, contract_name=contract_name, bytecode=bytecode))
+        infos.append(AbiInfo(abi=abi, contract_name=contract_name, bytecode=bytecode, bytecode_link_references=[]))
 
     return infos
