@@ -302,3 +302,10 @@ class ReturnTypesContract(Contract):
         contract.functions = ReturnTypesContractFunctions(returntypes_abi, w3, None)
         return contract
 ```
+
+## Tests
+We use pytest in our pypechain tests. Pytest, when ran locally, automatically compiles Solidity 
+using [Foundry](https://book.getfoundry.sh/getting-started/installation), as well as running 
+pypechain on the output abis.
+
+TODO add in instructions for snapshotting.
