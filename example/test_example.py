@@ -60,7 +60,7 @@ class TestExampleContract:
         """Tests single value"""
 
         deployed_contract = ExampleContract.deploy(
-            w3=w3, account=w3.eth.accounts[0], constructorArgs=ExampleContract.ConstructorArgs("example")
+            w3=w3, account=w3.eth.accounts[0], constructor_args=ExampleContract.ConstructorArgs("example")
         )
 
         flip = 1
@@ -73,7 +73,7 @@ class TestExampleContract:
         """Tests single value"""
 
         deployed_contract = ExampleContract.deploy(
-            w3=w3, account=w3.eth.accounts[0], constructorArgs=ExampleContract.ConstructorArgs("example")
+            w3=w3, account=w3.eth.accounts[0], constructor_args=ExampleContract.ConstructorArgs("example")
         )
 
         input_struct: SimpleStruct = SimpleStruct(1, "string")
@@ -86,7 +86,7 @@ class TestExampleContract:
         """Tests single value"""
 
         deployed_contract = ExampleContract.deploy(
-            w3=w3, account=w3.eth.accounts[0], constructorArgs=ExampleContract.ConstructorArgs("example")
+            w3=w3, account=w3.eth.accounts[0], constructor_args=ExampleContract.ConstructorArgs("example")
         )
 
         input_struct = NestedStruct(1, "string", InnerStruct(True))

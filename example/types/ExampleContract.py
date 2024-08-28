@@ -1058,7 +1058,7 @@ class ExampleContract(Contract):
         return super().constructor(dataclass_to_tuple(name))
 
     @classmethod
-    def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress, constructorArgs: ConstructorArgs) -> Self:
+    def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress, constructor_args: ConstructorArgs) -> Self:
         """Deploys and instance of the contract.
 
         Parameters
@@ -1074,7 +1074,7 @@ class ExampleContract(Contract):
             A deployed instance of the contract.
         """
         deployer = cls.factory(w3=w3)
-        constructor_fn = deployer.constructor(*constructorArgs)
+        constructor_fn = deployer.constructor(*constructor_args)
 
         # if an address is supplied, try to use a web3 default account
         if isinstance(account, str):

@@ -63,7 +63,7 @@ class {{contract_name}}Contract(Contract):
 
 
     @classmethod
-    def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress{{', constructorArgs: ConstructorArgs' if has_constructor_args else ''}}) -> Self:
+    def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress{{', constructor_args: ConstructorArgs' if has_constructor_args else ''}}) -> Self:
         """Deploys and instance of the contract.
 
         Parameters
@@ -79,7 +79,7 @@ class {{contract_name}}Contract(Contract):
             A deployed instance of the contract.
         """
         deployer = cls.factory(w3=w3)
-        constructor_fn = deployer.constructor({{ '*constructorArgs' if has_constructor_args else ''}})
+        constructor_fn = deployer.constructor({{ '*constructor_args' if has_constructor_args else ''}})
 
         # if an address is supplied, try to use a web3 default account
         if isinstance(account, str):
