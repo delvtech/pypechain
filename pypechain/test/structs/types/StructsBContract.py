@@ -30,6 +30,7 @@ from typing import Any, Type, cast
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
+from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
@@ -37,7 +38,7 @@ from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 
 from .IStructsTypes import SimpleStruct
-from .utilities import dataclass_to_tuple, rename_returned_types, try_bytecode_hexbytes
+from .utilities import dataclass_to_tuple, rename_returned_types
 
 structs = {
     "SimpleStruct": SimpleStruct,
@@ -160,17 +161,18 @@ structsb_abi: ABI = cast(
         },
     ],
 )
-# pylint: disable=line-too-long
-structsb_bytecode = HexStr(
-    "0x608060405234801561001057600080fd5b50610166806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063389e91021461003b5780636456bc791461005f575b600080fd5b61004c6100493660046100b5565b90565b6040519081526020015b60405180910390f35b604080518082018252600081526060602091820152815180830183526001815282518084018452601081526f596f7520617265206e756d626572203160801b8184015291810191909152905161005691906100ce565b6000602082840312156100c757600080fd5b5035919050565b60006020808352835160208401526020840151604080850152805180606086015260005b8181101561010e578281018401518682016080015283016100f2565b506000608082870101526080601f19601f83011686010193505050509291505056fea2646970667358221220ad88b65d8d939f33e6b0c7fb080cedf1622d450c939626245098b934f5f8dcc164736f6c63430008160033"
-)
 
 
 class StructsBContract(Contract):
     """A web3.py Contract class for the StructsB contract."""
 
     abi: ABI = structsb_abi
-    bytecode: bytes | None = try_bytecode_hexbytes(structsb_bytecode, "structsb")
+    # We change `bytecode` as needed for linking, but keep
+    # `_raw_bytecode` unchanged as an original copy.
+    # pylint: disable=line-too-long
+    _raw_bytecode: HexStr | None = HexStr(
+        "0x608060405234801561001057600080fd5b50610166806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063389e91021461003b5780636456bc791461005f575b600080fd5b61004c6100493660046100b5565b90565b6040519081526020015b60405180910390f35b604080518082018252600081526060602091820152815180830183526001815282518084018452601081526f596f7520617265206e756d626572203160801b8184015291810191909152905161005691906100ce565b6000602082840312156100c757600080fd5b5035919050565b60006020808352835160208401526020840151604080850152805180606086015260005b8181101561010e578281018401518682016080015283016100f2565b506000608082870101526080601f19601f83011686010193505050509291505056fea2646970667358221220ad88b65d8d939f33e6b0c7fb080cedf1622d450c939626245098b934f5f8dcc164736f6c63430008160033"
+    )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
         try:
@@ -201,6 +203,11 @@ class StructsBContract(Contract):
             A deployed instance of the contract.
 
         """
+        cls.bytecode = cls._raw_bytecode
+        if cls.bytecode is not None:
+
+            # bytecode needs to be in hex for web3
+            cls.bytecode = HexBytes(cls.bytecode)
 
         return super().constructor()
 
