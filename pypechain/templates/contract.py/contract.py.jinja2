@@ -54,7 +54,7 @@ class {{contract_name}}Contract(Contract):
 
     link_references_placeholder_lookup: dict[str, str] = {
 {% for lookup in link_references.contract_name_key_to_placeholder_lookup %}
-        {{lookup}}
+        {{lookup}},
 {% endfor %}
     }
 {% endif %}
