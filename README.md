@@ -308,5 +308,7 @@ We use pytest in our pypechain tests. Pytest, when ran locally, automatically co
 using [Foundry](https://book.getfoundry.sh/getting-started/installation), as well as running 
 pypechain on the output abis.
 
+If you run into issues during pytest, run `sh scripts/regenerate_types.sh`.
+
 TODO add in instructions for snapshotting.
 TODO also add in tests compiled via solc. See `conftest.py` for more information.
