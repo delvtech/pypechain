@@ -9,7 +9,6 @@ from dataclasses import fields, is_dataclass
 from typing import Any, Iterable, Tuple, TypeVar, cast, get_args
 
 from eth_utils.abi import collapse_if_tuple
-from hexbytes import HexBytes
 from web3.types import ABIFunction
 
 T = TypeVar("T")
