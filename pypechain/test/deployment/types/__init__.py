@@ -7,8 +7,8 @@ https://github.com/delvtech/pypechain"""
 # remove this pylint diable when we upgreade to 3.11
 # pylint: disable=import-self
 
+from .ConstructorNoArgsContract import *
 from .ConstructorWithStructArgsContract import *
 from .ConstructorWithStructArgsTypes import *
 from .NoConstructorContract import *
-from .ConstructorNoArgsContract import *
 from .ConstructorWithArgsContract import *

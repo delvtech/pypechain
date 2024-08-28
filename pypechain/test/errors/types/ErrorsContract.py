@@ -335,43 +335,43 @@ class ErrorsContractErrors:
 errors_abi: ABI = cast(
     ABI,
     [
-        {"inputs": [], "name": "One", "type": "error"},
+        {"type": "function", "name": "revertWithErrorOne", "inputs": [], "outputs": [], "stateMutability": "pure"},
+        {"type": "function", "name": "revertWithErrorThree", "inputs": [], "outputs": [], "stateMutability": "pure"},
+        {"type": "function", "name": "revertWithErrorTwo", "inputs": [], "outputs": [], "stateMutability": "pure"},
+        {"type": "error", "name": "One", "inputs": []},
         {
+            "type": "error",
+            "name": "Three",
             "inputs": [
-                {"internalType": "bool", "name": "trueOrFalse", "type": "bool"},
+                {"name": "trueOrFalse", "type": "bool", "internalType": "bool"},
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "bart", "type": "uint256"},
-                        {"internalType": "uint256", "name": "lisa", "type": "uint256"},
-                        {"internalType": "uint256", "name": "homer", "type": "uint256"},
-                        {"internalType": "uint256", "name": "marge", "type": "uint256"},
-                    ],
-                    "internalType": "struct Errors.Ages",
                     "name": "theSimpsons",
                     "type": "tuple",
+                    "internalType": "struct Errors.Ages",
+                    "components": [
+                        {"name": "bart", "type": "uint256", "internalType": "uint256"},
+                        {"name": "lisa", "type": "uint256", "internalType": "uint256"},
+                        {"name": "homer", "type": "uint256", "internalType": "uint256"},
+                        {"name": "marge", "type": "uint256", "internalType": "uint256"},
+                    ],
                 },
-                {"internalType": "enum Errors.Simpsons", "name": "who", "type": "uint8"},
+                {"name": "who", "type": "uint8", "internalType": "enum Errors.Simpsons"},
             ],
-            "name": "Three",
-            "type": "error",
         },
         {
-            "inputs": [
-                {"internalType": "string", "name": "message", "type": "string"},
-                {"internalType": "address", "name": "who", "type": "address"},
-                {"internalType": "uint8", "name": "value", "type": "uint8"},
-            ],
-            "name": "Two",
             "type": "error",
+            "name": "Two",
+            "inputs": [
+                {"name": "message", "type": "string", "internalType": "string"},
+                {"name": "who", "type": "address", "internalType": "address"},
+                {"name": "value", "type": "uint8", "internalType": "uint8"},
+            ],
         },
-        {"inputs": [], "name": "revertWithErrorOne", "outputs": [], "stateMutability": "pure", "type": "function"},
-        {"inputs": [], "name": "revertWithErrorThree", "outputs": [], "stateMutability": "pure", "type": "function"},
-        {"inputs": [], "name": "revertWithErrorTwo", "outputs": [], "stateMutability": "pure", "type": "function"},
     ],
 )
 # pylint: disable=line-too-long
 errors_bytecode = HexStr(
-    "0x608060405234801561000f575f80fd5b506104328061001d5f395ff3fe608060405234801561000f575f80fd5b506004361061003f575f3560e01c806349cbdbf514610043578063a13e7b711461004d578063dc785aeb14610057575b5f80fd5b61004b610061565b005b6100556100ca565b005b61005f6100fc565b005b5f6040518060800160405280600181526020016002815260200160038152602001600481525090505f815f6040517f09b8b9890000000000000000000000000000000000000000000000000000000081526004016100c193929190610234565b60405180910390fd5b6040517fbe0c211000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b5f60ff6040517f01e3e2f60000000000000000000000000000000000000000000000000000000081526004016101339291906103c2565b60405180910390fd5b5f8115159050919050565b6101508161013c565b82525050565b5f819050919050565b61016881610156565b82525050565b608082015f8201516101825f85018261015f565b506020820151610195602085018261015f565b5060408201516101a8604085018261015f565b5060608201516101bb606085018261015f565b50505050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52602160045260245ffd5b600481106101ff576101fe6101c1565b5b50565b5f81905061020f826101ee565b919050565b5f61021e82610202565b9050919050565b61022e81610214565b82525050565b5f60c0820190506102475f830186610147565b610254602083018561016e565b61026160a0830184610225565b949350505050565b5f82825260208201905092915050565b7f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f205f8201527f426172742e20492077696c6c206e6f7420706c6564676520616c6c656769616e60208201527f636520746f20426172742e20492077696c6c206e6f7420706c6564676520616c60408201527f6c656769616e636520746f20426172742e000000000000000000000000000000606082015250565b5f61031f607183610269565b915061032a82610279565b608082019050919050565b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f61035e82610335565b9050919050565b61036e81610354565b82525050565b5f819050919050565b5f60ff82169050919050565b5f819050919050565b5f6103ac6103a76103a284610374565b610389565b61037d565b9050919050565b6103bc81610392565b82525050565b5f6060820190508181035f8301526103d981610313565b90506103e86020830185610365565b6103f560408301846103b3565b939250505056fea2646970667358221220da2f21d893273a47e6194375eb60793b77ecfed19f9f9ac9024565a552b1c5bf64736f6c63430008170033"
+    "0x608060405234801561001057600080fd5b50610216806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806349cbdbf514610046578063a13e7b7114610050578063dc785aeb14610058575b600080fd5b61004e610060565b005b61004e6100ac565b61004e6100c5565b60408051608081018252600181526002602082015260038183015260046060820181905291516309b8b98960e01b815290916100a3916000918491839101610182565b60405180910390fd5b604051630be0c21160e41b815260040160405180910390fd5b60405162f1f17b60e11b815260606004820152607160648201527f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f2060848201527f426172742e20492077696c6c206e6f7420706c6564676520616c6c656769616e60a48201527f636520746f20426172742e20492077696c6c206e6f7420706c6564676520616c60c4820152703632b3b4b0b731b2903a37902130b93a1760791b60e48201526000602482015260ff6044820152610104016100a3565b600060c082019050841515825283516020830152602084015160408301526040840151606083015260608401516080830152600483106101d257634e487b7160e01b600052602160045260246000fd5b8260a083015294935050505056fea2646970667358221220296623bdd3b38f3766971b76f4c245b8f5a41426d160fc493f0bfc894995e25e64736f6c63430008160033"
 )
 
 

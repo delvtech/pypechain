@@ -344,50 +344,50 @@ events_abi: ABI = cast(
     ABI,
     [
         {
-            "anonymous": False,
-            "inputs": [
-                {"indexed": True, "internalType": "address", "name": "who", "type": "address"},
-                {"indexed": False, "internalType": "uint256", "name": "value", "type": "uint256"},
-            ],
-            "name": "EventA",
-            "type": "event",
-        },
-        {"anonymous": False, "inputs": [], "name": "EventB", "type": "event"},
-        {
-            "inputs": [
-                {"internalType": "uint256", "name": "x", "type": "uint256"},
-                {"internalType": "uint256", "name": "y", "type": "uint256"},
-            ],
+            "type": "function",
             "name": "emitNoEvents",
-            "outputs": [{"internalType": "uint256", "name": "added", "type": "uint256"}],
+            "inputs": [
+                {"name": "x", "type": "uint256", "internalType": "uint256"},
+                {"name": "y", "type": "uint256", "internalType": "uint256"},
+            ],
+            "outputs": [{"name": "added", "type": "uint256", "internalType": "uint256"}],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [
-                {"internalType": "uint256", "name": "value", "type": "uint256"},
-                {"internalType": "address", "name": "who", "type": "address"},
-            ],
+            "type": "function",
             "name": "emitOneEvent",
+            "inputs": [
+                {"name": "value", "type": "uint256", "internalType": "uint256"},
+                {"name": "who", "type": "address", "internalType": "address"},
+            ],
             "outputs": [],
             "stateMutability": "nonpayable",
-            "type": "function",
         },
         {
-            "inputs": [
-                {"internalType": "uint256", "name": "value", "type": "uint256"},
-                {"internalType": "address", "name": "who", "type": "address"},
-            ],
+            "type": "function",
             "name": "emitTwoEvents",
+            "inputs": [
+                {"name": "value", "type": "uint256", "internalType": "uint256"},
+                {"name": "who", "type": "address", "internalType": "address"},
+            ],
             "outputs": [],
             "stateMutability": "nonpayable",
-            "type": "function",
         },
+        {
+            "type": "event",
+            "name": "EventA",
+            "inputs": [
+                {"name": "who", "type": "address", "indexed": True, "internalType": "address"},
+                {"name": "value", "type": "uint256", "indexed": False, "internalType": "uint256"},
+            ],
+            "anonymous": False,
+        },
+        {"type": "event", "name": "EventB", "inputs": [], "anonymous": False},
     ],
 )
 # pylint: disable=line-too-long
 events_bytecode = HexStr(
-    "0x608060405234801561000f575f80fd5b5061035b8061001d5f395ff3fe608060405234801561000f575f80fd5b506004361061003f575f3560e01c8063307324fd14610043578063b517b0d81461005f578063c79ba18b1461007b575b5f80fd5b61005d60048036038101906100589190610221565b6100ab565b005b61007960048036038101906100749190610221565b6100fd565b005b6100956004803603810190610090919061025f565b61017b565b6040516100a291906102ac565b60405180910390f35b8073ffffffffffffffffffffffffffffffffffffffff167f9796ec8d639e8a8082085b1912b0c782def636bb8e5bde841892baff0f925433836040516100f191906102ac565b60405180910390a25050565b8073ffffffffffffffffffffffffffffffffffffffff167f9796ec8d639e8a8082085b1912b0c782def636bb8e5bde841892baff0f9254338360405161014391906102ac565b60405180910390a27f72c635b4ade595df848fdc26063ba6c3f276cd7121dadbacb0064e1e3a61961460405160405180910390a15050565b5f818361018891906102f2565b905092915050565b5f80fd5b5f819050919050565b6101a681610194565b81146101b0575f80fd5b50565b5f813590506101c18161019d565b92915050565b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f6101f0826101c7565b9050919050565b610200816101e6565b811461020a575f80fd5b50565b5f8135905061021b816101f7565b92915050565b5f806040838503121561023757610236610190565b5b5f610244858286016101b3565b92505060206102558582860161020d565b9150509250929050565b5f806040838503121561027557610274610190565b5b5f610282858286016101b3565b9250506020610293858286016101b3565b9150509250929050565b6102a681610194565b82525050565b5f6020820190506102bf5f83018461029d565b92915050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52601160045260245ffd5b5f6102fc82610194565b915061030783610194565b925082820190508082111561031f5761031e6102c5565b5b9291505056fea2646970667358221220b383644ab18d548fe7afe30be32478f77f7e0db56970ec5447b2d4a0a79fa05d64736f6c63430008170033"
+    "0x608060405234801561001057600080fd5b50610214806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063307324fd14610046578063b517b0d81461005b578063c79ba18b1461006e575b600080fd5b61005961005436600461015f565b610093565b005b61005961006936600461015f565b6100da565b61008161007c36600461019b565b61014a565b60405190815260200160405180910390f35b806001600160a01b03167f9796ec8d639e8a8082085b1912b0c782def636bb8e5bde841892baff0f925433836040516100ce91815260200190565b60405180910390a25050565b806001600160a01b03167f9796ec8d639e8a8082085b1912b0c782def636bb8e5bde841892baff0f9254338360405161011591815260200190565b60405180910390a26040517f72c635b4ade595df848fdc26063ba6c3f276cd7121dadbacb0064e1e3a61961490600090a15050565b600061015682846101bd565b90505b92915050565b6000806040838503121561017257600080fd5b8235915060208301356001600160a01b038116811461019057600080fd5b809150509250929050565b600080604083850312156101ae57600080fd5b50508035926020909101359150565b8082018082111561015957634e487b7160e01b600052601160045260246000fdfea2646970667358221220f4fc44b59a7d7fc9f695214dbacf39738bcfb36286157033034ece49be233d7564736f6c63430008160033"
 )
 
 

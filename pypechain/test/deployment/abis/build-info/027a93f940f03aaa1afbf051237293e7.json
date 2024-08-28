@@ -1,0 +1,10 @@
+{
+  "id": "027a93f940f03aaa1afbf051237293e7",
+  "source_id_to_path": {
+    "0": "pypechain/test/deployment/contracts/ConstructorNoArgs.sol",
+    "1": "pypechain/test/deployment/contracts/ConstructorWithArgs.sol",
+    "2": "pypechain/test/deployment/contracts/ConstructorWithStructArgs.sol",
+    "3": "pypechain/test/deployment/contracts/NoConstructor.sol"
+  },
+  "language": "Solidity"
+}

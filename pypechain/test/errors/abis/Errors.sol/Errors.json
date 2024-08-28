@@ -1,0 +1,244 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "revertWithErrorOne",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "revertWithErrorThree",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "revertWithErrorTwo",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "error",
+      "name": "One",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "Three",
+      "inputs": [
+        {
+          "name": "trueOrFalse",
+          "type": "bool",
+          "internalType": "bool"
+        },
+        {
+          "name": "theSimpsons",
+          "type": "tuple",
+          "internalType": "struct Errors.Ages",
+          "components": [
+            {
+              "name": "bart",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "lisa",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "homer",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "marge",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        },
+        {
+          "name": "who",
+          "type": "uint8",
+          "internalType": "enum Errors.Simpsons"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "Two",
+      "inputs": [
+        {
+          "name": "message",
+          "type": "string",
+          "internalType": "string"
+        },
+        {
+          "name": "who",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint8",
+          "internalType": "uint8"
+        }
+      ]
+    }
+  ],
+  "bytecode": {
+    "object": "0x608060405234801561001057600080fd5b50610216806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806349cbdbf514610046578063a13e7b7114610050578063dc785aeb14610058575b600080fd5b61004e610060565b005b61004e6100ac565b61004e6100c5565b60408051608081018252600181526002602082015260038183015260046060820181905291516309b8b98960e01b815290916100a3916000918491839101610182565b60405180910390fd5b604051630be0c21160e41b815260040160405180910390fd5b60405162f1f17b60e11b815260606004820152607160648201527f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f2060848201527f426172742e20492077696c6c206e6f7420706c6564676520616c6c656769616e60a48201527f636520746f20426172742e20492077696c6c206e6f7420706c6564676520616c60c4820152703632b3b4b0b731b2903a37902130b93a1760791b60e48201526000602482015260ff6044820152610104016100a3565b600060c082019050841515825283516020830152602084015160408301526040840151606083015260608401516080830152600483106101d257634e487b7160e01b600052602160045260246000fd5b8260a083015294935050505056fea2646970667358221220296623bdd3b38f3766971b76f4c245b8f5a41426d160fc493f0bfc894995e25e64736f6c63430008160033",
+    "sourceMap": "57:843:0:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c806349cbdbf514610046578063a13e7b7114610050578063dc785aeb14610058575b600080fd5b61004e610060565b005b61004e6100ac565b61004e6100c5565b60408051608081018252600181526002602082015260038183015260046060820181905291516309b8b98960e01b815290916100a3916000918491839101610182565b60405180910390fd5b604051630be0c21160e41b815260040160405180910390fd5b60405162f1f17b60e11b815260606004820152607160648201527f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f2060848201527f426172742e20492077696c6c206e6f7420706c6564676520616c6c656769616e60a48201527f636520746f20426172742e20492077696c6c206e6f7420706c6564676520616c60c4820152703632b3b4b0b731b2903a37902130b93a1760791b60e48201526000602482015260ff6044820152610104016100a3565b600060c082019050841515825283516020830152602084015160408301526040840151606083015260608401516080830152600483106101d257634e487b7160e01b600052602160045260246000fd5b8260a083015294935050505056fea2646970667358221220296623bdd3b38f3766971b76f4c245b8f5a41426d160fc493f0bfc894995e25e64736f6c63430008160033",
+    "sourceMap": "57:843:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;752:146;;;:::i;:::-;;420:71;;;:::i;497:249::-;;;:::i;752:146::-;825:16;;;;;;;;830:1;825:16;;833:1;825:16;;;;836:1;825:16;;;;839:1;825:16;;;;;;858:33;;-1:-1:-1;;;858:33:0;;825:16;;858:33;;806:16;;825;;806;;858:33;;:::i;:::-;;;;;;;;420:71;479:5;;-1:-1:-1;;;479:5:0;;;;;;;;;;;497:249;556:183;;-1:-1:-1;;;556:183:0;;1003:2:1;556:183:0;;;985:21:1;1042:3;1022:18;;;1015:31;1083:34;1062:19;;;1055:63;1155:34;1134:19;;;1127:63;1227:34;1206:19;;;1199:63;-1:-1:-1;;;1278:19:1;;;1271:48;710:1:0;1371:20:1;;;1364:62;726:3:0;1442:18:1;;;1435:45;1336:19;;556:183:0;737:749:1;14:718;205:4;247:3;236:9;232:19;224:27;;292:6;285:14;278:22;267:9;260:41;343:6;337:13;332:2;321:9;317:18;310:41;405:2;397:6;393:15;387:22;382:2;371:9;367:18;360:50;464:2;456:6;452:15;446:22;441:2;430:9;426:18;419:50;524:2;516:6;512:15;506:22;500:3;489:9;485:19;478:51;559:1;551:6;548:13;538:144;;604:10;599:3;595:20;592:1;585:31;639:4;636:1;629:15;667:4;664:1;657:15;538:144;719:6;713:3;702:9;698:19;691:35;14:718;;;;;;:::o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "revertWithErrorOne()": "a13e7b71",
+    "revertWithErrorThree()": "49cbdbf5",
+    "revertWithErrorTwo()": "dc785aeb"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"One\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"trueOrFalse\",\"type\":\"bool\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"bart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lisa\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"homer\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"marge\",\"type\":\"uint256\"}],\"internalType\":\"struct Errors.Ages\",\"name\":\"theSimpsons\",\"type\":\"tuple\"},{\"internalType\":\"enum Errors.Simpsons\",\"name\":\"who\",\"type\":\"uint8\"}],\"name\":\"Three\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"message\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"value\",\"type\":\"uint8\"}],\"name\":\"Two\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"revertWithErrorOne\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"revertWithErrorThree\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"revertWithErrorTwo\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/errors/contracts/Errors.sol\":\"Errors\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/errors/contracts/Errors.sol\":{\"keccak256\":\"0x030ad57df8b425fc245b26c9bd4952510bb616e861bb199357d2a2881e52844d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://69c5d52eea1d469d61ae3e30c829780b11f4339c96dc8fe210bd01e4d4cfed7c\",\"dweb:/ipfs/QmdMs9nZGHh9vw1o5xAsJrhoUCqcPzBDyYarAHmsoA6mNk\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.22+commit.4fc1097e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "One"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "trueOrFalse",
+              "type": "bool"
+            },
+            {
+              "internalType": "struct Errors.Ages",
+              "name": "theSimpsons",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "bart",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lisa",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "homer",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "marge",
+                  "type": "uint256"
+                }
+              ]
+            },
+            {
+              "internalType": "enum Errors.Simpsons",
+              "name": "who",
+              "type": "uint8"
+            }
+          ],
+          "type": "error",
+          "name": "Three"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "message",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            },
+            {
+              "internalType": "uint8",
+              "name": "value",
+              "type": "uint8"
+            }
+          ],
+          "type": "error",
+          "name": "Two"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "revertWithErrorOne"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "revertWithErrorThree"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "revertWithErrorTwo"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "pypechain/test/errors/contracts/Errors.sol": "Errors"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "pypechain/test/errors/contracts/Errors.sol": {
+        "keccak256": "0x030ad57df8b425fc245b26c9bd4952510bb616e861bb199357d2a2881e52844d",
+        "urls": [
+          "bzz-raw://69c5d52eea1d469d61ae3e30c829780b11f4339c96dc8fe210bd01e4d4cfed7c",
+          "dweb:/ipfs/QmdMs9nZGHh9vw1o5xAsJrhoUCqcPzBDyYarAHmsoA6mNk"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 0
+}

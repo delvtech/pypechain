@@ -140,59 +140,59 @@ structsc_abi: ABI = cast(
     ABI,
     [
         {
-            "inputs": [],
+            "type": "function",
             "name": "allStructsInternal",
+            "inputs": [],
             "outputs": [
                 {
+                    "name": "",
+                    "type": "tuple",
+                    "internalType": "struct StructsC.OuterStruct",
                     "components": [
                         {
-                            "components": [
-                                {
-                                    "components": [{"internalType": "uint256", "name": "innerVal", "type": "uint256"}],
-                                    "internalType": "struct StructsC.InnyStruct",
-                                    "name": "inner",
-                                    "type": "tuple",
-                                }
-                            ],
-                            "internalType": "struct StructsC.NestedStruct",
                             "name": "nested",
                             "type": "tuple",
+                            "internalType": "struct StructsC.NestedStruct",
+                            "components": [
+                                {
+                                    "name": "inner",
+                                    "type": "tuple",
+                                    "internalType": "struct StructsC.InnyStruct",
+                                    "components": [{"name": "innerVal", "type": "uint256", "internalType": "uint256"}],
+                                }
+                            ],
                         }
                     ],
-                    "internalType": "struct StructsC.OuterStruct",
-                    "name": "",
-                    "type": "tuple",
                 }
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [],
+            "type": "function",
             "name": "innerStructIsExternal",
+            "inputs": [],
             "outputs": [
                 {
-                    "components": [
-                        {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
-                            "internalType": "struct IStructs.InnerStruct",
-                            "name": "inner",
-                            "type": "tuple",
-                        }
-                    ],
-                    "internalType": "struct StructsC.CStruct",
                     "name": "",
                     "type": "tuple",
+                    "internalType": "struct StructsC.CStruct",
+                    "components": [
+                        {
+                            "name": "inner",
+                            "type": "tuple",
+                            "internalType": "struct IStructs.InnerStruct",
+                            "components": [{"name": "boolVal", "type": "bool", "internalType": "bool"}],
+                        }
+                    ],
                 }
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
     ],
 )
 # pylint: disable=line-too-long
 structsc_bytecode = HexStr(
-    "0x608060405234801561000f575f80fd5b506102668061001d5f395ff3fe608060405234801561000f575f80fd5b5060043610610034575f3560e01c80638012d82614610038578063fc0db1de14610056575b5f80fd5b610040610074565b60405161004d9190610198565b60405180910390f35b61005e6100a0565b60405161006b9190610217565b60405180910390f35b61007c6100d9565b604051806020016040528060405180602001604052805f1515815250815250905090565b6100a86100f2565b6040518060200160405280604051806020016040528060405180602001604052806001815250815250815250905090565b60405180602001604052806100ec61010b565b81525090565b604051806020016040528061010561011f565b81525090565b60405180602001604052805f151581525090565b6040518060200160405280610132610138565b81525090565b60405180602001604052805f81525090565b5f8115159050919050565b61015e8161014a565b82525050565b602082015f8201516101785f850182610155565b50505050565b602082015f8201516101925f850182610164565b50505050565b5f6020820190506101ab5f83018461017e565b92915050565b5f819050919050565b6101c3816101b1565b82525050565b602082015f8201516101dd5f8501826101ba565b50505050565b602082015f8201516101f75f8501826101c9565b50505050565b602082015f8201516102115f8501826101e3565b50505050565b5f60208201905061022a5f8301846101fd565b9291505056fea2646970667358221220e217d698fbee3ea477990d0e8d80f2f12de2a00be6853d6609e834810c01f4de64736f6c63430008170033"
+    "0x608060405234801561001057600080fd5b5060f48061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c80638012d826146037578063fc0db1de14606c575b600080fd5b604080518082018252600060208083018281529092528251808401845280830182815290529151918252015b60405180910390f35b608e60408051606081018252600091810191825260208101918252908152609e565b6040519051515181526020016063565b50604080516060810182526001918101918252602081019182529081529056fea2646970667358221220a897fe982f8c33895641b65745ff946b07724c9d9115b63b8c097c9d855b260464736f6c63430008160033"
 )
 
 

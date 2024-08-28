@@ -35,7 +35,7 @@ class TestExampleContract:
         # Get the directory of the current script
         script_dir = os.path.dirname(os.path.abspath(__file__))
         # Construct the path to the file relative to the script directory
-        file_path = Path(os.path.join(script_dir, "abis", "Example.json"))
+        file_path = Path(os.path.join(script_dir, "abis", "Example.sol/Example.json"))
         # Open the json and grab the abi and bytecode
         abi_info = load_abi_infos_from_file(file_path)[0]
 
