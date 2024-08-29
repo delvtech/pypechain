@@ -310,5 +310,9 @@ pypechain on the output abis.
 
 If you run into issues during pytest, run `sh scripts/regenerate_types.sh`.
 
-TODO add in instructions for snapshotting.
+We also use [`pytest-snapshot`](https://pypi.org/project/pytest-snapshot/) for some tests to ensure
+rendered files are as expected. If any changes are made to rendering that results in failures in snapshots, 
+run `pytest --snapshot-update`, ensure the generated files in `snapshots/` are as expected, and commit the new
+snapshots in `snapshots/` as part of the update.
+
 TODO also add in tests compiled via solc. See `conftest.py` for more information.
