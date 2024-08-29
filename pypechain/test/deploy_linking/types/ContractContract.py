@@ -136,9 +136,11 @@ class ContractContract(Contract):
     class LinkReferences(NamedTuple):
         """Link references required when deploying."""
 
-        my_library: MyLibraryContract
+        MyLibrary: MyLibraryContract
 
-    link_references_placeholder_lookup: dict[str, str] = {"my_library": "__$81c732ea87169659ae18eec7be97daeb59$__"}
+    link_references_placeholder_lookup: dict[str, str] = {
+        "MyLibrary": "__$81c732ea87169659ae18eec7be97daeb59$__",
+    }
 
     @classmethod
     def constructor(cls, link_references: LinkReferences) -> ContractConstructor:  # type: ignore
@@ -162,7 +164,7 @@ class ContractContract(Contract):
         if cls.bytecode is not None:
 
             cls.bytecode = cls.bytecode.replace(
-                cls.link_references_placeholder_lookup["my_library"], link_references.my_library.address[2:].lower()
+                cls.link_references_placeholder_lookup["MyLibrary"], link_references.MyLibrary.address[2:].lower()
             )
 
             # bytecode needs to be in hex for web3

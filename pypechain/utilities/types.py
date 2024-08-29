@@ -24,10 +24,10 @@ class SignatureData(TypedDict):
 class LinkReferencesData(TypedDict):
     """Define the structure of the link_references_data dictionary"""
 
-    contract_name_keys: list[str]
-    contract_name_key_and_types: list[str]
+    contract_names: list[str]
+    contract_names_and_types: list[str]
     contract_types: list[str]
-    contract_name_key_to_placeholder_lookup: list[str]
+    contract_names_to_placeholder_lookup: list[str]
 
 
 class FunctionData(TypedDict):

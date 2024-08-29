@@ -28,7 +28,7 @@ from pypechain.utilities.abi import (
     is_abi_event,
     is_abi_function,
 )
-from pypechain.utilities.format import camel_to_snake, capitalize_first_letter_only
+from pypechain.utilities.format import capitalize_first_letter_only
 from pypechain.utilities.templates import get_jinja_env
 from pypechain.utilities.types import EventData, FunctionData, LinkReferences, LinkReferencesData, SignatureData
 
@@ -512,25 +512,23 @@ def get_link_reference_data(link_references: list[LinkReferences]) -> LinkRefere
     LinkReferencesData
         A data structure containing the link reference data
     """
-    contract_name_keys = []
-    contract_name_key_and_types = []
+    contract_names = []
+    contract_names_and_types = []
     contract_types = []
-    contract_name_key_to_placeholder_lookup = []
+    contract_names_to_placeholder_lookup = []
     for link in link_references:
         contract_name = link["contract_name"]
-        # The contract_name_key is reformatting the contract name to be snake case
-        contract_name_key = camel_to_snake(contract_name)
         placeholder_code = link["placeholder_code"]
 
         # Add quotes to keys
-        contract_name_keys.append(contract_name_key)
-        contract_name_key_and_types.append(f"{contract_name_key}: {contract_name}Contract")
+        contract_names.append(contract_name)
+        contract_names_and_types.append(f"{contract_name}: {contract_name}Contract")
         contract_types.append(f"{contract_name}Contract")
-        contract_name_key_to_placeholder_lookup.append(f'"{contract_name_key}": "{placeholder_code}"')
+        contract_names_to_placeholder_lookup.append(f'"{contract_name}": "{placeholder_code}"')
 
     return LinkReferencesData(
-        contract_name_keys=contract_name_keys,
-        contract_name_key_and_types=contract_name_key_and_types,
+        contract_names=contract_names,
+        contract_names_and_types=contract_names_and_types,
         contract_types=contract_types,
-        contract_name_key_to_placeholder_lookup=contract_name_key_to_placeholder_lookup,
+        contract_names_to_placeholder_lookup=contract_names_to_placeholder_lookup,
     )

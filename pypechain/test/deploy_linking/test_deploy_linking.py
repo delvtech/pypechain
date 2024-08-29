@@ -55,7 +55,7 @@ class TestDeployLinking:
             w3,
             local_account,
             link_references=ContractContract.LinkReferences(
-                my_library=library_contract,
+                MyLibrary=library_contract,
             ),
         )
 

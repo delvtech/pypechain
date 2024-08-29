@@ -44,16 +44,16 @@ class {{contract_name}}Contract(Contract):
 {% endfor %}
 {% endif %}
 
-{% set has_link_references = link_references.contract_name_keys|length > 0 %}
+{% set has_link_references = link_references.contract_names|length > 0 %}
 {% if has_link_references %}
     class LinkReferences(NamedTuple):
         """Link references required when deploying."""
-{% for name_and_type in link_references.contract_name_key_and_types %}
+{% for name_and_type in link_references.contract_names_and_types %}
         {{name_and_type}}
 {% endfor %}
 
     link_references_placeholder_lookup: dict[str, str] = {
-{% for lookup in link_references.contract_name_key_to_placeholder_lookup %}
+{% for lookup in link_references.contract_names_to_placeholder_lookup %}
         {{lookup}},
 {% endfor %}
     }
@@ -82,9 +82,9 @@ class {{contract_name}}Contract(Contract):
         cls.bytecode = cls._raw_bytecode
         if cls.bytecode is not None:
 {% if has_link_references %}
-{% for contract_key in link_references.contract_name_keys%}
+{% for contract_name in link_references.contract_names%}
             cls.bytecode = cls.bytecode.replace(
-                cls.link_references_placeholder_lookup["{{contract_key}}"], link_references.{{contract_key}}.address[2:].lower()
+                cls.link_references_placeholder_lookup["{{contract_name}}"], link_references.{{contract_name}}.address[2:].lower()
             )
 {% endfor %}
 {% endif %}
