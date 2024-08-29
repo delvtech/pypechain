@@ -302,3 +302,17 @@ class ReturnTypesContract(Contract):
         contract.functions = ReturnTypesContractFunctions(returntypes_abi, w3, None)
         return contract
 ```
+
+## Tests
+We use pytest in our pypechain tests. Pytest, when ran locally, automatically compiles Solidity 
+using [Foundry](https://book.getfoundry.sh/getting-started/installation), as well as running 
+pypechain on the output abis.
+
+If you run into issues during pytest, run `sh scripts/regenerate_types.sh`.
+
+We also use [`pytest-snapshot`](https://pypi.org/project/pytest-snapshot/) for some tests to ensure
+rendered files are as expected. If any changes are made to rendering that results in failures in snapshots, 
+run `pytest --snapshot-update`, ensure the generated files in `snapshots/` are as expected, and commit the new
+snapshots in `snapshots/` as part of the update.
+
+TODO also add in tests compiled via solc. See `conftest.py` for more information.

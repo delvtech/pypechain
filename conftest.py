@@ -153,6 +153,22 @@ def initialize_web3_with_http_provider(
     return web3
 
 
+def _format_json_dir(json_dir):
+    for root, dirs, files in os.walk(json_dir):
+        # Format any outer json files
+        for file in files:
+            if file.endswith(".json"):
+                json_file = os.path.join(root, file)
+                # Format the JSON file
+                with open(json_file, "r", encoding="utf-8") as file:
+                    data = json.load(file)
+                with open(json_file, "w", encoding="utf-8") as file:
+                    json.dump(data, file, ensure_ascii=False, indent=2)
+
+        for d in dirs:
+            _format_json_dir(d)
+
+
 @pytest.fixture(scope="class")
 def process_contracts(request):
     """Generate ABIs for all contracts and pypechain types from those abis."""
@@ -171,23 +187,27 @@ def process_contracts(request):
         shutil.rmtree(abis_dir)
     os.makedirs(abis_dir, exist_ok=True)
 
-    # Process each .sol file in the contracts directory and its subdirectories
-    for root, _, files in os.walk(contracts_dir):
-        for file in files:
-            if file.endswith(".sol"):
-                contract_file = os.path.join(root, file)
-                contract_name = os.path.basename(contract_file).replace(".sol", "")
-                output_file = os.path.join(abis_dir, f"{contract_name}.json")
+    # Build the abis/ directory with forge
+    command = f"forge build {contracts_dir} -o {abis_dir}"
+    subprocess.run(command, shell=True, check=True)
 
-                # Run the solc command
-                command = f"solc {contract_file} --combined-json abi,bin,metadata > {output_file}"
-                subprocess.run(command, shell=True, check=True)
+    # TODO also test when building with solc
+    # # Process each .sol file in the contracts directory and its subdirectories
+    # for root, _, files in os.walk(contracts_dir):
+    #     for file in files:
+    #         if file.endswith(".sol"):
+    #             contract_file = os.path.join(root, file)
+    #             contract_name = os.path.basename(contract_file).replace(".sol", "")
+    #             # output_file = os.path.join(abis_dir, f"{contract_name}.json")
 
-                # Format the JSON file
-                with open(output_file, "r", encoding="utf-8") as file:
-                    data = json.load(file)
-                with open(output_file, "w", encoding="utf-8") as file:
-                    json.dump(data, file, ensure_ascii=False, indent=2)
+    #             # Run the solc command
+    #             # command = f"solc {contract_file} --combined-json abi,bin,metadata > {output_file}"
+    #             # Run the forge command
+    #             command = f"forge build {contract_file} -o {abis_dir}"
+    #             subprocess.run(command, shell=True, check=True)
+
+    # Format the output json files
+    _format_json_dir(abis_dir)
 
     # Run the pypechain module after processing all contracts
     pypechain(f"{test_dir}/abis", f"{test_dir}/types")

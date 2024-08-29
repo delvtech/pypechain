@@ -46,7 +46,10 @@ from web3._utils.filters import LogFilter
 {% for struct_info in structs_used %}
 from .{{struct_info.contract_name}}Types import {{struct_info.name}}
 {% endfor %}
-from .utilities import dataclass_to_tuple, get_abi_input_types, rename_returned_types, try_bytecode_hexbytes, tuple_to_dataclass
+{% for contract_type in link_references.contract_types %}
+from .{{contract_type}} import {{contract_type}}
+{% endfor %}
+from .utilities import dataclass_to_tuple, get_abi_input_types, rename_returned_types, tuple_to_dataclass
 
 
 structs = {

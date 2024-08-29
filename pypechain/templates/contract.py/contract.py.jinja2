@@ -2,9 +2,13 @@ class {{contract_name}}Contract(Contract):
     """A web3.py Contract class for the {{contract_name}} contract."""
 
     abi: ABI = {{contract_name | lower}}_abi
-    {%- if has_bytecode %}
-    bytecode: bytes | None = try_bytecode_hexbytes({{contract_name | lower}}_bytecode, "{{contract_name | lower}}")
-    {%- endif %}
+    # We change `bytecode` as needed for linking, but keep
+    # `_raw_bytecode` unchanged as an original copy.
+    {% if bytecode %}# pylint: disable=line-too-long
+    _raw_bytecode : HexStr | None = HexStr("{{bytecode}}")
+    {% else %}
+    _raw_bytecode : HexStr | None = None
+    {%- endif -%}
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
         try:
@@ -40,9 +44,26 @@ class {{contract_name}}Contract(Contract):
 {% endfor %}
 {% endif %}
 
+{% set has_link_references = link_references.contract_names|length > 0 %}
+{% if has_link_references %}
+    class LinkReferences(NamedTuple):
+        """Link references required when deploying."""
+{% for name_and_type in link_references.contract_names_and_types %}
+        {{name_and_type}}
+{% endfor %}
+
+    link_references_placeholder_lookup: dict[str, str] = {
+{% for lookup in link_references.contract_names_to_placeholder_lookup %}
+        {{lookup}},
+{% endfor %}
+    }
+{% endif %}
+
+
+
     @classmethod
-    def constructor(cls{{', ' + constructor.input_names_and_types|join(', ') if has_constructor_args else ''}}) -> ContractConstructor: # type: ignore
-      """Creates a transaction with the contract's constructor function.
+    def constructor(cls{{', ' + constructor.input_names_and_types|join(', ') if has_constructor_args else ''}}{{', link_references: LinkReferences' if has_link_references else ''}}) -> ContractConstructor: # type: ignore
+        """Creates a transaction with the contract's constructor function.
 
         Parameters
         ----------
@@ -57,13 +78,25 @@ class {{contract_name}}Contract(Contract):
         Self
             A deployed instance of the contract.
 
-      """
+        """
+        cls.bytecode = cls._raw_bytecode
+        if cls.bytecode is not None:
+{% if has_link_references %}
+{% for contract_name in link_references.contract_names%}
+            cls.bytecode = cls.bytecode.replace(
+                cls.link_references_placeholder_lookup["{{contract_name}}"], link_references.{{contract_name}}.address[2:].lower()
+            )
+{% endfor %}
+{% endif %}
+            # bytecode needs to be in hex for web3
+            cls.bytecode = HexBytes(cls.bytecode)
 
-      return super().constructor({{constructor.input_names | wrap_with_dataclass_to_tuple | join(', ')}})
+
+        return super().constructor({{constructor.input_names | wrap_with_dataclass_to_tuple | join(', ')}})
 
 
     @classmethod
-    def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress{{', constructorArgs: ConstructorArgs' if has_constructor_args else ''}}) -> Self:
+    def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress{{', constructor_args: ConstructorArgs' if has_constructor_args else ''}}{{', link_references: LinkReferences' if has_link_references else ''}}) -> Self:
         """Deploys and instance of the contract.
 
         Parameters
@@ -79,7 +112,7 @@ class {{contract_name}}Contract(Contract):
             A deployed instance of the contract.
         """
         deployer = cls.factory(w3=w3)
-        constructor_fn = deployer.constructor({{ '*constructorArgs' if has_constructor_args else ''}})
+        constructor_fn = deployer.constructor({{ '*constructor_args,' if has_constructor_args else ''}}{{'link_references' if has_link_references else ''}})
 
         # if an address is supplied, try to use a web3 default account
         if isinstance(account, str):

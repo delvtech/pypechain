@@ -157,7 +157,7 @@ class TestConstructorWithArgs:
         """Tests deployment using the constructor method instead of the deploy method."""
         # transact() uses the default signer in the web3 instance
         deployed_contract = ConstructorWithArgsContract.deploy(
-            w3, local_account, constructorArgs=ConstructorWithArgsContract.ConstructorArgs("not default")
+            w3, local_account, constructor_args=ConstructorWithArgsContract.ConstructorArgs("not default")
         )
         name = deployed_contract.functions.name().call()
         assert name == "not default"
@@ -166,7 +166,7 @@ class TestConstructorWithArgs:
         """Tests deployment using the constructor method instead of the deploy method."""
         # Get the deployment transaction
         deployed_contract = ConstructorWithArgsContract.deploy(
-            w3, local_account, constructorArgs=ConstructorWithArgsContract.ConstructorArgs("not default")
+            w3, local_account, constructor_args=ConstructorWithArgsContract.ConstructorArgs("not default")
         )
 
         name = deployed_contract.functions.name().call()
@@ -207,7 +207,7 @@ class TestConstructorWithStructArgs:
         # transact() uses the default signer in the web3 instance
         config = Config(name="name", items=Items(thing="thang", yesOrNo=True))
         args = ConstructorWithStructArgsContract.ConstructorArgs(config)
-        deployed_contract = ConstructorWithStructArgsContract.deploy(w3, local_account, constructorArgs=args)
+        deployed_contract = ConstructorWithStructArgsContract.deploy(w3, local_account, constructor_args=args)
         name = deployed_contract.functions.name().call()
         assert name == "name"
 
@@ -216,7 +216,7 @@ class TestConstructorWithStructArgs:
         # Get the deployment transaction
         config = Config(name="name", items=Items(thing="thang", yesOrNo=True))
         args = ConstructorWithStructArgsContract.ConstructorArgs(config)
-        deployed_contract = ConstructorWithStructArgsContract.deploy(w3, local_account, constructorArgs=args)
+        deployed_contract = ConstructorWithStructArgsContract.deploy(w3, local_account, constructor_args=args)
 
         name = deployed_contract.functions.name().call()
         assert name == "name"

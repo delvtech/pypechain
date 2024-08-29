@@ -10,7 +10,7 @@ class FoundryByteCode(TypedDict):
 
     object: str
     sourceMap: str
-    linkReference: Any
+    linkReferences: dict[str, dict[str, Any]]
 
 
 class FoundryDeployedByteCode(TypedDict):
@@ -18,7 +18,7 @@ class FoundryDeployedByteCode(TypedDict):
 
     object: str
     sourceMap: str
-    linkReference: Any
+    linkReferences: Any
 
 
 class FoundryCompiler(TypedDict):

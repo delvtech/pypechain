@@ -8,8 +8,8 @@ https://github.com/delvtech/pypechain"""
 # pylint: disable=import-self
 
 from .IStructsTypes import *
-from .StructsBContract import *
 from .StructsCContract import *
 from .StructsCTypes import *
+from .StructsBContract import *
 from .StructsAContract import *
 from .StructsATypes import *

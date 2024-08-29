@@ -29,20 +29,20 @@ class InnerStruct:
 
 
 @dataclass
+class SimpleStruct:
+    """SimpleStruct struct."""
+
+    intVal: int
+    strVal: str
+
+
+@dataclass
 class NestedStruct:
     """NestedStruct struct."""
 
     intVal: int
     strVal: str
     innerStruct: InnerStruct
-
-
-@dataclass
-class SimpleStruct:
-    """SimpleStruct struct."""
-
-    intVal: int
-    strVal: str
 
 
 @dataclass

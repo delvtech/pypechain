@@ -30,6 +30,7 @@ from typing import Any, NamedTuple, Type, cast
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
+from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
@@ -37,7 +38,7 @@ from web3.exceptions import FallbackNotFound
 from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 
 from .ReturnTypesTypes import InnerStruct, NestedStruct, SimpleStruct
-from .utilities import dataclass_to_tuple, rename_returned_types, try_bytecode_hexbytes
+from .utilities import dataclass_to_tuple, rename_returned_types
 
 structs = {
     "SimpleStruct": SimpleStruct,
@@ -546,255 +547,251 @@ returntypes_abi: ABI = cast(
     ABI,
     [
         {
-            "inputs": [],
+            "type": "function",
             "name": "mixStructsAndPrimitives",
+            "inputs": [],
             "outputs": [
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                    ],
-                    "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "simpleStruct",
                     "type": "tuple",
+                    "internalType": "struct ReturnTypes.SimpleStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                    ],
                 },
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                        {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
-                            "internalType": "struct ReturnTypes.InnerStruct",
-                            "name": "innerStruct",
-                            "type": "tuple",
-                        },
-                    ],
-                    "internalType": "struct ReturnTypes.NestedStruct",
                     "name": "",
                     "type": "tuple",
+                    "internalType": "struct ReturnTypes.NestedStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                        {
+                            "name": "innerStruct",
+                            "type": "tuple",
+                            "internalType": "struct ReturnTypes.InnerStruct",
+                            "components": [{"name": "boolVal", "type": "bool", "internalType": "bool"}],
+                        },
+                    ],
                 },
-                {"internalType": "uint256", "name": "", "type": "uint256"},
-                {"internalType": "string", "name": "name", "type": "string"},
-                {"internalType": "bool", "name": "YesOrNo", "type": "bool"},
+                {"name": "", "type": "uint256", "internalType": "uint256"},
+                {"name": "name", "type": "string", "internalType": "string"},
+                {"name": "YesOrNo", "type": "bool", "internalType": "bool"},
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [],
+            "type": "function",
             "name": "namedSingleStruct",
+            "inputs": [],
             "outputs": [
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                    ],
-                    "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "struct1",
                     "type": "tuple",
+                    "internalType": "struct ReturnTypes.SimpleStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                    ],
                 }
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [
-                {"internalType": "uint256", "name": "x", "type": "uint256"},
-                {"internalType": "uint256", "name": "y", "type": "uint256"},
-            ],
+            "type": "function",
             "name": "namedSingleValue",
-            "outputs": [{"internalType": "uint256", "name": "added", "type": "uint256"}],
+            "inputs": [
+                {"name": "x", "type": "uint256", "internalType": "uint256"},
+                {"name": "y", "type": "uint256", "internalType": "uint256"},
+            ],
+            "outputs": [{"name": "added", "type": "uint256", "internalType": "uint256"}],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [],
+            "type": "function",
             "name": "namedTwoMixedStructs",
+            "inputs": [],
             "outputs": [
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                    ],
-                    "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "simpleStruct",
                     "type": "tuple",
+                    "internalType": "struct ReturnTypes.SimpleStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                    ],
                 },
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                        {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
-                            "internalType": "struct ReturnTypes.InnerStruct",
-                            "name": "innerStruct",
-                            "type": "tuple",
-                        },
-                    ],
-                    "internalType": "struct ReturnTypes.NestedStruct",
                     "name": "nestedStruct",
                     "type": "tuple",
+                    "internalType": "struct ReturnTypes.NestedStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                        {
+                            "name": "innerStruct",
+                            "type": "tuple",
+                            "internalType": "struct ReturnTypes.InnerStruct",
+                            "components": [{"name": "boolVal", "type": "bool", "internalType": "bool"}],
+                        },
+                    ],
                 },
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [
-                {"internalType": "uint256", "name": "x", "type": "uint256"},
-                {"internalType": "uint256", "name": "y", "type": "uint256"},
-            ],
+            "type": "function",
             "name": "namedTwoValues",
+            "inputs": [
+                {"name": "x", "type": "uint256", "internalType": "uint256"},
+                {"name": "y", "type": "uint256", "internalType": "uint256"},
+            ],
             "outputs": [
-                {"internalType": "uint256", "name": "flip", "type": "uint256"},
-                {"internalType": "uint256", "name": "flop", "type": "uint256"},
+                {"name": "flip", "type": "uint256", "internalType": "uint256"},
+                {"name": "flop", "type": "uint256", "internalType": "uint256"},
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [{"internalType": "uint256", "name": "x", "type": "uint256"}],
+            "type": "function",
             "name": "noNameSingleValue",
-            "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+            "inputs": [{"name": "x", "type": "uint256", "internalType": "uint256"}],
+            "outputs": [{"name": "", "type": "uint256", "internalType": "uint256"}],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [{"internalType": "string", "name": "s", "type": "string"}],
+            "type": "function",
             "name": "noNameTwoValues",
+            "inputs": [{"name": "s", "type": "string", "internalType": "string"}],
             "outputs": [
-                {"internalType": "string", "name": "", "type": "string"},
-                {"internalType": "uint256", "name": "", "type": "uint256"},
+                {"name": "", "type": "string", "internalType": "string"},
+                {"name": "", "type": "uint256", "internalType": "uint256"},
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [],
+            "type": "function",
             "name": "singleNestedStruct",
+            "inputs": [],
             "outputs": [
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                        {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
-                            "internalType": "struct ReturnTypes.InnerStruct",
-                            "name": "innerStruct",
-                            "type": "tuple",
-                        },
-                    ],
-                    "internalType": "struct ReturnTypes.NestedStruct",
                     "name": "",
                     "type": "tuple",
+                    "internalType": "struct ReturnTypes.NestedStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                        {
+                            "name": "innerStruct",
+                            "type": "tuple",
+                            "internalType": "struct ReturnTypes.InnerStruct",
+                            "components": [{"name": "boolVal", "type": "bool", "internalType": "bool"}],
+                        },
+                    ],
                 }
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [],
+            "type": "function",
             "name": "singleNestedStructArray",
+            "inputs": [],
             "outputs": [
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                        {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
-                            "internalType": "struct ReturnTypes.InnerStruct",
-                            "name": "innerStruct",
-                            "type": "tuple",
-                        },
-                    ],
-                    "internalType": "struct ReturnTypes.NestedStruct[]",
                     "name": "",
                     "type": "tuple[]",
-                }
-            ],
-            "stateMutability": "pure",
-            "type": "function",
-        },
-        {
-            "inputs": [],
-            "name": "singleSimpleStruct",
-            "outputs": [
-                {
+                    "internalType": "struct ReturnTypes.NestedStruct[]",
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                    ],
-                    "internalType": "struct ReturnTypes.SimpleStruct",
-                    "name": "",
-                    "type": "tuple",
-                }
-            ],
-            "stateMutability": "pure",
-            "type": "function",
-        },
-        {
-            "inputs": [],
-            "name": "twoMixedStructs",
-            "outputs": [
-                {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                    ],
-                    "internalType": "struct ReturnTypes.SimpleStruct",
-                    "name": "",
-                    "type": "tuple",
-                },
-                {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
                         {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
-                            "internalType": "struct ReturnTypes.InnerStruct",
                             "name": "innerStruct",
                             "type": "tuple",
+                            "internalType": "struct ReturnTypes.InnerStruct",
+                            "components": [{"name": "boolVal", "type": "bool", "internalType": "bool"}],
                         },
                     ],
-                    "internalType": "struct ReturnTypes.NestedStruct",
-                    "name": "",
-                    "type": "tuple",
-                },
+                }
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
+            "type": "function",
+            "name": "singleSimpleStruct",
             "inputs": [],
-            "name": "twoSimpleStructs",
             "outputs": [
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                    ],
-                    "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "",
                     "type": "tuple",
+                    "internalType": "struct ReturnTypes.SimpleStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                    ],
+                }
+            ],
+            "stateMutability": "pure",
+        },
+        {
+            "type": "function",
+            "name": "twoMixedStructs",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "tuple",
+                    "internalType": "struct ReturnTypes.SimpleStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                    ],
                 },
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                    ],
-                    "internalType": "struct ReturnTypes.SimpleStruct",
                     "name": "",
                     "type": "tuple",
+                    "internalType": "struct ReturnTypes.NestedStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                        {
+                            "name": "innerStruct",
+                            "type": "tuple",
+                            "internalType": "struct ReturnTypes.InnerStruct",
+                            "components": [{"name": "boolVal", "type": "bool", "internalType": "bool"}],
+                        },
+                    ],
                 },
             ],
             "stateMutability": "pure",
+        },
+        {
             "type": "function",
+            "name": "twoSimpleStructs",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "tuple",
+                    "internalType": "struct ReturnTypes.SimpleStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                    ],
+                },
+                {
+                    "name": "",
+                    "type": "tuple",
+                    "internalType": "struct ReturnTypes.SimpleStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                    ],
+                },
+            ],
+            "stateMutability": "pure",
         },
     ],
-)
-# pylint: disable=line-too-long
-returntypes_bytecode = HexStr(
-    "0x608060405234801561000f575f80fd5b506110228061001d5f395ff3fe608060405234801561000f575f80fd5b50600436106100b2575f3560e01c8063811d9aa31161006f578063811d9aa314610194578063879896af146101b2578063c567c2f3146101e3578063d6c1a03e14610201578063e0f7c60414610232578063fa1fac8f14610251576100b2565b8063389e9102146100b657806340e27b10146100e657806353fd1043146101055780636456bc7914610124578063730fe90e1461014257806373b10c0f14610172575b5f80fd5b6100d060048036038101906100cb9190610923565b61026f565b6040516100dd919061095d565b60405180910390f35b6100ee610278565b6040516100fc929190610a49565b60405180910390f35b61010d610330565b60405161011b929190610aff565b60405180910390f35b61012c6103ff565b6040516101399190610b34565b60405180910390f35b61015c60048036038101906101579190610b54565b610457565b604051610169919061095d565b60405180910390f35b61017a61046c565b60405161018b959493929190610be9565b60405180910390f35b61019c610580565b6040516101a99190610b34565b60405180910390f35b6101cc60048036038101906101c79190610d7b565b6105d8565b6040516101da929190610dc2565b60405180910390f35b6101eb6105e7565b6040516101f89190610df0565b60405180910390f35b61021b60048036038101906102169190610b54565b610656565b604051610229929190610e10565b60405180910390f35b61023a610665565b604051610248929190610aff565b60405180910390f35b61025961072a565b6040516102669190610f3f565b60405180910390f35b5f819050919050565b61028061088c565b61028861088c565b5f6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d62657220310000000000000000000000000000000081525081525090505f6040518060400160405280600281526020016040518060400160405280601081526020017f596f7520617265206e756d626572203200000000000000000000000000000000815250815250905081819350935050509091565b61033861088c565b6103406108a5565b5f6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d62657220310000000000000000000000000000000081525081525090505f6040518060600160405280600281526020016040518060400160405280601081526020017f596f7520617265206e756d6265722032000000000000000000000000000000008152508152602001604051806020016040528060011515815250815250905081819350935050509091565b61040761088c565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d626572203100000000000000000000000000000000815250815250905090565b5f81836104649190610f8c565b905092915050565b61047461088c565b61047c6108a5565b5f60605f6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d62657220310000000000000000000000000000000081525081525094505f6040518060600160405280600281526020016040518060400160405280601081526020017f596f7520617265206e756d62657220320000000000000000000000000000000081525081526020016040518060200160405280600115158152508152509050858160015f6040518060400160405280601381526020017f52657475726e5479706573436f6e7472616374000000000000000000000000008152509095509550955095509550509091929394565b61058861088c565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d626572203100000000000000000000000000000000815250815250905090565b60605f82600291509150915091565b6105ef6108a5565b6040518060600160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d6265722031000000000000000000000000000000008152508152602001604051806020016040528060011515815250815250905090565b5f808284915091509250929050565b61066d61088c565b6106756108a5565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d62657220310000000000000000000000000000000081525081525091506040518060600160405280600281526020016040518060400160405280601081526020017f596f7520617265206e756d626572203200000000000000000000000000000000815250815260200160405180602001604052806001151581525081525090509091565b60605f600267ffffffffffffffff81111561074857610747610c57565b5b60405190808252806020026020018201604052801561078157816020015b61076e6108a5565b8152602001906001900390816107665790505b5090506040518060600160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d6265722031000000000000000000000000000000008152508152602001604051806020016040528060011515815250815250815f815181106107f9576107f8610fbf565b5b60200260200101819052506040518060600160405280600281526020016040518060400160405280601081526020017f596f7520617265206e756d62657220320000000000000000000000000000000081525081526020016040518060200160405280600115158152508152508160018151811061087a57610879610fbf565b5b60200260200101819052508091505090565b60405180604001604052805f8152602001606081525090565b60405180606001604052805f8152602001606081526020016108c56108cb565b81525090565b60405180602001604052805f151581525090565b5f604051905090565b5f80fd5b5f80fd5b5f819050919050565b610902816108f0565b811461090c575f80fd5b50565b5f8135905061091d816108f9565b92915050565b5f60208284031215610938576109376108e8565b5b5f6109458482850161090f565b91505092915050565b610957816108f0565b82525050565b5f6020820190506109705f83018461094e565b92915050565b61097f816108f0565b82525050565b5f81519050919050565b5f82825260208201905092915050565b5f5b838110156109bc5780820151818401526020810190506109a1565b5f8484015250505050565b5f601f19601f8301169050919050565b5f6109e182610985565b6109eb818561098f565b93506109fb81856020860161099f565b610a04816109c7565b840191505092915050565b5f604083015f830151610a245f860182610976565b5060208301518482036020860152610a3c82826109d7565b9150508091505092915050565b5f6040820190508181035f830152610a618185610a0f565b90508181036020830152610a758184610a0f565b90509392505050565b5f8115159050919050565b610a9281610a7e565b82525050565b602082015f820151610aac5f850182610a89565b50505050565b5f606083015f830151610ac75f860182610976565b5060208301518482036020860152610adf82826109d7565b9150506040830151610af46040860182610a98565b508091505092915050565b5f6040820190508181035f830152610b178185610a0f565b90508181036020830152610b2b8184610ab2565b90509392505050565b5f6020820190508181035f830152610b4c8184610a0f565b905092915050565b5f8060408385031215610b6a57610b696108e8565b5b5f610b778582860161090f565b9250506020610b888582860161090f565b9150509250929050565b5f82825260208201905092915050565b5f610bac82610985565b610bb68185610b92565b9350610bc681856020860161099f565b610bcf816109c7565b840191505092915050565b610be381610a7e565b82525050565b5f60a0820190508181035f830152610c018188610a0f565b90508181036020830152610c158187610ab2565b9050610c24604083018661094e565b8181036060830152610c368185610ba2565b9050610c456080830184610bda565b9695505050505050565b5f80fd5b5f80fd5b7f4e487b71000000000000000000000000000000000000000000000000000000005f52604160045260245ffd5b610c8d826109c7565b810181811067ffffffffffffffff82111715610cac57610cab610c57565b5b80604052505050565b5f610cbe6108df565b9050610cca8282610c84565b919050565b5f67ffffffffffffffff821115610ce957610ce8610c57565b5b610cf2826109c7565b9050602081019050919050565b828183375f83830152505050565b5f610d1f610d1a84610ccf565b610cb5565b905082815260208101848484011115610d3b57610d3a610c53565b5b610d46848285610cff565b509392505050565b5f82601f830112610d6257610d61610c4f565b5b8135610d72848260208601610d0d565b91505092915050565b5f60208284031215610d9057610d8f6108e8565b5b5f82013567ffffffffffffffff811115610dad57610dac6108ec565b5b610db984828501610d4e565b91505092915050565b5f6040820190508181035f830152610dda8185610ba2565b9050610de9602083018461094e565b9392505050565b5f6020820190508181035f830152610e088184610ab2565b905092915050565b5f604082019050610e235f83018561094e565b610e30602083018461094e565b9392505050565b5f81519050919050565b5f82825260208201905092915050565b5f819050602082019050919050565b5f606083015f830151610e755f860182610976565b5060208301518482036020860152610e8d82826109d7565b9150506040830151610ea26040860182610a98565b508091505092915050565b5f610eb88383610e60565b905092915050565b5f602082019050919050565b5f610ed682610e37565b610ee08185610e41565b935083602082028501610ef285610e51565b805f5b85811015610f2d5784840389528151610f0e8582610ead565b9450610f1983610ec0565b925060208a01995050600181019050610ef5565b50829750879550505050505092915050565b5f6020820190508181035f830152610f578184610ecc565b905092915050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52601160045260245ffd5b5f610f96826108f0565b9150610fa1836108f0565b9250828201905080821115610fb957610fb8610f5f565b5b92915050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52603260045260245ffdfea26469706673582212201073f1e3b57139bd7e41b1d49f803a4937972503b2fbf518ee39e85c8b65807864736f6c63430008170033"
 )
 
 
@@ -802,7 +799,12 @@ class ReturnTypesContract(Contract):
     """A web3.py Contract class for the ReturnTypes contract."""
 
     abi: ABI = returntypes_abi
-    bytecode: bytes | None = try_bytecode_hexbytes(returntypes_bytecode, "returntypes")
+    # We change `bytecode` as needed for linking, but keep
+    # `_raw_bytecode` unchanged as an original copy.
+    # pylint: disable=line-too-long
+    _raw_bytecode: HexStr | None = HexStr(
+        "0x608060405234801561001057600080fd5b506109f0806100206000396000f3fe608060405234801561001057600080fd5b50600436106100b45760003560e01c8063811d9aa311610071578063811d9aa31461018d578063879896af1461020f578063c567c2f314610231578063d6c1a03e14610246578063e0f7c6041461026c578063fa1fac8f1461027457600080fd5b8063389e9102146100b957806340e27b10146100dd57806353fd1043146101775780636456bc791461018d578063730fe90e146101e357806373b10c0f146101f6575b600080fd5b6100ca6100c736600461068b565b90565b6040519081526020015b60405180910390f35b604080518082018252600080825260606020928301819052835180850185529182529082015281518083018352600181528251808401845260108082526f596f7520617265206e756d626572203160801b82850152828401919091528351808501855260028152845180860186529182526f2cb7ba9030b93290373ab6b132b9101960811b828501529283015291516100d4929190610711565b61017f610289565b6040516100d4929190610775565b604080518082018252600081526060602091820152815180830183526001815282518084018452601081526f596f7520617265206e756d626572203160801b818401529181019190915290516100d4919061079a565b6100ca6101f13660046107ad565b61032f565b6101fe610344565b6040516100d49594939291906107cf565b61022361021d366004610839565b90600290565b6040516100d49291906108ea565b610239610419565b6040516100d4919061090c565b6102576102543660046107ad565b91565b604080519283526020830191909152016100d4565b61017f61047b565b61027c610533565b6040516100d4919061091f565b6040805180820190915260008152606060208201526102a6610655565b505060408051808201825260018082528251808401845260108082526f596f7520617265206e756d626572203160801b60208381019190915280850192909252845160608101865260028152855180870187529182526f2cb7ba9030b93290373ab6b132b9101960811b8284015280830191909152845191820185529181529281019290925291565b600061033b8284610983565b90505b92915050565b604080518082019091526000815260606020820152610361610655565b505060408051808201825260018082528251808401845260108082526f596f7520617265206e756d626572203160801b60208381019190915280850192909252845160608101865260028152855180870187529182526f2cb7ba9030b93290373ab6b132b9101960811b828401528083019190915284518083018652838152818601528451808601909552601385527214995d1d5c9b951e5c195cd0dbdb9d1c9858dd606a1b91850191909152919260009091929394565b610421610655565b6040518060600160405280600181526020016040518060400160405280601081526020016f596f7520617265206e756d626572203160801b8152508152602001604051806020016040528060011515815250815250905090565b604080518082019091526000815260606020820152610498610655565b6040518060400160405280600181526020016040518060400160405280601081526020016f596f7520617265206e756d626572203160801b81525081525091506040518060600160405280600281526020016040518060400160405280601081526020016f2cb7ba9030b93290373ab6b132b9101960811b815250815260200160405180602001604052806001151581525081525090509091565b604080516002808252606082810190935260009190816020015b610555610655565b81526020019060019003908161054d5790505090506040518060600160405280600181526020016040518060400160405280601081526020016f596f7520617265206e756d626572203160801b8152508152602001604051806020016040528060011515815250815250816000815181106105d2576105d26109a4565b60200260200101819052506040518060600160405280600281526020016040518060400160405280601081526020016f2cb7ba9030b93290373ab6b132b9101960811b815250815260200160405180602001604052806001151581525081525081600181518110610645576106456109a4565b6020908102919091010152919050565b6040518060600160405280600081526020016060815260200161068660405180602001604052806000151581525090565b905290565b60006020828403121561069d57600080fd5b5035919050565b6000815180845260005b818110156106ca576020818501810151868301820152016106ae565b506000602082860101526020601f19601f83011685010191505092915050565b80518252600060208201516040602085015261070960408501826106a4565b949350505050565b60408152600061072460408301856106ea565b828103602084015261073681856106ea565b95945050505050565b80518252600060208201516060602085015261075e60608501826106a4565b604093840151511515949093019390935250919050565b60408152600061078860408301856106ea565b8281036020840152610736818561073f565b60208152600061033b60208301846106ea565b600080604083850312156107c057600080fd5b50508035926020909101359150565b60a0815260006107e260a08301886106ea565b82810360208401526107f4818861073f565b9050856040840152828103606084015261080e81866106a4565b91505082151560808301529695505050505050565b634e487b7160e01b600052604160045260246000fd5b60006020828403121561084b57600080fd5b813567ffffffffffffffff8082111561086357600080fd5b818401915084601f83011261087757600080fd5b81358181111561088957610889610823565b604051601f8201601f19908116603f011681019083821181831017156108b1576108b1610823565b816040528281528760208487010111156108ca57600080fd5b826020860160208301376000928101602001929092525095945050505050565b6040815260006108fd60408301856106a4565b90508260208301529392505050565b60208152600061033b602083018461073f565b600060208083016020845280855180835260408601915060408160051b87010192506020870160005b8281101561097657603f1988860301845261096485835161073f565b94509285019290850190600101610948565b5092979650505050505050565b8082018082111561033e57634e487b7160e01b600052601160045260246000fd5b634e487b7160e01b600052603260045260246000fdfea26469706673582212208061bb9dfb6ca91986804236640ed2dfa852ed35a004e66befcbab10e8c17ac064736f6c63430008160033"
+    )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
         try:
@@ -833,6 +835,11 @@ class ReturnTypesContract(Contract):
             A deployed instance of the contract.
 
         """
+        cls.bytecode = cls._raw_bytecode
+        if cls.bytecode is not None:
+
+            # bytecode needs to be in hex for web3
+            cls.bytecode = HexBytes(cls.bytecode)
 
         return super().constructor()
 

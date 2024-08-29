@@ -16,9 +16,9 @@ from pypechain.hardhat.types import HardhatJson
 from pypechain.hardhat.utilities import is_hardhat_json
 from pypechain.solc.types import SolcJson
 from pypechain.solc.utilities import is_solc_json
+from pypechain.utilities.bytecode import get_bytecode_from_json, get_bytecode_link_references_from_json, is_foundry_json
 from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
-from pypechain.utilities.json import get_bytecode_from_json, is_foundry_json
-from pypechain.utilities.types import solidity_to_python_type
+from pypechain.utilities.types import LinkReferences, solidity_to_python_type
 
 # These are exactly the same sowe just rename.
 ABIErrorParams = ABIFunctionParams
@@ -643,6 +643,9 @@ class AbiInfo:
     abi: ABI
     bytecode: str
     contract_name: str
+    # Bytecode link references is a dictionary keyed by a contract name,
+    # valued with the hex code placeholder in the bytecode.
+    bytecode_link_references: list[LinkReferences]
 
 
 def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
@@ -672,14 +675,23 @@ def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
             bytecode = get_bytecode_from_json(json_file)
             # hardhat jsons have the contract name as a field.
             contract_name = json_file.get("contractName")
-            return [AbiInfo(abi=abi, bytecode=bytecode, contract_name=contract_name)]
+            # TODO get bytecode link references and add here
+            return [AbiInfo(abi=abi, bytecode=bytecode, contract_name=contract_name, bytecode_link_references=[])]
 
         if is_foundry_json(json_file):
             abi = get_abi_from_json(json_file)
             bytecode = get_bytecode_from_json(json_file)
+            bytecode_link_references = get_bytecode_link_references_from_json(json_file)
             # foundry saves contracts to self-named files.
             contract_name = file_path.name.removesuffix(".json")
-            return [AbiInfo(abi=abi, bytecode=bytecode, contract_name=contract_name)]
+            return [
+                AbiInfo(
+                    abi=abi,
+                    bytecode=bytecode,
+                    contract_name=contract_name,
+                    bytecode_link_references=bytecode_link_references,
+                )
+            ]
 
         raise ValueError("Unknown ABI Json format")
 
@@ -968,6 +980,7 @@ def _get_abis_from_solc_json(json_abi: SolcJson) -> list[AbiInfo]:
         abi = value.get("abi")
         binary = value.get("bin")
         bytecode = f"0x{binary}"
-        infos.append(AbiInfo(abi=abi, contract_name=contract_name, bytecode=bytecode))
+        # TODO get bytecode link references and add here
+        infos.append(AbiInfo(abi=abi, contract_name=contract_name, bytecode=bytecode, bytecode_link_references=[]))
 
     return infos

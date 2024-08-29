@@ -30,6 +30,7 @@ from typing import Any, Type, cast
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ChecksumAddress, HexStr
+from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
@@ -38,7 +39,7 @@ from web3.types import ABI, BlockIdentifier, CallOverride, TxParams
 
 from .IStructsTypes import InnerStruct, NestedStruct, SimpleStruct
 from .StructsATypes import AStruct
-from .utilities import rename_returned_types, try_bytecode_hexbytes
+from .utilities import rename_returned_types
 
 structs = {
     "InnerStruct": InnerStruct,
@@ -176,67 +177,63 @@ structsa_abi: ABI = cast(
     ABI,
     [
         {
-            "inputs": [],
+            "type": "function",
             "name": "singleNestedStruct",
+            "inputs": [],
             "outputs": [
                 {
+                    "name": "",
+                    "type": "tuple",
+                    "internalType": "struct IStructs.NestedStruct",
                     "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
                         {
-                            "components": [{"internalType": "bool", "name": "boolVal", "type": "bool"}],
-                            "internalType": "struct IStructs.InnerStruct",
                             "name": "innerStruct",
                             "type": "tuple",
+                            "internalType": "struct IStructs.InnerStruct",
+                            "components": [{"name": "boolVal", "type": "bool", "internalType": "bool"}],
                         },
                     ],
-                    "internalType": "struct IStructs.NestedStruct",
-                    "name": "",
-                    "type": "tuple",
                 }
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [],
+            "type": "function",
             "name": "singleSimpleStruct",
+            "inputs": [],
             "outputs": [
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                    ],
-                    "internalType": "struct IStructs.SimpleStruct",
                     "name": "",
                     "type": "tuple",
+                    "internalType": "struct IStructs.SimpleStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                    ],
                 }
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
         {
-            "inputs": [],
+            "type": "function",
             "name": "structA",
+            "inputs": [],
             "outputs": [
                 {
-                    "components": [
-                        {"internalType": "uint256", "name": "intVal", "type": "uint256"},
-                        {"internalType": "string", "name": "strVal", "type": "string"},
-                    ],
-                    "internalType": "struct StructsA.AStruct",
                     "name": "",
                     "type": "tuple",
+                    "internalType": "struct StructsA.AStruct",
+                    "components": [
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                    ],
                 }
             ],
             "stateMutability": "pure",
-            "type": "function",
         },
     ],
-)
-# pylint: disable=line-too-long
-structsa_bytecode = HexStr(
-    "0x608060405234801561000f575f80fd5b506104558061001d5f395ff3fe608060405234801561000f575f80fd5b506004361061003f575f3560e01c806311ba731f146100435780636456bc7914610061578063c567c2f31461007f575b5f80fd5b61004b61009d565b6040516100589190610304565b60405180910390f35b6100696100f5565b604051610076919061035e565b60405180910390f35b61008761014d565b60405161009491906103ff565b60405180910390f35b6100a56101bc565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d626572203100000000000000000000000000000000815250815250905090565b6100fd6101d5565b6040518060400160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d626572203100000000000000000000000000000000815250815250905090565b6101556101ee565b6040518060600160405280600181526020016040518060400160405280601081526020017f596f7520617265206e756d6265722031000000000000000000000000000000008152508152602001604051806020016040528060011515815250815250905090565b60405180604001604052805f8152602001606081525090565b60405180604001604052805f8152602001606081525090565b60405180606001604052805f81526020016060815260200161020e610214565b81525090565b60405180602001604052805f151581525090565b5f819050919050565b61023a81610228565b82525050565b5f81519050919050565b5f82825260208201905092915050565b5f5b8381101561027757808201518184015260208101905061025c565b5f8484015250505050565b5f601f19601f8301169050919050565b5f61029c82610240565b6102a6818561024a565b93506102b681856020860161025a565b6102bf81610282565b840191505092915050565b5f604083015f8301516102df5f860182610231565b50602083015184820360208601526102f78282610292565b9150508091505092915050565b5f6020820190508181035f83015261031c81846102ca565b905092915050565b5f604083015f8301516103395f860182610231565b50602083015184820360208601526103518282610292565b9150508091505092915050565b5f6020820190508181035f8301526103768184610324565b905092915050565b5f8115159050919050565b6103928161037e565b82525050565b602082015f8201516103ac5f850182610389565b50505050565b5f606083015f8301516103c75f860182610231565b50602083015184820360208601526103df8282610292565b91505060408301516103f46040860182610398565b508091505092915050565b5f6020820190508181035f83015261041781846103b2565b90509291505056fea2646970667358221220a15c6d8167c125a327fdf2203a61e80b4eb9bf7b1b303817bb771333d8b10fd564736f6c63430008170033"
 )
 
 
@@ -244,7 +241,12 @@ class StructsAContract(Contract):
     """A web3.py Contract class for the StructsA contract."""
 
     abi: ABI = structsa_abi
-    bytecode: bytes | None = try_bytecode_hexbytes(structsa_bytecode, "structsa")
+    # We change `bytecode` as needed for linking, but keep
+    # `_raw_bytecode` unchanged as an original copy.
+    # pylint: disable=line-too-long
+    _raw_bytecode: HexStr | None = HexStr(
+        "0x608060405234801561001057600080fd5b5061024e806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806311ba731f146100465780636456bc7914610046578063c567c2f3146100a5575b600080fd5b604080518082018252600081526060602091820152815180830183526001815282518084018452601081526f596f7520617265206e756d626572203160801b8184015291810191909152905161009c91906101bf565b60405180910390f35b6100ad6100ba565b60405161009c91906101d9565b6100c261011c565b6040518060600160405280600181526020016040518060400160405280601081526020016f596f7520617265206e756d626572203160801b8152508152602001604051806020016040528060011515815250815250905090565b6040518060600160405280600081526020016060815260200161014d60405180602001604052806000151581525090565b905290565b6000815180845260005b818110156101785760208185018101518683018201520161015c565b506000602082860101526020601f19601f83011685010191505092915050565b8051825260006020820151604060208501526101b76040850182610152565b949350505050565b6020815260006101d26020830184610198565b9392505050565b602081528151602082015260006020830151606060408401526101ff6080840182610152565b905060408401515115156060840152809150509291505056fea2646970667358221220bc1b4d24faa73bb69c7c733cb49b490e847da06a9083c0d28e077d44105cf11564736f6c63430008160033"
+    )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
         try:
@@ -275,6 +277,11 @@ class StructsAContract(Contract):
             A deployed instance of the contract.
 
         """
+        cls.bytecode = cls._raw_bytecode
+        if cls.bytecode is not None:
+
+            # bytecode needs to be in hex for web3
+            cls.bytecode = HexBytes(cls.bytecode)
 
         return super().constructor()
 
