@@ -520,10 +520,10 @@ def get_link_reference_data(link_references: list[LinkReferences]) -> LinkRefere
         contract_name = link["contract_name"]
         placeholder_code = link["placeholder_code"]
 
-        # Add quotes to keys
         contract_names.append(contract_name)
         contract_names_and_types.append(f"{contract_name}: {contract_name}Contract")
         contract_types.append(f"{contract_name}Contract")
+        # Add quotes key and value, as this will be expanded to a dictionary
         contract_names_to_placeholder_lookup.append(f'"{contract_name}": "{placeholder_code}"')
 
     return LinkReferencesData(
