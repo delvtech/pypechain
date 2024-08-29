@@ -675,7 +675,7 @@ def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
             bytecode = get_bytecode_from_json(json_file)
             # hardhat jsons have the contract name as a field.
             contract_name = json_file.get("contractName")
-            # TODO
+            # TODO get bytecode link references and add here
             return [AbiInfo(abi=abi, bytecode=bytecode, contract_name=contract_name, bytecode_link_references=[])]
 
         if is_foundry_json(json_file):
@@ -980,6 +980,7 @@ def _get_abis_from_solc_json(json_abi: SolcJson) -> list[AbiInfo]:
         abi = value.get("abi")
         binary = value.get("bin")
         bytecode = f"0x{binary}"
+        # TODO get bytecode link references and add here
         infos.append(AbiInfo(abi=abi, contract_name=contract_name, bytecode=bytecode, bytecode_link_references=[]))
 
     return infos

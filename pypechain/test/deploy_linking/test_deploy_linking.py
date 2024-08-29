@@ -1,4 +1,4 @@
-"""Tests for overloading methods."""
+"""Tests for deploying contracts with linked libraries methods."""
 
 from __future__ import annotations
 
@@ -51,8 +51,6 @@ class TestDeployLinking:
 
         # Deploy the library first
         library_contract = MyLibraryContract.deploy(w3, local_account)
-
-        #
         contract = ContractContract.deploy(
             w3,
             local_account,
