@@ -308,7 +308,8 @@ We use pytest in our pypechain tests. Pytest, when ran locally, automatically co
 using [Foundry](https://book.getfoundry.sh/getting-started/installation), as well as running 
 pypechain on the output abis.
 
-If you run into issues during pytest, run `sh scripts/regenerate_types.sh`.
+If you run into issues during pytest, run `make clean; make build-test` to rebuild all solidity
+and pypechain types in tests.
 
 We also use [`pytest-snapshot`](https://pypi.org/project/pytest-snapshot/) for some tests to ensure
 rendered files are as expected. If any changes are made to rendering that results in failures in snapshots, 
