@@ -845,7 +845,7 @@ class ReturnTypesContract(Contract):
 
     @classmethod
     def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress) -> Self:
-        """Deploys and instance of the contract.
+        """Deploys an instance of the contract.
 
         Parameters
         ----------
@@ -887,7 +887,7 @@ class ReturnTypesContract(Contract):
 
     @classmethod
     def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
-        """Deploys and instance of the contract.
+        """Initializes the contract object.
 
         Parameters
         ----------
@@ -899,7 +899,7 @@ class ReturnTypesContract(Contract):
         Returns
         -------
         Self
-            A deployed instance of the contract.
+            An instance of the contract class.
         """
         contract = super().factory(w3, class_name, **kwargs)
         contract.functions = ReturnTypesContractFunctions(returntypes_abi, w3, None)
