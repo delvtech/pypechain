@@ -196,7 +196,7 @@ class OverloadedMethodsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="doSomething",
+            abi_element_identifier="doSomething",
         )
 
 

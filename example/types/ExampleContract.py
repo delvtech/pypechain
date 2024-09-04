@@ -391,7 +391,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="flipFlop",
+            abi_element_identifier="flipFlop",
         )
         self.guessALetter = ExampleGuessALetterContractFunction.factory(
             "guessALetter",
@@ -399,7 +399,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="guessALetter",
+            abi_element_identifier="guessALetter",
         )
         self.mixStructsAndPrimitives = ExampleMixStructsAndPrimitivesContractFunction.factory(
             "mixStructsAndPrimitives",
@@ -407,7 +407,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="mixStructsAndPrimitives",
+            abi_element_identifier="mixStructsAndPrimitives",
         )
         self.namedSingleStruct = ExampleNamedSingleStructContractFunction.factory(
             "namedSingleStruct",
@@ -415,7 +415,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="namedSingleStruct",
+            abi_element_identifier="namedSingleStruct",
         )
         self.namedTwoMixedStructs = ExampleNamedTwoMixedStructsContractFunction.factory(
             "namedTwoMixedStructs",
@@ -423,7 +423,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="namedTwoMixedStructs",
+            abi_element_identifier="namedTwoMixedStructs",
         )
         self.singleNestedStruct = ExampleSingleNestedStructContractFunction.factory(
             "singleNestedStruct",
@@ -431,7 +431,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="singleNestedStruct",
+            abi_element_identifier="singleNestedStruct",
         )
         self.singleSimpleStruct = ExampleSingleSimpleStructContractFunction.factory(
             "singleSimpleStruct",
@@ -439,7 +439,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="singleSimpleStruct",
+            abi_element_identifier="singleSimpleStruct",
         )
         self.twoMixedStructs = ExampleTwoMixedStructsContractFunction.factory(
             "twoMixedStructs",
@@ -447,7 +447,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="twoMixedStructs",
+            abi_element_identifier="twoMixedStructs",
         )
         self.twoSimpleStructs = ExampleTwoSimpleStructsContractFunction.factory(
             "twoSimpleStructs",
@@ -455,7 +455,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="twoSimpleStructs",
+            abi_element_identifier="twoSimpleStructs",
         )
         self.vecOfStruct = ExampleVecOfStructContractFunction.factory(
             "vecOfStruct",
@@ -463,7 +463,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="vecOfStruct",
+            abi_element_identifier="vecOfStruct",
         )
 
 

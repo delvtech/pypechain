@@ -450,7 +450,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="mixStructsAndPrimitives",
+            abi_element_identifier="mixStructsAndPrimitives",
         )
         self.namedSingleStruct = ReturnTypesNamedSingleStructContractFunction.factory(
             "namedSingleStruct",
@@ -458,7 +458,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="namedSingleStruct",
+            abi_element_identifier="namedSingleStruct",
         )
         self.namedSingleValue = ReturnTypesNamedSingleValueContractFunction.factory(
             "namedSingleValue",
@@ -466,7 +466,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="namedSingleValue",
+            abi_element_identifier="namedSingleValue",
         )
         self.namedTwoMixedStructs = ReturnTypesNamedTwoMixedStructsContractFunction.factory(
             "namedTwoMixedStructs",
@@ -474,7 +474,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="namedTwoMixedStructs",
+            abi_element_identifier="namedTwoMixedStructs",
         )
         self.namedTwoValues = ReturnTypesNamedTwoValuesContractFunction.factory(
             "namedTwoValues",
@@ -482,7 +482,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="namedTwoValues",
+            abi_element_identifier="namedTwoValues",
         )
         self.noNameSingleValue = ReturnTypesNoNameSingleValueContractFunction.factory(
             "noNameSingleValue",
@@ -490,7 +490,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="noNameSingleValue",
+            abi_element_identifier="noNameSingleValue",
         )
         self.noNameTwoValues = ReturnTypesNoNameTwoValuesContractFunction.factory(
             "noNameTwoValues",
@@ -498,7 +498,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="noNameTwoValues",
+            abi_element_identifier="noNameTwoValues",
         )
         self.singleNestedStruct = ReturnTypesSingleNestedStructContractFunction.factory(
             "singleNestedStruct",
@@ -506,7 +506,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="singleNestedStruct",
+            abi_element_identifier="singleNestedStruct",
         )
         self.singleNestedStructArray = ReturnTypesSingleNestedStructArrayContractFunction.factory(
             "singleNestedStructArray",
@@ -514,7 +514,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="singleNestedStructArray",
+            abi_element_identifier="singleNestedStructArray",
         )
         self.singleSimpleStruct = ReturnTypesSingleSimpleStructContractFunction.factory(
             "singleSimpleStruct",
@@ -522,7 +522,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="singleSimpleStruct",
+            abi_element_identifier="singleSimpleStruct",
         )
         self.twoMixedStructs = ReturnTypesTwoMixedStructsContractFunction.factory(
             "twoMixedStructs",
@@ -530,7 +530,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="twoMixedStructs",
+            abi_element_identifier="twoMixedStructs",
         )
         self.twoSimpleStructs = ReturnTypesTwoSimpleStructsContractFunction.factory(
             "twoSimpleStructs",
@@ -538,7 +538,7 @@ class ReturnTypesContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="twoSimpleStructs",
+            abi_element_identifier="twoSimpleStructs",
         )
 
 

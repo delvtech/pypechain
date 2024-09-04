@@ -119,7 +119,7 @@ class StructsBContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="noNameSingleValue",
+            abi_element_identifier="noNameSingleValue",
         )
         self.singleSimpleStruct = StructsBSingleSimpleStructContractFunction.factory(
             "singleSimpleStruct",
@@ -127,7 +127,7 @@ class StructsBContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="singleSimpleStruct",
+            abi_element_identifier="singleSimpleStruct",
         )
 
 

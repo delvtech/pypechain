@@ -132,7 +132,7 @@ class ErrorsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="revertWithErrorOne",
+            abi_element_identifier="revertWithErrorOne",
         )
         self.revertWithErrorThree = ErrorsRevertWithErrorThreeContractFunction.factory(
             "revertWithErrorThree",
@@ -140,7 +140,7 @@ class ErrorsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="revertWithErrorThree",
+            abi_element_identifier="revertWithErrorThree",
         )
         self.revertWithErrorTwo = ErrorsRevertWithErrorTwoContractFunction.factory(
             "revertWithErrorTwo",
@@ -148,7 +148,7 @@ class ErrorsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="revertWithErrorTwo",
+            abi_element_identifier="revertWithErrorTwo",
         )
 
 

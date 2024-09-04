@@ -144,7 +144,7 @@ class ConstructorWithStructArgsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="name",
+            abi_element_identifier="name",
         )
         self.setName = ConstructorWithStructArgsSetNameContractFunction.factory(
             "setName",
@@ -152,7 +152,7 @@ class ConstructorWithStructArgsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="setName",
+            abi_element_identifier="setName",
         )
         self.thing = ConstructorWithStructArgsThingContractFunction.factory(
             "thing",
@@ -160,7 +160,7 @@ class ConstructorWithStructArgsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="thing",
+            abi_element_identifier="thing",
         )
 
 

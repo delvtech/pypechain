@@ -111,7 +111,7 @@ class ConstructorNoArgsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="name",
+            abi_element_identifier="name",
         )
         self.setName = ConstructorNoArgsSetNameContractFunction.factory(
             "setName",
@@ -119,7 +119,7 @@ class ConstructorNoArgsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="setName",
+            abi_element_identifier="setName",
         )
 
 

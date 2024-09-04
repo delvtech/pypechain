@@ -124,7 +124,7 @@ class StructsCContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="allStructsInternal",
+            abi_element_identifier="allStructsInternal",
         )
         self.innerStructIsExternal = StructsCInnerStructIsExternalContractFunction.factory(
             "innerStructIsExternal",
@@ -132,7 +132,7 @@ class StructsCContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="innerStructIsExternal",
+            abi_element_identifier="innerStructIsExternal",
         )
 
 

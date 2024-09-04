@@ -87,7 +87,7 @@ class MyLibraryContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="add",
+            abi_element_identifier="add",
         )
 
 

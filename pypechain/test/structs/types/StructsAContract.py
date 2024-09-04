@@ -152,7 +152,7 @@ class StructsAContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="singleNestedStruct",
+            abi_element_identifier="singleNestedStruct",
         )
         self.singleSimpleStruct = StructsASingleSimpleStructContractFunction.factory(
             "singleSimpleStruct",
@@ -160,7 +160,7 @@ class StructsAContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="singleSimpleStruct",
+            abi_element_identifier="singleSimpleStruct",
         )
         self.structA = StructsAStructAContractFunction.factory(
             "structA",
@@ -168,7 +168,7 @@ class StructsAContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="structA",
+            abi_element_identifier="structA",
         )
 
 

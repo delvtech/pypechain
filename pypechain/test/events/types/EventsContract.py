@@ -143,7 +143,7 @@ class EventsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="emitNoEvents",
+            abi_element_identifier="emitNoEvents",
         )
         self.emitOneEvent = EventsEmitOneEventContractFunction.factory(
             "emitOneEvent",
@@ -151,7 +151,7 @@ class EventsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="emitOneEvent",
+            abi_element_identifier="emitOneEvent",
         )
         self.emitTwoEvents = EventsEmitTwoEventsContractFunction.factory(
             "emitTwoEvents",
@@ -159,7 +159,7 @@ class EventsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="emitTwoEvents",
+            abi_element_identifier="emitTwoEvents",
         )
 
 
