@@ -19,7 +19,7 @@ class OverloadedBalanceOfContractFunction0(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
@@ -50,7 +50,7 @@ class OverloadedBalanceOfContractFunction1(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
@@ -109,6 +109,6 @@ class OverloadedContractFunctions(ContractFunctions):
              contract_abi=abi,
              address=address,
              decode_tuples=decode_tuples,
-             function_identifier="balanceOf",
+             abi_element_identifier="balanceOf",
          )
          
