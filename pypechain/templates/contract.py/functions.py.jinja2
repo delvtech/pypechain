@@ -131,6 +131,6 @@ class {{contract_name}}ContractFunctions(ContractFunctions):
              contract_abi=abi,
              address=address,
              decode_tuples=decode_tuples,
-             function_identifier="{{function.name}}",
+             abi_element_identifier="{{function.name}}",
          )
          {% endfor %}
