@@ -29,7 +29,7 @@ from __future__ import annotations
 from typing import Any, Iterable, Sequence, Type, cast
 
 from eth_account.signers.local import LocalAccount
-from eth_typing import ChecksumAddress, HexStr
+from eth_typing import ABI, ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
@@ -42,8 +42,7 @@ from web3.contract.contract import (
     ContractFunction,
     ContractFunctions,
 )
-from web3.exceptions import FallbackNotFound
-from web3.types import ABI, BlockIdentifier, CallOverride, EventData, TxParams
+from web3.types import BlockIdentifier, EventData, StateOverride, TxParams
 
 from .utilities import dataclass_to_tuple, rename_returned_types
 
@@ -63,7 +62,7 @@ class EventsEmitNoEventsContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
@@ -90,7 +89,7 @@ class EventsEmitOneEventContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
@@ -112,7 +111,7 @@ class EventsEmitTwoEventsContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
@@ -144,7 +143,7 @@ class EventsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="emitNoEvents",
+            abi_element_identifier="emitNoEvents",
         )
         self.emitOneEvent = EventsEmitOneEventContractFunction.factory(
             "emitOneEvent",
@@ -152,7 +151,7 @@ class EventsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="emitOneEvent",
+            abi_element_identifier="emitOneEvent",
         )
         self.emitTwoEvents = EventsEmitTwoEventsContractFunction.factory(
             "emitTwoEvents",
@@ -160,7 +159,7 @@ class EventsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="emitTwoEvents",
+            abi_element_identifier="emitTwoEvents",
         )
 
 
@@ -180,14 +179,14 @@ class EventsEventAContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         self: "EventsEventAContractEvent",
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -195,14 +194,14 @@ class EventsEventAContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         cls: Type["EventsEventAContractEvent"],
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -210,15 +209,19 @@ class EventsEventAContractEvent(ContractEvent):
         self: "EventsEventAContractEvent",
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -227,15 +230,19 @@ class EventsEventAContractEvent(ContractEvent):
         cls: Type["EventsEventAContractEvent"],
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -256,14 +263,14 @@ class EventsEventBContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         self: "EventsEventBContractEvent",
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -271,14 +278,14 @@ class EventsEventBContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         cls: Type["EventsEventBContractEvent"],
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -286,15 +293,19 @@ class EventsEventBContractEvent(ContractEvent):
         self: "EventsEventBContractEvent",
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -303,15 +314,19 @@ class EventsEventBContractEvent(ContractEvent):
         cls: Type["EventsEventBContractEvent"],
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -399,14 +414,10 @@ class EventsContract(Contract):
     )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
-        try:
-            # Initialize parent Contract class
-            super().__init__(address=address)
-            self.functions = EventsContractFunctions(events_abi, self.w3, address)  # type: ignore
-            self.events = EventsContractEvents(events_abi, self.w3, address)  # type: ignore
-
-        except FallbackNotFound:
-            print("Fallback function not found. Continuing...")
+        # Initialize parent Contract class
+        super().__init__(address=address)
+        self.functions = EventsContractFunctions(events_abi, self.w3, address)  # type: ignore
+        self.events = EventsContractEvents(events_abi, self.w3, address)  # type: ignore
 
     events: EventsContractEvents
 
@@ -474,7 +485,7 @@ class EventsContract(Contract):
         signed_tx = account.sign_transaction(deployment_tx)
 
         # Send the signed transaction and wait for receipt
-        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
         deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore

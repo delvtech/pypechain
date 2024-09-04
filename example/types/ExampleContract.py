@@ -31,7 +31,7 @@ from typing import Any, Iterable, NamedTuple, Sequence, Type, cast
 from eth_abi.codec import ABICodec
 from eth_abi.registry import registry as default_registry
 from eth_account.signers.local import LocalAccount
-from eth_typing import ChecksumAddress, HexStr
+from eth_typing import ABI, ABIFunction, ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
@@ -44,8 +44,7 @@ from web3.contract.contract import (
     ContractFunction,
     ContractFunctions,
 )
-from web3.exceptions import FallbackNotFound
-from web3.types import ABI, ABIFunction, BlockIdentifier, CallOverride, EventData, TxParams
+from web3.types import BlockIdentifier, EventData, StateOverride, TxParams
 
 from .ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
 from .utilities import dataclass_to_tuple, get_abi_input_types, rename_returned_types
@@ -76,7 +75,7 @@ class ExampleFlipFlopContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
@@ -103,7 +102,7 @@ class ExampleGuessALetterContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
@@ -134,7 +133,7 @@ class ExampleMixStructsAndPrimitivesContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
@@ -161,7 +160,7 @@ class ExampleNamedSingleStructContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> SimpleStruct:
         """returns SimpleStruct."""
@@ -194,7 +193,7 @@ class ExampleNamedTwoMixedStructsContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
@@ -221,7 +220,7 @@ class ExampleSingleNestedStructContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> NestedStruct:
         """returns NestedStruct."""
@@ -248,7 +247,7 @@ class ExampleSingleSimpleStructContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> SimpleStruct:
         """returns SimpleStruct."""
@@ -281,7 +280,7 @@ class ExampleTwoMixedStructsContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
@@ -314,7 +313,7 @@ class ExampleTwoSimpleStructsContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
@@ -341,7 +340,7 @@ class ExampleVecOfStructContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> list[SimpleStruct]:
         """returns list[SimpleStruct]."""
@@ -392,7 +391,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="flipFlop",
+            abi_element_identifier="flipFlop",
         )
         self.guessALetter = ExampleGuessALetterContractFunction.factory(
             "guessALetter",
@@ -400,7 +399,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="guessALetter",
+            abi_element_identifier="guessALetter",
         )
         self.mixStructsAndPrimitives = ExampleMixStructsAndPrimitivesContractFunction.factory(
             "mixStructsAndPrimitives",
@@ -408,7 +407,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="mixStructsAndPrimitives",
+            abi_element_identifier="mixStructsAndPrimitives",
         )
         self.namedSingleStruct = ExampleNamedSingleStructContractFunction.factory(
             "namedSingleStruct",
@@ -416,7 +415,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="namedSingleStruct",
+            abi_element_identifier="namedSingleStruct",
         )
         self.namedTwoMixedStructs = ExampleNamedTwoMixedStructsContractFunction.factory(
             "namedTwoMixedStructs",
@@ -424,7 +423,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="namedTwoMixedStructs",
+            abi_element_identifier="namedTwoMixedStructs",
         )
         self.singleNestedStruct = ExampleSingleNestedStructContractFunction.factory(
             "singleNestedStruct",
@@ -432,7 +431,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="singleNestedStruct",
+            abi_element_identifier="singleNestedStruct",
         )
         self.singleSimpleStruct = ExampleSingleSimpleStructContractFunction.factory(
             "singleSimpleStruct",
@@ -440,7 +439,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="singleSimpleStruct",
+            abi_element_identifier="singleSimpleStruct",
         )
         self.twoMixedStructs = ExampleTwoMixedStructsContractFunction.factory(
             "twoMixedStructs",
@@ -448,7 +447,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="twoMixedStructs",
+            abi_element_identifier="twoMixedStructs",
         )
         self.twoSimpleStructs = ExampleTwoSimpleStructsContractFunction.factory(
             "twoSimpleStructs",
@@ -456,7 +455,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="twoSimpleStructs",
+            abi_element_identifier="twoSimpleStructs",
         )
         self.vecOfStruct = ExampleVecOfStructContractFunction.factory(
             "vecOfStruct",
@@ -464,7 +463,7 @@ class ExampleContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="vecOfStruct",
+            abi_element_identifier="vecOfStruct",
         )
 
 
@@ -484,14 +483,14 @@ class ExampleFlipContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         self: "ExampleFlipContractEvent",
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -499,14 +498,14 @@ class ExampleFlipContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         cls: Type["ExampleFlipContractEvent"],
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -514,15 +513,19 @@ class ExampleFlipContractEvent(ContractEvent):
         self: "ExampleFlipContractEvent",
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -531,15 +534,19 @@ class ExampleFlipContractEvent(ContractEvent):
         cls: Type["ExampleFlipContractEvent"],
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -560,14 +567,14 @@ class ExampleFlopContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         self: "ExampleFlopContractEvent",
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -575,14 +582,14 @@ class ExampleFlopContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         cls: Type["ExampleFlopContractEvent"],
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -590,15 +597,19 @@ class ExampleFlopContractEvent(ContractEvent):
         self: "ExampleFlopContractEvent",
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -607,15 +618,19 @@ class ExampleFlopContractEvent(ContractEvent):
         cls: Type["ExampleFlopContractEvent"],
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -1016,15 +1031,11 @@ class ExampleContract(Contract):
     )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
-        try:
-            # Initialize parent Contract class
-            super().__init__(address=address)
-            self.functions = ExampleContractFunctions(example_abi, self.w3, address)  # type: ignore
-            self.events = ExampleContractEvents(example_abi, self.w3, address)  # type: ignore
-            self.errors = ExampleContractErrors()
-
-        except FallbackNotFound:
-            print("Fallback function not found. Continuing...")
+        # Initialize parent Contract class
+        super().__init__(address=address)
+        self.functions = ExampleContractFunctions(example_abi, self.w3, address)  # type: ignore
+        self.events = ExampleContractEvents(example_abi, self.w3, address)  # type: ignore
+        self.errors = ExampleContractErrors()
 
     events: ExampleContractEvents
 
@@ -1101,7 +1112,7 @@ class ExampleContract(Contract):
         signed_tx = account.sign_transaction(deployment_tx)
 
         # Send the signed transaction and wait for receipt
-        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
         deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore

@@ -8,9 +8,9 @@ from typing import cast
 import pytest
 from eth_abi.codec import ABICodec
 from eth_abi.registry import registry as default_registry
+from eth_typing import ABIFunction
 from hexbytes import HexBytes
 from web3.exceptions import ContractCustomError
-from web3.types import ABIFunction
 
 from pypechain.templates.utilities import get_abi_input_types
 

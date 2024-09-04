@@ -3,7 +3,7 @@
 import json
 import os
 
-from web3.types import ABI
+from eth_typing import ABI
 
 from pypechain.render.contract import get_event_datas, get_function_datas
 from pypechain.utilities.templates import get_jinja_env

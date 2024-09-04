@@ -31,13 +31,12 @@ from typing import Any, Type, cast
 from eth_abi.codec import ABICodec
 from eth_abi.registry import registry as default_registry
 from eth_account.signers.local import LocalAccount
-from eth_typing import ChecksumAddress, HexStr
+from eth_typing import ABI, ABIFunction, ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
-from web3.exceptions import FallbackNotFound
-from web3.types import ABI, ABIFunction, BlockIdentifier, CallOverride, TxParams
+from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from .utilities import get_abi_input_types
 
@@ -57,7 +56,7 @@ class ErrorsRevertWithErrorOneContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
@@ -79,7 +78,7 @@ class ErrorsRevertWithErrorThreeContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
@@ -101,7 +100,7 @@ class ErrorsRevertWithErrorTwoContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
@@ -133,7 +132,7 @@ class ErrorsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="revertWithErrorOne",
+            abi_element_identifier="revertWithErrorOne",
         )
         self.revertWithErrorThree = ErrorsRevertWithErrorThreeContractFunction.factory(
             "revertWithErrorThree",
@@ -141,7 +140,7 @@ class ErrorsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="revertWithErrorThree",
+            abi_element_identifier="revertWithErrorThree",
         )
         self.revertWithErrorTwo = ErrorsRevertWithErrorTwoContractFunction.factory(
             "revertWithErrorTwo",
@@ -149,7 +148,7 @@ class ErrorsContractFunctions(ContractFunctions):
             contract_abi=abi,
             address=address,
             decode_tuples=decode_tuples,
-            function_identifier="revertWithErrorTwo",
+            abi_element_identifier="revertWithErrorTwo",
         )
 
 
@@ -383,15 +382,11 @@ class ErrorsContract(Contract):
     )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
-        try:
-            # Initialize parent Contract class
-            super().__init__(address=address)
-            self.functions = ErrorsContractFunctions(errors_abi, self.w3, address)  # type: ignore
+        # Initialize parent Contract class
+        super().__init__(address=address)
+        self.functions = ErrorsContractFunctions(errors_abi, self.w3, address)  # type: ignore
 
-            self.errors = ErrorsContractErrors()
-
-        except FallbackNotFound:
-            print("Fallback function not found. Continuing...")
+        self.errors = ErrorsContractErrors()
 
     errors: ErrorsContractErrors = ErrorsContractErrors()
 
@@ -459,7 +454,7 @@ class ErrorsContract(Contract):
         signed_tx = account.sign_transaction(deployment_tx)
 
         # Send the signed transaction and wait for receipt
-        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
         deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore

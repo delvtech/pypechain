@@ -7,9 +7,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal, NamedTuple, Sequence, TypeGuard, cast
 
+from eth_typing import ABI, ABIComponent, ABIElement, ABIError, ABIEvent, ABIFunction
 from eth_utils.abi import collapse_if_tuple, function_signature_to_4byte_selector
 from eth_utils.hexadecimal import encode_hex
-from web3.types import ABI, ABIElement, ABIError, ABIEvent, ABIFunction, ABIFunctionComponents, ABIFunctionParams
 
 from pypechain.foundry.types import FoundryJson
 from pypechain.hardhat.types import HardhatJson
@@ -19,9 +19,6 @@ from pypechain.solc.utilities import is_solc_json
 from pypechain.utilities.bytecode import get_bytecode_from_json, get_bytecode_link_references_from_json, is_foundry_json
 from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
 from pypechain.utilities.types import LinkReferences, solidity_to_python_type
-
-# These are exactly the same sowe just rename.
-ABIErrorParams = ABIFunctionParams
 
 
 class AbiJson(NamedTuple):
@@ -259,12 +256,12 @@ class ErrorParams:
 
 
 def get_structs(
-    function_params: Sequence[ABIFunctionParams] | Sequence[ABIFunctionComponents],
+    function_params: Sequence[ABIComponent],
     structs: dict[str, StructInfo] | None = None,
 ) -> dict[str, StructInfo]:
     """Recursively gets all the structs for a contract by walking all function parameters.
 
-     Pseudo code of the shape of a Sequence[ABIFunctionParams]:
+     Pseudo code of the shape of a Sequence[ABIComponent]:
      [
         { #ABIFunctionParams
             name:
@@ -276,16 +273,16 @@ def get_structs(
             name:
             type:
             internalType:
-            components: [ #Sequence[ABIFunctionComponents]
-                { #ABIFunctionComponents
+            components: [ #Sequence[ABIComponent]
+                { #ABIComponent
                     name:
                     type:
                 },
-                { #ABIFunctionComponents
+                { #ABIComponent
                     name:
                     type:
                     internalType:
-                    components: # Sequence[ABIFunctionComponents]
+                    components: # Sequence[ABIComponent]
                 }
             ]
         },
@@ -513,7 +510,7 @@ def _abi_to_signature(abi: dict[str, Any]) -> str:
 
 
 def get_struct_name(
-    param_or_component: ABIFunctionParams | ABIFunctionComponents,
+    param_or_component: ABIComponent,
 ) -> str:
     """Returns the name of the given struct.
 
@@ -552,9 +549,7 @@ def get_struct_name(
     return capitalize_first_letter_only(struct_name)
 
 
-def get_struct_type(
-    param_or_component: ABIFunctionParams | ABIFunctionComponents,
-) -> str:
+def get_struct_type(param_or_component: ABIComponent) -> str:
     """Returns the type of the given struct.
 
     This works the same as `get_struct_name`, except that we account for arrays by
@@ -581,9 +576,7 @@ def get_struct_type(
     return get_struct_name(param_or_component)
 
 
-def get_struct_contract_name(
-    param_or_component: ABIFunctionParams | ABIFunctionComponents,
-) -> str:
+def get_struct_contract_name(param_or_component: ABIComponent) -> str:
     """Returns the contract name that the given struct is defined in.
 
     For example, a struct in an abi json will look like:
@@ -617,7 +610,7 @@ def get_struct_contract_name(
 
 
 def get_param_name(
-    param_or_component: ABIFunctionParams | ABIFunctionComponents,
+    param_or_component: ABIComponent,
 ) -> str:
     """Returns the name for a given ABIFunctionParams or ABIFunctionComponents.
 
@@ -715,9 +708,9 @@ def get_abi_items(abi: ABI) -> list[ABIElement]:
 
 
 def get_function_parameter_names(
-    parameters: Sequence[ABIFunctionParams | ABIFunctionComponents],
+    parameters: Sequence[ABIComponent],
 ) -> list[str]:
-    """Parses a list of ABIFunctionParams or ABIFUnctionComponents and returns a list of parameter
+    """Parses a list of ABIComponent and returns a list of parameter
     names."""
 
     stringified_function_parameters: list[str] = []
@@ -918,7 +911,7 @@ def _get_param_types(function: ABIFunction, parameters_type: Literal["inputs", "
     """
     stringified_function_parameters: list[str] = []
     inputs_or_outputs = function.get(parameters_type, [])
-    inputs_or_outputs = cast(list[ABIFunctionParams], inputs_or_outputs)
+    inputs_or_outputs = cast(list[ABIComponent], inputs_or_outputs)
 
     for param in inputs_or_outputs:
         python_type = get_param_type(param)
@@ -926,7 +919,7 @@ def _get_param_types(function: ABIFunction, parameters_type: Literal["inputs", "
     return stringified_function_parameters
 
 
-def get_param_type(param: ABIFunctionParams | ABIFunctionComponents):
+def get_param_type(param: ABIComponent):
     """Gets the associated python type, including generated dataclasses"""
     internal_type = cast(str, param.get("internalType", ""))
     # if we find a struct, we'll add it to the dict of StructInfo's

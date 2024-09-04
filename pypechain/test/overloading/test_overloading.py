@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 
 import pytest
-from web3.exceptions import Web3ValidationError
+from web3.exceptions import MismatchedABI
 
 from pypechain.test.overloading.types import OverloadedMethodsContract
 
@@ -40,6 +40,6 @@ class TestOverloading:
         result = deployed_contract.functions.doSomething(x, y).call()
         assert result == 1 + 2
 
-        with pytest.raises(Web3ValidationError) as err:
+        with pytest.raises(MismatchedABI) as err:
             result = deployed_contract.functions.doSomething(x, y, s).call()  # type: ignore
         assert "Could not identify the intended function with name `doSomething`" in str(err.value)

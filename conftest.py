@@ -12,7 +12,7 @@ from typing import Iterator
 import pytest
 from eth_typing import URI
 from web3 import Web3
-from web3.middleware import geth_poa
+from web3.middleware import ExtraDataToPOAMiddleware
 from web3.types import RPCEndpoint
 
 from pypechain import pypechain
@@ -138,7 +138,7 @@ def initialize_web3_with_http_provider(
 
     Notes
     -----
-    The geth_poa_middleware is required to connect to geth --dev or the Goerli public network.
+    The ExtraataToPOAMiddleware is required to connect to geth --dev or the Goerli public network.
     It may also be needed for other EVM compatible blockchains like Polygon or BNB Chain (Binance Smart Chain).
     See more `here <https://web3py.readthedocs.io/en/stable/middleware.html#proof-of-authority>`_.
     """
@@ -146,7 +146,7 @@ def initialize_web3_with_http_provider(
         request_kwargs = {}
     provider = Web3.HTTPProvider(ethereum_node, request_kwargs)
     web3 = Web3(provider)
-    web3.middleware_onion.inject(geth_poa.geth_poa_middleware, layer=0)
+    web3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
     if reset_provider:
         # TODO: Check that the user is running on anvil, raise error if not
         _ = web3.provider.make_request(method=RPCEndpoint("anvil_reset"), params=[])

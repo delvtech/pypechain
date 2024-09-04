@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, NamedTuple
 
-from web3.types import ABI
+from eth_typing import ABI
 
 from pypechain.utilities.abi import (
     AbiInfo,

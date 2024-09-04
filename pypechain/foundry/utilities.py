@@ -30,9 +30,9 @@ def get_bytecode_link_references_from_foundry_json(json_abi: FoundryJson) -> lis
         for contract_name, _ in value.items():
             fully_qualified_lib_name = f"{function_path}:{contract_name}"
             hex_code = Web3.keccak(text=fully_qualified_lib_name).hex()
-            # Remove the leading 0x, and take the 34 character prefix, and add the placeholder
+            # Hex returns raw hex without 0x. We take the 34 character prefix, and add the placeholder
             # token
-            placehoder_code = f"__${hex_code[2:36]}$__"
+            placehoder_code = f"__${hex_code[0:34]}$__"
             # TODO there may be scoping issues here
             out_link_references.append(LinkReferences(contract_name=contract_name, placeholder_code=placehoder_code))
 

@@ -8,8 +8,8 @@ from __future__ import annotations
 from dataclasses import fields, is_dataclass
 from typing import Any, Iterable, Tuple, TypeVar, cast, get_args
 
+from eth_typing import ABIFunction
 from eth_utils.abi import collapse_if_tuple
-from web3.types import ABIFunction
 
 T = TypeVar("T")
 
