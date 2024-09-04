@@ -16,7 +16,15 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["autoflake", "black", "eth-account", "isort", "jinja2", "toml", "web3>=6.20.2, <7.0.0"]
+dependencies = [
+    "autoflake", 
+    "black", 
+    "eth-account >= 0.13.3", 
+    "isort", 
+    "jinja2", 
+    "toml", 
+    "web3 >= 7.2.0",
+]
 
 [project.scripts]
 pypechain = "pypechain.main:main"
