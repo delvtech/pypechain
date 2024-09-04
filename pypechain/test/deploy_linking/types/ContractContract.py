@@ -134,7 +134,7 @@ class ContractContract(Contract):
         MyLibrary: MyLibraryContract
 
     link_references_placeholder_lookup: dict[str, str] = {
-        "MyLibrary": "__$c732ea87169659ae18eec7be97daeb59e9$__",
+        "MyLibrary": "__$81c732ea87169659ae18eec7be97daeb59$__",
     }
 
     @classmethod
