@@ -17,7 +17,7 @@ https://github.com/delvtech/pypechain """
 # pylint: disable=no-else-return
 from __future__ import annotations
 from dataclasses import dataclass
-from eth_typing import ABIEvent, ABIComponent
+from eth_typing import ABIEvent, ABIComponentIndexed
 {% for imported_contract_name in types_files_imported %}
 from . import {{imported_contract_name}}Types as {{imported_contract_name}}
 {% endfor %}
@@ -35,7 +35,7 @@ class {{struct.name}}:
     anonymous = {{event.anonymous}},
     inputs = [
 {%- for event_input in event.inputs %}
-        ABIEventParams(indexed={{event_input.indexed}}, name="{{event_input.name}}", type="{{event_input.solidity_type}}"),
+        ABIComponentIndexed(indexed={{event_input.indexed}}, name="{{event_input.name}}", type="{{event_input.solidity_type}}"),
 {%- endfor %}
     ],
     name = "{{event.name}}",
