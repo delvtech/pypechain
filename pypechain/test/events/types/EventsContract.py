@@ -29,7 +29,7 @@ from __future__ import annotations
 from typing import Any, Iterable, Sequence, Type, cast
 
 from eth_account.signers.local import LocalAccount
-from eth_typing import ChecksumAddress, HexStr
+from eth_typing import ABI, ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
@@ -42,8 +42,7 @@ from web3.contract.contract import (
     ContractFunction,
     ContractFunctions,
 )
-from web3.exceptions import FallbackNotFound
-from web3.types import ABI, BlockIdentifier, CallOverride, EventData, TxParams
+from web3.types import BlockIdentifier, EventData, StateOverride, TxParams
 
 from .utilities import dataclass_to_tuple, rename_returned_types
 
@@ -63,7 +62,7 @@ class EventsEmitNoEventsContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
@@ -90,7 +89,7 @@ class EventsEmitOneEventContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
@@ -112,7 +111,7 @@ class EventsEmitTwoEventsContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
@@ -399,14 +398,10 @@ class EventsContract(Contract):
     )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
-        try:
-            # Initialize parent Contract class
-            super().__init__(address=address)
-            self.functions = EventsContractFunctions(events_abi, self.w3, address)  # type: ignore
-            self.events = EventsContractEvents(events_abi, self.w3, address)  # type: ignore
-
-        except FallbackNotFound:
-            print("Fallback function not found. Continuing...")
+        # Initialize parent Contract class
+        super().__init__(address=address)
+        self.functions = EventsContractFunctions(events_abi, self.w3, address)  # type: ignore
+        self.events = EventsContractEvents(events_abi, self.w3, address)  # type: ignore
 
     events: EventsContractEvents
 
@@ -474,7 +469,7 @@ class EventsContract(Contract):
         signed_tx = account.sign_transaction(deployment_tx)
 
         # Send the signed transaction and wait for receipt
-        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
         deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore

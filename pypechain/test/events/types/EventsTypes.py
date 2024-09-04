@@ -20,13 +20,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from web3.types import ABIEvent, ABIEventParams
+from eth_typing import ABIComponentIndexed, ABIEvent
 
 EventA = ABIEvent(
     anonymous=False,
     inputs=[
-        ABIEventParams(indexed=True, name="who", type="address"),
-        ABIEventParams(indexed=False, name="value", type="uint256"),
+        ABIComponentIndexed(indexed=True, name="who", type="address"),
+        ABIComponentIndexed(indexed=False, name="value", type="uint256"),
     ],
     name="EventA",
     type="event",

@@ -31,7 +31,7 @@ from typing import Any, Iterable, NamedTuple, Sequence, Type, cast
 from eth_abi.codec import ABICodec
 from eth_abi.registry import registry as default_registry
 from eth_account.signers.local import LocalAccount
-from eth_typing import ChecksumAddress, HexStr
+from eth_typing import ABI, ABIFunction, ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
@@ -44,8 +44,7 @@ from web3.contract.contract import (
     ContractFunction,
     ContractFunctions,
 )
-from web3.exceptions import FallbackNotFound
-from web3.types import ABI, ABIFunction, BlockIdentifier, CallOverride, EventData, TxParams
+from web3.types import BlockIdentifier, EventData, StateOverride, TxParams
 
 from .ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
 from .utilities import dataclass_to_tuple, get_abi_input_types, rename_returned_types
@@ -76,7 +75,7 @@ class ExampleFlipFlopContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
@@ -103,7 +102,7 @@ class ExampleGuessALetterContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
@@ -134,7 +133,7 @@ class ExampleMixStructsAndPrimitivesContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
@@ -161,7 +160,7 @@ class ExampleNamedSingleStructContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> SimpleStruct:
         """returns SimpleStruct."""
@@ -194,7 +193,7 @@ class ExampleNamedTwoMixedStructsContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
@@ -221,7 +220,7 @@ class ExampleSingleNestedStructContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> NestedStruct:
         """returns NestedStruct."""
@@ -248,7 +247,7 @@ class ExampleSingleSimpleStructContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> SimpleStruct:
         """returns SimpleStruct."""
@@ -281,7 +280,7 @@ class ExampleTwoMixedStructsContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
@@ -314,7 +313,7 @@ class ExampleTwoSimpleStructsContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
@@ -341,7 +340,7 @@ class ExampleVecOfStructContractFunction(ContractFunction):
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> list[SimpleStruct]:
         """returns list[SimpleStruct]."""
@@ -1016,15 +1015,11 @@ class ExampleContract(Contract):
     )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
-        try:
-            # Initialize parent Contract class
-            super().__init__(address=address)
-            self.functions = ExampleContractFunctions(example_abi, self.w3, address)  # type: ignore
-            self.events = ExampleContractEvents(example_abi, self.w3, address)  # type: ignore
-            self.errors = ExampleContractErrors()
-
-        except FallbackNotFound:
-            print("Fallback function not found. Continuing...")
+        # Initialize parent Contract class
+        super().__init__(address=address)
+        self.functions = ExampleContractFunctions(example_abi, self.w3, address)  # type: ignore
+        self.events = ExampleContractEvents(example_abi, self.w3, address)  # type: ignore
+        self.errors = ExampleContractErrors()
 
     events: ExampleContractEvents
 
@@ -1101,7 +1096,7 @@ class ExampleContract(Contract):
         signed_tx = account.sign_transaction(deployment_tx)
 
         # Send the signed transaction and wait for receipt
-        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
         tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
         deployed_contract = deployer(address=tx_receipt.contractAddress)  # type: ignore
