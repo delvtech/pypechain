@@ -1065,7 +1065,7 @@ class ExampleContract(Contract):
 
     @classmethod
     def deploy(cls, w3: Web3, account: LocalAccount | ChecksumAddress, constructor_args: ConstructorArgs) -> Self:
-        """Deploys and instance of the contract.
+        """Deploys an instance of the contract.
 
         Parameters
         ----------
@@ -1109,7 +1109,7 @@ class ExampleContract(Contract):
 
     @classmethod
     def factory(cls, w3: Web3, class_name: str | None = None, **kwargs: Any) -> Type[Self]:
-        """Deploys and instance of the contract.
+        """Initializes the contract object.
 
         Parameters
         ----------
@@ -1121,7 +1121,7 @@ class ExampleContract(Contract):
         Returns
         -------
         Self
-            A deployed instance of the contract.
+            An instance of the contract class.
         """
         contract = super().factory(w3, class_name, **kwargs)
         contract.functions = ExampleContractFunctions(example_abi, w3, None)
