@@ -179,14 +179,14 @@ class EventsEventAContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         self: "EventsEventAContractEvent",
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -194,14 +194,14 @@ class EventsEventAContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         cls: Type["EventsEventAContractEvent"],
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -209,15 +209,19 @@ class EventsEventAContractEvent(ContractEvent):
         self: "EventsEventAContractEvent",
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -226,15 +230,19 @@ class EventsEventAContractEvent(ContractEvent):
         cls: Type["EventsEventAContractEvent"],
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -255,14 +263,14 @@ class EventsEventBContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         self: "EventsEventBContractEvent",
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -270,14 +278,14 @@ class EventsEventBContractEvent(ContractEvent):
     def get_logs(  # type: ignore
         cls: Type["EventsEventBContractEvent"],
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier | None = None,
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[EventData]:
         return cast(
             Iterable[EventData],
             super().get_logs(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, block_hash=block_hash
+                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
             ),
         )
 
@@ -285,15 +293,19 @@ class EventsEventBContractEvent(ContractEvent):
         self: "EventsEventBContractEvent",
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 
@@ -302,15 +314,19 @@ class EventsEventBContractEvent(ContractEvent):
         cls: Type["EventsEventBContractEvent"],
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
-        fromBlock: BlockIdentifier | None = None,
-        toBlock: BlockIdentifier = "latest",
+        from_block: BlockIdentifier | None = None,
+        to_block: BlockIdentifier = "latest",
         address: ChecksumAddress | None = None,
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(
             LogFilter,
             super().create_filter(
-                argument_filters=argument_filters, fromBlock=fromBlock, toBlock=toBlock, address=address, topics=topics
+                argument_filters=argument_filters,
+                from_block=from_block,
+                to_block=to_block,
+                address=address,
+                topics=topics,
             ),
         )
 

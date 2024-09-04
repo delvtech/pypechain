@@ -38,10 +38,10 @@ class TestEvents:
 
         event_a_logs = deployed_contract.events.EventA.get_logs(
             argument_filters={"who": "0x0000000000000000000000000000000000000000"},
-            fromBlock=0,
+            from_block=0,
         )
         event_b_logs = deployed_contract.events.EventB.get_logs(
-            fromBlock=0,
+            from_block=0,
         )
         assert len(list(event_a_logs)) == 2
         assert len(list(event_b_logs)) == 1
@@ -54,10 +54,10 @@ class TestEvents:
 
         event_a_filter = deployed_contract.events.EventA.create_filter(
             argument_filters={"who": "0x0000000000000000000000000000000000000000"},
-            fromBlock=0,
+            from_block=0,
         )
         event_b_filter = deployed_contract.events.EventB.create_filter(
-            fromBlock=0,
+            from_block=0,
         )
 
         a_events = event_a_filter.get_new_entries()
