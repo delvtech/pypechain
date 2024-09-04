@@ -2,7 +2,7 @@
 
 from typing import Any, Literal, TypedDict
 
-from web3.types import ABI
+from eth_typing import ABI
 
 
 class FoundryByteCode(TypedDict):
