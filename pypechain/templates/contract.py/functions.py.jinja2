@@ -27,7 +27,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction{{i}}(C
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> {{return_type}}:
         """returns {{return_type}}."""
@@ -89,7 +89,7 @@ class {{contract_name}}{{function_data.capitalized_name}}ContractFunction(Contra
         self,
         transaction: TxParams | None = None,
         block_identifier: BlockIdentifier = "latest",
-        state_override: CallOverride | None = None,
+        state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> {{return_type}}:
         """returns {{return_type}}."""

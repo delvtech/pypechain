@@ -11,19 +11,15 @@ class {{contract_name}}Contract(Contract):
     {%- endif -%}
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
-        try:
-            # Initialize parent Contract class
-            super().__init__(address=address)
-            self.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, self.w3, address) # type: ignore
-            {% if has_events -%}
-            self.events = {{contract_name}}ContractEvents({{contract_name | lower}}_abi, self.w3, address) # type: ignore
-            {%- endif %}
-            {% if has_errors -%}
-            self.errors = {{contract_name}}ContractErrors()
-            {%- endif %}
-
-        except FallbackNotFound:
-            print("Fallback function not found. Continuing...")
+        # Initialize parent Contract class
+        super().__init__(address=address)
+        self.functions = {{contract_name}}ContractFunctions({{contract_name | lower}}_abi, self.w3, address) # type: ignore
+        {% if has_events -%}
+        self.events = {{contract_name}}ContractEvents({{contract_name | lower}}_abi, self.w3, address) # type: ignore
+        {%- endif %}
+        {% if has_errors -%}
+        self.errors = {{contract_name}}ContractErrors()
+        {%- endif %}
 
     {% if has_events -%}
     events: {{contract_name}}ContractEvents
