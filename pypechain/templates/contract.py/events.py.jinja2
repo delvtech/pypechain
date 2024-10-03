@@ -15,7 +15,7 @@ class {{event.capitalized_name}}EventArgs:
 @dataclass(kw_only=True)
 class {{event.capitalized_name}}Event(BaseEvent):
 {% if has_event_args %}
-    args: {{event.name}}EventArgs
+    args: {{event.capitalized_name}}EventArgs
 {% endif %}
     __name__: str = "{{event.name}}"
 
