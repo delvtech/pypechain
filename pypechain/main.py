@@ -77,12 +77,6 @@ def pypechain(
     # Render the __init__.py file
     render_init_file(output_dir, file_names, line_length)
 
-    # Get the path to `utilities.py` (assuming it's in the same directory as your script)
-    utilities_path = Path(__file__).parent / "templates/utilities.py"
-
-    # Copy the file to the output directory
-    copy2(utilities_path, output_dir)
-
 
 def gather_json_files(directory: str) -> list:
     """Gather all JSON files in the specified directory and its subdirectories."""
