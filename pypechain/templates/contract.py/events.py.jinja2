@@ -40,10 +40,10 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[{{event.name}}Event]:
+    ) -> Iterable[{{event.capitalized_name}}Event]:
         abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
         return [
-            {{event.name}}Event(
+            {{event.capitalized_name}}Event(
                 log_index = abi_event.logIndex,
                 transaction_index = abi_event.transactionIndex,
                 transaction_hash = abi_event.transactionHash,
@@ -68,10 +68,10 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[{{event.name}}Event]:
+    ) -> Iterable[{{event.capitalized_name}}Event]:
         abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
         return [
-            {{event.name}}Event(
+            {{event.capitalized_name}}Event(
                 log_index = abi_event.logIndex,
                 transaction_index = abi_event.transactionIndex,
                 transaction_hash = abi_event.transactionHash,
