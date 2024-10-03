@@ -1,3 +1,12 @@
+@dataclass(kw_only=True)
+class TransferEvent(BaseEvent):
+    """The return event type for Transfer"""
+    # TODO event_input.name may conflict with base event arguments
+    from: str
+    to: str
+    value: int
+    __name__: str = "Transfer"
+
 class OverloadedTransferContractEvent(ContractEvent):
     """ContractEvent for Transfer."""
     # super() get_logs and create_filter methods are generic, while our version adds values & types
@@ -18,8 +27,22 @@ class OverloadedTransferContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(Iterable[EventData], super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash))
+    ) -> Iterable[TransferEvent]:
+        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        return [
+            TransferEvent(
+                log_index = abi_event.logIndex,
+                transaction_index = abi_event.transactionIndex,
+                transaction_hash = abi_event.transactionHash,
+                address = abi_event.address,
+                block_hash = abi_event.blockHash,
+                block_number = abi_event.blockNumber,
+                abi_event = abi_event,
+                from = abi_event.args["from"],
+                to = abi_event.args["to"],
+                value = abi_event.args["value"],
+            ) for abi_event in abi_events
+        ]
 
     @classmethod
     def get_logs( # type: ignore
@@ -28,8 +51,22 @@ class OverloadedTransferContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(Iterable[EventData], super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash))
+    ) -> Iterable[TransferEvent]:
+        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        return [
+            TransferEvent(
+                log_index = abi_event.logIndex,
+                transaction_index = abi_event.transactionIndex,
+                transaction_hash = abi_event.transactionHash,
+                address = abi_event.address,
+                block_hash = abi_event.blockHash,
+                block_number = abi_event.blockNumber,
+                abi_event = abi_event,
+                from = abi_event.args["from"],
+                to = abi_event.args["to"],
+                value = abi_event.args["value"],
+            ) for abi_event in abi_events
+        ]
 
     def create_filter( # type: ignore
         self: "OverloadedTransferContractEvent",
@@ -53,6 +90,15 @@ class OverloadedTransferContractEvent(ContractEvent):
         topics: Sequence[Any] | None = None,
     ) -> LogFilter:
         return cast(LogFilter, super().create_filter(argument_filters=argument_filters, from_block=from_block, to_block=to_block, address=address, topics=topics))
+
+@dataclass(kw_only=True)
+class ApprovalEvent(BaseEvent):
+    """The return event type for Approval"""
+    # TODO event_input.name may conflict with base event arguments
+    owner: str
+    spender: str
+    value: int
+    __name__: str = "Approval"
 
 class OverloadedApprovalContractEvent(ContractEvent):
     """ContractEvent for Approval."""
@@ -74,8 +120,22 @@ class OverloadedApprovalContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(Iterable[EventData], super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash))
+    ) -> Iterable[ApprovalEvent]:
+        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        return [
+            ApprovalEvent(
+                log_index = abi_event.logIndex,
+                transaction_index = abi_event.transactionIndex,
+                transaction_hash = abi_event.transactionHash,
+                address = abi_event.address,
+                block_hash = abi_event.blockHash,
+                block_number = abi_event.blockNumber,
+                abi_event = abi_event,
+                owner = abi_event.args["owner"],
+                spender = abi_event.args["spender"],
+                value = abi_event.args["value"],
+            ) for abi_event in abi_events
+        ]
 
     @classmethod
     def get_logs( # type: ignore
@@ -84,8 +144,22 @@ class OverloadedApprovalContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(Iterable[EventData], super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash))
+    ) -> Iterable[ApprovalEvent]:
+        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        return [
+            ApprovalEvent(
+                log_index = abi_event.logIndex,
+                transaction_index = abi_event.transactionIndex,
+                transaction_hash = abi_event.transactionHash,
+                address = abi_event.address,
+                block_hash = abi_event.blockHash,
+                block_number = abi_event.blockNumber,
+                abi_event = abi_event,
+                owner = abi_event.args["owner"],
+                spender = abi_event.args["spender"],
+                value = abi_event.args["value"],
+            ) for abi_event in abi_events
+        ]
 
     def create_filter( # type: ignore
         self: "OverloadedApprovalContractEvent",
