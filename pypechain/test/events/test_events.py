@@ -8,7 +8,7 @@ import pytest
 from web3 import Web3
 from web3.logs import WARN
 
-from pypechain.test.events.types import EventsContract
+from pypechain.test.events.types import EventAEvent, EventBEvent, EventsContract
 
 current_path = os.path.abspath(os.path.dirname(__file__))
 project_root = os.path.dirname(os.path.dirname(current_path))
@@ -27,24 +27,37 @@ class TestEvents:
         hash_b = deployed_contract.functions.emitTwoEvents(0, "0x0000000000000000000000000000000000000000").transact()
         receipt_b = w3.eth.get_transaction_receipt(hash_b)
 
-        deployed_contract.events.EventA.process_receipt(receipt_a, WARN)
-        deployed_contract.events.EventB.process_receipt(receipt_b, WARN)
+        deployed_contract.events.EventA.process_receipt(receipt_a, errors=WARN)
+        deployed_contract.events.EventB.process_receipt(receipt_b, errors=WARN)
 
     def test_get_logs(self, w3):
-        """Test that we can use event filters."""
+        """Test that we can get logs and the return is the type we expect."""
         deployed_contract = EventsContract.deploy(w3=w3, account=w3.eth.accounts[0])
         deployed_contract.functions.emitOneEvent(0, "0x0000000000000000000000000000000000000000").transact()
-        deployed_contract.functions.emitTwoEvents(0, "0x0000000000000000000000000000000000000000").transact()
+        deployed_contract.functions.emitTwoEvents(1, "0x0000000000000000000000000000000000000000").transact()
 
-        event_a_logs = deployed_contract.events.EventA.get_logs(
-            argument_filters={"who": "0x0000000000000000000000000000000000000000"},
-            from_block=0,
+        event_a_logs = list(
+            deployed_contract.events.EventA.get_logs(
+                argument_filters={"who": "0x0000000000000000000000000000000000000000"},
+                from_block=0,
+            )
         )
-        event_b_logs = deployed_contract.events.EventB.get_logs(
-            from_block=0,
+        event_b_logs = list(
+            deployed_contract.events.EventB.get_logs(
+                from_block=0,
+            )
         )
-        assert len(list(event_a_logs)) == 2
+
+        assert len(event_a_logs) == 2
+        assert isinstance(event_a_logs[0], EventAEvent)
+        assert event_a_logs[0].who == "0x0000000000000000000000000000000000000000"
+        assert event_a_logs[0].value == 0
+        assert isinstance(event_a_logs[1], EventAEvent)
+        assert event_a_logs[1].who == "0x0000000000000000000000000000000000000000"
+        assert event_a_logs[1].value == 1
+
         assert len(list(event_b_logs)) == 1
+        assert isinstance(event_b_logs[0], EventBEvent)
 
     def test_create_filter(self, w3):
         """Test that we can use event filters."""

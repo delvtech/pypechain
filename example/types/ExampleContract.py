@@ -26,6 +26,7 @@ https://github.com/delvtech/pypechain"""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any, Iterable, NamedTuple, Sequence, Type, cast
 
 from eth_abi.codec import ABICodec
@@ -44,7 +45,9 @@ from web3.contract.contract import (
     ContractFunction,
     ContractFunctions,
 )
-from web3.types import BlockIdentifier, EventData, StateOverride, TxParams
+from web3.types import BlockIdentifier, StateOverride, TxParams
+
+from pypechain.core import BaseEvent
 
 from .ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
 from .utilities import dataclass_to_tuple, get_abi_input_types, rename_returned_types
@@ -467,6 +470,15 @@ class ExampleContractFunctions(ContractFunctions):
         )
 
 
+@dataclass(kw_only=True)
+class FlipEvent(BaseEvent):
+    """The return event type for Flip"""
+
+    # TODO event_input.name may conflict with base event arguments
+    flip: int
+    __name__: str = "Flip"
+
+
 class ExampleFlipContractEvent(ContractEvent):
     """ContractEvent for Flip."""
 
@@ -486,13 +498,23 @@ class ExampleFlipContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(
-            Iterable[EventData],
-            super().get_logs(
-                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
-            ),
+    ) -> Iterable[FlipEvent]:
+        abi_events = super().get_logs(
+            argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
         )
+        return [
+            FlipEvent(
+                log_index=abi_event.logIndex,
+                transaction_index=abi_event.transactionIndex,
+                transaction_hash=abi_event.transactionHash,
+                address=abi_event.address,
+                block_hash=abi_event.blockHash,
+                block_number=abi_event.blockNumber,
+                abi_event=abi_event,
+                flip=abi_event.args["flip"],
+            )
+            for abi_event in abi_events
+        ]
 
     @classmethod
     def get_logs(  # type: ignore
@@ -501,13 +523,23 @@ class ExampleFlipContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(
-            Iterable[EventData],
-            super().get_logs(
-                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
-            ),
+    ) -> Iterable[FlipEvent]:
+        abi_events = super().get_logs(
+            argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
         )
+        return [
+            FlipEvent(
+                log_index=abi_event.logIndex,
+                transaction_index=abi_event.transactionIndex,
+                transaction_hash=abi_event.transactionHash,
+                address=abi_event.address,
+                block_hash=abi_event.blockHash,
+                block_number=abi_event.blockNumber,
+                abi_event=abi_event,
+                flip=abi_event.args["flip"],
+            )
+            for abi_event in abi_events
+        ]
 
     def create_filter(  # type: ignore
         self: "ExampleFlipContractEvent",
@@ -549,6 +581,15 @@ class ExampleFlipContractEvent(ContractEvent):
                 topics=topics,
             ),
         )
+
+
+@dataclass(kw_only=True)
+class FlopEvent(BaseEvent):
+    """The return event type for Flop"""
+
+    # TODO event_input.name may conflict with base event arguments
+    flop: int
+    __name__: str = "Flop"
 
 
 class ExampleFlopContractEvent(ContractEvent):
@@ -570,13 +611,23 @@ class ExampleFlopContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(
-            Iterable[EventData],
-            super().get_logs(
-                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
-            ),
+    ) -> Iterable[FlopEvent]:
+        abi_events = super().get_logs(
+            argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
         )
+        return [
+            FlopEvent(
+                log_index=abi_event.logIndex,
+                transaction_index=abi_event.transactionIndex,
+                transaction_hash=abi_event.transactionHash,
+                address=abi_event.address,
+                block_hash=abi_event.blockHash,
+                block_number=abi_event.blockNumber,
+                abi_event=abi_event,
+                flop=abi_event.args["flop"],
+            )
+            for abi_event in abi_events
+        ]
 
     @classmethod
     def get_logs(  # type: ignore
@@ -585,13 +636,23 @@ class ExampleFlopContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(
-            Iterable[EventData],
-            super().get_logs(
-                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
-            ),
+    ) -> Iterable[FlopEvent]:
+        abi_events = super().get_logs(
+            argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
         )
+        return [
+            FlopEvent(
+                log_index=abi_event.logIndex,
+                transaction_index=abi_event.transactionIndex,
+                transaction_hash=abi_event.transactionHash,
+                address=abi_event.address,
+                block_hash=abi_event.blockHash,
+                block_number=abi_event.blockNumber,
+                abi_event=abi_event,
+                flop=abi_event.args["flop"],
+            )
+            for abi_event in abi_events
+        ]
 
     def create_filter(  # type: ignore
         self: "ExampleFlopContractEvent",

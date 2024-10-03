@@ -26,6 +26,7 @@ https://github.com/delvtech/pypechain"""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any, Iterable, Sequence, Type, cast
 
 from eth_account.signers.local import LocalAccount
@@ -42,7 +43,9 @@ from web3.contract.contract import (
     ContractFunction,
     ContractFunctions,
 )
-from web3.types import BlockIdentifier, EventData, StateOverride, TxParams
+from web3.types import BlockIdentifier, StateOverride, TxParams
+
+from pypechain.core import BaseEvent
 
 from .utilities import dataclass_to_tuple, rename_returned_types
 
@@ -163,6 +166,16 @@ class EventsContractFunctions(ContractFunctions):
         )
 
 
+@dataclass(kw_only=True)
+class EventAEvent(BaseEvent):
+    """The return event type for EventA"""
+
+    # TODO event_input.name may conflict with base event arguments
+    who: str
+    value: int
+    __name__: str = "EventA"
+
+
 class EventsEventAContractEvent(ContractEvent):
     """ContractEvent for EventA."""
 
@@ -182,13 +195,24 @@ class EventsEventAContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(
-            Iterable[EventData],
-            super().get_logs(
-                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
-            ),
+    ) -> Iterable[EventAEvent]:
+        abi_events = super().get_logs(
+            argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
         )
+        return [
+            EventAEvent(
+                log_index=abi_event.logIndex,
+                transaction_index=abi_event.transactionIndex,
+                transaction_hash=abi_event.transactionHash,
+                address=abi_event.address,
+                block_hash=abi_event.blockHash,
+                block_number=abi_event.blockNumber,
+                abi_event=abi_event,
+                who=abi_event.args["who"],
+                value=abi_event.args["value"],
+            )
+            for abi_event in abi_events
+        ]
 
     @classmethod
     def get_logs(  # type: ignore
@@ -197,13 +221,24 @@ class EventsEventAContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(
-            Iterable[EventData],
-            super().get_logs(
-                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
-            ),
+    ) -> Iterable[EventAEvent]:
+        abi_events = super().get_logs(
+            argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
         )
+        return [
+            EventAEvent(
+                log_index=abi_event.logIndex,
+                transaction_index=abi_event.transactionIndex,
+                transaction_hash=abi_event.transactionHash,
+                address=abi_event.address,
+                block_hash=abi_event.blockHash,
+                block_number=abi_event.blockNumber,
+                abi_event=abi_event,
+                who=abi_event.args["who"],
+                value=abi_event.args["value"],
+            )
+            for abi_event in abi_events
+        ]
 
     def create_filter(  # type: ignore
         self: "EventsEventAContractEvent",
@@ -245,6 +280,14 @@ class EventsEventAContractEvent(ContractEvent):
                 topics=topics,
             ),
         )
+
+
+@dataclass(kw_only=True)
+class EventBEvent(BaseEvent):
+    """The return event type for EventB"""
+
+    # TODO event_input.name may conflict with base event arguments
+    __name__: str = "EventB"
 
 
 class EventsEventBContractEvent(ContractEvent):
@@ -266,13 +309,22 @@ class EventsEventBContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(
-            Iterable[EventData],
-            super().get_logs(
-                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
-            ),
+    ) -> Iterable[EventBEvent]:
+        abi_events = super().get_logs(
+            argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
         )
+        return [
+            EventBEvent(
+                log_index=abi_event.logIndex,
+                transaction_index=abi_event.transactionIndex,
+                transaction_hash=abi_event.transactionHash,
+                address=abi_event.address,
+                block_hash=abi_event.blockHash,
+                block_number=abi_event.blockNumber,
+                abi_event=abi_event,
+            )
+            for abi_event in abi_events
+        ]
 
     @classmethod
     def get_logs(  # type: ignore
@@ -281,13 +333,22 @@ class EventsEventBContractEvent(ContractEvent):
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(
-            Iterable[EventData],
-            super().get_logs(
-                argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
-            ),
+    ) -> Iterable[EventBEvent]:
+        abi_events = super().get_logs(
+            argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
         )
+        return [
+            EventBEvent(
+                log_index=abi_event.logIndex,
+                transaction_index=abi_event.transactionIndex,
+                transaction_hash=abi_event.transactionHash,
+                address=abi_event.address,
+                block_hash=abi_event.blockHash,
+                block_number=abi_event.blockNumber,
+                abi_event=abi_event,
+            )
+            for abi_event in abi_events
+        ]
 
     def create_filter(  # type: ignore
         self: "EventsEventBContractEvent",

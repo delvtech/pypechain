@@ -8,4 +8,3 @@ https://github.com/delvtech/pypechain"""
 # pylint: disable=import-self
 
 from .EventsContract import *
-from .EventsTypes import *
