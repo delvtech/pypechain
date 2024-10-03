@@ -471,11 +471,17 @@ class ExampleContractFunctions(ContractFunctions):
 
 
 @dataclass(kw_only=True)
-class FlipEvent(BaseEvent):
-    """The return event type for Flip"""
+class FlipEventArgs:
+    """The args to the event Flip"""
 
-    # TODO event_input.name may conflict with base event arguments
     flip: int
+
+
+@dataclass(kw_only=True)
+class FlipEvent(BaseEvent):
+
+    args: FlipEventArgs
+
     __name__: str = "Flip"
 
 
@@ -511,7 +517,9 @@ class ExampleFlipContractEvent(ContractEvent):
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
                 abi_event=abi_event,
-                flip=abi_event.args["flip"],
+                args=FlipEventArgs(
+                    flip=abi_event.args["flip"],
+                ),
             )
             for abi_event in abi_events
         ]
@@ -536,7 +544,9 @@ class ExampleFlipContractEvent(ContractEvent):
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
                 abi_event=abi_event,
-                flip=abi_event.args["flip"],
+                args=FlipEventArgs(
+                    flip=abi_event.args["flip"],
+                ),
             )
             for abi_event in abi_events
         ]
@@ -584,11 +594,17 @@ class ExampleFlipContractEvent(ContractEvent):
 
 
 @dataclass(kw_only=True)
-class FlopEvent(BaseEvent):
-    """The return event type for Flop"""
+class FlopEventArgs:
+    """The args to the event Flop"""
 
-    # TODO event_input.name may conflict with base event arguments
     flop: int
+
+
+@dataclass(kw_only=True)
+class FlopEvent(BaseEvent):
+
+    args: FlopEventArgs
+
     __name__: str = "Flop"
 
 
@@ -624,7 +640,9 @@ class ExampleFlopContractEvent(ContractEvent):
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
                 abi_event=abi_event,
-                flop=abi_event.args["flop"],
+                args=FlopEventArgs(
+                    flop=abi_event.args["flop"],
+                ),
             )
             for abi_event in abi_events
         ]
@@ -649,7 +667,9 @@ class ExampleFlopContractEvent(ContractEvent):
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
                 abi_event=abi_event,
-                flop=abi_event.args["flop"],
+                args=FlopEventArgs(
+                    flop=abi_event.args["flop"],
+                ),
             )
             for abi_event in abi_events
         ]

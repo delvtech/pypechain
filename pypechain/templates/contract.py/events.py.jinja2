@@ -1,13 +1,22 @@
 {# loop over all events and create types for each #}
 {%- for event in events -%}
 
+{% set has_event_args = event.inputs|length > 0 %}
+
+{% if has_event_args %}
 @dataclass(kw_only=True)
-class {{event.name}}Event(BaseEvent):
-    """The return event type for {{event.name}}"""
-    # TODO event_input.name may conflict with base event arguments
+class {{event.name}}EventArgs:
+    """The args to the event {{event.name}}"""
 {%- for event_input in event.inputs %}
     {{event_input.name}}: {{event_input.python_type}}
 {%- endfor %}
+{% endif %}
+
+@dataclass(kw_only=True)
+class {{event.name}}Event(BaseEvent):
+{% if has_event_args %}
+    args: {{event.name}}EventArgs
+{% endif %}
     __name__: str = "{{event.name}}"
 
 class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
@@ -42,9 +51,13 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
                 abi_event = abi_event,
-    {%- for event_input in event.inputs %}
-                {{event_input.name}} = abi_event.args["{{event_input.name}}"],
-    {%- endfor %}
+{% if has_event_args %}
+                args = {{event.name}}EventArgs(
+{%- for event_input in event.inputs %}
+                    {{event_input.name}} = abi_event.args["{{event_input.name}}"],
+{%- endfor %}
+                ),
+{% endif %}
             ) for abi_event in abi_events
         ]
 
@@ -66,9 +79,13 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
                 abi_event = abi_event,
-    {%- for event_input in event.inputs %}
-                {{event_input.name}} = abi_event.args["{{event_input.name}}"],
-    {%- endfor %}
+{% if has_event_args %}
+                args = {{event.name}}EventArgs(
+{%- for event_input in event.inputs %}
+                    {{event_input.name}} = abi_event.args["{{event_input.name}}"],
+{%- endfor %}
+                ),
+{% endif %}
             ) for abi_event in abi_events
         ]
 

@@ -167,12 +167,18 @@ class EventsContractFunctions(ContractFunctions):
 
 
 @dataclass(kw_only=True)
-class EventAEvent(BaseEvent):
-    """The return event type for EventA"""
+class EventAEventArgs:
+    """The args to the event EventA"""
 
-    # TODO event_input.name may conflict with base event arguments
     who: str
     value: int
+
+
+@dataclass(kw_only=True)
+class EventAEvent(BaseEvent):
+
+    args: EventAEventArgs
+
     __name__: str = "EventA"
 
 
@@ -208,8 +214,10 @@ class EventsEventAContractEvent(ContractEvent):
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
                 abi_event=abi_event,
-                who=abi_event.args["who"],
-                value=abi_event.args["value"],
+                args=EventAEventArgs(
+                    who=abi_event.args["who"],
+                    value=abi_event.args["value"],
+                ),
             )
             for abi_event in abi_events
         ]
@@ -234,8 +242,10 @@ class EventsEventAContractEvent(ContractEvent):
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
                 abi_event=abi_event,
-                who=abi_event.args["who"],
-                value=abi_event.args["value"],
+                args=EventAEventArgs(
+                    who=abi_event.args["who"],
+                    value=abi_event.args["value"],
+                ),
             )
             for abi_event in abi_events
         ]
@@ -284,9 +294,7 @@ class EventsEventAContractEvent(ContractEvent):
 
 @dataclass(kw_only=True)
 class EventBEvent(BaseEvent):
-    """The return event type for EventB"""
 
-    # TODO event_input.name may conflict with base event arguments
     __name__: str = "EventB"
 
 

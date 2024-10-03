@@ -50,11 +50,11 @@ class TestEvents:
 
         assert len(event_a_logs) == 2
         assert isinstance(event_a_logs[0], EventAEvent)
-        assert event_a_logs[0].who == "0x0000000000000000000000000000000000000000"
-        assert event_a_logs[0].value == 0
+        assert event_a_logs[0].args.who == "0x0000000000000000000000000000000000000000"
+        assert event_a_logs[0].args.value == 0
         assert isinstance(event_a_logs[1], EventAEvent)
-        assert event_a_logs[1].who == "0x0000000000000000000000000000000000000000"
-        assert event_a_logs[1].value == 1
+        assert event_a_logs[1].args.who == "0x0000000000000000000000000000000000000000"
+        assert event_a_logs[1].args.value == 1
 
         assert len(list(event_b_logs)) == 1
         assert isinstance(event_b_logs[0], EventBEvent)
