@@ -11,6 +11,7 @@ class TransferEventArgs:
 
 @dataclass(kw_only=True)
 class TransferEvent(BaseEvent):
+    """The event type for event Transfer"""
 
     args: TransferEventArgs
 
@@ -121,6 +122,7 @@ class ApprovalEventArgs:
 
 @dataclass(kw_only=True)
 class ApprovalEvent(BaseEvent):
+    """The event type for event Approval"""
 
     args: ApprovalEventArgs
 
