@@ -8,6 +8,10 @@ from hexbytes import HexBytes
 
 @dataclass(kw_only=True)
 class BaseEvent:
+    """The base event class for all subclasses of events."""
+
+    # pylint: disable=too-many-instance-attributes
+
     # Base event arguments
     log_index: int
     transaction_index: int

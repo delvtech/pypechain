@@ -176,6 +176,7 @@ class EventAEventArgs:
 
 @dataclass(kw_only=True)
 class EventAEvent(BaseEvent):
+    """The event type for event EventA"""
 
     args: EventAEventArgs
 
@@ -294,6 +295,7 @@ class EventsEventAContractEvent(ContractEvent):
 
 @dataclass(kw_only=True)
 class EventBEvent(BaseEvent):
+    """The event type for event EventB"""
 
     __name__: str = "EventB"
 

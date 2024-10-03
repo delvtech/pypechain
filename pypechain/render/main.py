@@ -48,6 +48,7 @@ def render_files(
         A list of filenames for the generated files.
     """
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-positional-arguments
 
     contract_infos = get_contract_infos(abi_infos)
 

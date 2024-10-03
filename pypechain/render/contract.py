@@ -25,7 +25,6 @@ from pypechain.utilities.abi import (
     get_output_names_and_types,
     get_output_types,
     get_structs_for_abi,
-    is_abi_event,
     is_abi_function,
 )
 from pypechain.utilities.format import capitalize_first_letter_only

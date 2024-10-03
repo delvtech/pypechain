@@ -479,6 +479,7 @@ class FlipEventArgs:
 
 @dataclass(kw_only=True)
 class FlipEvent(BaseEvent):
+    """The event type for event Flip"""
 
     args: FlipEventArgs
 
@@ -602,6 +603,7 @@ class FlopEventArgs:
 
 @dataclass(kw_only=True)
 class FlopEvent(BaseEvent):
+    """The event type for event Flop"""
 
     args: FlopEventArgs
 

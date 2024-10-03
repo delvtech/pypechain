@@ -14,6 +14,7 @@ class {{event.capitalized_name}}EventArgs:
 
 @dataclass(kw_only=True)
 class {{event.capitalized_name}}Event(BaseEvent):
+    """The event type for event {{event.name}}"""
 {% if has_event_args %}
     args: {{event.capitalized_name}}EventArgs
 {% endif %}
