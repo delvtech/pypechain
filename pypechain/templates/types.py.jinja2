@@ -30,18 +30,7 @@ class {{struct.name}}:
     {{struct_value.name}}: {%if struct_value.is_struct and struct_value.contract_name != contract_name%}{{struct_value.contract_name}}.{%endif%}{{struct_value.python_type}}
 {%- endfor %}
 {% endfor %}
-{% for event in events %}
-{{event.name}} = ABIEvent(
-    anonymous = {{event.anonymous}},
-    inputs = [
-{%- for event_input in event.inputs %}
-        ABIComponentIndexed(indexed={{event_input.indexed}}, name="{{event_input.name}}", type="{{event_input.solidity_type}}"),
-{%- endfor %}
-    ],
-    name = "{{event.name}}",
-    type = "event",
-)
-{% endfor %}
+
 @dataclass
 class ErrorInfo:
     """Custom contract error information."""

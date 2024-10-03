@@ -30,7 +30,7 @@ from pypechain.utilities.abi import (
 )
 from pypechain.utilities.format import capitalize_first_letter_only
 from pypechain.utilities.templates import get_jinja_env
-from pypechain.utilities.types import EventData, FunctionData, LinkReferences, LinkReferencesData, SignatureData
+from pypechain.utilities.types import FunctionData, LinkReferences, LinkReferencesData, SignatureData
 
 # Flag for warning this case only once
 OVERLOAD_EVENT_WARN = False
@@ -257,11 +257,11 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
     templates = get_templates_for_contract_file(env)
 
     function_datas, constructor_data = get_function_datas(contract_info.abi)
-    event_datas = get_event_datas(contract_info.abi)
+    event_datas = contract_info.events.values()
     error_infos = contract_info.errors.values()
 
     has_bytecode = bool(contract_info.bytecode)
-    has_events = bool(len(event_datas.values()))
+    has_events = bool(len(event_datas))
     # if any function has overloading
     has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
 
@@ -472,31 +472,6 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
                 )
                 function_datas[name]["has_multiple_return_values"] = get_has_multiple_return_values(signature_datas)
     return GetFunctionDatasReturnValue(function_datas, constructor_data)
-
-
-def get_event_datas(abi: ABI) -> dict[str, EventData]:
-    """Gets the event datas required for the events template.
-
-    Parameters
-    ----------
-    abi : ABI
-        An application boundary interface for smart contract in json format.
-
-    Returns
-    -------
-    dict[str, EventData]
-        A dictionary of EventData's keyed by event name.
-    """
-    event_datas: dict[str, EventData] = {}
-    for abi_event in get_abi_items(abi):
-        if is_abi_event(abi_event):
-            name = abi_event.get("name", "")
-            event_data: EventData = {
-                "name": name,
-                "capitalized_name": capitalize_first_letter_only(name),
-            }
-            event_datas[name] = event_data
-    return event_datas
 
 
 def get_link_reference_data(link_references: list[LinkReferences]) -> LinkReferencesData:

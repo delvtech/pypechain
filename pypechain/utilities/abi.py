@@ -222,6 +222,7 @@ class EventInfo:
     """Solidity struct information needed for codegen."""
 
     name: str
+    capitalized_name: str
     anonymous: bool
     inputs: list[EventParams]
 
@@ -440,10 +441,12 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
                 inputs.append(event_input)
 
             anonymous = item.get("anonymous", False)
+            name = item.get("name", f"Annonymous{anonymous_event_counter or None}")
             # TODO add test for multiple anonymous events
             events.append(
                 EventInfo(
-                    name=item.get("name", f"Annonymous{anonymous_event_counter or None}"),
+                    name=name,
+                    capitalized_name=capitalize_first_letter_only(name),
                     anonymous=anonymous,
                     inputs=inputs,
                 )
