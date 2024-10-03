@@ -433,7 +433,7 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
                 python_type = solidity_to_python_type(solidity_type)
                 event_input = EventParams(
                     indexed=indexed,
-                    name=name,
+                    name=avoid_python_keywords(name),
                     solidity_type=solidity_type,
                     python_type=python_type,
                 )
