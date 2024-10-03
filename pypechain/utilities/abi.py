@@ -423,9 +423,15 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
             event_inputs = event.get("inputs", [])
             inputs: list[EventParams] = []
 
+            arg_counter: int = 1
             for i in event_inputs:
                 indexed = i.get("indexed", False)
                 name = i.get("name", "annonymous")
+
+                # Event names can be unnamed
+                if name == "":
+                    name = f"arg{arg_counter}"
+
                 solidity_type = i.get("type")
                 if not solidity_type:
                     raise ValueError("Type not known for event input.")
@@ -439,6 +445,7 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
                 )
 
                 inputs.append(event_input)
+                arg_counter += 1
 
             anonymous = item.get("anonymous", False)
             name = item.get("name", f"Annonymous{anonymous_event_counter or None}")
