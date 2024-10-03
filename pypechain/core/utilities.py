@@ -37,10 +37,10 @@ def tuple_to_dataclass(cls: type[T], structs: dict[str, Any], tuple_data: Any | 
     field_values = {}
 
     for (field_name, field_type), value in zip(field_types.items(), tuple_data):
-        field_type = structs.get(field_type, field_type)
+        field_type = structs.get(field_type, field_type)  # type: ignore
         if is_dataclass(field_type):
             # Recursively convert nested tuples to nested dataclasses
-            field_values[field_name] = tuple_to_dataclass(field_type, structs, value)
+            field_values[field_name] = tuple_to_dataclass(field_type, structs, value)  # type: ignore
         elif isinstance(value, tuple) and not getattr(field_type, "_name", None) == "Tuple":
             # If it's a tuple and the field is not intended to be a tuple, assume it's a nested dataclass
             field_values[field_name] = tuple_to_dataclass(field_type, structs, value)
