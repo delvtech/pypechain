@@ -47,10 +47,9 @@ from web3.contract.contract import (
 )
 from web3.types import BlockIdentifier, StateOverride, TxParams
 
-from pypechain.core import BaseEvent
+from pypechain.core import BaseEvent, dataclass_to_tuple, get_abi_input_types, rename_returned_types
 
 from .ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
-from .utilities import dataclass_to_tuple, get_abi_input_types, rename_returned_types
 
 structs = {
     "SimpleStruct": SimpleStruct,

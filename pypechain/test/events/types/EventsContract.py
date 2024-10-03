@@ -45,9 +45,7 @@ from web3.contract.contract import (
 )
 from web3.types import BlockIdentifier, StateOverride, TxParams
 
-from pypechain.core import BaseEvent
-
-from .utilities import dataclass_to_tuple, rename_returned_types
+from pypechain.core import BaseEvent, dataclass_to_tuple, rename_returned_types
 
 structs = {}
 

@@ -38,7 +38,7 @@ from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
 from web3.types import BlockIdentifier, StateOverride, TxParams
 
-from .utilities import get_abi_input_types
+from pypechain.core import get_abi_input_types
 
 structs = {}
 
