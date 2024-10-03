@@ -7,7 +7,6 @@ import os
 import shutil
 import sys
 from pathlib import Path
-from shutil import copy2
 from typing import NamedTuple, Sequence
 
 from pypechain.render.init import render_init_file
