@@ -1,10 +1,19 @@
+
+
+
 @dataclass(kw_only=True)
-class TransferEvent(BaseEvent):
-    """The return event type for Transfer"""
-    # TODO event_input.name may conflict with base event arguments
-    from: str
+class TransferEventArgs:
+    """The args to the event Transfer"""
+    _from: str
     to: str
     value: int
+
+
+@dataclass(kw_only=True)
+class TransferEvent(BaseEvent):
+
+    args: TransferEventArgs
+
     __name__: str = "Transfer"
 
 class OverloadedTransferContractEvent(ContractEvent):
@@ -38,9 +47,13 @@ class OverloadedTransferContractEvent(ContractEvent):
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
                 abi_event = abi_event,
-                from = abi_event.args["from"],
-                to = abi_event.args["to"],
-                value = abi_event.args["value"],
+
+                args = TransferEventArgs(
+                    _from = abi_event.args["_from"],
+                    to = abi_event.args["to"],
+                    value = abi_event.args["value"],
+                ),
+
             ) for abi_event in abi_events
         ]
 
@@ -62,9 +75,13 @@ class OverloadedTransferContractEvent(ContractEvent):
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
                 abi_event = abi_event,
-                from = abi_event.args["from"],
-                to = abi_event.args["to"],
-                value = abi_event.args["value"],
+
+                args = TransferEventArgs(
+                    _from = abi_event.args["_from"],
+                    to = abi_event.args["to"],
+                    value = abi_event.args["value"],
+                ),
+
             ) for abi_event in abi_events
         ]
 
@@ -91,13 +108,22 @@ class OverloadedTransferContractEvent(ContractEvent):
     ) -> LogFilter:
         return cast(LogFilter, super().create_filter(argument_filters=argument_filters, from_block=from_block, to_block=to_block, address=address, topics=topics))
 
+
+
+
 @dataclass(kw_only=True)
-class ApprovalEvent(BaseEvent):
-    """The return event type for Approval"""
-    # TODO event_input.name may conflict with base event arguments
+class ApprovalEventArgs:
+    """The args to the event Approval"""
     owner: str
     spender: str
     value: int
+
+
+@dataclass(kw_only=True)
+class ApprovalEvent(BaseEvent):
+
+    args: ApprovalEventArgs
+
     __name__: str = "Approval"
 
 class OverloadedApprovalContractEvent(ContractEvent):
@@ -131,9 +157,13 @@ class OverloadedApprovalContractEvent(ContractEvent):
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
                 abi_event = abi_event,
-                owner = abi_event.args["owner"],
-                spender = abi_event.args["spender"],
-                value = abi_event.args["value"],
+
+                args = ApprovalEventArgs(
+                    owner = abi_event.args["owner"],
+                    spender = abi_event.args["spender"],
+                    value = abi_event.args["value"],
+                ),
+
             ) for abi_event in abi_events
         ]
 
@@ -155,9 +185,13 @@ class OverloadedApprovalContractEvent(ContractEvent):
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
                 abi_event = abi_event,
-                owner = abi_event.args["owner"],
-                spender = abi_event.args["spender"],
-                value = abi_event.args["value"],
+
+                args = ApprovalEventArgs(
+                    owner = abi_event.args["owner"],
+                    spender = abi_event.args["spender"],
+                    value = abi_event.args["value"],
+                ),
+
             ) for abi_event in abi_events
         ]
 
