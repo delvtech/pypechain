@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from eth_typing import ABIEvent, ChecksumAddress
+from eth_typing import ChecksumAddress
 from hexbytes import HexBytes
 
 
@@ -19,6 +19,4 @@ class BaseEvent:
     address: ChecksumAddress
     block_hash: HexBytes
     block_number: int
-    # We keep the original abi event here as well
-    abi_event: ABIEvent
     __name__: str = "BaseEvent"

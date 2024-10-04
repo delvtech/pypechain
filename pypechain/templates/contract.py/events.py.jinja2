@@ -37,7 +37,6 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
                 address = abi_event.address,
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
-                abi_event = abi_event,
 {% if has_event_args %}
                 args = {{event.capitalized_name}}EventArgs(
 {%- for event_input in event.inputs %}
