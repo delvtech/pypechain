@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.metadata
 import logging
 import re
 from dataclasses import dataclass
@@ -310,6 +311,7 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
 
     # Render the template
     return templates.base_template.render(
+        pypechain_version=importlib.metadata.version("pypechain"),
         contract_name=contract_info.contract_name,
         structs_used=structs_used,
         has_overloading=has_overloading,
