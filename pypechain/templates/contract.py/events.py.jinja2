@@ -35,14 +35,16 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
         super().__init__(*argument_names)
 
     {# TODO: add type-hints for argument_filters -#}
-    def get_logs( # type: ignore
+    def get_typed_logs(
         self: "{{contract_name}}{{event.capitalized_name}}ContractEvent",
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[{{event.capitalized_name}}Event]:
-        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        """Extension of `get_logs` that return a typed dataclass of the event."""
+        abi_events = self.get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             {{event.capitalized_name}}Event(
                 log_index = abi_event.logIndex,
@@ -63,14 +65,16 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
         ]
 
     @classmethod
-    def get_logs( # type: ignore
+    def get_typed_logs(
         cls: Type["{{contract_name}}{{event.capitalized_name}}ContractEvent"],
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[{{event.capitalized_name}}Event]:
-        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        """Extension of `get_logs` that return a typed dataclass of the event."""
+        abi_events = cls.get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             {{event.capitalized_name}}Event(
                 log_index = abi_event.logIndex,
