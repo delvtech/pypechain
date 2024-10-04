@@ -24,16 +24,15 @@ from pypechain.core import BaseEvent
 
 
 @dataclass(kw_only=True)
-class EventAEventArgs:
-    """The args to the event EventA"""
-
-    who: str
-    value: int
-
-
-@dataclass(kw_only=True)
 class EventAEvent(BaseEvent):
     """The event type for event EventA"""
+
+    @dataclass
+    class EventAEventArgs:
+        """The args to the event EventA"""
+
+        who: str
+        value: int
 
     args: EventAEventArgs
 

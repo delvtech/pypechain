@@ -24,15 +24,14 @@ from pypechain.core import BaseEvent, ErrorInfo, ErrorParams
 
 
 @dataclass(kw_only=True)
-class FlipEventArgs:
-    """The args to the event Flip"""
-
-    flip: int
-
-
-@dataclass(kw_only=True)
 class FlipEvent(BaseEvent):
     """The event type for event Flip"""
+
+    @dataclass
+    class FlipEventArgs:
+        """The args to the event Flip"""
+
+        flip: int
 
     args: FlipEventArgs
 
@@ -40,15 +39,14 @@ class FlipEvent(BaseEvent):
 
 
 @dataclass(kw_only=True)
-class FlopEventArgs:
-    """The args to the event Flop"""
-
-    flop: int
-
-
-@dataclass(kw_only=True)
 class FlopEvent(BaseEvent):
     """The event type for event Flop"""
+
+    @dataclass
+    class FlopEventArgs:
+        """The args to the event Flop"""
+
+        flop: int
 
     args: FlopEventArgs
 

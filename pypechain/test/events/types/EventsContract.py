@@ -46,7 +46,7 @@ from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import dataclass_to_tuple, rename_returned_types
 
-from .EventsTypes import EventAEvent, EventAEventArgs, EventBEvent
+from .EventsTypes import EventAEvent, EventBEvent
 
 structs = {}
 
@@ -199,7 +199,7 @@ class EventsEventAContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
-                args=EventAEventArgs(
+                args=EventAEvent.EventAEventArgs(
                     who=abi_event.args["who"],
                     value=abi_event.args["value"],
                 ),
@@ -229,7 +229,7 @@ class EventsEventAContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
-                args=EventAEventArgs(
+                args=EventAEvent.EventAEventArgs(
                     who=abi_event.args["who"],
                     value=abi_event.args["value"],
                 ),

@@ -7,9 +7,25 @@ See documentation at https://github.com/delvtech/pypechain """
 # remove this pylint diable when we upgreade to 3.11
 # pylint: disable=import-self
 
-from .IStructsTypes import *
-from .StructsCContract import *
-from .StructsCTypes import *
-from .StructsBContract import *
-from .StructsAContract import *
-from .StructsATypes import *
+
+from .IStructsTypes import InnerStruct
+from .IStructsTypes import SimpleStruct
+from .IStructsTypes import NestedStruct
+
+
+from .StructsCContract import StructsCContract
+
+
+from .StructsCTypes import InnyStruct
+from .StructsCTypes import NestedStruct
+from .StructsCTypes import OuterStruct
+from .StructsCTypes import CStruct
+
+
+from .StructsBContract import StructsBContract
+
+
+from .StructsAContract import StructsAContract
+
+
+from .StructsATypes import AStruct

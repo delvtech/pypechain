@@ -48,7 +48,7 @@ from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import dataclass_to_tuple, get_abi_input_types, rename_returned_types
 
-from .ExampleTypes import FlipEvent, FlipEventArgs, FlopEvent, FlopEventArgs, InnerStruct, NestedStruct, SimpleStruct
+from .ExampleTypes import FlipEvent, FlopEvent, InnerStruct, NestedStruct, SimpleStruct
 
 structs = {
     "SimpleStruct": SimpleStruct,
@@ -502,7 +502,7 @@ class ExampleFlipContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
-                args=FlipEventArgs(
+                args=FlipEvent.FlipEventArgs(
                     flip=abi_event.args["flip"],
                 ),
             )
@@ -531,7 +531,7 @@ class ExampleFlipContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
-                args=FlipEventArgs(
+                args=FlipEvent.FlipEventArgs(
                     flip=abi_event.args["flip"],
                 ),
             )
@@ -614,7 +614,7 @@ class ExampleFlopContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
-                args=FlopEventArgs(
+                args=FlopEvent.FlopEventArgs(
                     flop=abi_event.args["flop"],
                 ),
             )
@@ -643,7 +643,7 @@ class ExampleFlopContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
-                args=FlopEventArgs(
+                args=FlopEvent.FlopEventArgs(
                     flop=abi_event.args["flop"],
                 ),
             )

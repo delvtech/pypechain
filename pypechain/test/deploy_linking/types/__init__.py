@@ -7,5 +7,8 @@ See documentation at https://github.com/delvtech/pypechain """
 # remove this pylint diable when we upgreade to 3.11
 # pylint: disable=import-self
 
-from .MyLibraryContract import *
-from .ContractContract import *
+
+from .MyLibraryContract import MyLibraryContract
+
+
+from .ContractContract import ContractContract
