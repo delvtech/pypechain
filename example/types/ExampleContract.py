@@ -531,7 +531,6 @@ class ExampleFlipContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
-                abi_event=abi_event,
                 args=FlipEventArgs(
                     flip=abi_event.args["flip"],
                 ),
@@ -644,7 +643,6 @@ class ExampleFlopContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
-                abi_event=abi_event,
                 args=FlopEventArgs(
                     flop=abi_event.args["flop"],
                 ),

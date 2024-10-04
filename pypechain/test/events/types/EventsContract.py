@@ -229,7 +229,6 @@ class EventsEventAContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
-                abi_event=abi_event,
                 args=EventAEventArgs(
                     who=abi_event.args["who"],
                     value=abi_event.args["value"],
@@ -340,7 +339,6 @@ class EventsEventBContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
-                abi_event=abi_event,
             )
             for abi_event in abi_events
         ]
