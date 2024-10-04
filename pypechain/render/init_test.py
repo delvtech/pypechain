@@ -1,5 +1,6 @@
 """Tests for rendering the init file."""
 
+import importlib.metadata
 import os
 
 from pypechain.utilities.templates import get_jinja_env
@@ -30,7 +31,10 @@ class TestRenderInit:
             "ContractFile3",
         ]
 
-        init_code = init_template.render(file_names=file_names)
+        init_code = init_template.render(
+            pypechain_version=importlib.metadata.version("pypechain"),
+            file_names=file_names,
+        )
 
         snapshot.snapshot_dir = "snapshots"  # This line is optional.
         snapshot.assert_match(init_code, "expected_init.py")

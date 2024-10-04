@@ -41,7 +41,6 @@ class TestStructs:
             "types/StructsAContract.py",
             "types/StructsATypes.py",
             "types/StructsBContract.py",
-            "types/utilities.py",
         ]
 
         results: list[tuple[bool, Path]] = []

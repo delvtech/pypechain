@@ -39,7 +39,7 @@ jobs:
         run: pip install dist/*.whl
 
       - name: Upload to GitHub Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: python-package
           path: dist/*.whl

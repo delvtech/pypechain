@@ -222,6 +222,7 @@ class EventInfo:
     """Solidity struct information needed for codegen."""
 
     name: str
+    capitalized_name: str
     anonymous: bool
     inputs: list[EventParams]
 
@@ -422,9 +423,15 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
             event_inputs = event.get("inputs", [])
             inputs: list[EventParams] = []
 
+            arg_counter: int = 1
             for i in event_inputs:
                 indexed = i.get("indexed", False)
                 name = i.get("name", "annonymous")
+
+                # Event names can be unnamed
+                if name == "":
+                    name = f"arg{arg_counter}"
+
                 solidity_type = i.get("type")
                 if not solidity_type:
                     raise ValueError("Type not known for event input.")
@@ -432,18 +439,21 @@ def get_events_for_abi(abi: ABI) -> list[EventInfo]:
                 python_type = solidity_to_python_type(solidity_type)
                 event_input = EventParams(
                     indexed=indexed,
-                    name=name,
+                    name=avoid_python_keywords(name),
                     solidity_type=solidity_type,
                     python_type=python_type,
                 )
 
                 inputs.append(event_input)
+                arg_counter += 1
 
             anonymous = item.get("anonymous", False)
+            name = item.get("name", f"Annonymous{anonymous_event_counter or None}")
             # TODO add test for multiple anonymous events
             events.append(
                 EventInfo(
-                    name=item.get("name", f"Annonymous{anonymous_event_counter or None}"),
+                    name=name,
+                    capitalized_name=capitalize_first_letter_only(name),
                     anonymous=anonymous,
                     inputs=inputs,
                 )

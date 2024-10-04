@@ -5,7 +5,8 @@ import os
 
 from eth_typing import ABI
 
-from pypechain.render.contract import get_event_datas, get_function_datas
+from pypechain.render.contract import get_function_datas
+from pypechain.utilities.abi import get_events_for_abi
 from pypechain.utilities.templates import get_jinja_env
 
 # using pytest fixtures necessitates this.
@@ -181,7 +182,7 @@ class TestOverloading:
 
         abi: ABI = json.loads(abi_str)
 
-        event_datas = get_event_datas(abi)
+        event_datas = get_events_for_abi(abi)
         contract_name = "Overloaded"
 
         events_block = events_template.render(

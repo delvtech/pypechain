@@ -1,7 +1,10 @@
 {# loop over all events and create types for each #}
-{%- for name, event_data in events.items() -%}
-class {{contract_name}}{{event_data.capitalized_name}}ContractEvent(ContractEvent):
-    """ContractEvent for {{event_data.name}}."""
+{%- for event in events -%}
+
+{% set has_event_args = event.inputs|length > 0 %}
+
+class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
+    """ContractEvent for {{event.name}}."""
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
 
@@ -15,30 +18,68 @@ class {{contract_name}}{{event_data.capitalized_name}}ContractEvent(ContractEven
         super().__init__(*argument_names)
 
     {# TODO: add type-hints for argument_filters -#}
-    {# TODO: add dataclass for [EventName]Data return value -#}
-    def get_logs( # type: ignore
-        self: "{{contract_name}}{{event_data.capitalized_name}}ContractEvent",
+    # We ignore types here for function redefinition
+    def get_typed_logs( # type: ignore
+        self: "{{contract_name}}{{event.capitalized_name}}ContractEvent",
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(Iterable[EventData], super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash))
+    ) -> Iterable[{{event.capitalized_name}}Event]:
+        """Extension of `get_logs` that return a typed dataclass of the event."""
+        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        # TODO there may be issues with this function if the user uses a middleware that changes event structure.
+        return [
+            {{event.capitalized_name}}Event(
+                log_index = abi_event.logIndex,
+                transaction_index = abi_event.transactionIndex,
+                transaction_hash = abi_event.transactionHash,
+                address = abi_event.address,
+                block_hash = abi_event.blockHash,
+                block_number = abi_event.blockNumber,
+{% if has_event_args %}
+                args = {{event.capitalized_name}}EventArgs(
+{%- for event_input in event.inputs %}
+                    {{event_input.name}} = abi_event.args["{{event_input.name}}"],
+{%- endfor %}
+                ),
+{% endif %}
+            ) for abi_event in abi_events
+        ]
 
     @classmethod
-    def get_logs( # type: ignore
-        cls: Type["{{contract_name}}{{event_data.capitalized_name}}ContractEvent"],
+    # We ignore types here for function redefinition
+    def get_typed_logs( # type: ignore
+        cls: Type["{{contract_name}}{{event.capitalized_name}}ContractEvent"],
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
-    ) -> Iterable[EventData]:
-        return cast(Iterable[EventData], super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash))
+    ) -> Iterable[{{event.capitalized_name}}Event]:
+        """Extension of `get_logs` that return a typed dataclass of the event."""
+        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        # TODO there may be issues with this function if the user uses a middleware that changes event structure.
+        return [
+            {{event.capitalized_name}}Event(
+                log_index = abi_event.logIndex,
+                transaction_index = abi_event.transactionIndex,
+                transaction_hash = abi_event.transactionHash,
+                address = abi_event.address,
+                block_hash = abi_event.blockHash,
+                block_number = abi_event.blockNumber,
+{% if has_event_args %}
+                args = {{event.capitalized_name}}EventArgs(
+{%- for event_input in event.inputs %}
+                    {{event_input.name}} = abi_event.args["{{event_input.name}}"],
+{%- endfor %}
+                ),
+{% endif %}
+            ) for abi_event in abi_events
+        ]
 
     {# TODO: add type-hints for argument_filters -#}
-    {# TODO: add dataclass for [EventName]Data return value -#}
     def create_filter( # type: ignore
-        self: "{{contract_name}}{{event_data.capitalized_name}}ContractEvent",
+        self: "{{contract_name}}{{event.capitalized_name}}ContractEvent",
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
@@ -50,7 +91,7 @@ class {{contract_name}}{{event_data.capitalized_name}}ContractEvent(ContractEven
 
     @classmethod
     def create_filter( # type: ignore
-        cls: Type["{{contract_name}}{{event_data.capitalized_name}}ContractEvent"],
+        cls: Type["{{contract_name}}{{event.capitalized_name}}ContractEvent"],
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
@@ -64,8 +105,8 @@ class {{contract_name}}{{event_data.capitalized_name}}ContractEvent(ContractEven
 
 class {{contract_name}}ContractEvents(ContractEvents):
     """ContractEvents for the {{contract_name}} contract."""
-{% for event_data in events.values() %}
-    {{event_data.name}}: {{contract_name}}{{event_data.capitalized_name}}ContractEvent
+{% for event in events %}
+    {{event.name}}: {{contract_name}}{{event.capitalized_name}}ContractEvent
 {% endfor %}
 
     def __init__(
@@ -75,12 +116,12 @@ class {{contract_name}}ContractEvents(ContractEvents):
         address: ChecksumAddress | None = None,
     ) -> None:
         super().__init__(abi, w3, address)
-        {% for event_data in events.values() -%}
-        self.{{event_data.name}} = cast({{contract_name}}{{event_data.capitalized_name}}ContractEvent, {{contract_name}}{{event_data.capitalized_name}}ContractEvent.factory(
-            "{{event_data.name}}",
+        {% for event in events -%}
+        self.{{event.name}} = cast({{contract_name}}{{event.capitalized_name}}ContractEvent, {{contract_name}}{{event.capitalized_name}}ContractEvent.factory(
+            "{{event.name}}",
             w3=w3,
             contract_abi=abi,
             address=address,
-            event_name="{{event_data.name}}"
+            event_name="{{event.name}}"
         ))
         {% endfor %}

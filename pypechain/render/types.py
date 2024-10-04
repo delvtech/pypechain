@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import importlib.metadata
+
 from pypechain.render.contract import ContractInfo
 from pypechain.utilities.abi import get_structs_for_abi
 from pypechain.utilities.templates import get_jinja_env
@@ -26,9 +28,8 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
     structs = contract_info.structs.values()
     events = contract_info.events.values()
     errors = contract_info.errors.values()
-    has_events = bool(events)
-    has_structs = bool(structs)
-    has_event_params = any(len(event.inputs) > 0 for event in events)
+    has_events = len(events) > 0
+    has_structs = len(structs) > 0
 
     structs_used = get_structs_for_abi(contract_info.abi)
     types_files_imported = {
@@ -39,11 +40,11 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
         return None
 
     return types_template.render(
+        pypechain_version=importlib.metadata.version("pypechain"),
         contract_name=contract_info.contract_name,
         structs=structs,
         types_files_imported=list(types_files_imported),
         events=events,
-        errors=errors,
         has_events=has_events,
-        has_event_params=has_event_params,
+        errors=errors,
     )

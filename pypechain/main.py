@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import argparse
+import importlib.metadata
 import os
 import shutil
 import sys
 from pathlib import Path
-from shutil import copy2
 from typing import NamedTuple, Sequence
 
 from pypechain.render.init import render_init_file
@@ -77,11 +77,9 @@ def pypechain(
     # Render the __init__.py file
     render_init_file(output_dir, file_names, line_length)
 
-    # Get the path to `utilities.py` (assuming it's in the same directory as your script)
-    utilities_path = Path(__file__).parent / "templates/utilities.py"
-
-    # Copy the file to the output directory
-    copy2(utilities_path, output_dir)
+    # Make a pypechain.version file
+    with open(f"{output_dir}/pypechain.version", "w", encoding="utf-8") as f:
+        f.write(f"pypechain == {importlib.metadata.version('pypechain')}")
 
 
 def gather_json_files(directory: str) -> list:

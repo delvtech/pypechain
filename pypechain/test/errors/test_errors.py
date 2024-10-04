@@ -12,7 +12,7 @@ from eth_typing import ABIFunction
 from hexbytes import HexBytes
 from web3.exceptions import ContractCustomError
 
-from pypechain.templates.utilities import get_abi_input_types
+from pypechain.core import get_abi_input_types
 
 from .types import ErrorsContract
 
