@@ -34,7 +34,7 @@ class TestRenderInit:
 
         # To avoid having to regenerate snapshots per version bump, we hard code the test version to 0.0.0 here
         init_code = init_template.render(
-            pypechain_version="0.0.0",
+            pypechain_version="_version_ignored",
             file_outputs=file_outputs,
         )
 
