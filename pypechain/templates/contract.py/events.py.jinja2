@@ -35,7 +35,8 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
         super().__init__(*argument_names)
 
     {# TODO: add type-hints for argument_filters -#}
-    def get_typed_logs(
+    # We ignore types here for function redefinition
+    def get_typed_logs( # type: ignore
         self: "{{contract_name}}{{event.capitalized_name}}ContractEvent",
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
@@ -43,7 +44,7 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
         block_hash: HexBytes | None = None,
     ) -> Iterable[{{event.capitalized_name}}Event]:
         """Extension of `get_logs` that return a typed dataclass of the event."""
-        abi_events = self.get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
         # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             {{event.capitalized_name}}Event(
@@ -65,7 +66,8 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
         ]
 
     @classmethod
-    def get_typed_logs(
+    # We ignore types here for function redefinition
+    def get_typed_logs( # type: ignore
         cls: Type["{{contract_name}}{{event.capitalized_name}}ContractEvent"],
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
@@ -73,7 +75,7 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
         block_hash: HexBytes | None = None,
     ) -> Iterable[{{event.capitalized_name}}Event]:
         """Extension of `get_logs` that return a typed dataclass of the event."""
-        abi_events = cls.get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
         # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             {{event.capitalized_name}}Event(
