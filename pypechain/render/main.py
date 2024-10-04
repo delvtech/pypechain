@@ -15,14 +15,14 @@ from pypechain.utilities.format import format_file
 from pypechain.utilities.types import RenderOutput
 
 
-def render_files(
+def render_contracts(
     abi_infos: list[AbiInfo],
     output_dir: str,
     line_length: int = 120,
     apply_formatting: bool = True,
     parallel: bool = False,
     chunksize: int | None = None,
-) -> list[str]:
+) -> list[RenderOutput]:
     """Processes a single JSON file to generate class and types files.
 
 
@@ -45,8 +45,8 @@ def render_files(
 
     Returns
     -------
-    list[str]
-        A list of filenames for the generated files.
+    list[RenderOutput]
+        A list of filenames and definitions for the generated files.
     """
     # pylint: disable=too-many-arguments
     # pylint: disable=too-many-positional-arguments
@@ -54,7 +54,7 @@ def render_files(
     contract_infos = get_contract_infos(abi_infos)
 
     # this is what we are returning
-    file_names: list[RenderOutput] = []
+    file_outputs: list[RenderOutput] = []
 
     # for every [ContractName] generate a:
     #    1. [ContractName]Contract.py
@@ -67,19 +67,19 @@ def render_files(
         with Pool() as pool:
             # chunksize should be increased with the number of iterables
             chunksize = len(contract_infos) // 10
-            for file_name_sublist in pool.imap(
+            for file_output_sublist in pool.imap(
                 partial(
-                    get_file_names, output_dir=output_dir, line_length=line_length, apply_formatting=apply_formatting
+                    render_contract, output_dir=output_dir, line_length=line_length, apply_formatting=apply_formatting
                 ),
                 list(contract_infos.values()),
                 chunksize=chunksize,
             ):
-                file_names.extend(file_name_sublist)
+                file_outputs.extend(file_output_sublist)
     # Sequential mode
     else:
         for contract_info in contract_infos.values():
-            file_names.extend(
-                get_file_names(
+            file_outputs.extend(
+                render_contract(
                     contract_info=contract_info,
                     output_dir=output_dir,
                     line_length=line_length,
@@ -87,10 +87,10 @@ def render_files(
                 )
             )
 
-    return file_names
+    return file_outputs
 
 
-def get_file_names(
+def render_contract(
     contract_info: ContractInfo, output_dir: str, line_length: int, apply_formatting: bool
 ) -> list[RenderOutput]:
     """Get the file name for a single ContractInfo object
@@ -109,8 +109,8 @@ def get_file_names(
 
     Returns
     -------
-    list[str]
-        A list of filenames for the generated Contract and Types files.
+    list[RenderOutput]
+        A list of filenames and definitions for the generated Contract and Types files.
     """
     file_outputs: list[RenderOutput] = []
     file_path = Path(output_dir)
@@ -125,8 +125,8 @@ def get_file_names(
         # We expose only the contract function from the contract file
         file_outputs.append(
             RenderOutput(
-                file_name=f"{contract_info.contract_name}Contract",
-                definition=[f"{contract_info.contract_name}Contract"],
+                filename=f"{contract_info.contract_name}Contract",
+                definitions=[f"{contract_info.contract_name}Contract"],
             )
         )
 
@@ -137,10 +137,11 @@ def get_file_names(
         write_string_to_file(types_file_path, rendered_types_code)
         if apply_formatting is True:
             format_file(types_file_path, line_length)
+        # We expose events, structs, and errors from the types file
         file_outputs.append(
             RenderOutput(
-                file_name=f"{contract_info.contract_name}Types",
-                definition=[f"{event.capitalized_name}Event" for event in contract_info.events.values()]
+                filename=f"{contract_info.contract_name}Types",
+                definitions=[f"{event.capitalized_name}Event" for event in contract_info.events.values()]
                 + [struct.name for struct in contract_info.structs.values()]
                 + [f"{error.name}Error" for error in contract_info.errors.values()],
             )

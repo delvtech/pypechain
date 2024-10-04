@@ -11,8 +11,9 @@ from pathlib import Path
 from typing import NamedTuple, Sequence
 
 from pypechain.render.init import render_init_file
-from pypechain.render.main import render_files
+from pypechain.render.main import render_contracts
 from pypechain.utilities.abi import AbiInfo, load_abi_infos_from_file
+from pypechain.utilities.types import RenderOutput
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -72,10 +73,12 @@ def pypechain(
     setup_directory(output_dir)
 
     # Now process all gathered files
-    file_names: list[str] = render_files(abi_infos, output_dir, line_length, apply_formatting, parallel=parallel)
+    file_outputs: list[RenderOutput] = render_contracts(
+        abi_infos, output_dir, line_length, apply_formatting, parallel=parallel
+    )
 
     # Render the __init__.py file
-    render_init_file(output_dir, file_names, line_length)
+    render_init_file(output_dir, file_outputs, line_length)
 
     # Make a pypechain.version file
     with open(f"{output_dir}/pypechain.version", "w", encoding="utf-8") as f:
