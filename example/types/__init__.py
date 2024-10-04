@@ -6,9 +6,6 @@ See documentation at https://github.com/delvtech/pypechain """
 from .ExampleContract import ExampleContract
 
 
-from .ExampleTypes import FlipEvent
-from .ExampleTypes import FlopEvent
 from .ExampleTypes import SimpleStruct
 from .ExampleTypes import InnerStruct
 from .ExampleTypes import NestedStruct
-from .ExampleTypes import WrongChoiceError

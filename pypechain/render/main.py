@@ -137,13 +137,13 @@ def render_contract(
         write_string_to_file(types_file_path, rendered_types_code)
         if apply_formatting is True:
             format_file(types_file_path, line_length)
-        # We expose events, structs, and errors from the types file
+        # We only expose structs, since events and errors are redefined per contract,
+        # and likely have the same name, so any imports of events and error require the
+        # fully qualified name.
         file_outputs.append(
             RenderOutput(
                 filename=f"{contract_info.contract_name}Types",
-                definitions=[f"{event.capitalized_name}Event" for event in contract_info.events.values()]
-                + [struct.name for struct in contract_info.structs.values()]
-                + [f"{error.name}Error" for error in contract_info.errors.values()],
+                definitions=[struct.name for struct in contract_info.structs.values()],
             )
         )
 
