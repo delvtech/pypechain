@@ -26,8 +26,9 @@ from . import {{imported_contract_name}}Types as {{imported_contract_name}}
 from pypechain.core import BaseEvent
 {% endif %}
 
-
-
+{% if errors|length > 0 %}
+from pypechain.core import ErrorInfo, ErrorParams
+{% endif %}
 
 
 {%- for event in events -%}
