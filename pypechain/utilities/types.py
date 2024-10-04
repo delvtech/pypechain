@@ -4,6 +4,13 @@ import logging
 from typing import TypedDict
 
 
+class RenderOutput(TypedDict):
+    """Defines the file and objects to be exposed."""
+
+    filename: str
+    definitions: list[str]
+
+
 class LinkReferences(TypedDict):
     """Define the structure of the link_references dictionary"""
 

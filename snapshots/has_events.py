@@ -34,7 +34,7 @@ class OverloadedTransferContractEvent(ContractEvent):
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
 
-                args = TransferEventArgs(
+                args = TransferEvent.TransferEventArgs(
                     _from = abi_event.args["_from"],
                     to = abi_event.args["to"],
                     value = abi_event.args["value"],
@@ -64,7 +64,7 @@ class OverloadedTransferContractEvent(ContractEvent):
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
 
-                args = TransferEventArgs(
+                args = TransferEvent.TransferEventArgs(
                     _from = abi_event.args["_from"],
                     to = abi_event.args["to"],
                     value = abi_event.args["value"],
@@ -132,7 +132,7 @@ class OverloadedApprovalContractEvent(ContractEvent):
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
 
-                args = ApprovalEventArgs(
+                args = ApprovalEvent.ApprovalEventArgs(
                     owner = abi_event.args["owner"],
                     spender = abi_event.args["spender"],
                     value = abi_event.args["value"],
@@ -162,7 +162,7 @@ class OverloadedApprovalContractEvent(ContractEvent):
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
 
-                args = ApprovalEventArgs(
+                args = ApprovalEvent.ApprovalEventArgs(
                     owner = abi_event.args["owner"],
                     spender = abi_event.args["spender"],
                     value = abi_event.args["value"],

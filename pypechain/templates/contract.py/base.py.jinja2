@@ -51,9 +51,6 @@ from .{{contract_type}} import {{contract_type}}
 
 {% for event in events %}
 from .{{contract_name}}Types import {{event.capitalized_name}}Event
-{% if event.inputs | length > 0 %}
-from .{{contract_name}}Types import {{event.capitalized_name}}EventArgs
-{% endif %}
 {% endfor %}
 
 from pypechain.core import dataclass_to_tuple, get_abi_input_types, rename_returned_types, tuple_to_dataclass
