@@ -33,8 +33,9 @@ class TestRenderInit:
             RenderOutput(filename="TypesFile", definitions=["Struct2"]),
         ]
 
+        # To avoid having to regenerate snapshots per version bump, we hard code the test version to 0.0.0 here
         init_code = init_template.render(
-            pypechain_version=importlib.metadata.version("pypechain"),
+            pypechain_version="0.0.0",
             file_outputs=file_outputs,
         )
 
