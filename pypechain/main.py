@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.metadata
 import os
 import shutil
 import sys
@@ -75,6 +76,10 @@ def pypechain(
 
     # Render the __init__.py file
     render_init_file(output_dir, file_names, line_length)
+
+    # Make a pypechain.version file
+    with open(f"{output_dir}/pypechain.version", "w", encoding="utf-8") as f:
+        f.write(f"pypechain == {importlib.metadata.version('pypechain')}")
 
 
 def gather_json_files(directory: str) -> list:
