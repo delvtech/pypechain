@@ -12,6 +12,7 @@ from pypechain.render.types import render_types_file
 from pypechain.utilities.abi import AbiInfo
 from pypechain.utilities.file import write_string_to_file
 from pypechain.utilities.format import format_file
+from pypechain.utilities.types import RenderOutput
 
 
 def render_files(
@@ -53,7 +54,7 @@ def render_files(
     contract_infos = get_contract_infos(abi_infos)
 
     # this is what we are returning
-    file_names: list[str] = []
+    file_names: list[RenderOutput] = []
 
     # for every [ContractName] generate a:
     #    1. [ContractName]Contract.py
@@ -89,7 +90,9 @@ def render_files(
     return file_names
 
 
-def get_file_names(contract_info: ContractInfo, output_dir: str, line_length: int, apply_formatting: bool) -> list[str]:
+def get_file_names(
+    contract_info: ContractInfo, output_dir: str, line_length: int, apply_formatting: bool
+) -> list[RenderOutput]:
     """Get the file name for a single ContractInfo object
 
 
@@ -109,7 +112,7 @@ def get_file_names(contract_info: ContractInfo, output_dir: str, line_length: in
     list[str]
         A list of filenames for the generated Contract and Types files.
     """
-    file_names: list[str] = []
+    file_outputs: list[RenderOutput] = []
     file_path = Path(output_dir)
 
     rendered_contract_code = render_contract_file(contract_info)
@@ -119,7 +122,13 @@ def get_file_names(contract_info: ContractInfo, output_dir: str, line_length: in
         write_string_to_file(contract_file_path, rendered_contract_code)
         if apply_formatting is True:
             format_file(contract_file_path, line_length)
-        file_names.append(f"{contract_info.contract_name}Contract")
+        # We expose only the contract function from the contract file
+        file_outputs.append(
+            RenderOutput(
+                file_name=f"{contract_info.contract_name}Contract",
+                definition=[f"{contract_info.contract_name}Contract"],
+            )
+        )
 
     rendered_types_code = render_types_file(contract_info)
     if rendered_types_code:
@@ -128,6 +137,13 @@ def get_file_names(contract_info: ContractInfo, output_dir: str, line_length: in
         write_string_to_file(types_file_path, rendered_types_code)
         if apply_formatting is True:
             format_file(types_file_path, line_length)
-        file_names.append(f"{contract_info.contract_name}Types")
+        file_outputs.append(
+            RenderOutput(
+                file_name=f"{contract_info.contract_name}Types",
+                definition=[f"{event.capitalized_name}Event" for event in contract_info.events.values()]
+                + [struct.name for struct in contract_info.structs.values()]
+                + [f"{error.name}Error" for error in contract_info.errors.values()],
+            )
+        )
 
-    return file_names
+    return file_outputs
