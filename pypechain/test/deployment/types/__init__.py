@@ -9,10 +9,6 @@ from .ConstructorNoArgsContract import ConstructorNoArgsContract
 from .ConstructorWithStructArgsContract import ConstructorWithStructArgsContract
 
 
-from .ConstructorWithStructArgsTypes import Items
-from .ConstructorWithStructArgsTypes import Config
-
-
 from .NoConstructorContract import NoConstructorContract
 
 
