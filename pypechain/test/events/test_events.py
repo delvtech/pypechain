@@ -8,7 +8,8 @@ import pytest
 from web3 import Web3
 from web3.logs import WARN
 
-from pypechain.test.events.types import EventAEvent, EventBEvent, EventsContract
+from pypechain.test.events.types import EventsContract
+from pypechain.test.events.types.EventsTypes import EventAEvent, EventBEvent
 
 current_path = os.path.abspath(os.path.dirname(__file__))
 project_root = os.path.dirname(os.path.dirname(current_path))

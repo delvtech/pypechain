@@ -4,6 +4,7 @@ import importlib.metadata
 import os
 
 from pypechain.utilities.templates import get_jinja_env
+from pypechain.utilities.types import RenderOutput
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
@@ -25,15 +26,16 @@ class TestRenderInit:
 
         # TODO: add return types to function calls
 
-        file_names = [
-            "ContractFile1",
-            "ContractFile2",
-            "ContractFile3",
+        file_outputs = [
+            RenderOutput(filename="ContractFile1", definitions=["ContractFile1Contract"]),
+            RenderOutput(filename="ContractFile2", definitions=["ContractFile2Contract"]),
+            RenderOutput(filename="TypesFile", definitions=["Struct1"]),
+            RenderOutput(filename="TypesFile", definitions=["Struct2"]),
         ]
 
         init_code = init_template.render(
             pypechain_version=importlib.metadata.version("pypechain"),
-            file_names=file_names,
+            file_outputs=file_outputs,
         )
 
         snapshot.snapshot_dir = "snapshots"  # This line is optional.
