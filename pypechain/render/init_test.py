@@ -1,6 +1,5 @@
 """Tests for rendering the init file."""
 
-import importlib.metadata
 import os
 
 from pypechain.utilities.templates import get_jinja_env
