@@ -24,20 +24,24 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
     types_template = env.get_template("types.py.jinja2")
 
     structs = contract_info.structs.values()
+    events = contract_info.events.values()
     errors = contract_info.errors.values()
-    has_structs = bool(structs)
+    has_events = len(events) > 0
+    has_structs = len(structs) > 0
 
     structs_used = get_structs_for_abi(contract_info.abi)
     types_files_imported = {
         struct.contract_name for struct in structs_used if struct.contract_name != contract_info.contract_name
     }
 
-    if not has_structs:
+    if not has_events and not has_structs:
         return None
 
     return types_template.render(
         contract_name=contract_info.contract_name,
         structs=structs,
         types_files_imported=list(types_files_imported),
+        events=events,
+        has_events=has_events,
         errors=errors,
     )

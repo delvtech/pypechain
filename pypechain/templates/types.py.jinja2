@@ -22,6 +22,39 @@ from eth_typing import ABIEvent, ABIComponentIndexed
 from . import {{imported_contract_name}}Types as {{imported_contract_name}}
 {% endfor %}
 
+{% if has_events %}
+from pypechain.core import BaseEvent
+{% endif %}
+
+
+
+
+
+{%- for event in events -%}
+
+{% set has_event_args = event.inputs|length > 0 %}
+
+{% if has_event_args %}
+@dataclass(kw_only=True)
+class {{event.capitalized_name}}EventArgs:
+    """The args to the event {{event.name}}"""
+{%- for event_input in event.inputs %}
+    {{event_input.name}}: {{event_input.python_type}}
+{%- endfor %}
+{% endif %}
+
+@dataclass(kw_only=True)
+class {{event.capitalized_name}}Event(BaseEvent):
+    """The event type for event {{event.name}}"""
+{% if has_event_args %}
+    args: {{event.capitalized_name}}EventArgs
+{% endif %}
+    __name__: str = "{{event.name}}"
+
+{% endfor %}
+
+
+
 {% for struct in structs %}
 @dataclass
 class {{struct.name}}:

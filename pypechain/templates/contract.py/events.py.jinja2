@@ -3,23 +3,6 @@
 
 {% set has_event_args = event.inputs|length > 0 %}
 
-{% if has_event_args %}
-@dataclass(kw_only=True)
-class {{event.capitalized_name}}EventArgs:
-    """The args to the event {{event.name}}"""
-{%- for event_input in event.inputs %}
-    {{event_input.name}}: {{event_input.python_type}}
-{%- endfor %}
-{% endif %}
-
-@dataclass(kw_only=True)
-class {{event.capitalized_name}}Event(BaseEvent):
-    """The event type for event {{event.name}}"""
-{% if has_event_args %}
-    args: {{event.capitalized_name}}EventArgs
-{% endif %}
-    __name__: str = "{{event.name}}"
-
 class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
     """ContractEvent for {{event.name}}."""
     # super() get_logs and create_filter methods are generic, while our version adds values & types

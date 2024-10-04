@@ -317,6 +317,7 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
         has_bytecode=has_bytecode,
         functions_block=functions_block,
         has_events=has_events,
+        events=event_datas,
         events_block=events_block,
         has_errors=has_errors,
         errors_block=errors_block,
