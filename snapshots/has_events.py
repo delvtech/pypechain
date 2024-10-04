@@ -1,22 +1,5 @@
 
 
-
-@dataclass(kw_only=True)
-class TransferEventArgs:
-    """The args to the event Transfer"""
-    _from: str
-    to: str
-    value: int
-
-
-@dataclass(kw_only=True)
-class TransferEvent(BaseEvent):
-    """The event type for event Transfer"""
-
-    args: TransferEventArgs
-
-    __name__: str = "Transfer"
-
 class OverloadedTransferContractEvent(ContractEvent):
     """ContractEvent for Transfer."""
     # super() get_logs and create_filter methods are generic, while our version adds values & types
@@ -31,14 +14,17 @@ class OverloadedTransferContractEvent(ContractEvent):
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)
 
-    def get_logs( # type: ignore
+    # We ignore types here for function redefinition
+    def get_typed_logs( # type: ignore
         self: "OverloadedTransferContractEvent",
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[TransferEvent]:
+        """Extension of `get_logs` that return a typed dataclass of the event."""
         abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             TransferEvent(
                 log_index = abi_event.logIndex,
@@ -47,7 +33,6 @@ class OverloadedTransferContractEvent(ContractEvent):
                 address = abi_event.address,
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
-                abi_event = abi_event,
 
                 args = TransferEventArgs(
                     _from = abi_event.args["_from"],
@@ -59,14 +44,17 @@ class OverloadedTransferContractEvent(ContractEvent):
         ]
 
     @classmethod
-    def get_logs( # type: ignore
+    # We ignore types here for function redefinition
+    def get_typed_logs( # type: ignore
         cls: Type["OverloadedTransferContractEvent"],
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[TransferEvent]:
+        """Extension of `get_logs` that return a typed dataclass of the event."""
         abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             TransferEvent(
                 log_index = abi_event.logIndex,
@@ -75,7 +63,6 @@ class OverloadedTransferContractEvent(ContractEvent):
                 address = abi_event.address,
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
-                abi_event = abi_event,
 
                 args = TransferEventArgs(
                     _from = abi_event.args["_from"],
@@ -110,23 +97,6 @@ class OverloadedTransferContractEvent(ContractEvent):
         return cast(LogFilter, super().create_filter(argument_filters=argument_filters, from_block=from_block, to_block=to_block, address=address, topics=topics))
 
 
-
-
-@dataclass(kw_only=True)
-class ApprovalEventArgs:
-    """The args to the event Approval"""
-    owner: str
-    spender: str
-    value: int
-
-
-@dataclass(kw_only=True)
-class ApprovalEvent(BaseEvent):
-    """The event type for event Approval"""
-
-    args: ApprovalEventArgs
-
-    __name__: str = "Approval"
 
 class OverloadedApprovalContractEvent(ContractEvent):
     """ContractEvent for Approval."""
@@ -142,14 +112,17 @@ class OverloadedApprovalContractEvent(ContractEvent):
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)
 
-    def get_logs( # type: ignore
+    # We ignore types here for function redefinition
+    def get_typed_logs( # type: ignore
         self: "OverloadedApprovalContractEvent",
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[ApprovalEvent]:
+        """Extension of `get_logs` that return a typed dataclass of the event."""
         abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             ApprovalEvent(
                 log_index = abi_event.logIndex,
@@ -158,7 +131,6 @@ class OverloadedApprovalContractEvent(ContractEvent):
                 address = abi_event.address,
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
-                abi_event = abi_event,
 
                 args = ApprovalEventArgs(
                     owner = abi_event.args["owner"],
@@ -170,14 +142,17 @@ class OverloadedApprovalContractEvent(ContractEvent):
         ]
 
     @classmethod
-    def get_logs( # type: ignore
+    # We ignore types here for function redefinition
+    def get_typed_logs( # type: ignore
         cls: Type["OverloadedApprovalContractEvent"],
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
         block_hash: HexBytes | None = None,
     ) -> Iterable[ApprovalEvent]:
+        """Extension of `get_logs` that return a typed dataclass of the event."""
         abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             ApprovalEvent(
                 log_index = abi_event.logIndex,
@@ -186,7 +161,6 @@ class OverloadedApprovalContractEvent(ContractEvent):
                 address = abi_event.address,
                 block_hash = abi_event.blockHash,
                 block_number = abi_event.blockNumber,
-                abi_event = abi_event,
 
                 args = ApprovalEventArgs(
                     owner = abi_event.args["owner"],
