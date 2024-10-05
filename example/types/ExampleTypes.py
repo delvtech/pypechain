@@ -20,15 +20,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from pypechain.core import BaseEvent, ErrorInfo, ErrorParams
+from pypechain.core import BaseEvent, BaseEventArgs, ErrorInfo, ErrorParams
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, frozen=True)
 class FlipEvent(BaseEvent):
     """The event type for event Flip"""
 
-    @dataclass
-    class FlipEventArgs:
+    @dataclass(kw_only=True, frozen=True)
+    class FlipEventArgs(BaseEventArgs):
         """The args to the event Flip"""
 
         flip: int
@@ -38,12 +38,12 @@ class FlipEvent(BaseEvent):
     __name__: str = "Flip"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, frozen=True)
 class FlopEvent(BaseEvent):
     """The event type for event Flop"""
 
-    @dataclass
-    class FlopEventArgs:
+    @dataclass(kw_only=True, frozen=True)
+    class FlopEventArgs(BaseEventArgs):
         """The args to the event Flop"""
 
         flop: int

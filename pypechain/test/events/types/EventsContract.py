@@ -46,7 +46,7 @@ from web3.contract.contract import (
 from web3.logs import WARN
 from web3.types import BlockIdentifier, StateOverride, TxParams, TxReceipt
 
-from pypechain.core import combomethod_typed, dataclass_to_tuple, rename_returned_types
+from pypechain.core import BaseEventArgs, combomethod_typed, dataclass_to_tuple, rename_returned_types
 
 from .EventsTypes import EventAEvent, EventBEvent
 
@@ -280,6 +280,7 @@ class EventsEventBContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
+                args=BaseEventArgs(),
             )
             for abi_event in abi_events
         ]

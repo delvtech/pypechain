@@ -20,15 +20,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from pypechain.core import BaseEvent
+from pypechain.core import BaseEvent, BaseEventArgs
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, frozen=True)
 class EventAEvent(BaseEvent):
     """The event type for event EventA"""
 
-    @dataclass
-    class EventAEventArgs:
+    @dataclass(kw_only=True, frozen=True)
+    class EventAEventArgs(BaseEventArgs):
         """The args to the event EventA"""
 
         who: str
@@ -39,7 +39,7 @@ class EventAEvent(BaseEvent):
     __name__: str = "EventA"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, frozen=True)
 class EventBEvent(BaseEvent):
     """The event type for event EventB"""
 

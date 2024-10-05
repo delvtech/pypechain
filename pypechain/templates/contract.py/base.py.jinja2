@@ -53,6 +53,7 @@ from .{{contract_type}} import {{contract_type}}
 from web3.types import TxReceipt
 from web3.logs import WARN
 from web3._utils.events import EventLogErrorFlags
+from pypechain.core import BaseEventArgs
 {% endif %}
 
 {% if has_errors or has_events %}
