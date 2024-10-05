@@ -5,18 +5,15 @@ class OverloadedTransferContractEvent(ContractEvent):
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
 
-    # @combomethod destroys return types, so we are redefining functions as both class and instance
-    # pylint: disable=function-redefined
-
     
     
     # pylint: disable=useless-parent-delegation
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)
 
-    # We ignore types here for function redefinition
-    def get_typed_logs( # type: ignore
-        self: "OverloadedTransferContractEvent",
+    @combomethod_typed
+    def get_logs_typed(
+        self,
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
@@ -42,18 +39,13 @@ class OverloadedTransferContractEvent(ContractEvent):
 
             ) for abi_event in abi_events
         ]
-
-    @classmethod
-    # We ignore types here for function redefinition
-    def get_typed_logs( # type: ignore
-        cls: Type["OverloadedTransferContractEvent"],
-        argument_filters: dict[str, Any] | None = None,
-        from_block: BlockIdentifier | None = None,
-        to_block: BlockIdentifier | None = None,
-        block_hash: HexBytes | None = None,
+    
+    @combomethod_typed
+    def process_receipt_typed(
+        self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN
     ) -> Iterable[TransferEvent]:
-        """Extension of `get_logs` that return a typed dataclass of the event."""
-        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        """Extension of `process_receipt` that return a typed dataclass of the event."""
+        abi_events = super().process_receipt(txn_receipt, errors)
         # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             TransferEvent(
@@ -73,20 +65,9 @@ class OverloadedTransferContractEvent(ContractEvent):
             ) for abi_event in abi_events
         ]
 
+    @combomethod_typed
     def create_filter( # type: ignore
-        self: "OverloadedTransferContractEvent",
-        *,  # PEP 3102
-        argument_filters: dict[str, Any] | None = None,
-        from_block: BlockIdentifier | None = None,
-        to_block: BlockIdentifier = "latest",
-        address: ChecksumAddress | None = None,
-        topics: Sequence[Any] | None = None,
-    ) -> LogFilter:
-        return cast(LogFilter, super().create_filter(argument_filters=argument_filters, from_block=from_block, to_block=to_block, address=address, topics=topics))
-
-    @classmethod
-    def create_filter( # type: ignore
-        cls: Type["OverloadedTransferContractEvent"],
+        self,
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
@@ -103,18 +84,15 @@ class OverloadedApprovalContractEvent(ContractEvent):
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
 
-    # @combomethod destroys return types, so we are redefining functions as both class and instance
-    # pylint: disable=function-redefined
-
     
     
     # pylint: disable=useless-parent-delegation
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)
 
-    # We ignore types here for function redefinition
-    def get_typed_logs( # type: ignore
-        self: "OverloadedApprovalContractEvent",
+    @combomethod_typed
+    def get_logs_typed(
+        self,
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
@@ -140,18 +118,13 @@ class OverloadedApprovalContractEvent(ContractEvent):
 
             ) for abi_event in abi_events
         ]
-
-    @classmethod
-    # We ignore types here for function redefinition
-    def get_typed_logs( # type: ignore
-        cls: Type["OverloadedApprovalContractEvent"],
-        argument_filters: dict[str, Any] | None = None,
-        from_block: BlockIdentifier | None = None,
-        to_block: BlockIdentifier | None = None,
-        block_hash: HexBytes | None = None,
+    
+    @combomethod_typed
+    def process_receipt_typed(
+        self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN
     ) -> Iterable[ApprovalEvent]:
-        """Extension of `get_logs` that return a typed dataclass of the event."""
-        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        """Extension of `process_receipt` that return a typed dataclass of the event."""
+        abi_events = super().process_receipt(txn_receipt, errors)
         # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             ApprovalEvent(
@@ -171,20 +144,9 @@ class OverloadedApprovalContractEvent(ContractEvent):
             ) for abi_event in abi_events
         ]
 
+    @combomethod_typed
     def create_filter( # type: ignore
-        self: "OverloadedApprovalContractEvent",
-        *,  # PEP 3102
-        argument_filters: dict[str, Any] | None = None,
-        from_block: BlockIdentifier | None = None,
-        to_block: BlockIdentifier = "latest",
-        address: ChecksumAddress | None = None,
-        topics: Sequence[Any] | None = None,
-    ) -> LogFilter:
-        return cast(LogFilter, super().create_filter(argument_filters=argument_filters, from_block=from_block, to_block=to_block, address=address, topics=topics))
-
-    @classmethod
-    def create_filter( # type: ignore
-        cls: Type["OverloadedApprovalContractEvent"],
+        self,
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
@@ -199,9 +161,9 @@ class OverloadedApprovalContractEvent(ContractEvent):
 class OverloadedContractEvents(ContractEvents):
     """ContractEvents for the Overloaded contract."""
 
-    Transfer: OverloadedTransferContractEvent
+    Transfer: Type[OverloadedTransferContractEvent]
 
-    Approval: OverloadedApprovalContractEvent
+    Approval: Type[OverloadedApprovalContractEvent]
 
 
     def __init__(
@@ -211,14 +173,14 @@ class OverloadedContractEvents(ContractEvents):
         address: ChecksumAddress | None = None,
     ) -> None:
         super().__init__(abi, w3, address)
-        self.Transfer = cast(OverloadedTransferContractEvent, OverloadedTransferContractEvent.factory(
+        self.Transfer = cast(Type[OverloadedTransferContractEvent], OverloadedTransferContractEvent.factory(
             "Transfer",
             w3=w3,
             contract_abi=abi,
             address=address,
             event_name="Transfer"
         ))
-        self.Approval = cast(OverloadedApprovalContractEvent, OverloadedApprovalContractEvent.factory(
+        self.Approval = cast(Type[OverloadedApprovalContractEvent], OverloadedApprovalContractEvent.factory(
             "Approval",
             w3=w3,
             contract_abi=abi,
