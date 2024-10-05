@@ -49,6 +49,16 @@ from .{{struct_info.contract_name}}Types import {{struct_info.name}}
 from .{{contract_type}} import {{contract_type}}
 {% endfor %}
 
+{% if has_events %}
+from web3.types import TxReceipt
+from web3.logs import WARN
+from web3._utils.events import EventLogErrorFlags
+{% endif %}
+
+{% if has_errors or has_events %}
+from pypechain.core import combomethod_typed
+{% endif %}
+
 {% for event in events %}
 from .{{contract_name}}Types import {{event.capitalized_name}}Event
 {% endfor %}
