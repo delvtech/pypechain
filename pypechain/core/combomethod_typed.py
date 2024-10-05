@@ -1,3 +1,5 @@
+"""A typed version of combomethod from eth_utils."""
+
 import functools
 from typing import Any, Callable, Concatenate, Generic, Optional, ParamSpec, Type, TypeVar
 

@@ -510,6 +510,7 @@ class ExampleFlipContractEvent(ContractEvent):
 
     @combomethod_typed
     def process_receipt_typed(self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN) -> Iterable[FlipEvent]:
+        """Extension of `process_receipt` that return a typed dataclass of the event."""
         abi_events = super().process_receipt(txn_receipt, errors)
         # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
@@ -589,6 +590,7 @@ class ExampleFlopContractEvent(ContractEvent):
 
     @combomethod_typed
     def process_receipt_typed(self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN) -> Iterable[FlopEvent]:
+        """Extension of `process_receipt` that return a typed dataclass of the event."""
         abi_events = super().process_receipt(txn_receipt, errors)
         # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
