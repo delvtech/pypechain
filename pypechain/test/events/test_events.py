@@ -17,7 +17,7 @@ project_root = os.path.dirname(os.path.dirname(current_path))
 class TestEvents:
     """Tests events emitted from the contracts."""
 
-    def test_process_typed_receipt(self, w3: Web3):
+    def test_process_receipt_typed(self, w3: Web3):
         """Test that we can use event filters."""
         deployed_contract = EventsContract.deploy(w3=w3, account=w3.eth.accounts[0])
         hash_a = deployed_contract.functions.emitOneEvent(0, "0x0000000000000000000000000000000000000000").transact()
@@ -50,7 +50,7 @@ class TestEvents:
         assert len(event_bb) == 1
         assert isinstance(event_bb[0], EventBEvent)
 
-    def test_get_typed_logs(self, w3):
+    def test_get_logs_typed(self, w3):
         """Test that we can get logs and the return is the type we expect."""
         deployed_contract = EventsContract.deploy(w3=w3, account=w3.eth.accounts[0])
         deployed_contract.functions.emitOneEvent(0, "0x0000000000000000000000000000000000000000").transact()
