@@ -38,7 +38,7 @@ from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
 from web3.types import BlockIdentifier, StateOverride, TxParams
 
-from pypechain.core import get_abi_input_types
+from pypechain.core import combomethod_typed, get_abi_input_types
 
 structs = {}
 
@@ -155,9 +155,6 @@ class ErrorsContractFunctions(ContractFunctions):
 class ErrorsOneContractError:
     """ContractError for One."""
 
-    # @combomethod destroys return types, so we are redefining functions as both class and instance
-    # pylint: disable=function-redefined
-
     # 4 byte error selector
     selector: str
     # error signature, i.e. CustomError(uint256,bool)
@@ -170,25 +167,11 @@ class ErrorsOneContractError:
         self.selector = "0xbe0c2110"
         self.signature = "One()"
 
-    def decode_error_data(  # type: ignore
-        self: "ErrorsOneContractError",
+    @combomethod_typed
+    def decode_error_data(
+        self,
         data: HexBytes,
         # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
-    ) -> tuple[Any, ...]:
-        """Decodes error data returns from a smart contract."""
-        error_abi = cast(
-            ABIFunction,
-            [item for item in errors_abi if item.get("name") == "One" and item.get("type") == "error"][0],
-        )
-        types = get_abi_input_types(error_abi)
-        abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, data)
-        return decoded
-
-    @classmethod
-    def decode_error_data(  # type: ignore
-        cls: Type["ErrorsOneContractError"],
-        data: HexBytes,
     ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
         error_abi = cast(
@@ -204,9 +187,6 @@ class ErrorsOneContractError:
 class ErrorsThreeContractError:
     """ContractError for Three."""
 
-    # @combomethod destroys return types, so we are redefining functions as both class and instance
-    # pylint: disable=function-redefined
-
     # 4 byte error selector
     selector: str
     # error signature, i.e. CustomError(uint256,bool)
@@ -219,25 +199,11 @@ class ErrorsThreeContractError:
         self.selector = "0x09b8b989"
         self.signature = "Three(bool,(uint256,uint256,uint256,uint256),uint8)"
 
-    def decode_error_data(  # type: ignore
-        self: "ErrorsThreeContractError",
+    @combomethod_typed
+    def decode_error_data(
+        self,
         data: HexBytes,
         # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
-    ) -> tuple[Any, ...]:
-        """Decodes error data returns from a smart contract."""
-        error_abi = cast(
-            ABIFunction,
-            [item for item in errors_abi if item.get("name") == "Three" and item.get("type") == "error"][0],
-        )
-        types = get_abi_input_types(error_abi)
-        abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, data)
-        return decoded
-
-    @classmethod
-    def decode_error_data(  # type: ignore
-        cls: Type["ErrorsThreeContractError"],
-        data: HexBytes,
     ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
         error_abi = cast(
@@ -253,9 +219,6 @@ class ErrorsThreeContractError:
 class ErrorsTwoContractError:
     """ContractError for Two."""
 
-    # @combomethod destroys return types, so we are redefining functions as both class and instance
-    # pylint: disable=function-redefined
-
     # 4 byte error selector
     selector: str
     # error signature, i.e. CustomError(uint256,bool)
@@ -268,25 +231,11 @@ class ErrorsTwoContractError:
         self.selector = "0x01e3e2f6"
         self.signature = "Two(string,address,uint8)"
 
-    def decode_error_data(  # type: ignore
-        self: "ErrorsTwoContractError",
+    @combomethod_typed
+    def decode_error_data(
+        self,
         data: HexBytes,
         # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
-    ) -> tuple[Any, ...]:
-        """Decodes error data returns from a smart contract."""
-        error_abi = cast(
-            ABIFunction,
-            [item for item in errors_abi if item.get("name") == "Two" and item.get("type") == "error"][0],
-        )
-        types = get_abi_input_types(error_abi)
-        abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, data)
-        return decoded
-
-    @classmethod
-    def decode_error_data(  # type: ignore
-        cls: Type["ErrorsTwoContractError"],
-        data: HexBytes,
     ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
         error_abi = cast(

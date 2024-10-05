@@ -33,6 +33,7 @@ from eth_typing import ABI, ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
+from web3._utils.events import EventLogErrorFlags
 from web3._utils.filters import LogFilter
 from web3.contract.contract import (
     Contract,
@@ -42,9 +43,10 @@ from web3.contract.contract import (
     ContractFunction,
     ContractFunctions,
 )
-from web3.types import BlockIdentifier, StateOverride, TxParams
+from web3.logs import WARN
+from web3.types import BlockIdentifier, StateOverride, TxParams, TxReceipt
 
-from pypechain.core import dataclass_to_tuple, rename_returned_types
+from pypechain.core import combomethod_typed, dataclass_to_tuple, rename_returned_types
 
 from .EventsTypes import EventAEvent, EventBEvent
 
@@ -171,16 +173,13 @@ class EventsEventAContractEvent(ContractEvent):
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
 
-    # @combomethod destroys return types, so we are redefining functions as both class and instance
-    # pylint: disable=function-redefined
-
     # pylint: disable=useless-parent-delegation
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)
 
-    # We ignore types here for function redefinition
-    def get_typed_logs(  # type: ignore
-        self: "EventsEventAContractEvent",
+    @combomethod_typed
+    def get_logs_typed(
+        self,
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
@@ -207,19 +206,9 @@ class EventsEventAContractEvent(ContractEvent):
             for abi_event in abi_events
         ]
 
-    @classmethod
-    # We ignore types here for function redefinition
-    def get_typed_logs(  # type: ignore
-        cls: Type["EventsEventAContractEvent"],
-        argument_filters: dict[str, Any] | None = None,
-        from_block: BlockIdentifier | None = None,
-        to_block: BlockIdentifier | None = None,
-        block_hash: HexBytes | None = None,
-    ) -> Iterable[EventAEvent]:
-        """Extension of `get_logs` that return a typed dataclass of the event."""
-        abi_events = super().get_logs(
-            argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
-        )
+    @combomethod_typed
+    def process_receipt_typed(self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN) -> Iterable[EventAEvent]:
+        abi_events = super().process_receipt(txn_receipt, errors)
         # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             EventAEvent(
@@ -237,29 +226,9 @@ class EventsEventAContractEvent(ContractEvent):
             for abi_event in abi_events
         ]
 
+    @combomethod_typed
     def create_filter(  # type: ignore
-        self: "EventsEventAContractEvent",
-        *,  # PEP 3102
-        argument_filters: dict[str, Any] | None = None,
-        from_block: BlockIdentifier | None = None,
-        to_block: BlockIdentifier = "latest",
-        address: ChecksumAddress | None = None,
-        topics: Sequence[Any] | None = None,
-    ) -> LogFilter:
-        return cast(
-            LogFilter,
-            super().create_filter(
-                argument_filters=argument_filters,
-                from_block=from_block,
-                to_block=to_block,
-                address=address,
-                topics=topics,
-            ),
-        )
-
-    @classmethod
-    def create_filter(  # type: ignore
-        cls: Type["EventsEventAContractEvent"],
+        self,
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
@@ -285,16 +254,13 @@ class EventsEventBContractEvent(ContractEvent):
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
 
-    # @combomethod destroys return types, so we are redefining functions as both class and instance
-    # pylint: disable=function-redefined
-
     # pylint: disable=useless-parent-delegation
     def __init__(self, *argument_names: tuple[str]) -> None:
         super().__init__(*argument_names)
 
-    # We ignore types here for function redefinition
-    def get_typed_logs(  # type: ignore
-        self: "EventsEventBContractEvent",
+    @combomethod_typed
+    def get_logs_typed(
+        self,
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
@@ -317,19 +283,9 @@ class EventsEventBContractEvent(ContractEvent):
             for abi_event in abi_events
         ]
 
-    @classmethod
-    # We ignore types here for function redefinition
-    def get_typed_logs(  # type: ignore
-        cls: Type["EventsEventBContractEvent"],
-        argument_filters: dict[str, Any] | None = None,
-        from_block: BlockIdentifier | None = None,
-        to_block: BlockIdentifier | None = None,
-        block_hash: HexBytes | None = None,
-    ) -> Iterable[EventBEvent]:
-        """Extension of `get_logs` that return a typed dataclass of the event."""
-        abi_events = super().get_logs(
-            argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash
-        )
+    @combomethod_typed
+    def process_receipt_typed(self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN) -> Iterable[EventBEvent]:
+        abi_events = super().process_receipt(txn_receipt, errors)
         # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             EventBEvent(
@@ -343,29 +299,9 @@ class EventsEventBContractEvent(ContractEvent):
             for abi_event in abi_events
         ]
 
+    @combomethod_typed
     def create_filter(  # type: ignore
-        self: "EventsEventBContractEvent",
-        *,  # PEP 3102
-        argument_filters: dict[str, Any] | None = None,
-        from_block: BlockIdentifier | None = None,
-        to_block: BlockIdentifier = "latest",
-        address: ChecksumAddress | None = None,
-        topics: Sequence[Any] | None = None,
-    ) -> LogFilter:
-        return cast(
-            LogFilter,
-            super().create_filter(
-                argument_filters=argument_filters,
-                from_block=from_block,
-                to_block=to_block,
-                address=address,
-                topics=topics,
-            ),
-        )
-
-    @classmethod
-    def create_filter(  # type: ignore
-        cls: Type["EventsEventBContractEvent"],
+        self,
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
