@@ -695,9 +695,9 @@ class ExampleFlopContractEvent(ContractEvent):
 class ExampleContractEvents(ContractEvents):
     """ContractEvents for the Example contract."""
 
-    Flip: ExampleFlipContractEvent
+    Flip: Type[ExampleFlipContractEvent]
 
-    Flop: ExampleFlopContractEvent
+    Flop: Type[ExampleFlopContractEvent]
 
     def __init__(
         self,
@@ -707,11 +707,11 @@ class ExampleContractEvents(ContractEvents):
     ) -> None:
         super().__init__(abi, w3, address)
         self.Flip = cast(
-            ExampleFlipContractEvent,
+            Type[ExampleFlipContractEvent],
             ExampleFlipContractEvent.factory("Flip", w3=w3, contract_abi=abi, address=address, event_name="Flip"),
         )
         self.Flop = cast(
-            ExampleFlopContractEvent,
+            Type[ExampleFlopContractEvent],
             ExampleFlopContractEvent.factory("Flop", w3=w3, contract_abi=abi, address=address, event_name="Flop"),
         )
 

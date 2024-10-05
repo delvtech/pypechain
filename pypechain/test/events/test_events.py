@@ -15,21 +15,21 @@ current_path = os.path.abspath(os.path.dirname(__file__))
 project_root = os.path.dirname(os.path.dirname(current_path))
 
 
-@pytest.mark.usefixtures("process_contracts")
+# @pytest.mark.usefixtures("process_contracts")
 class TestEvents:
     """Tests events emitted from the contracts."""
 
-    @pytest.mark.skip()
+    # @pytest.mark.skip()
     def test_process_receipt(self, w3: Web3):
         """Test that we can use event filters."""
         deployed_contract = EventsContract.deploy(w3=w3, account=w3.eth.accounts[0])
         hash_a = deployed_contract.functions.emitOneEvent(0, "0x0000000000000000000000000000000000000000").transact()
         receipt_a = w3.eth.get_transaction_receipt(hash_a)
-        hash_b = deployed_contract.functions.emitTwoEvents(0, "0x0000000000000000000000000000000000000000").transact()
+        hash_b = deployed_contract.functions.emitTwoEvents(1, "0x0000000000000000000000000000000000000000").transact()
         receipt_b = w3.eth.get_transaction_receipt(hash_b)
 
-        deployed_contract.events.EventA.process_receipt(receipt_a, errors=WARN)
-        deployed_contract.events.EventB.process_receipt(receipt_b, errors=WARN)
+        event_a = deployed_contract.events.EventA().process_receipt(receipt_a, errors=WARN)
+        event_b = deployed_contract.events.EventB().process_receipt(receipt_b, errors=WARN)
 
     def test_get_typed_logs(self, w3):
         """Test that we can get logs and the return is the type we expect."""
