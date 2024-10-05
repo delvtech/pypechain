@@ -298,6 +298,7 @@ class EventsEventBContractEvent(ContractEvent):
                 address=abi_event.address,
                 block_hash=abi_event.blockHash,
                 block_number=abi_event.blockNumber,
+                args=BaseEventArgs(),
             )
             for abi_event in abi_events
         ]
