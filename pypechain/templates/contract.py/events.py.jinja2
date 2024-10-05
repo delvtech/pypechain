@@ -67,6 +67,8 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
                     {{event_input.name}} = abi_event.args["{{event_input.name}}"],
 {%- endfor %}
                 ),
+{% else %}
+                args = BaseEventArgs(),
 {% endif %}
             ) for abi_event in abi_events
         ]
