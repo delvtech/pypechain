@@ -42,11 +42,11 @@ from .IStructsTypes import InnerStruct
 from .StructsCTypes import CStruct, InnyStruct, NestedStruct, OuterStruct
 
 structs = {
-    "InnyStruct": InnyStruct,
-    "NestedStruct": NestedStruct,
-    "OuterStruct": OuterStruct,
+    "StructsC.InnyStruct": InnyStruct,
+    "StructsC.NestedStruct": NestedStruct,
+    "StructsC.OuterStruct": OuterStruct,
     "IStructs.InnerStruct": InnerStruct,
-    "CStruct": CStruct,
+    "StructsC.CStruct": CStruct,
 }
 
 

@@ -53,9 +53,9 @@ from pypechain.core import combomethod_typed, dataclass_to_tuple, get_abi_input_
 from .ExampleTypes import FlipEvent, FlopEvent, InnerStruct, NestedStruct, SimpleStruct
 
 structs = {
-    "SimpleStruct": SimpleStruct,
-    "InnerStruct": InnerStruct,
-    "NestedStruct": NestedStruct,
+    "Example.SimpleStruct": SimpleStruct,
+    "Example.InnerStruct": InnerStruct,
+    "Example.NestedStruct": NestedStruct,
 }
 
 

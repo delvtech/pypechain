@@ -41,9 +41,9 @@ from pypechain.core import dataclass_to_tuple, rename_returned_types
 from .ReturnTypesTypes import InnerStruct, NestedStruct, SimpleStruct
 
 structs = {
-    "SimpleStruct": SimpleStruct,
-    "InnerStruct": InnerStruct,
-    "NestedStruct": NestedStruct,
+    "ReturnTypes.SimpleStruct": SimpleStruct,
+    "ReturnTypes.InnerStruct": InnerStruct,
+    "ReturnTypes.NestedStruct": NestedStruct,
 }
 
 

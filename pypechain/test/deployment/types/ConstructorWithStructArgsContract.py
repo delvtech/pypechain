@@ -41,8 +41,8 @@ from pypechain.core import dataclass_to_tuple, rename_returned_types
 from .ConstructorWithStructArgsTypes import Config, Items
 
 structs = {
-    "Items": Items,
-    "Config": Config,
+    "ConstructorWithStructArgs.Items": Items,
+    "ConstructorWithStructArgs.Config": Config,
 }
 
 

@@ -45,7 +45,7 @@ structs = {
     "IStructs.InnerStruct": InnerStruct,
     "IStructs.NestedStruct": NestedStruct,
     "IStructs.SimpleStruct": SimpleStruct,
-    "AStruct": AStruct,
+    "StructsA.AStruct": AStruct,
 }
 
 
