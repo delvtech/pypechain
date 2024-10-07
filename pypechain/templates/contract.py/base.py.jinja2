@@ -69,11 +69,7 @@ from pypechain.core import dataclass_to_tuple, get_abi_input_types, rename_retur
 
 structs = {
 {%- for struct in structs_used %}
-{% if struct.contract_name == contract_name %}
-    "{{struct.name}}": {{struct.name}},
-{% else %}
     "{{struct.contract_name}}.{{struct.name}}" : {{struct.name}},
-{% endif %}
 {%- endfor %}}
 
 
