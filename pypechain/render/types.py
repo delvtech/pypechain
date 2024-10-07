@@ -5,7 +5,6 @@ from __future__ import annotations
 import importlib.metadata
 
 from pypechain.render.contract import ContractInfo
-from pypechain.utilities.abi import get_structs_for_abi
 from pypechain.utilities.templates import get_jinja_env
 
 
@@ -31,9 +30,14 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
     has_events = len(events) > 0
     has_structs = len(structs) > 0
 
-    structs_used = get_structs_for_abi(contract_info.abi)
+    # We need to identify any inner structs that are defined in other contracts.
     types_files_imported = {
-        struct.contract_name for struct in structs_used if struct.contract_name != contract_info.contract_name
+        # Iterate through all structs and look at the contract_name of each struct value
+        struct_value.contract_name
+        for struct in structs
+        for struct_value in struct.values
+        # Filter out structs that don't have a reference to another contract
+        if struct_value.contract_name is not None
     }
 
     if not has_events and not has_structs:
