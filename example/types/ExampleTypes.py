@@ -33,7 +33,8 @@ class FlipEvent(BaseEvent):
 
         flip: int
 
-    args: FlipEventArgs
+    # We redefine the args field with the specific event arg type.
+    args: FlipEventArgs  # type: ignore[override]
 
     __name__: str = "Flip"
 
@@ -48,7 +49,8 @@ class FlopEvent(BaseEvent):
 
         flop: int
 
-    args: FlopEventArgs
+    # We redefine the args field with the specific event arg type.
+    args: FlopEventArgs  # type: ignore[override]
 
     __name__: str = "Flop"
 

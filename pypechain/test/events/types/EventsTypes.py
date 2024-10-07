@@ -34,7 +34,8 @@ class EventAEvent(BaseEvent):
         who: str
         value: int
 
-    args: EventAEventArgs
+    # We redefine the args field with the specific event arg type.
+    args: EventAEventArgs  # type: ignore[override]
 
     __name__: str = "EventA"
 

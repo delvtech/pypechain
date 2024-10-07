@@ -48,7 +48,8 @@ class {{event.capitalized_name}}Event(BaseEvent):
         {{event_input.name}}: {{event_input.python_type}}
     {%- endfor %}
 
-    args: {{event.capitalized_name}}EventArgs
+    # We redefine the args field with the specific event arg type.
+    args: {{event.capitalized_name}}EventArgs # type: ignore[override]
 {% endif %}
     __name__: str = "{{event.name}}"
 
