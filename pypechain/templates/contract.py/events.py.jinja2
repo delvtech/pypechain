@@ -8,9 +8,6 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
     # super() get_logs and create_filter methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ
 
-    # @combomethod destroys return types, so we are redefining functions as both class and instance
-    # pylint: disable=function-redefined
-
     {# TODO: add type-hints for argument_names #}
     {# TODO: remove pylint disable when we add a type-hint for argument_names #}
     # pylint: disable=useless-parent-delegation
@@ -18,9 +15,9 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
         super().__init__(*argument_names)
 
     {# TODO: add type-hints for argument_filters -#}
-    # We ignore types here for function redefinition
-    def get_typed_logs( # type: ignore
-        self: "{{contract_name}}{{event.capitalized_name}}ContractEvent",
+    @combomethod_typed
+    def get_logs_typed(
+        self,
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
         to_block: BlockIdentifier | None = None,
@@ -43,21 +40,18 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
                     {{event_input.name}} = abi_event.args["{{event_input.name}}"],
 {%- endfor %}
                 ),
+{% else %}
+                args = BaseEventArgs(),
 {% endif %}
             ) for abi_event in abi_events
         ]
-
-    @classmethod
-    # We ignore types here for function redefinition
-    def get_typed_logs( # type: ignore
-        cls: Type["{{contract_name}}{{event.capitalized_name}}ContractEvent"],
-        argument_filters: dict[str, Any] | None = None,
-        from_block: BlockIdentifier | None = None,
-        to_block: BlockIdentifier | None = None,
-        block_hash: HexBytes | None = None,
+    
+    @combomethod_typed
+    def process_receipt_typed(
+        self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN
     ) -> Iterable[{{event.capitalized_name}}Event]:
-        """Extension of `get_logs` that return a typed dataclass of the event."""
-        abi_events = super().get_logs(argument_filters=argument_filters, from_block=from_block, to_block=to_block, block_hash=block_hash)
+        """Extension of `process_receipt` that return a typed dataclass of the event."""
+        abi_events = super().process_receipt(txn_receipt, errors)
         # TODO there may be issues with this function if the user uses a middleware that changes event structure.
         return [
             {{event.capitalized_name}}Event(
@@ -73,25 +67,16 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
                     {{event_input.name}} = abi_event.args["{{event_input.name}}"],
 {%- endfor %}
                 ),
+{% else %}
+                args = BaseEventArgs(),
 {% endif %}
             ) for abi_event in abi_events
         ]
 
     {# TODO: add type-hints for argument_filters -#}
+    @combomethod_typed
     def create_filter( # type: ignore
-        self: "{{contract_name}}{{event.capitalized_name}}ContractEvent",
-        *,  # PEP 3102
-        argument_filters: dict[str, Any] | None = None,
-        from_block: BlockIdentifier | None = None,
-        to_block: BlockIdentifier = "latest",
-        address: ChecksumAddress | None = None,
-        topics: Sequence[Any] | None = None,
-    ) -> LogFilter:
-        return cast(LogFilter, super().create_filter(argument_filters=argument_filters, from_block=from_block, to_block=to_block, address=address, topics=topics))
-
-    @classmethod
-    def create_filter( # type: ignore
-        cls: Type["{{contract_name}}{{event.capitalized_name}}ContractEvent"],
+        self,
         *,  # PEP 3102
         argument_filters: dict[str, Any] | None = None,
         from_block: BlockIdentifier | None = None,
@@ -106,7 +91,7 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
 class {{contract_name}}ContractEvents(ContractEvents):
     """ContractEvents for the {{contract_name}} contract."""
 {% for event in events %}
-    {{event.name}}: {{contract_name}}{{event.capitalized_name}}ContractEvent
+    {{event.name}}: Type[{{contract_name}}{{event.capitalized_name}}ContractEvent]
 {% endfor %}
 
     def __init__(
@@ -117,7 +102,7 @@ class {{contract_name}}ContractEvents(ContractEvents):
     ) -> None:
         super().__init__(abi, w3, address)
         {% for event in events -%}
-        self.{{event.name}} = cast({{contract_name}}{{event.capitalized_name}}ContractEvent, {{contract_name}}{{event.capitalized_name}}ContractEvent.factory(
+        self.{{event.name}} = cast(Type[{{contract_name}}{{event.capitalized_name}}ContractEvent], {{contract_name}}{{event.capitalized_name}}ContractEvent.factory(
             "{{event.name}}",
             w3=w3,
             contract_abi=abi,

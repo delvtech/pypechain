@@ -2,9 +2,6 @@
 {%- for error_info in errors -%}
 class {{contract_name}}{{error_info.name}}ContractError:
     """ContractError for {{error_info.name}}."""
-    # @combomethod destroys return types, so we are redefining functions as both class and instance
-    # pylint: disable=function-redefined
-
     # 4 byte error selector
     selector: str
     # error signature, i.e. CustomError(uint256,bool)
@@ -18,25 +15,11 @@ class {{contract_name}}{{error_info.name}}ContractError:
         self.selector = "{{error_info.selector}}"
         self.signature = "{{error_info.signature}}"
 
-    def decode_error_data( # type: ignore
-        self: "{{contract_name}}{{error_info.name}}ContractError",
+    @combomethod_typed
+    def decode_error_data(
+        self,
         data: HexBytes,
         # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
-    ) -> tuple[Any, ...]:
-        """Decodes error data returns from a smart contract."""
-        error_abi = cast(
-            ABIFunction,
-            [item for item in {{contract_name | lower}}_abi if item.get("name") == "{{error_info.name}}" and item.get("type") == "error"][0],
-        )
-        types = get_abi_input_types(error_abi)
-        abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, data)
-        return decoded
-
-    @classmethod
-    def decode_error_data( # type: ignore
-        cls: Type["{{contract_name}}{{error_info.name}}ContractError"],
-        data: HexBytes,
     ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
         error_abi = cast(

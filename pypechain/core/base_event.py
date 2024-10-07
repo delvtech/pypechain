@@ -1,12 +1,19 @@
 """Defines the base event class for all subclasses of events."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from eth_typing import ChecksumAddress
 from hexbytes import HexBytes
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, frozen=True)
+class BaseEventArgs:
+    """The base event argument class for all subclasses of event args."""
+
+
+@dataclass(kw_only=True, frozen=True)
 class BaseEvent:
     """The base event class for all subclasses of events."""
 
@@ -19,4 +26,5 @@ class BaseEvent:
     address: ChecksumAddress
     block_hash: HexBytes
     block_number: int
+    args: BaseEventArgs
     __name__: str = "BaseEvent"
