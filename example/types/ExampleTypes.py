@@ -23,32 +23,34 @@ from dataclasses import dataclass
 from pypechain.core import BaseEvent, BaseEventArgs, ErrorInfo, ErrorParams
 
 
-@dataclass(kw_only=True, frozen=True)
+@dataclass(kw_only=True)
 class FlipEvent(BaseEvent):
     """The event type for event Flip"""
 
-    @dataclass(kw_only=True, frozen=True)
+    @dataclass(kw_only=True)
     class FlipEventArgs(BaseEventArgs):
         """The args to the event Flip"""
 
         flip: int
 
-    args: FlipEventArgs
+    # We redefine the args field with the specific event arg type.
+    args: FlipEventArgs  # type: ignore[override]
 
     __name__: str = "Flip"
 
 
-@dataclass(kw_only=True, frozen=True)
+@dataclass(kw_only=True)
 class FlopEvent(BaseEvent):
     """The event type for event Flop"""
 
-    @dataclass(kw_only=True, frozen=True)
+    @dataclass(kw_only=True)
     class FlopEventArgs(BaseEventArgs):
         """The args to the event Flop"""
 
         flop: int
 
-    args: FlopEventArgs
+    # We redefine the args field with the specific event arg type.
+    args: FlopEventArgs  # type: ignore[override]
 
     __name__: str = "Flop"
 

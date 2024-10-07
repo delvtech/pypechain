@@ -8,12 +8,12 @@ from eth_typing import ChecksumAddress
 from hexbytes import HexBytes
 
 
-@dataclass(kw_only=True, frozen=True)
+@dataclass(kw_only=True)
 class BaseEventArgs:
     """The base event argument class for all subclasses of event args."""
 
 
-@dataclass(kw_only=True, frozen=True)
+@dataclass(kw_only=True)
 class BaseEvent:
     """The base event class for all subclasses of events."""
 
