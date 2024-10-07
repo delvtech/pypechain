@@ -41,7 +41,7 @@ from pypechain.core import dataclass_to_tuple, rename_returned_types
 from .IStructsTypes import SimpleStruct
 
 structs = {
-    "SimpleStruct": SimpleStruct,
+    "IStructs.SimpleStruct": SimpleStruct,
 }
 
 

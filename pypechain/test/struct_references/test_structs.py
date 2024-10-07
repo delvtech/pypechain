@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from web3 import Web3
 
-from .types import StructsAContract, StructsBContract
+from .types import ContractCContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
@@ -18,14 +18,12 @@ project_root = os.path.dirname(os.path.dirname(current_path))
 
 
 @pytest.fixture
-def deployed_contracts(w3: Web3) -> tuple[StructsAContract, StructsBContract]:
+def deployed_contracts(w3: Web3) -> ContractCContract:
     """Deploys a StructsA contract and StructsB."""
-    structs_a = StructsAContract.deploy(w3=w3, account=w3.eth.accounts[0])
-    structs_b = StructsBContract.deploy(w3=w3, account=w3.eth.accounts[0])
-    return structs_a, structs_b
+    contract = ContractCContract.deploy(w3=w3, account=w3.eth.accounts[0])
+    return contract
 
 
-@pytest.mark.usefixtures("process_contracts")
 class TestStructs:
     """Tests pipeline from bots making trades to viewing the trades in the db"""
 
@@ -37,10 +35,9 @@ class TestStructs:
 
         expected_files = [
             "types/__init__.py",
-            "types/IStructsTypes.py",
-            "types/StructsAContract.py",
-            "types/StructsATypes.py",
-            "types/StructsBContract.py",
+            "types/ContractATypes.py",
+            "types/ContractBTypes.py",
+            "types/ContractCContract.py",
         ]
 
         results: list[tuple[bool, Path]] = []
@@ -51,3 +48,8 @@ class TestStructs:
         failed_tests = [full_path for exists, full_path in results if not exists]
 
         assert len(failed_tests) == 0, f"Several files don't exist: {failed_tests=}"
+
+    def test_build_struct(self, deployed_contracts: ContractCContract):
+        # Get the nested struct
+        out_struct = deployed_contracts.functions.buildStruct().call()
+        pass

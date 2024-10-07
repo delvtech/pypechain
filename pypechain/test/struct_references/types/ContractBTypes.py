@@ -20,9 +20,20 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from . import ContractATypes as ContractA
+
+
+@dataclass
+class InnerStruct:
+    """InnerStruct struct."""
+
+    intVal: int
+    strVal: str
+
 
 @dataclass
 class StructsB:
     """StructsB struct."""
 
     structA: ContractA.StructsA
+    structB: InnerStruct

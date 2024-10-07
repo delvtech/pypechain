@@ -9,7 +9,8 @@ contract ContractC {
     function buildStruct() public pure returns (ContractB.StructsB memory) {
         return
             ContractB.StructsB({
-                structA: ContractA.StructsA({ intVal: 1, strVal: "a" })
+                structA: ContractA.StructsA({ intVal: 1, strVal: "a" }),
+                structB: ContractB.InnerStruct({ intVal: 2, strVal: "b" })
             });
     }
 }

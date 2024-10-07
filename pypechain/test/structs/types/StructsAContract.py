@@ -42,9 +42,9 @@ from .IStructsTypes import InnerStruct, NestedStruct, SimpleStruct
 from .StructsATypes import AStruct
 
 structs = {
-    "InnerStruct": InnerStruct,
-    "NestedStruct": NestedStruct,
-    "SimpleStruct": SimpleStruct,
+    "IStructs.InnerStruct": InnerStruct,
+    "IStructs.NestedStruct": NestedStruct,
+    "IStructs.SimpleStruct": SimpleStruct,
     "AStruct": AStruct,
 }
 

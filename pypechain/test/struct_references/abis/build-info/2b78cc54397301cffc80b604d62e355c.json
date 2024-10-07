@@ -1,9 +1,0 @@
-{
-  "id": "2b78cc54397301cffc80b604d62e355c",
-  "source_id_to_path": {
-    "0": "pypechain/test/struct_references/contracts/ContractA.sol",
-    "1": "pypechain/test/struct_references/contracts/ContractB.sol",
-    "2": "pypechain/test/struct_references/contracts/ContractC.sol"
-  },
-  "language": "Solidity"
-}
