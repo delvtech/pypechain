@@ -32,11 +32,11 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
 
     # We need to identify any inner structs that are defined in other contracts.
     types_files_imported = {
-        # Iterate through all structs and look at the contract_name of each struct value
         struct_value.contract_name
+        # Iterate through all structs and look at the contract_name of each struct value
         for struct in structs
         for struct_value in struct.values
-        # Filter out structs that don't have a reference to another contract
+        # Filter out any fields without a contract name. These are native datatypes in solidity.
         if struct_value.contract_name is not None
     }
 
