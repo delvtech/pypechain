@@ -9,6 +9,8 @@ import pytest
 from web3 import Web3
 
 from .types import ContractCContract
+from .types.ContractATypes import StructsA
+from .types.ContractBTypes import InnerStruct, StructsB
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
@@ -50,6 +52,13 @@ class TestStructs:
         assert len(failed_tests) == 0, f"Several files don't exist: {failed_tests=}"
 
     def test_build_struct(self, deployed_contracts: ContractCContract):
+        """Test calling a method that returns the nested struct."""
         # Get the nested struct
         out_struct = deployed_contracts.functions.buildStruct().call()
-        pass
+        assert isinstance(out_struct, StructsB)
+        assert isinstance(out_struct.structA, StructsA)
+        assert isinstance(out_struct.structB, InnerStruct)
+        assert out_struct.structA.intVal == 1
+        assert out_struct.structA.strVal == "a"
+        assert out_struct.structB.intVal == 2
+        assert out_struct.structB.strVal == "b"
