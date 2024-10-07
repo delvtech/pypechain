@@ -1,0 +1,61 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212200a77b439ce040521a5ff1c43be663e6e07db110fda718c7ac9c90dc2fdce06a564736f6c63430008160033",
+    "sourceMap": "57:126:0:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080604052600080fdfea26469706673582212200a77b439ce040521a5ff1c43be663e6e07db110fda718c7ac9c90dc2fdce06a564736f6c63430008160033",
+    "sourceMap": "57:126:0:-:0;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/struct_references/contracts/ContractA.sol\":\"ContractA\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/struct_references/contracts/ContractA.sol\":{\"keccak256\":\"0x7c6e0e2f077d73754587b0760e3111b53eeb7ef6fbcd91ad0e32483e8e1673e4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://49991b12192da7819b81fd3c2738401ab2d9f08eec3b3e945dd9334a59edd3aa\",\"dweb:/ipfs/QmfX1i2YeftES985pspzVSU2DTVxwTWQ3z7QHaQqkx8NCD\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.22+commit.4fc1097e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "pypechain/test/struct_references/contracts/ContractA.sol": "ContractA"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "pypechain/test/struct_references/contracts/ContractA.sol": {
+        "keccak256": "0x7c6e0e2f077d73754587b0760e3111b53eeb7ef6fbcd91ad0e32483e8e1673e4",
+        "urls": [
+          "bzz-raw://49991b12192da7819b81fd3c2738401ab2d9f08eec3b3e945dd9334a59edd3aa",
+          "dweb:/ipfs/QmfX1i2YeftES985pspzVSU2DTVxwTWQ3z7QHaQqkx8NCD"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 0
+}

@@ -1,0 +1,69 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220290c89878a955eec9a461a52b42871b49b7d029eab84fc034ce94bc9f8c8c8ee64736f6c63430008160033",
+    "sourceMap": "103:126:1:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080604052600080fdfea2646970667358221220290c89878a955eec9a461a52b42871b49b7d029eab84fc034ce94bc9f8c8c8ee64736f6c63430008160033",
+    "sourceMap": "103:126:1:-:0;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/struct_references/contracts/ContractB.sol\":\"ContractB\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/struct_references/contracts/ContractA.sol\":{\"keccak256\":\"0x7c6e0e2f077d73754587b0760e3111b53eeb7ef6fbcd91ad0e32483e8e1673e4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://49991b12192da7819b81fd3c2738401ab2d9f08eec3b3e945dd9334a59edd3aa\",\"dweb:/ipfs/QmfX1i2YeftES985pspzVSU2DTVxwTWQ3z7QHaQqkx8NCD\"]},\"pypechain/test/struct_references/contracts/ContractB.sol\":{\"keccak256\":\"0xf55848e358b8ef541a0331029ca1b896c8c622780666a88b98739a2d89e63b4c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://81be1592e4734c55dde68df5a9461a5188dc03ed7dce6bfda00690c61d56868a\",\"dweb:/ipfs/QmdBYmEK49cwcmt9nfobXHSHuNbUSUh5BaDUnZuSVttiis\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.22+commit.4fc1097e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "pypechain/test/struct_references/contracts/ContractB.sol": "ContractB"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "pypechain/test/struct_references/contracts/ContractA.sol": {
+        "keccak256": "0x7c6e0e2f077d73754587b0760e3111b53eeb7ef6fbcd91ad0e32483e8e1673e4",
+        "urls": [
+          "bzz-raw://49991b12192da7819b81fd3c2738401ab2d9f08eec3b3e945dd9334a59edd3aa",
+          "dweb:/ipfs/QmfX1i2YeftES985pspzVSU2DTVxwTWQ3z7QHaQqkx8NCD"
+        ],
+        "license": "MIT"
+      },
+      "pypechain/test/struct_references/contracts/ContractB.sol": {
+        "keccak256": "0xf55848e358b8ef541a0331029ca1b896c8c622780666a88b98739a2d89e63b4c",
+        "urls": [
+          "bzz-raw://81be1592e4734c55dde68df5a9461a5188dc03ed7dce6bfda00690c61d56868a",
+          "dweb:/ipfs/QmdBYmEK49cwcmt9nfobXHSHuNbUSUh5BaDUnZuSVttiis"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 1
+}
