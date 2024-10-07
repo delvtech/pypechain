@@ -3,20 +3,19 @@
 import functools
 from typing import Any, Callable, Concatenate, Generic, Optional, ParamSpec, Type, TypeVar
 
-T = TypeVar("T")
-P = ParamSpec("P")
-R = TypeVar("R")
-
+# TODO remove this file once https://github.com/ethereum/eth-utils/pull/264 gets merged
 
 # We use generics to define the structure of the wrapped method
 # Here, `T` is the `self` or `cls` object, `P` is the parameter of the wrapped function, and
 # `R` is the return type
 
+T = TypeVar("T")
+P = ParamSpec("P")
+R = TypeVar("R")
+
 
 # We define the generic that attaches to the function we're decorating
 # so here, P and R are the types of the parameters and return of the decorated function
-
-
 class combomethod_typed(Generic[P, R]):  # pylint: disable=invalid-name
     """A typed version of combomethod from eth_utils."""
 
@@ -30,6 +29,7 @@ class combomethod_typed(Generic[P, R]):  # pylint: disable=invalid-name
     # The getter allows for logic to call either cls or obj method
     # with the original type decorators in the output wrapper function
     def __get__(self, obj: Optional[T] = None, objtype: Optional[Type[T]] = None) -> Callable[P, R]:
+        # The _wrapper function is unchanged from eth-utils
         @functools.wraps(self.method)
         def _wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
             if obj is not None:
