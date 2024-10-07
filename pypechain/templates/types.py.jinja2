@@ -36,12 +36,12 @@ from pypechain.core import ErrorInfo, ErrorParams
 
 {% set has_event_args = event.inputs|length > 0 %}
 
-@dataclass(kw_only=True, frozen=True)
+@dataclass(kw_only=True)
 class {{event.capitalized_name}}Event(BaseEvent):
     """The event type for event {{event.name}}"""
 {% if has_event_args %}
 
-    @dataclass(kw_only=True, frozen=True)
+    @dataclass(kw_only=True)
     class {{event.capitalized_name}}EventArgs(BaseEventArgs):
         """The args to the event {{event.name}}"""
     {%- for event_input in event.inputs %}

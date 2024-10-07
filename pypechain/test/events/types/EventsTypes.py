@@ -23,11 +23,11 @@ from dataclasses import dataclass
 from pypechain.core import BaseEvent, BaseEventArgs
 
 
-@dataclass(kw_only=True, frozen=True)
+@dataclass(kw_only=True)
 class EventAEvent(BaseEvent):
     """The event type for event EventA"""
 
-    @dataclass(kw_only=True, frozen=True)
+    @dataclass(kw_only=True)
     class EventAEventArgs(BaseEventArgs):
         """The args to the event EventA"""
 
@@ -39,7 +39,7 @@ class EventAEvent(BaseEvent):
     __name__: str = "EventA"
 
 
-@dataclass(kw_only=True, frozen=True)
+@dataclass(kw_only=True)
 class EventBEvent(BaseEvent):
     """The event type for event EventB"""
 
