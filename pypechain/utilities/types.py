@@ -195,9 +195,11 @@ def solidity_to_python_type(solidity_type: str, custom_types: list[str] = []) ->
 
     # custom types
     if solidity_type in custom_types:
-        if solidity_type[-2:] == "[]":
-            return "list[" + solidity_type[:-2] + "]"
         return solidity_type
+
+    # array of custom types
+    if solidity_type[-2:] == "[]" and solidity_type[:-2] in custom_types:
+        return "list[" + solidity_type[:-2] + "]"
 
     # If the Solidity type isn't recognized, make a warning.  This can happen when an internal type
     # is expected for an input parameter or returned in an output.

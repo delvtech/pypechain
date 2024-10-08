@@ -558,10 +558,7 @@ def get_struct_name(
 
 
 def get_struct_type(param_or_component: ABIComponent) -> str:
-    """Returns the type of the given struct.
-
-    This works the same as `get_struct_name`, except that we account for arrays by
-    wrapping the name in `list[...]`.
+    """Returns the internal solidity type of the given struct.
 
     Parameters
     ----------
@@ -576,8 +573,6 @@ def get_struct_type(param_or_component: ABIComponent) -> str:
     # it is possible that the internal type has a "struct" label
     # we want to strip that to only include the struct name itself
     internal_type = internal_type.replace("struct ", "")
-    if internal_type[-2:] == "[]":  # ends with [] indicates an array
-        return "list[" + internal_type[:-2] + "]"
     return internal_type
 
 
@@ -940,6 +935,10 @@ def get_param_type(param: ABIComponent):
     # if we find a struct, we'll add it to the dict of StructInfo's
     if is_struct(internal_type):
         python_type = get_struct_type(param)
+        # get_struct_type is potentially an array since `get_struct_type` preserves
+        # brackets, since this function is used to be parsed into a valid solidity type
+        if python_type[-2:] == "[]":
+            python_type = "list[" + python_type[:-2] + "]"
     else:
         python_type = solidity_to_python_type(param.get("type", "unknown"))
     return python_type
