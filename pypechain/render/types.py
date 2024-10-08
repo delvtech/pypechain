@@ -31,14 +31,18 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
     has_structs = len(structs) > 0
 
     # We need to identify any inner structs that are defined in other contracts.
-    types_files_imported = {
-        struct_value.contract_name
-        # Iterate through all structs and look at the contract_name of each struct value
-        for struct in structs
-        for struct_value in struct.values
-        # Filter out any fields without a contract name. These are native datatypes in solidity.
-        if struct_value.contract_name is not None
-    }
+    types_files_imported = []
+    # Iterate through all structs and look at the contract_name of each struct value
+    for struct in structs:
+        for struct_value in struct.values:
+            # Add an import if it's a struct
+            if struct_value.is_struct:
+                if struct_value.contract_name is not None:
+                    types_files_imported.append(struct_value.contract_name)
+                # There's a case where a struct is imported locally without a contract name.
+                # In this case, we use the name of the struct as the contract name.
+                else:
+                    types_files_imported.append(struct_value.name)
 
     if not has_events and not has_structs:
         return None

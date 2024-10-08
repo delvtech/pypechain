@@ -200,7 +200,7 @@ class StructInfo:
     """Solidity struct information needed for codegen."""
 
     name: str
-    contract_name: str
+    contract_name: str | None
     values: list[StructValue]
 
 
@@ -581,7 +581,7 @@ def get_struct_type(param_or_component: ABIComponent) -> str:
     return internal_type
 
 
-def get_struct_contract_name(param_or_component: ABIComponent) -> str:
+def get_struct_contract_name(param_or_component: ABIComponent) -> str | None:
     """Returns the contract name that the given struct is defined in.
 
     For example, a struct in an abi json will look like:
@@ -598,6 +598,10 @@ def get_struct_contract_name(param_or_component: ABIComponent) -> str:
     We are assuming 'internalType's value to have the form:
     'struct [ContractName].[StructName]'
 
+    If the struct's `ContractName` is not defined, we default to the name
+    of the struct.
+
+
     Parameters
     ----------
     param : ABIFunctionParams | ABIFunctionComponents
@@ -610,8 +614,14 @@ def get_struct_contract_name(param_or_component: ABIComponent) -> str:
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
     contract_name_and_struct_name = internal_type.replace("struct ", "")
-    contract_name = contract_name_and_struct_name.split(".")[0]
-    return capitalize_first_letter_only(contract_name)
+    contract_split = contract_name_and_struct_name.split(".")
+
+    if len(contract_split) == 2:
+        return capitalize_first_letter_only(contract_split[0])
+    if len(contract_split) == 1:
+        return None
+
+    raise ValueError(f"Unexpected internal struct type: {internal_type}")
 
 
 def get_param_name(
