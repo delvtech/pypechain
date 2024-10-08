@@ -46,4 +46,4 @@ class Config:
     """Config struct."""
 
     name: str
-    items: ConstructorWithStructArgs.ConstructorWithStructArgs.Items
+    items: ConstructorWithStructArgs.Items

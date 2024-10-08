@@ -54,4 +54,4 @@ class NestedStruct:
 
     intVal: int
     strVal: str
-    innerStruct: ReturnTypes.ReturnTypes.InnerStruct
+    innerStruct: ReturnTypes.InnerStruct

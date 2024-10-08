@@ -88,7 +88,7 @@ class NestedStruct:
 
     intVal: int
     strVal: str
-    innerStruct: Example.Example.InnerStruct
+    innerStruct: Example.InnerStruct
 
 
 WrongChoiceError = ErrorInfo(
