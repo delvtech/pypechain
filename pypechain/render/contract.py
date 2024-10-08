@@ -116,7 +116,11 @@ def _add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | 
     if not isinstance(structs, list):
         structs = [structs]
     for struct in structs:
-        info = contract_infos.get(struct.contract_name)
+        if struct.contract_name is None:
+            contract_name = struct.name
+        else:
+            contract_name = struct.contract_name
+        info = contract_infos.get(contract_name)
         if info:
             # Sanity check, if this structure already exists, we compare the two and ensure
             # it's the same structure
@@ -129,10 +133,10 @@ def _add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | 
             else:
                 info.structs[struct.name] = struct
         else:
-            contract_infos[struct.contract_name] = ContractInfo(
+            contract_infos[contract_name] = ContractInfo(
                 abi=[],
                 bytecode="",
-                contract_name=struct.contract_name,
+                contract_name=contract_name,
                 link_references=[],
                 structs={struct.name: struct},
                 events={},
@@ -266,6 +270,10 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
     has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
 
     structs_used = get_structs_for_abi(contract_info.abi)
+    structs_filenames = list({struct.contract_name for struct in structs_used if struct.contract_name is not None})
+
+    # Special handling for structs without a contract name
+    structs_without_filenames = list({struct.name for struct in structs_used if struct.contract_name is None})
 
     link_reference_data = get_link_reference_data(contract_info.link_references)
 
@@ -314,6 +322,8 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
         pypechain_version=importlib.metadata.version("pypechain"),
         contract_name=contract_info.contract_name,
         structs_used=structs_used,
+        structs_filenames=structs_filenames,
+        structs_without_filenames=structs_without_filenames,
         has_overloading=has_overloading,
         has_multiple_return_values=has_multiple_return_values,
         has_bytecode=has_bytecode,

@@ -42,9 +42,15 @@ from web3.contract.contract import ContractEvent, ContractEvents
 from web3.types import BlockIdentifier, StateOverride, TxParams
 from web3.types import EventData
 from web3._utils.filters import LogFilter
-{% for struct_info in structs_used %}
-from .{{struct_info.contract_name}}Types import {{struct_info.name}}
+
+{% for name in structs_filenames%}
+from . import {{name}}Types as {{name}}
 {% endfor %}
+
+{% for name in structs_without_filenames%}
+from .{{name}}Types import {{name}}
+{% endfor %}
+
 {% for contract_type in link_references.contract_types %}
 from .{{contract_type}} import {{contract_type}}
 {% endfor %}
@@ -69,7 +75,11 @@ from pypechain.core import dataclass_to_tuple, get_abi_input_types, rename_retur
 
 structs = {
 {%- for struct in structs_used %}
-    "{{struct.name}}": {{struct.name}},
+{% if struct.contract_name %}
+    "{{struct.contract_name}}.{{struct.name}}" : {{struct.contract_name}}.{{struct.name}},
+{% else %}
+    "{{struct.name}}" : {{struct.name}},
+{% endif %}
 {%- endfor %}}
 
 

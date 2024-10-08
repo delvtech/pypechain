@@ -200,7 +200,7 @@ class StructInfo:
     """Solidity struct information needed for codegen."""
 
     name: str
-    contract_name: str
+    contract_name: str | None
     values: list[StructValue]
 
 
@@ -329,9 +329,7 @@ def get_structs(
                 component_type = (
                     get_struct_type(component) if is_struct(component_internal_type) else component.get("type", "")
                 )
-                python_type = solidity_to_python_type(
-                    component_type, custom_types=[struct.name for struct in structs.values()]
-                )
+                python_type = solidity_to_python_type(component_type, custom_types=list(structs.keys()))
 
                 # Collect information
                 struct_values.append(
@@ -560,10 +558,7 @@ def get_struct_name(
 
 
 def get_struct_type(param_or_component: ABIComponent) -> str:
-    """Returns the type of the given struct.
-
-    This works the same as `get_struct_name`, except that we account for arrays by
-    wrapping the name in `list[...]`.
+    """Returns the internal solidity type of the given struct.
 
     Parameters
     ----------
@@ -575,18 +570,13 @@ def get_struct_type(param_or_component: ABIComponent) -> str:
         The type of the item.
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
-    # grab subtype if there is one
-    if "." in internal_type:
-        internal_type = internal_type.split(".")[1]
     # it is possible that the internal type has a "struct" label
     # we want to strip that to only include the struct name itself
     internal_type = internal_type.replace("struct ", "")
-    if internal_type[-2:] == "[]":  # ends with [] indicates an array
-        return "list[" + get_struct_name(param_or_component) + "]"
-    return get_struct_name(param_or_component)
+    return internal_type
 
 
-def get_struct_contract_name(param_or_component: ABIComponent) -> str:
+def get_struct_contract_name(param_or_component: ABIComponent) -> str | None:
     """Returns the contract name that the given struct is defined in.
 
     For example, a struct in an abi json will look like:
@@ -603,6 +593,10 @@ def get_struct_contract_name(param_or_component: ABIComponent) -> str:
     We are assuming 'internalType's value to have the form:
     'struct [ContractName].[StructName]'
 
+    If the struct's `ContractName` is not defined, we default to the name
+    of the struct.
+
+
     Parameters
     ----------
     param : ABIFunctionParams | ABIFunctionComponents
@@ -615,8 +609,14 @@ def get_struct_contract_name(param_or_component: ABIComponent) -> str:
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
     contract_name_and_struct_name = internal_type.replace("struct ", "")
-    contract_name = contract_name_and_struct_name.split(".")[0]
-    return capitalize_first_letter_only(contract_name)
+    contract_split = contract_name_and_struct_name.split(".")
+
+    if len(contract_split) == 2:
+        return capitalize_first_letter_only(contract_split[0])
+    if len(contract_split) == 1:
+        return None
+
+    raise ValueError(f"Unexpected internal struct type: {internal_type}")
 
 
 def get_param_name(
@@ -935,6 +935,10 @@ def get_param_type(param: ABIComponent):
     # if we find a struct, we'll add it to the dict of StructInfo's
     if is_struct(internal_type):
         python_type = get_struct_type(param)
+        # get_struct_type is potentially an array since `get_struct_type` preserves
+        # brackets, since this function is used to be parsed into a valid solidity type
+        if python_type[-2:] == "[]":
+            python_type = "list[" + python_type[:-2] + "]"
     else:
         python_type = solidity_to_python_type(param.get("type", "unknown"))
     return python_type
