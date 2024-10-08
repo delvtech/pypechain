@@ -10,8 +10,8 @@ import sys
 from pathlib import Path
 from typing import NamedTuple, Sequence
 
+from pypechain.render import render_contracts
 from pypechain.render.init import render_init_file
-from pypechain.render.render import render_contracts
 from pypechain.utilities.abi import AbiInfo, load_abi_infos_from_file
 from pypechain.utilities.types import RenderOutput
 
