@@ -329,9 +329,7 @@ def get_structs(
                 component_type = (
                     get_struct_type(component) if is_struct(component_internal_type) else component.get("type", "")
                 )
-                python_type = solidity_to_python_type(
-                    component_type, custom_types=[struct for struct in structs.keys()]
-                )
+                python_type = solidity_to_python_type(component_type, custom_types=list(structs.keys()))
 
                 # Collect information
                 struct_values.append(
