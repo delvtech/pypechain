@@ -330,7 +330,7 @@ def get_structs(
                     get_struct_type(component) if is_struct(component_internal_type) else component.get("type", "")
                 )
                 python_type = solidity_to_python_type(
-                    component_type, custom_types=[struct.name for struct in structs.values()]
+                    component_type, custom_types=[struct for struct in structs.keys()]
                 )
 
                 # Collect information
@@ -575,15 +575,12 @@ def get_struct_type(param_or_component: ABIComponent) -> str:
         The type of the item.
     """
     internal_type = cast(str, param_or_component.get("internalType", ""))
-    # grab subtype if there is one
-    if "." in internal_type:
-        internal_type = internal_type.split(".")[1]
     # it is possible that the internal type has a "struct" label
     # we want to strip that to only include the struct name itself
     internal_type = internal_type.replace("struct ", "")
     if internal_type[-2:] == "[]":  # ends with [] indicates an array
-        return "list[" + get_struct_name(param_or_component) + "]"
-    return get_struct_name(param_or_component)
+        return "list[" + internal_type[:-2] + "]"
+    return internal_type
 
 
 def get_struct_contract_name(param_or_component: ABIComponent) -> str:

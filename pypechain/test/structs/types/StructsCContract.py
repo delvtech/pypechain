@@ -38,15 +38,15 @@ from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import rename_returned_types
 
-from .IStructsTypes import InnerStruct
-from .StructsCTypes import CStruct, InnyStruct, NestedStruct, OuterStruct
+from . import IStructsTypes as IStructs
+from . import StructsCTypes as StructsC
 
 structs = {
-    "StructsC.InnyStruct": InnyStruct,
-    "StructsC.NestedStruct": NestedStruct,
-    "StructsC.OuterStruct": OuterStruct,
-    "IStructs.InnerStruct": InnerStruct,
-    "StructsC.CStruct": CStruct,
+    "StructsC.InnyStruct": StructsC.InnyStruct,
+    "StructsC.NestedStruct": StructsC.NestedStruct,
+    "StructsC.OuterStruct": StructsC.OuterStruct,
+    "IStructs.InnerStruct": IStructs.InnerStruct,
+    "StructsC.CStruct": StructsC.CStruct,
 }
 
 
@@ -65,16 +65,16 @@ class StructsCAllStructsInternalContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> OuterStruct:
-        """returns OuterStruct."""
+    ) -> StructsC.OuterStruct:
+        """returns StructsC.OuterStruct."""
         # Define the expected return types from the smart contract call
 
-        return_types = OuterStruct
+        return_types = StructsC.OuterStruct
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(OuterStruct, rename_returned_types(structs, return_types, raw_values))
+        return cast(StructsC.OuterStruct, rename_returned_types(structs, return_types, raw_values))
 
 
 class StructsCInnerStructIsExternalContractFunction(ContractFunction):
@@ -92,16 +92,16 @@ class StructsCInnerStructIsExternalContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> CStruct:
-        """returns CStruct."""
+    ) -> StructsC.CStruct:
+        """returns StructsC.CStruct."""
         # Define the expected return types from the smart contract call
 
-        return_types = CStruct
+        return_types = StructsC.CStruct
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(CStruct, rename_returned_types(structs, return_types, raw_values))
+        return cast(StructsC.CStruct, rename_returned_types(structs, return_types, raw_values))
 
 
 class StructsCContractFunctions(ContractFunctions):

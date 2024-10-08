@@ -38,12 +38,12 @@ from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import dataclass_to_tuple, rename_returned_types
 
-from .ReturnTypesTypes import InnerStruct, NestedStruct, SimpleStruct
+from . import ReturnTypesTypes as ReturnTypes
 
 structs = {
-    "ReturnTypes.SimpleStruct": SimpleStruct,
-    "ReturnTypes.InnerStruct": InnerStruct,
-    "ReturnTypes.NestedStruct": NestedStruct,
+    "ReturnTypes.SimpleStruct": ReturnTypes.SimpleStruct,
+    "ReturnTypes.InnerStruct": ReturnTypes.InnerStruct,
+    "ReturnTypes.NestedStruct": ReturnTypes.NestedStruct,
 }
 
 
@@ -53,8 +53,8 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
     class ReturnValues(NamedTuple):
         """The return named tuple for MixStructsAndPrimitives."""
 
-        simpleStruct: SimpleStruct
-        arg2: NestedStruct
+        simpleStruct: ReturnTypes.SimpleStruct
+        arg2: ReturnTypes.NestedStruct
         arg3: int
         name: str
         YesOrNo: bool
@@ -75,7 +75,7 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = [SimpleStruct, NestedStruct, int, str, bool]
+        return_types = [ReturnTypes.SimpleStruct, ReturnTypes.NestedStruct, int, str, bool]
 
         # Call the function
 
@@ -98,16 +98,16 @@ class ReturnTypesNamedSingleStructContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> SimpleStruct:
-        """returns SimpleStruct."""
+    ) -> ReturnTypes.SimpleStruct:
+        """returns ReturnTypes.SimpleStruct."""
         # Define the expected return types from the smart contract call
 
-        return_types = SimpleStruct
+        return_types = ReturnTypes.SimpleStruct
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(SimpleStruct, rename_returned_types(structs, return_types, raw_values))
+        return cast(ReturnTypes.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
 
 class ReturnTypesNamedSingleValueContractFunction(ContractFunction):
@@ -143,8 +143,8 @@ class ReturnTypesNamedTwoMixedStructsContractFunction(ContractFunction):
     class ReturnValues(NamedTuple):
         """The return named tuple for NamedTwoMixedStructs."""
 
-        simpleStruct: SimpleStruct
-        nestedStruct: NestedStruct
+        simpleStruct: ReturnTypes.SimpleStruct
+        nestedStruct: ReturnTypes.NestedStruct
 
     def __call__(self) -> ReturnTypesNamedTwoMixedStructsContractFunction:  # type: ignore
         clone = super().__call__()
@@ -162,7 +162,7 @@ class ReturnTypesNamedTwoMixedStructsContractFunction(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = [SimpleStruct, NestedStruct]
+        return_types = [ReturnTypes.SimpleStruct, ReturnTypes.NestedStruct]
 
         # Call the function
 
@@ -278,16 +278,16 @@ class ReturnTypesSingleNestedStructContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> NestedStruct:
-        """returns NestedStruct."""
+    ) -> ReturnTypes.NestedStruct:
+        """returns ReturnTypes.NestedStruct."""
         # Define the expected return types from the smart contract call
 
-        return_types = NestedStruct
+        return_types = ReturnTypes.NestedStruct
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(NestedStruct, rename_returned_types(structs, return_types, raw_values))
+        return cast(ReturnTypes.NestedStruct, rename_returned_types(structs, return_types, raw_values))
 
 
 class ReturnTypesSingleNestedStructArrayContractFunction(ContractFunction):
@@ -305,16 +305,16 @@ class ReturnTypesSingleNestedStructArrayContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> list[NestedStruct]:
-        """returns list[NestedStruct]."""
+    ) -> list[ReturnTypes.NestedStruct]:
+        """returns list[ReturnTypes.NestedStruct]."""
         # Define the expected return types from the smart contract call
 
-        return_types = list[NestedStruct]
+        return_types = list[ReturnTypes.NestedStruct]
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(list[NestedStruct], rename_returned_types(structs, return_types, raw_values))
+        return cast(list[ReturnTypes.NestedStruct], rename_returned_types(structs, return_types, raw_values))
 
 
 class ReturnTypesSingleSimpleStructContractFunction(ContractFunction):
@@ -332,16 +332,16 @@ class ReturnTypesSingleSimpleStructContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> SimpleStruct:
-        """returns SimpleStruct."""
+    ) -> ReturnTypes.SimpleStruct:
+        """returns ReturnTypes.SimpleStruct."""
         # Define the expected return types from the smart contract call
 
-        return_types = SimpleStruct
+        return_types = ReturnTypes.SimpleStruct
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(SimpleStruct, rename_returned_types(structs, return_types, raw_values))
+        return cast(ReturnTypes.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
 
 class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
@@ -350,8 +350,8 @@ class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
     class ReturnValues(NamedTuple):
         """The return named tuple for TwoMixedStructs."""
 
-        arg1: SimpleStruct
-        arg2: NestedStruct
+        arg1: ReturnTypes.SimpleStruct
+        arg2: ReturnTypes.NestedStruct
 
     def __call__(self) -> ReturnTypesTwoMixedStructsContractFunction:  # type: ignore
         clone = super().__call__()
@@ -369,7 +369,7 @@ class ReturnTypesTwoMixedStructsContractFunction(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = [SimpleStruct, NestedStruct]
+        return_types = [ReturnTypes.SimpleStruct, ReturnTypes.NestedStruct]
 
         # Call the function
 
@@ -383,8 +383,8 @@ class ReturnTypesTwoSimpleStructsContractFunction(ContractFunction):
     class ReturnValues(NamedTuple):
         """The return named tuple for TwoSimpleStructs."""
 
-        arg1: SimpleStruct
-        arg2: SimpleStruct
+        arg1: ReturnTypes.SimpleStruct
+        arg2: ReturnTypes.SimpleStruct
 
     def __call__(self) -> ReturnTypesTwoSimpleStructsContractFunction:  # type: ignore
         clone = super().__call__()
@@ -402,7 +402,7 @@ class ReturnTypesTwoSimpleStructsContractFunction(ContractFunction):
         """returns ReturnValues."""
         # Define the expected return types from the smart contract call
 
-        return_types = [SimpleStruct, SimpleStruct]
+        return_types = [ReturnTypes.SimpleStruct, ReturnTypes.SimpleStruct]
 
         # Call the function
 

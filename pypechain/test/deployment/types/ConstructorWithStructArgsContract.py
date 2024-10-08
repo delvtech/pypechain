@@ -38,11 +38,11 @@ from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import dataclass_to_tuple, rename_returned_types
 
-from .ConstructorWithStructArgsTypes import Config, Items
+from . import ConstructorWithStructArgsTypes as ConstructorWithStructArgs
 
 structs = {
-    "ConstructorWithStructArgs.Items": Items,
-    "ConstructorWithStructArgs.Config": Config,
+    "ConstructorWithStructArgs.Items": ConstructorWithStructArgs.Items,
+    "ConstructorWithStructArgs.Config": ConstructorWithStructArgs.Config,
 }
 
 
@@ -237,10 +237,10 @@ class ConstructorWithStructArgsContract(Contract):
     class ConstructorArgs(NamedTuple):
         """Arguments to pass the contract's constructor function."""
 
-        config: Config
+        config: ConstructorWithStructArgs.Config
 
     @classmethod
-    def constructor(cls, config: Config) -> ContractConstructor:  # type: ignore
+    def constructor(cls, config: ConstructorWithStructArgs.Config) -> ContractConstructor:  # type: ignore
         """Creates a transaction with the contract's constructor function.
 
         Parameters

@@ -38,10 +38,10 @@ from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import dataclass_to_tuple, rename_returned_types
 
-from .IStructsTypes import SimpleStruct
+from . import IStructsTypes as IStructs
 
 structs = {
-    "IStructs.SimpleStruct": SimpleStruct,
+    "IStructs.SimpleStruct": IStructs.SimpleStruct,
 }
 
 
@@ -87,16 +87,16 @@ class StructsBSingleSimpleStructContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> SimpleStruct:
-        """returns SimpleStruct."""
+    ) -> IStructs.SimpleStruct:
+        """returns IStructs.SimpleStruct."""
         # Define the expected return types from the smart contract call
 
-        return_types = SimpleStruct
+        return_types = IStructs.SimpleStruct
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(SimpleStruct, rename_returned_types(structs, return_types, raw_values))
+        return cast(IStructs.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
 
 class StructsBContractFunctions(ContractFunctions):

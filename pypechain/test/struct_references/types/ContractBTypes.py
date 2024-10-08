@@ -46,5 +46,5 @@ class InnerStruct:
 class StructsB:
     """StructsB struct."""
 
-    structA: ContractA.StructsA
-    structB: ContractB.InnerStruct
+    structA: ContractA.ContractA.StructsA
+    structB: ContractB.ContractB.InnerStruct

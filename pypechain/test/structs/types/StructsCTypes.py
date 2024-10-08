@@ -45,18 +45,18 @@ class InnyStruct:
 class NestedStruct:
     """NestedStruct struct."""
 
-    inner: StructsC.InnyStruct
+    inner: StructsC.StructsC.InnyStruct
 
 
 @dataclass
 class OuterStruct:
     """OuterStruct struct."""
 
-    nested: StructsC.NestedStruct
+    nested: StructsC.StructsC.NestedStruct
 
 
 @dataclass
 class CStruct:
     """CStruct struct."""
 
-    inner: IStructs.InnerStruct
+    inner: IStructs.IStructs.InnerStruct

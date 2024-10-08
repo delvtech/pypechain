@@ -38,14 +38,14 @@ from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import rename_returned_types
 
-from .IStructsTypes import InnerStruct, NestedStruct, SimpleStruct
-from .StructsATypes import AStruct
+from . import IStructsTypes as IStructs
+from . import StructsATypes as StructsA
 
 structs = {
-    "IStructs.InnerStruct": InnerStruct,
-    "IStructs.NestedStruct": NestedStruct,
-    "IStructs.SimpleStruct": SimpleStruct,
-    "StructsA.AStruct": AStruct,
+    "IStructs.InnerStruct": IStructs.InnerStruct,
+    "IStructs.NestedStruct": IStructs.NestedStruct,
+    "IStructs.SimpleStruct": IStructs.SimpleStruct,
+    "StructsA.AStruct": StructsA.AStruct,
 }
 
 
@@ -64,16 +64,16 @@ class StructsASingleNestedStructContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> NestedStruct:
-        """returns NestedStruct."""
+    ) -> IStructs.NestedStruct:
+        """returns IStructs.NestedStruct."""
         # Define the expected return types from the smart contract call
 
-        return_types = NestedStruct
+        return_types = IStructs.NestedStruct
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(NestedStruct, rename_returned_types(structs, return_types, raw_values))
+        return cast(IStructs.NestedStruct, rename_returned_types(structs, return_types, raw_values))
 
 
 class StructsASingleSimpleStructContractFunction(ContractFunction):
@@ -91,16 +91,16 @@ class StructsASingleSimpleStructContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> SimpleStruct:
-        """returns SimpleStruct."""
+    ) -> IStructs.SimpleStruct:
+        """returns IStructs.SimpleStruct."""
         # Define the expected return types from the smart contract call
 
-        return_types = SimpleStruct
+        return_types = IStructs.SimpleStruct
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(SimpleStruct, rename_returned_types(structs, return_types, raw_values))
+        return cast(IStructs.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
 
 class StructsAStructAContractFunction(ContractFunction):
@@ -118,16 +118,16 @@ class StructsAStructAContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> AStruct:
-        """returns AStruct."""
+    ) -> StructsA.AStruct:
+        """returns StructsA.AStruct."""
         # Define the expected return types from the smart contract call
 
-        return_types = AStruct
+        return_types = StructsA.AStruct
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(AStruct, rename_returned_types(structs, return_types, raw_values))
+        return cast(StructsA.AStruct, rename_returned_types(structs, return_types, raw_values))
 
 
 class StructsAContractFunctions(ContractFunctions):

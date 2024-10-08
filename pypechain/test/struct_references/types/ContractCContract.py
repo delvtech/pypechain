@@ -38,13 +38,13 @@ from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import rename_returned_types
 
-from .ContractATypes import StructsA
-from .ContractBTypes import InnerStruct, StructsB
+from . import ContractATypes as ContractA
+from . import ContractBTypes as ContractB
 
 structs = {
-    "ContractA.StructsA": StructsA,
-    "ContractB.InnerStruct": InnerStruct,
-    "ContractB.StructsB": StructsB,
+    "ContractA.StructsA": ContractA.StructsA,
+    "ContractB.InnerStruct": ContractB.InnerStruct,
+    "ContractB.StructsB": ContractB.StructsB,
 }
 
 
@@ -63,16 +63,16 @@ class ContractCBuildStructContractFunction(ContractFunction):
         block_identifier: BlockIdentifier = "latest",
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
-    ) -> StructsB:
-        """returns StructsB."""
+    ) -> ContractB.StructsB:
+        """returns ContractB.StructsB."""
         # Define the expected return types from the smart contract call
 
-        return_types = StructsB
+        return_types = ContractB.StructsB
 
         # Call the function
 
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        return cast(StructsB, rename_returned_types(structs, return_types, raw_values))
+        return cast(ContractB.StructsB, rename_returned_types(structs, return_types, raw_values))
 
 
 class ContractCContractFunctions(ContractFunctions):

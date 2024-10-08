@@ -266,6 +266,7 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
     has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
 
     structs_used = get_structs_for_abi(contract_info.abi)
+    type_file_base_names = list({struct.contract_name for struct in structs_used})
 
     link_reference_data = get_link_reference_data(contract_info.link_references)
 
@@ -314,6 +315,7 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
         pypechain_version=importlib.metadata.version("pypechain"),
         contract_name=contract_info.contract_name,
         structs_used=structs_used,
+        type_file_base_names=type_file_base_names,
         has_overloading=has_overloading,
         has_multiple_return_values=has_multiple_return_values,
         has_bytecode=has_bytecode,
