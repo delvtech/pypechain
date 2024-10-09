@@ -9,6 +9,8 @@ from web3.exceptions import MismatchedABI
 
 from pypechain.test.overloading.types import OverloadedMethodsContract
 
+from .types import OverloadedMethodsTypes
+
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
 
@@ -39,6 +41,14 @@ class TestOverloading:
 
         result = deployed_contract.functions.doSomething(x, y).call()
         assert result == 1 + 2
+
+        result = deployed_contract.functions.doSomething(x, s).call()
+        assert isinstance(result, deployed_contract.functions.doSomething(x, s).ReturnValues)
+        assert result == deployed_contract.functions.doSomething(x, s).ReturnValues(x, s)
+
+        result = deployed_contract.functions.doSomething(OverloadedMethodsTypes.SimpleStruct(s, x)).call()
+        assert isinstance(result, OverloadedMethodsTypes.SimpleStruct)
+        assert result == OverloadedMethodsTypes.SimpleStruct(s, x)
 
         with pytest.raises(MismatchedABI) as err:
             result = deployed_contract.functions.doSomething(x, y, s).call()  # type: ignore

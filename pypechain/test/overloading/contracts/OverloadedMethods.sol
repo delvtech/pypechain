@@ -2,6 +2,13 @@
 pragma solidity ^0.8.0;
 
 contract OverloadedMethods {
+
+    struct SimpleStruct{
+        string strVal;
+        uint intVal;
+    }
+    
+
     // First version of the function accepts an integer, returns a uint
     function doSomething(uint x) public pure returns (uint) {
         return x * 2;
@@ -23,5 +30,12 @@ contract OverloadedMethods {
         string memory s
     ) public pure returns (uint int_input, string memory) {
         return (x, s);
+    }
+
+    // Another overloaded version accepts a struct, returns unchanged
+    function doSomething(
+        SimpleStruct calldata simpleStruct
+    ) public pure returns (SimpleStruct memory) {
+        return SimpleStruct({strVal: simpleStruct.strVal, intVal: simpleStruct.intVal});
     }
 }
