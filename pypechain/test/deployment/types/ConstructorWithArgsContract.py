@@ -17,7 +17,7 @@ See documentation at https://github.com/delvtech/pypechain """
 # This file is bound to get very long depending on contract sizes.
 # pylint: disable=too-many-lines
 
-# methods are overriden with specific arguments instead of generic *args, **kwargs
+# methods are overridden with specific arguments instead of generic *args, **kwargs
 # pylint: disable=arguments-differ
 
 # consumers have too many opinions on line length
@@ -45,6 +45,7 @@ from web3.contract.contract import Contract, ContractConstructor, ContractFuncti
 from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import (
+    PypechainBaseContractErrors,
     PypechainContractFunction,
     dataclass_to_tuple,
     expand_struct_type_str,
@@ -251,6 +252,16 @@ class ConstructorWithArgsContractFunctions(ContractFunctions):
             decode_tuples=decode_tuples,
             abi_element_identifier="setName",
         )
+
+
+class ConstructorWithArgsContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the ConstructorWithArgs contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 constructorwithargs_abi: ABI = cast(

@@ -17,7 +17,7 @@ See documentation at https://github.com/delvtech/pypechain """
 # This file is bound to get very long depending on contract sizes.
 # pylint: disable=too-many-lines
 
-# methods are overriden with specific arguments instead of generic *args, **kwargs
+# methods are overridden with specific arguments instead of generic *args, **kwargs
 # pylint: disable=arguments-differ
 
 # consumers have too many opinions on line length
@@ -49,6 +49,7 @@ from web3.types import BlockIdentifier, StateOverride, TxParams, TxReceipt
 
 from pypechain.core import (
     BaseEventArgs,
+    PypechainBaseContractErrors,
     PypechainContractFunction,
     combomethod_typed,
     dataclass_to_tuple,
@@ -530,6 +531,16 @@ class EventsContractEvents(ContractEvents):
             Type[EventsEventBContractEvent],
             EventsEventBContractEvent.factory("EventB", w3=w3, contract_abi=abi, address=address, event_name="EventB"),
         )
+
+
+class EventsContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the Events contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 events_abi: ABI = cast(
