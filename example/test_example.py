@@ -13,8 +13,6 @@ from example.types import ExampleContract
 from example.types.ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
 from pypechain.utilities.abi import load_abi_infos_from_file
 
-from .types.ExampleContract import ExampleFlipFlopContractFunction
-
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
 # pylint: disable=invalid-name
@@ -63,9 +61,10 @@ class TestExampleContract:
 
         flip = 1
         flop = 2
-        result: ExampleFlipFlopContractFunction.ReturnValues = deployed_contract.functions.flipFlop(flip, flop).call()
+        result = deployed_contract.functions.flipFlop(flip, flop).call()
 
-        assert result == (flop, flip)
+        assert result.flop == flop
+        assert result.flip == flip
 
     def test_simple_structs(self, w3):
         """Tests single value"""

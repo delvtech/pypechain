@@ -2,7 +2,24 @@
 pragma solidity ^0.8.0;
 
 contract OverloadedMethods {
-    // First version of the function accepts an integer, returns a uint
+
+    struct SimpleStruct{
+        string strVal;
+        uint intVal;
+    }
+
+    struct NestedStruct{
+        uint intVal;
+        string strVal;
+        SimpleStruct simpleStruct;
+    }
+    
+    // Function doesn't accept any parameters, returns a uint
+    function doSomething() public pure returns (uint) {
+        return 2;
+    }
+
+    // Function accepts an integer, returns a uint
     function doSomething(uint x) public pure returns (uint) {
         return x * 2;
     }
@@ -14,7 +31,7 @@ contract OverloadedMethods {
 
     // Another overloaded version accepts two integers, returns a named uint
     function doSomething(uint x, uint y) public pure returns (uint added) {
-        return x + y;
+        return x / y;
     }
 
     // Another overloaded version accepts an integer and a string, returns both unchanged
@@ -23,5 +40,26 @@ contract OverloadedMethods {
         string memory s
     ) public pure returns (uint int_input, string memory) {
         return (x, s);
+    }
+
+    // Another overloaded version accepts a struct, returns unchanged
+    function doSomething(
+        SimpleStruct memory simpleStruct
+    ) public pure returns (SimpleStruct memory) {
+        return SimpleStruct({strVal: simpleStruct.strVal, intVal: simpleStruct.intVal});
+    }
+
+    // Overloaded vec of structs as input
+    function doSomething(
+        SimpleStruct[] memory simpleStructVec
+    ) public pure returns (SimpleStruct[] memory) {
+        return simpleStructVec;
+    }
+
+    // Overloaded vec of nested struct as input
+    function doSomething(
+        NestedStruct[] memory nestedStructVec
+    ) public pure returns (NestedStruct[] memory outNestedStructVec) {
+        return nestedStructVec;
     }
 }

@@ -23,32 +23,42 @@ See documentation at https://github.com/delvtech/pypechain """
 # consumers have too many opinions on line length
 # pylint: disable=line-too-long
 
+# We use protected classes within pypechain
+# pylint: disable=protected-access
+
+# We sometimes define a variable that might not be returned in `call`,
+# but we still may want to call the function
+# pylint: disable=unused-variable
+
 
 from __future__ import annotations
 
-from typing import Any, Type, cast
+import copy
+from typing import Any, Type, cast, overload
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ABI, ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
-from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
+from web3.contract.contract import Contract, ContractConstructor, ContractFunctions
 from web3.types import BlockIdentifier, StateOverride, TxParams
 
-from pypechain.core import dataclass_to_tuple, rename_returned_types
+from pypechain.core import (
+    PypechainContractFunction,
+    dataclass_to_tuple,
+    expand_struct_type_str,
+    get_arg_type_names,
+    rename_returned_types,
+)
 
 structs = {}
 
 
-class MyLibraryAddContractFunction(ContractFunction):
-    """ContractFunction for the add method."""
+class MyLibraryAddContractFunction0(PypechainContractFunction):
+    """ContractFunction for the add(int,int) method."""
 
-    def __call__(self, a: int, b: int) -> MyLibraryAddContractFunction:  # type: ignore
-        clone = super().__call__(dataclass_to_tuple(a), dataclass_to_tuple(b))
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    _type_signature = expand_struct_type_str(tuple(["int", "int"]), structs)
 
     def call(
         self,
@@ -63,9 +73,57 @@ class MyLibraryAddContractFunction(ContractFunction):
         return_types = int
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return cast(int, rename_returned_types(structs, return_types, raw_values))
+
+
+class MyLibraryAddContractFunction(PypechainContractFunction):
+    """ContractFunction for the add method."""
+
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self, a: int, b: int) -> MyLibraryAddContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> MyLibraryAddContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            MyLibraryAddContractFunction0._type_signature: MyLibraryAddContractFunction0.factory(
+                "MyLibraryAddContractFunction0", **kwargs
+            ),
+        }
+        return out
 
 
 class MyLibraryContractFunctions(ContractFunctions):

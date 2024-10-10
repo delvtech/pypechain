@@ -68,8 +68,13 @@ def dataclass_to_tuple(instance: Any) -> Any:
     Returns
     -------
     Any
-        either a tuple or the orginial value
+        either a tuple or the original value
     """
+    # We expect vector inputs as lists, as set by the type hint of
+    # the function arguments.
+    if isinstance(instance, list):
+        return [dataclass_to_tuple(x) for x in instance]
+
     if not is_dataclass(instance):
         return instance
 
@@ -80,6 +85,52 @@ def dataclass_to_tuple(instance: Any) -> Any:
         return value
 
     return tuple(convert_value(getattr(instance, field.name)) for field in fields(instance))
+
+
+def get_arg_type_names(in_args: tuple[Any, ...] | list[Any] | Any) -> str:
+    """Returns the types of an input sequence of arguments recursively.
+
+    Parameters
+    ----------
+    in_args : tuple[Any, ...] | list[Any] | Any
+        The input sequence of arguments.
+
+    Returns
+    -------
+    str
+        The types of the input sequence of arguments.
+    """
+    if isinstance(in_args, tuple):
+        out = f"({', '.join(get_arg_type_names(arg) for arg in in_args)})"
+        return out
+    if isinstance(in_args, list):
+        # We only look at the first element of the list for types
+        # if it's a list, as we expect a list input be mapped to
+        # a vector input type in solidity, which must all be of
+        # the same type. This is also ensured via type hinting in
+        # the contract function.
+        out = f"list[{get_arg_type_names(in_args[0])}]"
+        return out
+    return type(in_args).__name__
+
+
+def expand_struct_type_str(in_type: tuple[str, ...] | str, structs: dict[str, Any]) -> str:
+    """Given a type string, expand any structs to tuples."""
+    if isinstance(in_type, str):
+        # handle list[types]
+        if in_type.startswith("list[") and in_type.endswith("]"):
+            return f"list[{expand_struct_type_str(in_type[5:-1], structs)}]"
+
+        if in_type in structs:
+            # Expand struct types to tuples
+            f = [expand_struct_type_str(str(field.type), structs) for field in fields(structs[in_type])]
+            return f"({', '.join(f)})"
+        return in_type
+
+    if isinstance(in_type, tuple):
+        return f"({', '.join(expand_struct_type_str(field, structs) for field in in_type)})"
+
+    raise TypeError(f"Unsupported type: {in_type}")
 
 
 def rename_returned_types(

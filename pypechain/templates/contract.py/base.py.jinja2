@@ -23,6 +23,14 @@ See documentation at https://github.com/delvtech/pypechain """
 # consumers have too many opinions on line length
 # pylint: disable=line-too-long
 
+# We use protected classes within pypechain
+# pylint: disable=protected-access
+
+# We sometimes define a variable that might not be returned in `call`,
+# but we still may want to call the function
+# pylint: disable=unused-variable
+
+
 
 from __future__ import annotations
 
@@ -42,6 +50,7 @@ from web3.contract.contract import ContractEvent, ContractEvents
 from web3.types import BlockIdentifier, StateOverride, TxParams
 from web3.types import EventData
 from web3._utils.filters import LogFilter
+import copy
 
 {% for name in structs_filenames%}
 from . import {{name}}Types as {{name}}
@@ -70,7 +79,15 @@ from pypechain.core import combomethod_typed
 from .{{contract_name}}Types import {{event.capitalized_name}}Event
 {% endfor %}
 
-from pypechain.core import dataclass_to_tuple, get_abi_input_types, rename_returned_types, tuple_to_dataclass
+from pypechain.core import (
+    dataclass_to_tuple, 
+    get_abi_input_types, 
+    rename_returned_types, 
+    tuple_to_dataclass, 
+    get_arg_type_names,
+    expand_struct_type_str,
+    PypechainContractFunction,
+)
 
 
 structs = {

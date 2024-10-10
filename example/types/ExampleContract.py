@@ -23,10 +23,18 @@ See documentation at https://github.com/delvtech/pypechain """
 # consumers have too many opinions on line length
 # pylint: disable=line-too-long
 
+# We use protected classes within pypechain
+# pylint: disable=protected-access
+
+# We sometimes define a variable that might not be returned in `call`,
+# but we still may want to call the function
+# pylint: disable=unused-variable
+
 
 from __future__ import annotations
 
-from typing import Any, Iterable, NamedTuple, Sequence, Type, cast
+import copy
+from typing import Any, Iterable, NamedTuple, Sequence, Type, cast, overload
 
 from eth_abi.codec import ABICodec
 from eth_abi.registry import registry as default_registry
@@ -37,18 +45,19 @@ from typing_extensions import Self
 from web3 import Web3
 from web3._utils.events import EventLogErrorFlags
 from web3._utils.filters import LogFilter
-from web3.contract.contract import (
-    Contract,
-    ContractConstructor,
-    ContractEvent,
-    ContractEvents,
-    ContractFunction,
-    ContractFunctions,
-)
+from web3.contract.contract import Contract, ContractConstructor, ContractEvent, ContractEvents, ContractFunctions
 from web3.logs import WARN
 from web3.types import BlockIdentifier, StateOverride, TxParams, TxReceipt
 
-from pypechain.core import combomethod_typed, dataclass_to_tuple, get_abi_input_types, rename_returned_types
+from pypechain.core import (
+    PypechainContractFunction,
+    combomethod_typed,
+    dataclass_to_tuple,
+    expand_struct_type_str,
+    get_abi_input_types,
+    get_arg_type_names,
+    rename_returned_types,
+)
 
 from . import ExampleTypes as Example
 from .ExampleTypes import FlipEvent, FlopEvent
@@ -60,20 +69,16 @@ structs = {
 }
 
 
-class ExampleFlipFlopContractFunction(ContractFunction):
-    """ContractFunction for the flipFlop method."""
+class ExampleFlipFlopContractFunction0(PypechainContractFunction):
+    """ContractFunction for the flipFlop(int,int) method."""
+
+    _type_signature = expand_struct_type_str(tuple(["int", "int"]), structs)
 
     class ReturnValues(NamedTuple):
         """The return named tuple for FlipFlop."""
 
         flop: int
         flip: int
-
-    def __call__(self, flip: int, flop: int) -> ExampleFlipFlopContractFunction:  # type: ignore
-        clone = super().__call__(dataclass_to_tuple(flip), dataclass_to_tuple(flop))
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
 
     def call(
         self,
@@ -88,19 +93,63 @@ class ExampleFlipFlopContractFunction(ContractFunction):
         return_types = [int, int]
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
 
 
-class ExampleGuessALetterContractFunction(ContractFunction):
-    """ContractFunction for the guessALetter method."""
+class ExampleFlipFlopContractFunction(PypechainContractFunction):
+    """ContractFunction for the flipFlop method."""
 
-    def __call__(self, guess: int) -> ExampleGuessALetterContractFunction:  # type: ignore
-        clone = super().__call__(dataclass_to_tuple(guess))
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self, flip: int, flop: int) -> ExampleFlipFlopContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ExampleFlipFlopContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ExampleFlipFlopContractFunction0._type_signature: ExampleFlipFlopContractFunction0.factory(
+                "ExampleFlipFlopContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ExampleGuessALetterContractFunction0(PypechainContractFunction):
+    """ContractFunction for the guessALetter(int) method."""
+
+    _type_signature = expand_struct_type_str(tuple(["int"]), structs)
 
     def call(
         self,
@@ -113,10 +162,61 @@ class ExampleGuessALetterContractFunction(ContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
 
-class ExampleMixStructsAndPrimitivesContractFunction(ContractFunction):
-    """ContractFunction for the mixStructsAndPrimitives method."""
+class ExampleGuessALetterContractFunction(PypechainContractFunction):
+    """ContractFunction for the guessALetter method."""
+
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self, guess: int) -> ExampleGuessALetterContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ExampleGuessALetterContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ExampleGuessALetterContractFunction0._type_signature: ExampleGuessALetterContractFunction0.factory(
+                "ExampleGuessALetterContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ExampleMixStructsAndPrimitivesContractFunction0(PypechainContractFunction):
+    """ContractFunction for the mixStructsAndPrimitives() method."""
+
+    _type_signature = expand_struct_type_str(tuple([]), structs)
 
     class ReturnValues(NamedTuple):
         """The return named tuple for MixStructsAndPrimitives."""
@@ -126,12 +226,6 @@ class ExampleMixStructsAndPrimitivesContractFunction(ContractFunction):
         arg3: int
         name: str
         YesOrNo: bool
-
-    def __call__(self) -> ExampleMixStructsAndPrimitivesContractFunction:  # type: ignore
-        clone = super().__call__()
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
 
     def call(
         self,
@@ -146,19 +240,63 @@ class ExampleMixStructsAndPrimitivesContractFunction(ContractFunction):
         return_types = [Example.SimpleStruct, Example.NestedStruct, int, str, bool]
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
 
 
-class ExampleNamedSingleStructContractFunction(ContractFunction):
-    """ContractFunction for the namedSingleStruct method."""
+class ExampleMixStructsAndPrimitivesContractFunction(PypechainContractFunction):
+    """ContractFunction for the mixStructsAndPrimitives method."""
 
-    def __call__(self) -> ExampleNamedSingleStructContractFunction:  # type: ignore
-        clone = super().__call__()
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self) -> ExampleMixStructsAndPrimitivesContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ExampleMixStructsAndPrimitivesContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ExampleMixStructsAndPrimitivesContractFunction0._type_signature: ExampleMixStructsAndPrimitivesContractFunction0.factory(
+                "ExampleMixStructsAndPrimitivesContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ExampleNamedSingleStructContractFunction0(PypechainContractFunction):
+    """ContractFunction for the namedSingleStruct() method."""
+
+    _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
         self,
@@ -173,25 +311,69 @@ class ExampleNamedSingleStructContractFunction(ContractFunction):
         return_types = Example.SimpleStruct
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return cast(Example.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
 
-class ExampleNamedTwoMixedStructsContractFunction(ContractFunction):
-    """ContractFunction for the namedTwoMixedStructs method."""
+class ExampleNamedSingleStructContractFunction(PypechainContractFunction):
+    """ContractFunction for the namedSingleStruct method."""
+
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self) -> ExampleNamedSingleStructContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ExampleNamedSingleStructContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ExampleNamedSingleStructContractFunction0._type_signature: ExampleNamedSingleStructContractFunction0.factory(
+                "ExampleNamedSingleStructContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ExampleNamedTwoMixedStructsContractFunction0(PypechainContractFunction):
+    """ContractFunction for the namedTwoMixedStructs() method."""
+
+    _type_signature = expand_struct_type_str(tuple([]), structs)
 
     class ReturnValues(NamedTuple):
         """The return named tuple for NamedTwoMixedStructs."""
 
         simpleStruct: Example.SimpleStruct
         nestedStruct: Example.NestedStruct
-
-    def __call__(self) -> ExampleNamedTwoMixedStructsContractFunction:  # type: ignore
-        clone = super().__call__()
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
 
     def call(
         self,
@@ -206,19 +388,63 @@ class ExampleNamedTwoMixedStructsContractFunction(ContractFunction):
         return_types = [Example.SimpleStruct, Example.NestedStruct]
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
 
 
-class ExampleSingleNestedStructContractFunction(ContractFunction):
-    """ContractFunction for the singleNestedStruct method."""
+class ExampleNamedTwoMixedStructsContractFunction(PypechainContractFunction):
+    """ContractFunction for the namedTwoMixedStructs method."""
 
-    def __call__(self, nestedStruct: Example.NestedStruct) -> ExampleSingleNestedStructContractFunction:  # type: ignore
-        clone = super().__call__(dataclass_to_tuple(nestedStruct))
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self) -> ExampleNamedTwoMixedStructsContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ExampleNamedTwoMixedStructsContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ExampleNamedTwoMixedStructsContractFunction0._type_signature: ExampleNamedTwoMixedStructsContractFunction0.factory(
+                "ExampleNamedTwoMixedStructsContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ExampleSingleNestedStructContractFunction0(PypechainContractFunction):
+    """ContractFunction for the singleNestedStruct(Example.NestedStruct) method."""
+
+    _type_signature = expand_struct_type_str(tuple(["Example.NestedStruct"]), structs)
 
     def call(
         self,
@@ -233,19 +459,63 @@ class ExampleSingleNestedStructContractFunction(ContractFunction):
         return_types = Example.NestedStruct
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return cast(Example.NestedStruct, rename_returned_types(structs, return_types, raw_values))
 
 
-class ExampleSingleSimpleStructContractFunction(ContractFunction):
-    """ContractFunction for the singleSimpleStruct method."""
+class ExampleSingleNestedStructContractFunction(PypechainContractFunction):
+    """ContractFunction for the singleNestedStruct method."""
 
-    def __call__(self, simpleStruct: Example.SimpleStruct) -> ExampleSingleSimpleStructContractFunction:  # type: ignore
-        clone = super().__call__(dataclass_to_tuple(simpleStruct))
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self, nestedStruct: Example.NestedStruct) -> ExampleSingleNestedStructContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ExampleSingleNestedStructContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ExampleSingleNestedStructContractFunction0._type_signature: ExampleSingleNestedStructContractFunction0.factory(
+                "ExampleSingleNestedStructContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ExampleSingleSimpleStructContractFunction0(PypechainContractFunction):
+    """ContractFunction for the singleSimpleStruct(Example.SimpleStruct) method."""
+
+    _type_signature = expand_struct_type_str(tuple(["Example.SimpleStruct"]), structs)
 
     def call(
         self,
@@ -260,25 +530,69 @@ class ExampleSingleSimpleStructContractFunction(ContractFunction):
         return_types = Example.SimpleStruct
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return cast(Example.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
 
-class ExampleTwoMixedStructsContractFunction(ContractFunction):
-    """ContractFunction for the twoMixedStructs method."""
+class ExampleSingleSimpleStructContractFunction(PypechainContractFunction):
+    """ContractFunction for the singleSimpleStruct method."""
+
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self, simpleStruct: Example.SimpleStruct) -> ExampleSingleSimpleStructContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ExampleSingleSimpleStructContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ExampleSingleSimpleStructContractFunction0._type_signature: ExampleSingleSimpleStructContractFunction0.factory(
+                "ExampleSingleSimpleStructContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ExampleTwoMixedStructsContractFunction0(PypechainContractFunction):
+    """ContractFunction for the twoMixedStructs() method."""
+
+    _type_signature = expand_struct_type_str(tuple([]), structs)
 
     class ReturnValues(NamedTuple):
         """The return named tuple for TwoMixedStructs."""
 
         arg1: Example.SimpleStruct
         arg2: Example.NestedStruct
-
-    def __call__(self) -> ExampleTwoMixedStructsContractFunction:  # type: ignore
-        clone = super().__call__()
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
 
     def call(
         self,
@@ -293,25 +607,69 @@ class ExampleTwoMixedStructsContractFunction(ContractFunction):
         return_types = [Example.SimpleStruct, Example.NestedStruct]
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
 
 
-class ExampleTwoSimpleStructsContractFunction(ContractFunction):
-    """ContractFunction for the twoSimpleStructs method."""
+class ExampleTwoMixedStructsContractFunction(PypechainContractFunction):
+    """ContractFunction for the twoMixedStructs method."""
+
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self) -> ExampleTwoMixedStructsContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ExampleTwoMixedStructsContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ExampleTwoMixedStructsContractFunction0._type_signature: ExampleTwoMixedStructsContractFunction0.factory(
+                "ExampleTwoMixedStructsContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ExampleTwoSimpleStructsContractFunction0(PypechainContractFunction):
+    """ContractFunction for the twoSimpleStructs() method."""
+
+    _type_signature = expand_struct_type_str(tuple([]), structs)
 
     class ReturnValues(NamedTuple):
         """The return named tuple for TwoSimpleStructs."""
 
         arg1: Example.SimpleStruct
         arg2: Example.SimpleStruct
-
-    def __call__(self) -> ExampleTwoSimpleStructsContractFunction:  # type: ignore
-        clone = super().__call__()
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
 
     def call(
         self,
@@ -326,19 +684,63 @@ class ExampleTwoSimpleStructsContractFunction(ContractFunction):
         return_types = [Example.SimpleStruct, Example.SimpleStruct]
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
 
 
-class ExampleVecOfStructContractFunction(ContractFunction):
-    """ContractFunction for the vecOfStruct method."""
+class ExampleTwoSimpleStructsContractFunction(PypechainContractFunction):
+    """ContractFunction for the twoSimpleStructs method."""
 
-    def __call__(self, inVecSimpleStruct: list[Example.SimpleStruct]) -> ExampleVecOfStructContractFunction:  # type: ignore
-        clone = super().__call__(dataclass_to_tuple(inVecSimpleStruct))
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self) -> ExampleTwoSimpleStructsContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ExampleTwoSimpleStructsContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ExampleTwoSimpleStructsContractFunction0._type_signature: ExampleTwoSimpleStructsContractFunction0.factory(
+                "ExampleTwoSimpleStructsContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ExampleVecOfStructContractFunction0(PypechainContractFunction):
+    """ContractFunction for the vecOfStruct(list[Example.SimpleStruct]) method."""
+
+    _type_signature = expand_struct_type_str(tuple(["list[Example.SimpleStruct]"]), structs)
 
     def call(
         self,
@@ -353,9 +755,57 @@ class ExampleVecOfStructContractFunction(ContractFunction):
         return_types = list[Example.SimpleStruct]
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return cast(list[Example.SimpleStruct], rename_returned_types(structs, return_types, raw_values))
+
+
+class ExampleVecOfStructContractFunction(PypechainContractFunction):
+    """ContractFunction for the vecOfStruct method."""
+
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self, inVecSimpleStruct: list[Example.SimpleStruct]) -> ExampleVecOfStructContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ExampleVecOfStructContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ExampleVecOfStructContractFunction0._type_signature: ExampleVecOfStructContractFunction0.factory(
+                "ExampleVecOfStructContractFunction0", **kwargs
+            ),
+        }
+        return out
 
 
 class ExampleContractFunctions(ContractFunctions):

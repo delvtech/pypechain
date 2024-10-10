@@ -23,10 +23,18 @@ See documentation at https://github.com/delvtech/pypechain """
 # consumers have too many opinions on line length
 # pylint: disable=line-too-long
 
+# We use protected classes within pypechain
+# pylint: disable=protected-access
+
+# We sometimes define a variable that might not be returned in `call`,
+# but we still may want to call the function
+# pylint: disable=unused-variable
+
 
 from __future__ import annotations
 
-from typing import Any, Iterable, Sequence, Type, cast
+import copy
+from typing import Any, Iterable, Sequence, Type, cast, overload
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ABI, ChecksumAddress, HexStr
@@ -35,32 +43,29 @@ from typing_extensions import Self
 from web3 import Web3
 from web3._utils.events import EventLogErrorFlags
 from web3._utils.filters import LogFilter
-from web3.contract.contract import (
-    Contract,
-    ContractConstructor,
-    ContractEvent,
-    ContractEvents,
-    ContractFunction,
-    ContractFunctions,
-)
+from web3.contract.contract import Contract, ContractConstructor, ContractEvent, ContractEvents, ContractFunctions
 from web3.logs import WARN
 from web3.types import BlockIdentifier, StateOverride, TxParams, TxReceipt
 
-from pypechain.core import BaseEventArgs, combomethod_typed, dataclass_to_tuple, rename_returned_types
+from pypechain.core import (
+    BaseEventArgs,
+    PypechainContractFunction,
+    combomethod_typed,
+    dataclass_to_tuple,
+    expand_struct_type_str,
+    get_arg_type_names,
+    rename_returned_types,
+)
 
 from .EventsTypes import EventAEvent, EventBEvent
 
 structs = {}
 
 
-class EventsEmitNoEventsContractFunction(ContractFunction):
-    """ContractFunction for the emitNoEvents method."""
+class EventsEmitNoEventsContractFunction0(PypechainContractFunction):
+    """ContractFunction for the emitNoEvents(int,int) method."""
 
-    def __call__(self, x: int, y: int) -> EventsEmitNoEventsContractFunction:  # type: ignore
-        clone = super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(y))
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    _type_signature = expand_struct_type_str(tuple(["int", "int"]), structs)
 
     def call(
         self,
@@ -75,19 +80,130 @@ class EventsEmitNoEventsContractFunction(ContractFunction):
         return_types = int
 
         # Call the function
-
         raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
 
-class EventsEmitOneEventContractFunction(ContractFunction):
+class EventsEmitNoEventsContractFunction(PypechainContractFunction):
+    """ContractFunction for the emitNoEvents method."""
+
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self, x: int, y: int) -> EventsEmitNoEventsContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> EventsEmitNoEventsContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            EventsEmitNoEventsContractFunction0._type_signature: EventsEmitNoEventsContractFunction0.factory(
+                "EventsEmitNoEventsContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class EventsEmitOneEventContractFunction0(PypechainContractFunction):
+    """ContractFunction for the emitOneEvent(int,str) method."""
+
+    _type_signature = expand_struct_type_str(tuple(["int", "str"]), structs)
+
+    def call(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier = "latest",
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
+    ) -> None:
+        """returns None."""
+        # Define the expected return types from the smart contract call
+
+        # Call the function
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
+
+class EventsEmitOneEventContractFunction(PypechainContractFunction):
     """ContractFunction for the emitOneEvent method."""
 
-    def __call__(self, value: int, who: str) -> EventsEmitOneEventContractFunction:  # type: ignore
-        clone = super().__call__(dataclass_to_tuple(value), dataclass_to_tuple(who))
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self, value: int, who: str) -> EventsEmitOneEventContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> EventsEmitOneEventContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            EventsEmitOneEventContractFunction0._type_signature: EventsEmitOneEventContractFunction0.factory(
+                "EventsEmitOneEventContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class EventsEmitTwoEventsContractFunction0(PypechainContractFunction):
+    """ContractFunction for the emitTwoEvents(int,str) method."""
+
+    _type_signature = expand_struct_type_str(tuple(["int", "str"]), structs)
 
     def call(
         self,
@@ -100,28 +216,55 @@ class EventsEmitOneEventContractFunction(ContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
 
-class EventsEmitTwoEventsContractFunction(ContractFunction):
+class EventsEmitTwoEventsContractFunction(PypechainContractFunction):
     """ContractFunction for the emitTwoEvents method."""
 
-    def __call__(self, value: int, who: str) -> EventsEmitTwoEventsContractFunction:  # type: ignore
-        clone = super().__call__(dataclass_to_tuple(value), dataclass_to_tuple(who))
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
 
-    def call(
-        self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
-    ) -> None:
-        """returns None."""
-        # Define the expected return types from the smart contract call
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
 
-        # Call the function
+    @overload
+    def __call__(self, value: int, who: str) -> EventsEmitTwoEventsContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> EventsEmitTwoEventsContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            EventsEmitTwoEventsContractFunction0._type_signature: EventsEmitTwoEventsContractFunction0.factory(
+                "EventsEmitTwoEventsContractFunction0", **kwargs
+            ),
+        }
+        return out
 
 
 class EventsContractFunctions(ContractFunctions):
