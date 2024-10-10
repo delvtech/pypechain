@@ -17,7 +17,7 @@ See documentation at https://github.com/delvtech/pypechain """
 # This file is bound to get very long depending on contract sizes.
 # pylint: disable=too-many-lines
 
-# methods are overriden with specific arguments instead of generic *args, **kwargs
+# methods are overridden with specific arguments instead of generic *args, **kwargs
 # pylint: disable=arguments-differ
 
 # consumers have too many opinions on line length
@@ -48,7 +48,6 @@ from web3.contract.contract import ContractEvent, ContractEvents
 from web3.types import BlockIdentifier, StateOverride, TxParams
 from web3.types import EventData
 from web3._utils.filters import LogFilter
-from web3.exceptions import ContractLogicError
 import copy
 
 {% for name in structs_filenames%}
@@ -71,7 +70,7 @@ from pypechain.core import BaseEventArgs
 {% endif %}
 
 {% if has_errors %}
-from pypechain.core import PypechainBaseError, PypechainBaseContractErrors
+from pypechain.core import PypechainBaseError
 {% endif %}
 
 {% if has_errors or has_events %}
@@ -91,6 +90,7 @@ from pypechain.core import (
     expand_struct_type_str,
     PypechainContractFunction,
     PypechainContractLogicError,
+    PypechainBaseContractErrors,
     handle_contract_logic_error,
 )
 
@@ -109,7 +109,7 @@ structs = {
 
 {% if has_events %}{{ events_block }}{% endif %}
 
-{% if has_errors %}{{ errors_block }}{% endif %}
+{{ errors_block }}
 
 {{abi_block}}
 
