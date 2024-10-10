@@ -105,7 +105,10 @@ def get_arg_type_names(in_args: tuple[Any, ...] | list[Any] | Any) -> str:
         return out
     if isinstance(in_args, list):
         # We only look at the first element of the list for types
-        # if it's a list
+        # if it's a list, as we expect a list input be mapped to
+        # a vector input type in solidity, which must all be of
+        # the same type. This is also ensured via type hinting in
+        # the contract function.
         out = f"list[{get_arg_type_names(in_args[0])}]"
         return out
     return type(in_args).__name__
