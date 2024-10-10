@@ -11,6 +11,11 @@ from web3.types import BlockIdentifier, TxParams
 from .contract_function import PypechainContractFunction
 from .error import PypechainBaseContractErrors
 
+# pylint: disable=too-many-arguments
+# pylint: disable=too-many-positional-arguments
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-ancestors
+
 
 class PypechainCallException(Exception):
     """Custom contract call exception wrapper that contains additional information on the function call"""
@@ -31,8 +36,6 @@ class PypechainCallException(Exception):
         raw_txn: TxParams | None = None,
         block_number: BlockNumber | None = None,
     ):
-        # pylint: disable=too-many-arguments
-        # pylint: disable:too-many-positional-arguments
         super().__init__(*args)
         self.orig_exception = orig_exception
         self.decoded_error = decoded_error
@@ -84,9 +87,6 @@ class PypechainGenericError(PypechainCallException, Generic[T]):
         raw_txn: TxParams | None = None,
         block_number: BlockNumber | None = None,
     ):
-        # pylint: disable:too-many-arguments
-        # pylint: disable:too-many-positional-arguments
-
         super().__init__(
             *args,
             orig_exception=orig_exception,
@@ -109,25 +109,17 @@ class PypechainGenericError(PypechainCallException, Generic[T]):
 class PypechainContractCustomError(PypechainGenericError[ContractCustomError], ContractCustomError):
     """Instance of `PypechainGenericError` for `ContractCustomError`."""
 
-    # pylint: disable=too-many-ancestors
-
 
 class PypechainContractPanicError(PypechainGenericError[ContractPanicError], ContractPanicError):
     """Instance of `PypechainGenericError` for `ContractPanicError`."""
-
-    # pylint: disable=too-many-ancestors
 
 
 class PypechainOffchainLookup(PypechainGenericError[OffchainLookup], OffchainLookup):
     """Instance of `PypechainGenericError` for `OffchainLookup`."""
 
-    # pylint: disable=too-many-ancestors
-
 
 class PypechainContractLogicError(PypechainGenericError[ContractLogicError], ContractLogicError):
     """Instance of `PypechainGenericError` for `ContractLogicError`."""
-
-    # pylint: disable=too-many-ancestors
 
 
 def handle_contract_logic_error(
@@ -139,8 +131,6 @@ def handle_contract_logic_error(
     block_identifier: BlockIdentifier,
 ) -> PypechainGenericError | PypechainCallException:
     """Handles an exception thrown by a contract call."""
-    # pylint: disable=too-many-arguments
-
     # We first handle the base `ContractLogicError`
     if isinstance(err, ContractLogicError):
         # We decode the error here

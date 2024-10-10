@@ -49,7 +49,8 @@ class PypechainBaseError:
     def decode_error_data(
         self,
         data: HexBytes,
-        # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
+        # TODO: instead of returning a tuple, return a dataclass
+        # with the input names and types just like we do for functions
     ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
 
