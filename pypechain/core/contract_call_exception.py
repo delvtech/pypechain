@@ -152,71 +152,74 @@ def handle_contract_logic_error(
     block_number = contract_function.w3.eth.get_block(block_identifier=block_identifier).get("number", None)
 
     # We create the contract logic error tied to the specific class of the original error
-    if isinstance(err, ContractCustomError):
-        return PypechainContractCustomError(
-            decoded_error=decoded_error,
-            decoded_error_name=decoded_error_name,
-            decoded_error_args=decoded_error_args,
-            orig_exception=err,
-            contract_call_type=contract_call_type,
-            function_name=contract_function._function_name,  # pylint: disable=protected-access
-            fn_args=contract_function.args,
-            fn_kwargs=contract_function.kwargs,
-            raw_txn=raw_txn,
-            block_number=block_number,
-        )
-    if isinstance(err, ContractPanicError):
-        return PypechainContractPanicError(
-            decoded_error=decoded_error,
-            decoded_error_name=decoded_error_name,
-            decoded_error_args=decoded_error_args,
-            orig_exception=err,
-            contract_call_type=contract_call_type,
-            function_name=contract_function._function_name,  # pylint: disable=protected-access
-            fn_args=contract_function.args,
-            fn_kwargs=contract_function.kwargs,
-            raw_txn=raw_txn,
-            block_number=block_number,
-        )
-    if isinstance(err, OffchainLookup):
-        return PypechainOffchainLookup(
-            decoded_error=decoded_error,
-            decoded_error_name=decoded_error_name,
-            decoded_error_args=decoded_error_args,
-            orig_exception=err,
-            contract_call_type=contract_call_type,
-            function_name=contract_function._function_name,  # pylint: disable=protected-access
-            fn_args=contract_function.args,
-            fn_kwargs=contract_function.kwargs,
-            raw_txn=raw_txn,
-            block_number=block_number,
-        )
-    # Handle base class
-    if isinstance(err, ContractLogicError):
-        return PypechainContractLogicError(
-            decoded_error=decoded_error,
-            decoded_error_name=decoded_error_name,
-            decoded_error_args=decoded_error_args,
-            orig_exception=err,
-            contract_call_type=contract_call_type,
-            function_name=contract_function._function_name,  # pylint: disable=protected-access
-            fn_args=contract_function.args,
-            fn_kwargs=contract_function.kwargs,
-            raw_txn=raw_txn,
-            block_number=block_number,
-        )
-
-    # If none of the above, we don't use the specific contract logic error, and instead just return
-    # the base PypechainCallException
-    return PypechainCallException(
-        decoded_error=decoded_error,
-        decoded_error_name=decoded_error_name,
-        decoded_error_args=decoded_error_args,
-        orig_exception=err,
-        contract_call_type=contract_call_type,
-        function_name=contract_function._function_name,  # pylint: disable=protected-access
-        fn_args=contract_function.args,
-        fn_kwargs=contract_function.kwargs,
-        raw_txn=raw_txn,
-        block_number=block_number,
-    )
+    match err:
+        case ContractCustomError():
+            return PypechainContractCustomError(
+                decoded_error=decoded_error,
+                decoded_error_name=decoded_error_name,
+                decoded_error_args=decoded_error_args,
+                orig_exception=err,
+                contract_call_type=contract_call_type,
+                function_name=contract_function._function_name,  # pylint: disable=protected-access
+                fn_args=contract_function.args,
+                fn_kwargs=contract_function.kwargs,
+                raw_txn=raw_txn,
+                block_number=block_number,
+            )
+        case ContractPanicError():
+            return PypechainContractPanicError(
+                decoded_error=decoded_error,
+                decoded_error_name=decoded_error_name,
+                decoded_error_args=decoded_error_args,
+                orig_exception=err,
+                contract_call_type=contract_call_type,
+                function_name=contract_function._function_name,  # pylint: disable=protected-access
+                fn_args=contract_function.args,
+                fn_kwargs=contract_function.kwargs,
+                raw_txn=raw_txn,
+                block_number=block_number,
+            )
+        case OffchainLookup():
+            return PypechainOffchainLookup(
+                decoded_error=decoded_error,
+                decoded_error_name=decoded_error_name,
+                decoded_error_args=decoded_error_args,
+                orig_exception=err,
+                contract_call_type=contract_call_type,
+                function_name=contract_function._function_name,  # pylint: disable=protected-access
+                fn_args=contract_function.args,
+                fn_kwargs=contract_function.kwargs,
+                raw_txn=raw_txn,
+                block_number=block_number,
+            )
+        # Handle base class
+        case ContractLogicError():
+            return PypechainContractLogicError(
+                decoded_error=decoded_error,
+                decoded_error_name=decoded_error_name,
+                decoded_error_args=decoded_error_args,
+                orig_exception=err,
+                contract_call_type=contract_call_type,
+                function_name=contract_function._function_name,  # pylint: disable=protected-access
+                fn_args=contract_function.args,
+                fn_kwargs=contract_function.kwargs,
+                raw_txn=raw_txn,
+                block_number=block_number,
+            )
+        case BaseException():
+            # If none of the above, we don't use the specific contract logic error, and instead just return
+            # the base PypechainCallException
+            return PypechainCallException(
+                decoded_error=decoded_error,
+                decoded_error_name=decoded_error_name,
+                decoded_error_args=decoded_error_args,
+                orig_exception=err,
+                contract_call_type=contract_call_type,
+                function_name=contract_function._function_name,  # pylint: disable=protected-access
+                fn_args=contract_function.args,
+                fn_kwargs=contract_function.kwargs,
+                raw_txn=raw_txn,
+                block_number=block_number,
+            )
+        case _:
+            raise TypeError(f"Unexpected error type: {type(err)}")
