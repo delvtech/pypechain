@@ -1394,37 +1394,6 @@ class ExampleContractEvents(ContractEvents):
         )
 
 
-class ExampleWrongChoiceContractError(PypechainBaseError):
-    """ContractError for WrongChoice."""
-
-    # Error name
-    name: str = "WrongChoice"
-    # 4 byte error selector
-    selector: str = "0xc13b30d4"
-    # error signature, i.e. CustomError(uint256,bool)
-    signature: str = "WrongChoice(uint8,string)"
-    # Error input types
-    input_types: list[str] = [
-        "uint8",
-        "string",
-    ]
-
-
-class ExampleContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the Example contract."""
-
-    WrongChoice: ExampleWrongChoiceContractError
-
-    def __init__(
-        self,
-    ) -> None:
-        self.WrongChoice = ExampleWrongChoiceContractError()
-
-        self._all = [
-            self.WrongChoice,
-        ]
-
-
 example_abi: ABI = cast(
     ABI,
     [
@@ -1710,6 +1679,34 @@ example_abi: ABI = cast(
         },
     ],
 )
+
+
+class ExampleWrongChoiceContractError(PypechainBaseError):
+    """ContractError for WrongChoice."""
+
+    # Error name
+    name: str = "WrongChoice"
+    # 4 byte error selector
+    selector: str = "0xc13b30d4"
+    # error signature, i.e. CustomError(uint256,bool)
+    signature: str = "WrongChoice(uint8,string)"
+    # Error input types
+    abi: ABI = example_abi
+
+
+class ExampleContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the Example contract."""
+
+    WrongChoice: ExampleWrongChoiceContractError
+
+    def __init__(
+        self,
+    ) -> None:
+        self.WrongChoice = ExampleWrongChoiceContractError()
+
+        self._all = [
+            self.WrongChoice,
+        ]
 
 
 class ExampleContract(Contract):

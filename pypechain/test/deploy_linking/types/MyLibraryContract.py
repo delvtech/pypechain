@@ -180,16 +180,6 @@ class MyLibraryContractFunctions(ContractFunctions):
         )
 
 
-class MyLibraryContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the MyLibrary contract."""
-
-    def __init__(
-        self,
-    ) -> None:
-
-        self._all = []
-
-
 mylibrary_abi: ABI = cast(
     ABI,
     [
@@ -205,6 +195,16 @@ mylibrary_abi: ABI = cast(
         }
     ],
 )
+
+
+class MyLibraryContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the MyLibrary contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class MyLibraryContract(Contract):

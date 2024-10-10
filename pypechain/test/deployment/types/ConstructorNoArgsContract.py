@@ -285,16 +285,6 @@ class ConstructorNoArgsContractFunctions(ContractFunctions):
         )
 
 
-class ConstructorNoArgsContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the ConstructorNoArgs contract."""
-
-    def __init__(
-        self,
-    ) -> None:
-
-        self._all = []
-
-
 constructornoargs_abi: ABI = cast(
     ABI,
     [
@@ -315,6 +305,16 @@ constructornoargs_abi: ABI = cast(
         },
     ],
 )
+
+
+class ConstructorNoArgsContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the ConstructorNoArgs contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class ConstructorNoArgsContract(Contract):

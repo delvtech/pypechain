@@ -187,16 +187,6 @@ class ContractCContractFunctions(ContractFunctions):
         )
 
 
-class ContractCContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the ContractC contract."""
-
-    def __init__(
-        self,
-    ) -> None:
-
-        self._all = []
-
-
 contractc_abi: ABI = cast(
     ABI,
     [
@@ -235,6 +225,16 @@ contractc_abi: ABI = cast(
         }
     ],
 )
+
+
+class ContractCContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the ContractC contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class ContractCContract(Contract):

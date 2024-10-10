@@ -285,16 +285,6 @@ class NoConstructorContractFunctions(ContractFunctions):
         )
 
 
-class NoConstructorContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the NoConstructor contract."""
-
-    def __init__(
-        self,
-    ) -> None:
-
-        self._all = []
-
-
 noconstructor_abi: ABI = cast(
     ABI,
     [
@@ -314,6 +304,16 @@ noconstructor_abi: ABI = cast(
         },
     ],
 )
+
+
+class NoConstructorContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the NoConstructor contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class NoConstructorContract(Contract):

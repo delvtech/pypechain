@@ -590,16 +590,6 @@ class OverloadedMethodsContractFunctions(ContractFunctions):
         )
 
 
-class OverloadedMethodsContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the OverloadedMethods contract."""
-
-    def __init__(
-        self,
-    ) -> None:
-
-        self._all = []
-
-
 overloadedmethods_abi: ABI = cast(
     ABI,
     [
@@ -748,6 +738,16 @@ overloadedmethods_abi: ABI = cast(
         },
     ],
 )
+
+
+class OverloadedMethodsContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the OverloadedMethods contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class OverloadedMethodsContract(Contract):

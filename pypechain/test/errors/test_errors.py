@@ -2,25 +2,15 @@
 
 from __future__ import annotations
 
-import os
-from typing import cast
-
 import pytest
-from eth_abi.codec import ABICodec
-from eth_abi.registry import registry as default_registry
-from eth_typing import ABIFunction
-from hexbytes import HexBytes
 from web3.exceptions import ContractCustomError
 
-from pypechain.core import PypechainCallException, get_abi_input_types
+from pypechain.core import PypechainCallException
 
 from .types import ErrorsContract, ErrorsTypes
 
-current_path = os.path.abspath(os.path.dirname(__file__))
-project_root = os.path.dirname(os.path.dirname(current_path))
 
-
-# @pytest.mark.usefixtures("process_contracts")
+@pytest.mark.usefixtures("process_contracts")
 class TestErrors:
     """Tests events emitted from the contracts."""
 
@@ -171,19 +161,17 @@ class TestErrors:
         except PypechainCallException as err:
             # Catch custom error
             assert isinstance(err.orig_exception, ContractCustomError)
-            assert err.decoded_error == (
-                "Two(I will not pledge allegiance to Bart., 0x0000000000000000000000000000000000000000, 255)"
-            )
-            assert err.decoded_error_name == "Two"
+            assert err.decoded_error == ("Three(False, (1, 2, 3, 4), 0)")
+            assert err.decoded_error_name == "Three"
             # Args keep orig type
             assert err.decoded_error_args == (
-                "I will not pledge allegiance to Bart.",
-                "0x0000000000000000000000000000000000000000",
-                255,
+                False,
+                (1, 2, 3, 4),  # TODO we may want to decode this into a struct
+                0,
             )
             assert err.contract_call_type == "call"
-            assert err.function_name == "revertWithErrorTwo"
-            assert err.fn_args == ()
+            assert err.function_name == "revertWithErrorThree"
+            assert err.fn_args == ((1, 2, 3, 4),)
             assert err.fn_kwargs == {}
             # Call functions don't write a block, so the block should be identical
             assert err.block_number == deployed_contract.w3.eth.get_block_number()
@@ -206,19 +194,17 @@ class TestErrors:
         except PypechainCallException as err:
             # Catch custom error
             assert isinstance(err.orig_exception, ContractCustomError)
-            assert err.decoded_error == (
-                "Two(I will not pledge allegiance to Bart., 0x0000000000000000000000000000000000000000, 255)"
-            )
-            assert err.decoded_error_name == "Two"
+            assert err.decoded_error == ("Three(False, (1, 2, 3, 4), 0)")
+            assert err.decoded_error_name == "Three"
             # Args keep orig type
             assert err.decoded_error_args == (
-                "I will not pledge allegiance to Bart.",
-                "0x0000000000000000000000000000000000000000",
-                255,
+                False,
+                (1, 2, 3, 4),  # TODO we may want to decode this into a struct
+                0,
             )
             assert err.contract_call_type == "transact"
-            assert err.function_name == "revertWithErrorTwo"
-            assert err.fn_args == ()
+            assert err.function_name == "revertWithErrorThree"
+            assert err.fn_args == ((1, 2, 3, 4),)
             assert err.fn_kwargs == {}
             # We default the block number to be the "pending" block.
             # Since this transaction failed, and the chain is on "mine to transact"
@@ -232,4 +218,4 @@ class TestErrors:
         except ContractCustomError as err:
             # Errors should still be caught with the original type.
             assert err.message
-            assert err.message[:10] == ErrorsContract.errors.Two.selector
+            assert err.message[:10] == ErrorsContract.errors.Three.selector

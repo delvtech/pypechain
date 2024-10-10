@@ -285,16 +285,6 @@ class ConstructorWithArgsContractFunctions(ContractFunctions):
         )
 
 
-class ConstructorWithArgsContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the ConstructorWithArgs contract."""
-
-    def __init__(
-        self,
-    ) -> None:
-
-        self._all = []
-
-
 constructorwithargs_abi: ABI = cast(
     ABI,
     [
@@ -319,6 +309,16 @@ constructorwithargs_abi: ABI = cast(
         },
     ],
 )
+
+
+class ConstructorWithArgsContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the ConstructorWithArgs contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class ConstructorWithArgsContract(Contract):

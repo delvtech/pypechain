@@ -389,76 +389,6 @@ class ErrorsContractFunctions(ContractFunctions):
         )
 
 
-class ErrorsOneContractError(PypechainBaseError):
-    """ContractError for One."""
-
-    # Error name
-    name: str = "One"
-    # 4 byte error selector
-    selector: str = "0xbe0c2110"
-    # error signature, i.e. CustomError(uint256,bool)
-    signature: str = "One()"
-    # Error input types
-    input_types: list[str] = []
-
-
-class ErrorsThreeContractError(PypechainBaseError):
-    """ContractError for Three."""
-
-    # Error name
-    name: str = "Three"
-    # 4 byte error selector
-    selector: str = "0x09b8b989"
-    # error signature, i.e. CustomError(uint256,bool)
-    signature: str = "Three(bool,(uint256,uint256,uint256,uint256),uint8)"
-    # Error input types
-    input_types: list[str] = [
-        "bool",
-        "tuple",
-        "uint8",
-    ]
-
-
-class ErrorsTwoContractError(PypechainBaseError):
-    """ContractError for Two."""
-
-    # Error name
-    name: str = "Two"
-    # 4 byte error selector
-    selector: str = "0x01e3e2f6"
-    # error signature, i.e. CustomError(uint256,bool)
-    signature: str = "Two(string,address,uint8)"
-    # Error input types
-    input_types: list[str] = [
-        "string",
-        "address",
-        "uint8",
-    ]
-
-
-class ErrorsContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the Errors contract."""
-
-    One: ErrorsOneContractError
-
-    Three: ErrorsThreeContractError
-
-    Two: ErrorsTwoContractError
-
-    def __init__(
-        self,
-    ) -> None:
-        self.One = ErrorsOneContractError()
-        self.Three = ErrorsThreeContractError()
-        self.Two = ErrorsTwoContractError()
-
-        self._all = [
-            self.One,
-            self.Three,
-            self.Two,
-        ]
-
-
 errors_abi: ABI = cast(
     ABI,
     [
@@ -514,6 +444,68 @@ errors_abi: ABI = cast(
         },
     ],
 )
+
+
+class ErrorsOneContractError(PypechainBaseError):
+    """ContractError for One."""
+
+    # Error name
+    name: str = "One"
+    # 4 byte error selector
+    selector: str = "0xbe0c2110"
+    # error signature, i.e. CustomError(uint256,bool)
+    signature: str = "One()"
+    # Error input types
+    abi: ABI = errors_abi
+
+
+class ErrorsThreeContractError(PypechainBaseError):
+    """ContractError for Three."""
+
+    # Error name
+    name: str = "Three"
+    # 4 byte error selector
+    selector: str = "0x09b8b989"
+    # error signature, i.e. CustomError(uint256,bool)
+    signature: str = "Three(bool,(uint256,uint256,uint256,uint256),uint8)"
+    # Error input types
+    abi: ABI = errors_abi
+
+
+class ErrorsTwoContractError(PypechainBaseError):
+    """ContractError for Two."""
+
+    # Error name
+    name: str = "Two"
+    # 4 byte error selector
+    selector: str = "0x01e3e2f6"
+    # error signature, i.e. CustomError(uint256,bool)
+    signature: str = "Two(string,address,uint8)"
+    # Error input types
+    abi: ABI = errors_abi
+
+
+class ErrorsContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the Errors contract."""
+
+    One: ErrorsOneContractError
+
+    Three: ErrorsThreeContractError
+
+    Two: ErrorsTwoContractError
+
+    def __init__(
+        self,
+    ) -> None:
+        self.One = ErrorsOneContractError()
+        self.Three = ErrorsThreeContractError()
+        self.Two = ErrorsTwoContractError()
+
+        self._all = [
+            self.One,
+            self.Three,
+            self.Two,
+        ]
 
 
 class ErrorsContract(Contract):

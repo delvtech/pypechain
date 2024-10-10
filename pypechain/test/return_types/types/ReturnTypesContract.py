@@ -1435,16 +1435,6 @@ class ReturnTypesContractFunctions(ContractFunctions):
         )
 
 
-class ReturnTypesContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the ReturnTypes contract."""
-
-    def __init__(
-        self,
-    ) -> None:
-
-        self._all = []
-
-
 returntypes_abi: ABI = cast(
     ABI,
     [
@@ -1695,6 +1685,16 @@ returntypes_abi: ABI = cast(
         },
     ],
 )
+
+
+class ReturnTypesContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the ReturnTypes contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class ReturnTypesContract(Contract):

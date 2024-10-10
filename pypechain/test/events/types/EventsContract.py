@@ -579,16 +579,6 @@ class EventsContractEvents(ContractEvents):
         )
 
 
-class EventsContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the Events contract."""
-
-    def __init__(
-        self,
-    ) -> None:
-
-        self._all = []
-
-
 events_abi: ABI = cast(
     ABI,
     [
@@ -634,6 +624,16 @@ events_abi: ABI = cast(
         {"type": "event", "name": "EventB", "inputs": [], "anonymous": False},
     ],
 )
+
+
+class EventsContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the Events contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class EventsContract(Contract):

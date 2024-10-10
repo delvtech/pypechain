@@ -408,16 +408,6 @@ class StructsAContractFunctions(ContractFunctions):
         )
 
 
-class StructsAContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the StructsA contract."""
-
-    def __init__(
-        self,
-    ) -> None:
-
-        self._all = []
-
-
 structsa_abi: ABI = cast(
     ABI,
     [
@@ -480,6 +470,16 @@ structsa_abi: ABI = cast(
         },
     ],
 )
+
+
+class StructsAContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the StructsA contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class StructsAContract(Contract):
