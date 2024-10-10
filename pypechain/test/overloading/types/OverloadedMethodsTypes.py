@@ -30,6 +30,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from . import OverloadedMethodsTypes as OverloadedMethods
+
 
 @dataclass
 class SimpleStruct:
@@ -37,3 +39,12 @@ class SimpleStruct:
 
     strVal: str
     intVal: int
+
+
+@dataclass
+class NestedStruct:
+    """NestedStruct struct."""
+
+    intVal: int
+    strVal: str
+    simpleStruct: OverloadedMethods.SimpleStruct

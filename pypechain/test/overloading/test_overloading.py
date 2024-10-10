@@ -74,6 +74,20 @@ class TestOverloading:
         assert result[0] == OverloadedMethodsTypes.SimpleStruct(s, x)
         assert result[1] == OverloadedMethodsTypes.SimpleStruct(s, y)
 
+        result = deployed_contract.functions.doSomething(
+            nestedStructVec=[
+                OverloadedMethodsTypes.NestedStruct(x, s, OverloadedMethodsTypes.SimpleStruct(s, x)),
+                OverloadedMethodsTypes.NestedStruct(y, s, OverloadedMethodsTypes.SimpleStruct(s, y)),
+            ],
+        ).call()
+        # TODO although the typing of this function says it returns a list,
+        # it actually returns a tuple. Fix the output type of this function.
+        # assert isinstance(result, list)
+        for r in result:
+            assert isinstance(r, OverloadedMethodsTypes.NestedStruct)
+        assert result[0] == OverloadedMethodsTypes.NestedStruct(x, s, OverloadedMethodsTypes.SimpleStruct(s, x))
+        assert result[1] == OverloadedMethodsTypes.NestedStruct(y, s, OverloadedMethodsTypes.SimpleStruct(s, y))
+
         with pytest.raises(MismatchedABI) as err:
             result = deployed_contract.functions.doSomething(x, y, s).call()  # type: ignore
         assert "Could not identify the intended function with name `doSomething`" in str(err.value)

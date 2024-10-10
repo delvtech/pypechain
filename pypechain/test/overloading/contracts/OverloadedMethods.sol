@@ -7,6 +7,12 @@ contract OverloadedMethods {
         string strVal;
         uint intVal;
     }
+
+    struct NestedStruct{
+        uint intVal;
+        string strVal;
+        SimpleStruct simpleStruct;
+    }
     
     // Function doesn't accept any parameters, returns a uint
     function doSomething() public pure returns (uint) {
@@ -48,5 +54,12 @@ contract OverloadedMethods {
         SimpleStruct[] memory simpleStructVec
     ) public pure returns (SimpleStruct[] memory) {
         return simpleStructVec;
+    }
+
+    // Overloaded vec of nested struct as input
+    function doSomething(
+        NestedStruct[] memory nestedStructVec
+    ) public pure returns (NestedStruct[] memory outNestedStructVec) {
+        return nestedStructVec;
     }
 }
