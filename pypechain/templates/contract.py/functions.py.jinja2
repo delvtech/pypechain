@@ -108,6 +108,9 @@ class {{contract_function_class_name}}{{i}}(PypechainContractFunction):
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
 
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
         # Sign the raw transaction
         # Mismatched types between account and web3py
         signed_transaction = account.sign_transaction(raw_transaction) # type: ignore
