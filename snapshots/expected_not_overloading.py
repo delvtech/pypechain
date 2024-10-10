@@ -20,10 +20,10 @@ class OverloadedBalanceOfContractFunction0(PypechainContractFunction):
 
     def call(
         self,
-        transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[StateOverride] = None,
-        ccip_read_enabled: Optional[bool] = None,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
         # We handle the block identifier = None case here for typing.
@@ -53,7 +53,7 @@ class OverloadedBalanceOfContractFunction0(PypechainContractFunction):
         return cast(int, rename_returned_types(structs, return_types, raw_values))
         
 
-    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
         try:
             return super().transact(transaction)
         except Exception as err: # pylint disable=broad-except
@@ -147,10 +147,10 @@ class OverloadedBalanceOfWhoContractFunction0(PypechainContractFunction):
 
     def call(
         self,
-        transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[StateOverride] = None,
-        ccip_read_enabled: Optional[bool] = None,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
     ) -> bool:
         """returns bool."""
         # We handle the block identifier = None case here for typing.
@@ -180,7 +180,7 @@ class OverloadedBalanceOfWhoContractFunction0(PypechainContractFunction):
         return cast(bool, rename_returned_types(structs, return_types, raw_values))
         
 
-    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
         try:
             return super().transact(transaction)
         except Exception as err: # pylint disable=broad-except
