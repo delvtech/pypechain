@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 
 import pytest
 from eth_account.account import Account
@@ -46,6 +45,7 @@ class TestStructs:
     """Tests pipeline from bots making trades to viewing the trades in the db"""
 
     def test_sign_and_transact(self, w3: Web3):
+        """Test the sign and transact function"""
         deployed_contract = TransactContract.deploy(w3=w3, account=w3.eth.accounts[0])
 
         # Make a new account that's not a default anvil account

@@ -138,6 +138,20 @@ class ExampleFlipFlopContractFunction0(PypechainContractFunction):
             ) from err
 
     def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
         if transaction is None:
             transaction_params: TxParams = {}
         else:
@@ -153,6 +167,9 @@ class ExampleFlipFlopContractFunction0(PypechainContractFunction):
 
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -280,6 +297,20 @@ class ExampleGuessALetterContractFunction0(PypechainContractFunction):
             ) from err
 
     def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
         if transaction is None:
             transaction_params: TxParams = {}
         else:
@@ -295,6 +326,9 @@ class ExampleGuessALetterContractFunction0(PypechainContractFunction):
 
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -436,6 +470,20 @@ class ExampleMixStructsAndPrimitivesContractFunction0(PypechainContractFunction)
             ) from err
 
     def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
         if transaction is None:
             transaction_params: TxParams = {}
         else:
@@ -451,6 +499,9 @@ class ExampleMixStructsAndPrimitivesContractFunction0(PypechainContractFunction)
 
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -583,6 +634,20 @@ class ExampleNamedSingleStructContractFunction0(PypechainContractFunction):
             ) from err
 
     def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
         if transaction is None:
             transaction_params: TxParams = {}
         else:
@@ -598,6 +663,9 @@ class ExampleNamedSingleStructContractFunction0(PypechainContractFunction):
 
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -736,6 +804,20 @@ class ExampleNamedTwoMixedStructsContractFunction0(PypechainContractFunction):
             ) from err
 
     def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
         if transaction is None:
             transaction_params: TxParams = {}
         else:
@@ -751,6 +833,9 @@ class ExampleNamedTwoMixedStructsContractFunction0(PypechainContractFunction):
 
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -883,6 +968,20 @@ class ExampleSingleNestedStructContractFunction0(PypechainContractFunction):
             ) from err
 
     def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
         if transaction is None:
             transaction_params: TxParams = {}
         else:
@@ -898,6 +997,9 @@ class ExampleSingleNestedStructContractFunction0(PypechainContractFunction):
 
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -1030,6 +1132,20 @@ class ExampleSingleSimpleStructContractFunction0(PypechainContractFunction):
             ) from err
 
     def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
         if transaction is None:
             transaction_params: TxParams = {}
         else:
@@ -1045,6 +1161,9 @@ class ExampleSingleSimpleStructContractFunction0(PypechainContractFunction):
 
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -1183,6 +1302,20 @@ class ExampleTwoMixedStructsContractFunction0(PypechainContractFunction):
             ) from err
 
     def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
         if transaction is None:
             transaction_params: TxParams = {}
         else:
@@ -1198,6 +1331,9 @@ class ExampleTwoMixedStructsContractFunction0(PypechainContractFunction):
 
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -1336,6 +1472,20 @@ class ExampleTwoSimpleStructsContractFunction0(PypechainContractFunction):
             ) from err
 
     def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
         if transaction is None:
             transaction_params: TxParams = {}
         else:
@@ -1351,6 +1501,9 @@ class ExampleTwoSimpleStructsContractFunction0(PypechainContractFunction):
 
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -1483,6 +1636,20 @@ class ExampleVecOfStructContractFunction0(PypechainContractFunction):
             ) from err
 
     def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
         if transaction is None:
             transaction_params: TxParams = {}
         else:
@@ -1498,6 +1665,9 @@ class ExampleVecOfStructContractFunction0(PypechainContractFunction):
 
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
