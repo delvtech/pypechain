@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Generic, Literal, Type, TypeVar
+from typing import Any, Generic, Literal, Type, TypeVar, Union
 
 from eth_typing import BlockNumber
 from web3.exceptions import ContractCustomError, ContractLogicError, ContractPanicError, OffchainLookup
@@ -16,7 +16,7 @@ from .error import PypechainBaseContractErrors
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-many-ancestors
 
-ContractCallType = Literal["call"] | Literal["transact"] | Literal["build"]
+ContractCallType = Union[Literal["call"], Literal["transact"], Literal["build"]]
 
 
 class PypechainCallException(Exception):
