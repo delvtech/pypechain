@@ -4,13 +4,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 from eth_abi.codec import ABICodec
 from eth_abi.registry import registry as default_registry
+from eth_typing import ABI, ABIFunction
 from hexbytes import HexBytes
 
 from .combomethod_typed import combomethod_typed
+from .utilities import get_abi_input_types
 
 
 @dataclass
@@ -40,8 +42,8 @@ class PypechainBaseError:
     selector: str
     # error signature, i.e. customerror(uint256,bool)
     signature: str
-    # Solidity error input types
-    input_types: list[str]
+    # The full abi that defines this error
+    abi: ABI
 
     @combomethod_typed
     def decode_error_data(
@@ -50,8 +52,14 @@ class PypechainBaseError:
         # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
     ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
+
+        error_abi = cast(
+            ABIFunction,
+            [item for item in self.abi if item.get("name") == self.name and item.get("type") == "error"][0],
+        )
+        types = get_abi_input_types(error_abi)
         abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(self.input_types, data)
+        decoded = abi_codec.decode(types, data)
         return decoded
 
 

@@ -9,11 +9,7 @@ class {{contract_name}}{{error_info.name}}ContractError(PypechainBaseError):
     # error signature, i.e. CustomError(uint256,bool)
     signature: str = "{{error_info.signature}}"
     # Error input types
-    input_types: list[str] = [
-        {% for error_param in error_info.inputs %}
-        "{{error_param.solidity_type}}",
-        {% endfor %}
-    ]
+    abi: ABI = {{contract_name | lower}}_abi
 {% endfor %}
 
 class {{contract_name}}ContractErrors(PypechainBaseContractErrors):
