@@ -63,9 +63,10 @@ class TestExampleContract:
 
         flip = 1
         flop = 2
-        result: ExampleFlipFlopContractFunction.ReturnValues = deployed_contract.functions.flipFlop(flip, flop).call()
+        result = deployed_contract.functions.flipFlop(flip, flop).call()
 
-        assert result == (flop, flip)
+        assert result.flop == flop
+        assert result.flip == flip
 
     def test_simple_structs(self, w3):
         """Tests single value"""
