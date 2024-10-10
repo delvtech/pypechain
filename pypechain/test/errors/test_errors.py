@@ -12,7 +12,7 @@ from eth_typing import ABIFunction
 from hexbytes import HexBytes
 from web3.exceptions import ContractCustomError
 
-from pypechain.core import get_abi_input_types
+from pypechain.core import PypechainCallException, get_abi_input_types
 
 from .types import ErrorsContract
 
@@ -27,6 +27,32 @@ class TestErrors:
     def test_error_one(self, w3):
         """Test that we can decode just the selector."""
         deployed_contract = ErrorsContract.deploy(w3=w3, account=w3.eth.accounts[0])
+
+        # Test error handling with "call"
+
+        # Calls should fail and caught with custom error
+        try:
+            _ = deployed_contract.functions.revertWithErrorOne().call()
+            assert False, "Expected exception."
+        # Catch custom error
+        except PypechainCallException as err:
+            assert isinstance(err.orig_exception, ContractCustomError)
+            assert err.decoded_error == "One()"
+            assert err.contract_call_type == "call"
+            assert err.function_signature == "revertWithErrorOne()"
+            assert err.fn_args == ()
+            assert err.fn_kwargs == {}
+            # Call functions don't write a block, so the block should be identical
+            assert err.block_number == deployed_contract.w3.eth.get_block_number()
+
+        # Calls should fail and caught with original web3 error
+        try:
+            _ = deployed_contract.functions.revertWithErrorOne().call()
+            assert False, "Expected exception."
+        # Errors should still be caught with the original type.
+        except ContractCustomError as err:
+            assert err.message == ErrorsContract.errors.One.selector
+
         try:
             deployed_contract.functions.revertWithErrorOne().transact()
         except ContractCustomError as err:

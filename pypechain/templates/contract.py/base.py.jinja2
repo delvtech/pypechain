@@ -38,8 +38,6 @@ from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast, overload
 from typing import Iterable, Sequence
 
-from eth_abi.codec import ABICodec
-from eth_abi.registry import registry as default_registry
 from eth_typing import ChecksumAddress, HexStr, ABIFunction, ABI
 from eth_account.signers.local import LocalAccount
 from hexbytes import HexBytes
@@ -50,6 +48,7 @@ from web3.contract.contract import ContractEvent, ContractEvents
 from web3.types import BlockIdentifier, StateOverride, TxParams
 from web3.types import EventData
 from web3._utils.filters import LogFilter
+from web3.exceptions import ContractLogicError
 import copy
 
 {% for name in structs_filenames%}
@@ -71,6 +70,10 @@ from web3._utils.events import EventLogErrorFlags
 from pypechain.core import BaseEventArgs
 {% endif %}
 
+{% if has_errors %}
+from pypechain.core import BaseError, BaseContractErrors
+{% endif %}
+
 {% if has_errors or has_events %}
 from pypechain.core import combomethod_typed
 {% endif %}
@@ -87,6 +90,8 @@ from pypechain.core import (
     get_arg_type_names,
     expand_struct_type_str,
     PypechainContractFunction,
+    PypechainContractLogicError,
+    handle_contract_logic_error,
 )
 
 
