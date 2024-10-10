@@ -21,7 +21,7 @@ contract OverloadedMethods {
 
     // Another overloaded version accepts two integers, returns a named uint
     function doSomething(uint x, uint y) public pure returns (uint added) {
-        return x + y;
+        return x / y;
     }
 
     // Another overloaded version accepts an integer and a string, returns both unchanged
@@ -34,8 +34,15 @@ contract OverloadedMethods {
 
     // Another overloaded version accepts a struct, returns unchanged
     function doSomething(
-        SimpleStruct calldata simpleStruct
+        SimpleStruct memory simpleStruct
     ) public pure returns (SimpleStruct memory) {
         return SimpleStruct({strVal: simpleStruct.strVal, intVal: simpleStruct.intVal});
+    }
+
+    // Overloaded vec of structs as input
+    function doSomething(
+        SimpleStruct[] memory simpleStructVec
+    ) public pure returns (SimpleStruct[] memory) {
+        return simpleStructVec;
     }
 }

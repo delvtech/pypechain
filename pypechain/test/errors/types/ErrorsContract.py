@@ -26,7 +26,7 @@ See documentation at https://github.com/delvtech/pypechain """
 
 from __future__ import annotations
 
-from typing import Any, Type, cast
+from typing import Any, Type, cast, overload
 
 from eth_abi.codec import ABICodec
 from eth_abi.registry import registry as default_registry
@@ -35,22 +35,91 @@ from eth_typing import ABI, ABIFunction, ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
-from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
+from web3.contract.contract import Contract, ContractConstructor, ContractFunctions
 from web3.types import BlockIdentifier, StateOverride, TxParams
 
-from pypechain.core import combomethod_typed, get_abi_input_types
+from pypechain.core import (
+    PypechainContractFunction,
+    combomethod_typed,
+    dataclass_to_tuple,
+    expand_struct_type_str,
+    get_abi_input_types,
+    get_arg_type_names,
+)
 
 structs = {}
 
 
-class ErrorsRevertWithErrorOneContractFunction(ContractFunction):
+class ErrorsRevertWithErrorOneContractFunction0(PypechainContractFunction):
+    """ContractFunction for the revertWithErrorOne() method."""
+
+    _type_signature = expand_struct_type_str(tuple([]), structs)
+
+    def call(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier = "latest",
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
+    ) -> None:
+        """returns None."""
+        # Define the expected return types from the smart contract call
+
+        # Call the function
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
+
+class ErrorsRevertWithErrorOneContractFunction(PypechainContractFunction):
     """ContractFunction for the revertWithErrorOne method."""
 
-    def __call__(self) -> ErrorsRevertWithErrorOneContractFunction:  # type: ignore
-        clone = super().__call__()
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self) -> ErrorsRevertWithErrorOneContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ErrorsRevertWithErrorOneContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types
+        function_obj = self._functions[arg_types]
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ErrorsRevertWithErrorOneContractFunction0._type_signature: ErrorsRevertWithErrorOneContractFunction0.factory(
+                "ErrorsRevertWithErrorOneContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ErrorsRevertWithErrorThreeContractFunction0(PypechainContractFunction):
+    """ContractFunction for the revertWithErrorThree() method."""
+
+    _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
         self,
@@ -63,16 +132,60 @@ class ErrorsRevertWithErrorOneContractFunction(ContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
 
-class ErrorsRevertWithErrorThreeContractFunction(ContractFunction):
+class ErrorsRevertWithErrorThreeContractFunction(PypechainContractFunction):
     """ContractFunction for the revertWithErrorThree method."""
 
-    def __call__(self) -> ErrorsRevertWithErrorThreeContractFunction:  # type: ignore
-        clone = super().__call__()
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
+
+    @overload
+    def __call__(self) -> ErrorsRevertWithErrorThreeContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ErrorsRevertWithErrorThreeContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types
+        function_obj = self._functions[arg_types]
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ErrorsRevertWithErrorThreeContractFunction0._type_signature: ErrorsRevertWithErrorThreeContractFunction0.factory(
+                "ErrorsRevertWithErrorThreeContractFunction0", **kwargs
+            ),
+        }
+        return out
+
+
+class ErrorsRevertWithErrorTwoContractFunction0(PypechainContractFunction):
+    """ContractFunction for the revertWithErrorTwo() method."""
+
+    _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
         self,
@@ -85,28 +198,54 @@ class ErrorsRevertWithErrorThreeContractFunction(ContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
 
 
-class ErrorsRevertWithErrorTwoContractFunction(ContractFunction):
+class ErrorsRevertWithErrorTwoContractFunction(PypechainContractFunction):
     """ContractFunction for the revertWithErrorTwo method."""
 
-    def __call__(self) -> ErrorsRevertWithErrorTwoContractFunction:  # type: ignore
-        clone = super().__call__()
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self
+    # super() call methods are generic, while our version adds values & types
+    # pylint: disable=arguments-differ# disable this warning when there is overloading
+    # pylint: disable=function-redefined
 
-    def call(
-        self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
-    ) -> None:
-        """returns None."""
-        # Define the expected return types from the smart contract call
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
 
-        # Call the function
+    @overload
+    def __call__(self) -> ErrorsRevertWithErrorTwoContractFunction0:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> ErrorsRevertWithErrorTwoContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types
+        function_obj = self._functions[arg_types]
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            ErrorsRevertWithErrorTwoContractFunction0._type_signature: ErrorsRevertWithErrorTwoContractFunction0.factory(
+                "ErrorsRevertWithErrorTwoContractFunction0", **kwargs
+            ),
+        }
+        return out
 
 
 class ErrorsContractFunctions(ContractFunctions):

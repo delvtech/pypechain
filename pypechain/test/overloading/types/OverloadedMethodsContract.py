@@ -33,10 +33,16 @@ from eth_typing import ABI, ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
-from web3.contract.contract import Contract, ContractConstructor, ContractFunction, ContractFunctions
+from web3.contract.contract import Contract, ContractConstructor, ContractFunctions
 from web3.types import BlockIdentifier, StateOverride, TxParams
 
-from pypechain.core import dataclass_to_tuple, rename_returned_types
+from pypechain.core import (
+    PypechainContractFunction,
+    dataclass_to_tuple,
+    expand_struct_type_str,
+    get_arg_type_names,
+    rename_returned_types,
+)
 
 from . import OverloadedMethodsTypes as OverloadedMethods
 
@@ -45,12 +51,10 @@ structs = {
 }
 
 
-class OverloadedMethodsDoSomethingContractFunction0(ContractFunction):
-    """ContractFunction for the doSomething method."""
+class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
+    """ContractFunction for the doSomething(OverloadedMethods.SimpleStruct) method."""
 
-    def __call__(self, simpleStruct: OverloadedMethods.SimpleStruct) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__()  # type: ignore
-        return cast(OverloadedMethodsDoSomethingContractFunction, self)
+    _type_signature = expand_struct_type_str(tuple(["OverloadedMethods.SimpleStruct"]), structs)
 
     def call(
         self,
@@ -70,12 +74,10 @@ class OverloadedMethodsDoSomethingContractFunction0(ContractFunction):
         return cast(OverloadedMethods.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
 
-class OverloadedMethodsDoSomethingContractFunction1(ContractFunction):
-    """ContractFunction for the doSomething method."""
+class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
+    """ContractFunction for the doSomething(int,str) method."""
 
-    def __call__(self, x: int, s: str) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(s))  # type: ignore
-        return cast(OverloadedMethodsDoSomethingContractFunction, self)
+    _type_signature = expand_struct_type_str(tuple(["int", "str"]), structs)
 
     class ReturnValues(NamedTuple):
         """The return named tuple for DoSomething."""
@@ -101,12 +103,33 @@ class OverloadedMethodsDoSomethingContractFunction1(ContractFunction):
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
 
 
-class OverloadedMethodsDoSomethingContractFunction2(ContractFunction):
-    """ContractFunction for the doSomething method."""
+class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
+    """ContractFunction for the doSomething(list[OverloadedMethods.SimpleStruct]) method."""
 
-    def __call__(self, s: str) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__()  # type: ignore
-        return cast(OverloadedMethodsDoSomethingContractFunction, self)
+    _type_signature = expand_struct_type_str(tuple(["list[OverloadedMethods.SimpleStruct]"]), structs)
+
+    def call(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier = "latest",
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
+    ) -> list[OverloadedMethods.SimpleStruct]:
+        """returns list[OverloadedMethods.SimpleStruct]."""
+        # Define the expected return types from the smart contract call
+
+        return_types = list[OverloadedMethods.SimpleStruct]
+
+        # Call the function
+        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+
+        return cast(list[OverloadedMethods.SimpleStruct], rename_returned_types(structs, return_types, raw_values))
+
+
+class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
+    """ContractFunction for the doSomething(str) method."""
+
+    _type_signature = expand_struct_type_str(tuple(["str"]), structs)
 
     def call(
         self,
@@ -126,12 +149,10 @@ class OverloadedMethodsDoSomethingContractFunction2(ContractFunction):
         return cast(str, rename_returned_types(structs, return_types, raw_values))
 
 
-class OverloadedMethodsDoSomethingContractFunction3(ContractFunction):
-    """ContractFunction for the doSomething method."""
+class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
+    """ContractFunction for the doSomething(int) method."""
 
-    def __call__(self, x: int) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__()  # type: ignore
-        return cast(OverloadedMethodsDoSomethingContractFunction, self)
+    _type_signature = expand_struct_type_str(tuple(["int"]), structs)
 
     def call(
         self,
@@ -151,12 +172,10 @@ class OverloadedMethodsDoSomethingContractFunction3(ContractFunction):
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
 
-class OverloadedMethodsDoSomethingContractFunction4(ContractFunction):
-    """ContractFunction for the doSomething method."""
+class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
+    """ContractFunction for the doSomething(int,int) method."""
 
-    def __call__(self, x: int, y: int) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        super().__call__(dataclass_to_tuple(x), dataclass_to_tuple(y))  # type: ignore
-        return cast(OverloadedMethodsDoSomethingContractFunction, self)
+    _type_signature = expand_struct_type_str(tuple(["int", "int"]), structs)
 
     def call(
         self,
@@ -176,12 +195,17 @@ class OverloadedMethodsDoSomethingContractFunction4(ContractFunction):
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
 
-class OverloadedMethodsDoSomethingContractFunction(ContractFunction):
+class OverloadedMethodsDoSomethingContractFunction(PypechainContractFunction):
     """ContractFunction for the doSomething method."""
 
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    # Make lookup for function signature -> overloaded function
+    # The function signatures are python types, as we need to do a
+    # lookup of arguments passed in to contract function
+    _functions: dict[str, PypechainContractFunction]
 
     @overload
     def __call__(self, simpleStruct: OverloadedMethods.SimpleStruct) -> OverloadedMethodsDoSomethingContractFunction0:  # type: ignore
@@ -192,22 +216,65 @@ class OverloadedMethodsDoSomethingContractFunction(ContractFunction):
         ...
 
     @overload
-    def __call__(self, s: str) -> OverloadedMethodsDoSomethingContractFunction2:  # type: ignore
+    def __call__(self, simpleStructVec: list[OverloadedMethods.SimpleStruct]) -> OverloadedMethodsDoSomethingContractFunction2:  # type: ignore
         ...
 
     @overload
-    def __call__(self, x: int) -> OverloadedMethodsDoSomethingContractFunction3:  # type: ignore
+    def __call__(self, s: str) -> OverloadedMethodsDoSomethingContractFunction3:  # type: ignore
         ...
 
     @overload
-    def __call__(self, x: int, y: int) -> OverloadedMethodsDoSomethingContractFunction4:  # type: ignore
+    def __call__(self, x: int) -> OverloadedMethodsDoSomethingContractFunction4:  # type: ignore
         ...
 
-    def __call__(self, *args) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
-        clone = super().__call__(*(dataclass_to_tuple(arg) for arg in args))
-        self.kwargs = clone.kwargs
-        self.args = clone.args
-        return self  # type: ignore
+    @overload
+    def __call__(self, x: int, y: int) -> OverloadedMethodsDoSomethingContractFunction5:  # type: ignore
+        ...
+
+    def __call__(self, *args, **kwargs) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
+        clone = super().__call__(
+            *(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()}
+        )
+
+        # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
+        # We get the python types of the args passed in, but remapped from tuples -> dataclasses
+        arg_types = get_arg_type_names(clone.arguments)
+
+        # Look up the function class based on arg types
+        function_obj = self._functions[arg_types]
+
+        function_obj.args = clone.args
+        function_obj.kwargs = clone.kwargs
+
+        # The `@overload` of `__call__` takes care of setting the type of this object correctly
+        return function_obj  # type: ignore
+
+    @classmethod
+    def factory(cls, class_name: str, **kwargs: Any) -> Self:
+        out = super().factory(class_name, **kwargs)
+
+        # We initialize our overridden functions here
+        cls._functions = {
+            OverloadedMethodsDoSomethingContractFunction0._type_signature: OverloadedMethodsDoSomethingContractFunction0.factory(
+                "OverloadedMethodsDoSomethingContractFunction0", **kwargs
+            ),
+            OverloadedMethodsDoSomethingContractFunction1._type_signature: OverloadedMethodsDoSomethingContractFunction1.factory(
+                "OverloadedMethodsDoSomethingContractFunction1", **kwargs
+            ),
+            OverloadedMethodsDoSomethingContractFunction2._type_signature: OverloadedMethodsDoSomethingContractFunction2.factory(
+                "OverloadedMethodsDoSomethingContractFunction2", **kwargs
+            ),
+            OverloadedMethodsDoSomethingContractFunction3._type_signature: OverloadedMethodsDoSomethingContractFunction3.factory(
+                "OverloadedMethodsDoSomethingContractFunction3", **kwargs
+            ),
+            OverloadedMethodsDoSomethingContractFunction4._type_signature: OverloadedMethodsDoSomethingContractFunction4.factory(
+                "OverloadedMethodsDoSomethingContractFunction4", **kwargs
+            ),
+            OverloadedMethodsDoSomethingContractFunction5._type_signature: OverloadedMethodsDoSomethingContractFunction5.factory(
+                "OverloadedMethodsDoSomethingContractFunction5", **kwargs
+            ),
+        }
+        return out
 
 
 class OverloadedMethodsContractFunctions(ContractFunctions):
@@ -279,6 +346,33 @@ overloadedmethods_abi: ABI = cast(
         {
             "type": "function",
             "name": "doSomething",
+            "inputs": [
+                {
+                    "name": "simpleStructVec",
+                    "type": "tuple[]",
+                    "internalType": "struct OverloadedMethods.SimpleStruct[]",
+                    "components": [
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                    ],
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "tuple[]",
+                    "internalType": "struct OverloadedMethods.SimpleStruct[]",
+                    "components": [
+                        {"name": "strVal", "type": "string", "internalType": "string"},
+                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                    ],
+                }
+            ],
+            "stateMutability": "pure",
+        },
+        {
+            "type": "function",
+            "name": "doSomething",
             "inputs": [{"name": "s", "type": "string", "internalType": "string"}],
             "outputs": [{"name": "", "type": "string", "internalType": "string"}],
             "stateMutability": "pure",
@@ -312,7 +406,7 @@ class OverloadedMethodsContract(Contract):
     # `_raw_bytecode` unchanged as an original copy.
     # pylint: disable=line-too-long
     _raw_bytecode: HexStr | None = HexStr(
-        "0x608060405234801561001057600080fd5b50610495806100206000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c80631d37834b1461005c5780633b6c27c4146100855780638ae3048e146100a6578063a6b206bf146100c4578063b2dd1d79146100e5575b600080fd5b61006f61006a366004610197565b6100f8565b60405161007c9190610218565b60405180910390f35b6100986100933660046102ed565b610167565b60405161007c929190610334565b6100b76100b4366004610355565b90565b60405161007c919061038a565b6100d76100d236600461039d565b610171565b60405190815260200161007c565b6100d76100f33660046103b6565b610184565b60408051808201825260608152600060208201528151808301909252908061012084806103d8565b8080601f0160208091040260200160405190810160405280939291908181526020018383808284376000920191909152505050908252506020938401359301929092525090565b81815b9250929050565b600061017e826002610435565b92915050565b6000610190828461044c565b9392505050565b6000602082840312156101a957600080fd5b813567ffffffffffffffff8111156101c057600080fd5b82016040818503121561019057600080fd5b6000815180845260005b818110156101f8576020818501810151868301820152016101dc565b506000602082860101526020601f19601f83011685010191505092915050565b60208152600082516040602084015261023460608401826101d2565b9050602084015160408401528091505092915050565b634e487b7160e01b600052604160045260246000fd5b600082601f83011261027157600080fd5b813567ffffffffffffffff8082111561028c5761028c61024a565b604051601f8301601f19908116603f011681019082821181831017156102b4576102b461024a565b816040528381528660208588010111156102cd57600080fd5b836020870160208301376000602085830101528094505050505092915050565b6000806040838503121561030057600080fd5b82359150602083013567ffffffffffffffff81111561031e57600080fd5b61032a85828601610260565b9150509250929050565b82815260406020820152600061034d60408301846101d2565b949350505050565b60006020828403121561036757600080fd5b813567ffffffffffffffff81111561037e57600080fd5b61034d84828501610260565b60208152600061019060208301846101d2565b6000602082840312156103af57600080fd5b5035919050565b600080604083850312156103c957600080fd5b50508035926020909101359150565b6000808335601e198436030181126103ef57600080fd5b83018035915067ffffffffffffffff82111561040a57600080fd5b60200191503681900382131561016a57600080fd5b634e487b7160e01b600052601160045260246000fd5b808202811582820484141761017e5761017e61041f565b8082018082111561017e5761017e61041f56fea264697066735822122092bce181069716b22a1afb312be5b76455d05c70d58ba1e10c9979edaad214c464736f6c63430008160033"
+        "0x608060405234801561001057600080fd5b506105d9806100206000396000f3fe608060405234801561001057600080fd5b50600436106100625760003560e01c80631d37834b146100675780633b6c27c4146100ba5780634a4c53e9146100da5780638ae3048e146100f8578063a6b206bf14610113578063b2dd1d7914610134575b600080fd5b6100a4610075366004610293565b604080518082018252606081526000602091820152815180830190925282518252918201519181019190915290565b6040516100b1919061033f565b60405180910390f35b6100cc6100c8366004610352565b9091565b6040516100b1929190610399565b6100eb6100e83660046103b2565b90565b6040516100b19190610475565b6101066100e83660046104d9565b6040516100b1919061050e565b610126610121366004610521565b610147565b6040519081526020016100b1565b61012661014236600461053a565b61015a565b600061015482600261055c565b92915050565b60006101668284610581565b9392505050565b634e487b7160e01b600052604160045260246000fd5b604051601f8201601f1916810167ffffffffffffffff811182821017156101ac576101ac61016d565b604052919050565b600082601f8301126101c557600080fd5b813567ffffffffffffffff8111156101df576101df61016d565b6101f2601f8201601f1916602001610183565b81815284602083860101111561020757600080fd5b816020850160208301376000918101602001919091529392505050565b60006040828403121561023657600080fd5b6040516040810167ffffffffffffffff828210818311171561025a5761025a61016d565b81604052829350843591508082111561027257600080fd5b5061027f858286016101b4565b825250602083013560208201525092915050565b6000602082840312156102a557600080fd5b813567ffffffffffffffff8111156102bc57600080fd5b6102c884828501610224565b949350505050565b6000815180845260005b818110156102f6576020818501810151868301820152016102da565b506000602082860101526020601f19601f83011685010191505092915050565b600081516040845261032b60408501826102d0565b602093840151949093019390935250919050565b6020815260006101666020830184610316565b6000806040838503121561036557600080fd5b82359150602083013567ffffffffffffffff81111561038357600080fd5b61038f858286016101b4565b9150509250929050565b8281526040602082015260006102c860408301846102d0565b600060208083850312156103c557600080fd5b823567ffffffffffffffff808211156103dd57600080fd5b818501915085601f8301126103f157600080fd5b8135818111156104035761040361016d565b8060051b610412858201610183565b918252838101850191858101908984111561042c57600080fd5b86860192505b838310156104685782358581111561044a5760008081fd5b6104588b89838a0101610224565b8352509186019190860190610432565b9998505050505050505050565b600060208083016020845280855180835260408601915060408160051b87010192506020870160005b828110156104cc57603f198886030184526104ba858351610316565b9450928501929085019060010161049e565b5092979650505050505050565b6000602082840312156104eb57600080fd5b813567ffffffffffffffff81111561050257600080fd5b6102c8848285016101b4565b60208152600061016660208301846102d0565b60006020828403121561053357600080fd5b5035919050565b6000806040838503121561054d57600080fd5b50508035926020909101359150565b808202811582820484141761015457634e487b7160e01b600052601160045260246000fd5b60008261059e57634e487b7160e01b600052601260045260246000fd5b50049056fea26469706673582212209ff711943ea972ee791b4ebe56ee7605021e4387f1313ab6eecfee915eff13b264736f6c63430008160033"
     )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:
