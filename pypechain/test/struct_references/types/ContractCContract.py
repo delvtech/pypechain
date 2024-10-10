@@ -23,6 +23,13 @@ See documentation at https://github.com/delvtech/pypechain """
 # consumers have too many opinions on line length
 # pylint: disable=line-too-long
 
+# We use protected classes within pypechain
+# pylint: disable=protected-access
+
+# We sometimes define a variable that might not be returned in `call`,
+# but we still may want to call the function
+# pylint: disable=unused-variable
+
 
 from __future__ import annotations
 

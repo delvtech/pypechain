@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import fields, is_dataclass
-from typing import Any, Iterable, Sequence, Tuple, TypeVar, cast, get_args
+from typing import Any, Iterable, Tuple, TypeVar, cast, get_args
 
 from eth_typing import ABIFunction
 from eth_utils.abi import collapse_if_tuple
@@ -124,6 +124,8 @@ def expand_struct_type_str(in_type: tuple[str, ...] | str, structs: dict[str, An
 
     if isinstance(in_type, tuple):
         return f"({', '.join(expand_struct_type_str(field, structs) for field in in_type)})"
+
+    raise TypeError(f"Unsupported type: {in_type}")
 
 
 def rename_returned_types(

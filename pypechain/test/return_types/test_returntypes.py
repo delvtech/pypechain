@@ -10,7 +10,6 @@ from web3 import Web3
 from pypechain.test.return_types.types.ReturnTypesTypes import InnerStruct, NestedStruct, SimpleStruct
 
 from .types import ReturnTypesContract
-from .types.ReturnTypesContract import ReturnTypesMixStructsAndPrimitivesContractFunction
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
