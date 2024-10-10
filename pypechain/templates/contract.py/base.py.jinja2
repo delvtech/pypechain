@@ -70,7 +70,15 @@ from pypechain.core import combomethod_typed
 from .{{contract_name}}Types import {{event.capitalized_name}}Event
 {% endfor %}
 
-from pypechain.core import dataclass_to_tuple, get_abi_input_types, rename_returned_types, tuple_to_dataclass
+from pypechain.core import (
+    dataclass_to_tuple, 
+    get_abi_input_types, 
+    rename_returned_types, 
+    tuple_to_dataclass, 
+    get_arg_type_names,
+    expand_struct_type_str,
+    PypechainContractFunction,
+)
 
 
 structs = {
