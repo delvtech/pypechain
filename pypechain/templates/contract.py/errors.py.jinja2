@@ -5,7 +5,7 @@ class {{contract_name}}{{error_info.name}}ContractError(BaseError):
     # Error name
     name: str = "{{error_info.name}}"
     # 4 byte error selector
-    selector: str
+    selector: str = "{{error_info.selector}}"
     # error signature, i.e. CustomError(uint256,bool)
     signature: str = "{{error_info.signature}}"
     # Error input types

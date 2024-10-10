@@ -23,7 +23,7 @@ class PypechainCallException(Exception):
         orig_exception: BaseException,
         decoded_error: str | None = None,
         contract_call_type: str | None = None,
-        function_signature: str | None = None,
+        function_name: str | None = None,
         fn_args: tuple | None = None,
         fn_kwargs: dict[str, Any] | None = None,
         raw_txn: TxParams | None = None,
@@ -35,7 +35,7 @@ class PypechainCallException(Exception):
         self.orig_exception = orig_exception
         self.decoded_error = decoded_error
         self.contract_call_type = contract_call_type
-        self.function_signature = function_signature
+        self.function_name = function_name
         self.fn_args = fn_args
         self.fn_kwargs = fn_kwargs
         self.block_number: BlockNumber | None = block_number
@@ -72,7 +72,7 @@ class PypechainGenericError(PypechainCallException, Generic[T]):
         orig_exception: T,
         decoded_error: str | None = None,
         contract_call_type: str | None = None,
-        function_signature: str | None = None,
+        function_name: str | None = None,
         fn_args: tuple | None = None,
         fn_kwargs: dict[str, Any] | None = None,
         raw_txn: TxParams | None = None,
@@ -86,7 +86,7 @@ class PypechainGenericError(PypechainCallException, Generic[T]):
             orig_exception=orig_exception,
             decoded_error=decoded_error,
             contract_call_type=contract_call_type,
-            function_signature=function_signature,
+            function_name=function_name,
             fn_args=fn_args,
             fn_kwargs=fn_kwargs,
             raw_txn=raw_txn,
@@ -157,7 +157,7 @@ def handle_contract_logic_error(
             decoded_error=decoded_error,
             orig_exception=err,
             contract_call_type=contract_call_type,
-            function_signature=contract_function._function_name,  # pylint: disable=protected-access
+            function_name=contract_function._function_name,  # pylint: disable=protected-access
             fn_args=contract_function.args,
             fn_kwargs=contract_function.kwargs,
             raw_txn=raw_txn,
@@ -168,7 +168,7 @@ def handle_contract_logic_error(
             decoded_error=decoded_error,
             orig_exception=err,
             contract_call_type=contract_call_type,
-            function_signature=contract_function._function_name,  # pylint: disable=protected-access
+            function_name=contract_function._function_name,  # pylint: disable=protected-access
             fn_args=contract_function.args,
             fn_kwargs=contract_function.kwargs,
             raw_txn=raw_txn,
@@ -179,7 +179,7 @@ def handle_contract_logic_error(
             decoded_error=decoded_error,
             orig_exception=err,
             contract_call_type=contract_call_type,
-            function_signature=contract_function._function_name,  # pylint: disable=protected-access
+            function_name=contract_function._function_name,  # pylint: disable=protected-access
             fn_args=contract_function.args,
             fn_kwargs=contract_function.kwargs,
             raw_txn=raw_txn,
@@ -191,7 +191,7 @@ def handle_contract_logic_error(
             decoded_error=decoded_error,
             orig_exception=err,
             contract_call_type=contract_call_type,
-            function_signature=contract_function._function_name,  # pylint: disable=protected-access
+            function_name=contract_function._function_name,  # pylint: disable=protected-access
             fn_args=contract_function.args,
             fn_kwargs=contract_function.kwargs,
             raw_txn=raw_txn,
@@ -204,7 +204,7 @@ def handle_contract_logic_error(
         decoded_error=decoded_error,
         orig_exception=err,
         contract_call_type=contract_call_type,
-        function_signature=contract_function._function_name,  # pylint: disable=protected-access
+        function_name=contract_function._function_name,  # pylint: disable=protected-access
         fn_args=contract_function.args,
         fn_kwargs=contract_function.kwargs,
         raw_txn=raw_txn,
