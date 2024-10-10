@@ -34,7 +34,7 @@ See documentation at https://github.com/delvtech/pypechain """
 from __future__ import annotations
 
 import copy
-from typing import Any, NamedTuple, Type, cast, overload
+from typing import Any, NamedTuple, Optional, Type, cast, overload
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ABI, ChecksumAddress, HexStr
@@ -70,14 +70,17 @@ class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> list[OverloadedMethods.NestedStruct]:
         """returns list[OverloadedMethods.NestedStruct]."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = list[OverloadedMethods.NestedStruct]
 
         # Call the function
@@ -95,6 +98,19 @@ class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
 
         return cast(list[OverloadedMethods.NestedStruct], rename_returned_types(structs, return_types, raw_values))
 
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
     """ContractFunction for the doSomething(OverloadedMethods.SimpleStruct) method."""
@@ -104,14 +120,17 @@ class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> OverloadedMethods.SimpleStruct:
         """returns OverloadedMethods.SimpleStruct."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = OverloadedMethods.SimpleStruct
 
         # Call the function
@@ -129,6 +148,19 @@ class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
 
         return cast(OverloadedMethods.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
     """ContractFunction for the doSomething(int,str) method."""
@@ -144,14 +176,17 @@ class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = [int, str]
 
         # Call the function
@@ -169,6 +204,19 @@ class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
 
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
 
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
     """ContractFunction for the doSomething(list[OverloadedMethods.SimpleStruct]) method."""
@@ -178,14 +226,17 @@ class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> list[OverloadedMethods.SimpleStruct]:
         """returns list[OverloadedMethods.SimpleStruct]."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = list[OverloadedMethods.SimpleStruct]
 
         # Call the function
@@ -203,6 +254,19 @@ class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
 
         return cast(list[OverloadedMethods.SimpleStruct], rename_returned_types(structs, return_types, raw_values))
 
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
     """ContractFunction for the doSomething() method."""
@@ -212,14 +276,17 @@ class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> int:
         """returns int."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = int
 
         # Call the function
@@ -237,6 +304,19 @@ class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
     """ContractFunction for the doSomething(str) method."""
@@ -246,14 +326,17 @@ class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> str:
         """returns str."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = str
 
         # Call the function
@@ -271,6 +354,19 @@ class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
 
         return cast(str, rename_returned_types(structs, return_types, raw_values))
 
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
     """ContractFunction for the doSomething(int) method."""
@@ -280,14 +376,17 @@ class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> int:
         """returns int."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = int
 
         # Call the function
@@ -304,6 +403,19 @@ class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
             ) from err
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
@@ -314,14 +426,17 @@ class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> int:
         """returns int."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = int
 
         # Call the function
@@ -338,6 +453,19 @@ class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
             ) from err
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class OverloadedMethodsDoSomethingContractFunction(PypechainContractFunction):

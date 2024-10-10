@@ -14,7 +14,7 @@ from web3.exceptions import ContractCustomError
 
 from pypechain.core import PypechainCallException, get_abi_input_types
 
-from .types import ErrorsContract
+from .types import ErrorsContract, ErrorsTypes
 
 current_path = os.path.abspath(os.path.dirname(__file__))
 project_root = os.path.dirname(os.path.dirname(current_path))
@@ -34,10 +34,12 @@ class TestErrors:
         try:
             _ = deployed_contract.functions.revertWithErrorOne().call()
             assert False, "Expected exception."
-        # Catch custom error
         except PypechainCallException as err:
+            # Catch custom error
             assert isinstance(err.orig_exception, ContractCustomError)
             assert err.decoded_error == "One()"
+            assert err.decoded_error_name == "One"
+            assert err.decoded_error_args == ()
             assert err.contract_call_type == "call"
             assert err.function_name == "revertWithErrorOne"
             assert err.fn_args == ()
@@ -49,85 +51,185 @@ class TestErrors:
         try:
             _ = deployed_contract.functions.revertWithErrorOne().call()
             assert False, "Expected exception."
-        # Errors should still be caught with the original type.
         except ContractCustomError as err:
+            # Errors should still be caught with the original type.
             assert err.message == ErrorsContract.errors.One.selector
 
-        pass
+        # Test error handling with "transact"
 
-        # TODO
-        # try:
-        #     deployed_contract.functions.revertWithErrorOne().transact()
-        # except ContractCustomError as err:
-        #     assert err.message
+        try:
+            deployed_contract.functions.revertWithErrorOne().transact()
+        except PypechainCallException as err:
+            # Catch custom error
+            assert isinstance(err.orig_exception, ContractCustomError)
+            assert err.decoded_error == "One()"
+            assert err.decoded_error_name == "One"
+            assert err.decoded_error_args == ()
+            assert err.contract_call_type == "transact"
+            assert err.function_name == "revertWithErrorOne"
+            assert err.fn_args == ()
+            assert err.fn_kwargs == {}
+            # We default the block number to be the "pending" block.
+            # Since this transaction failed, and the chain is on "mine to transact"
+            # mode, we expect the block number to be the next block.
+            assert err.block_number == deployed_contract.w3.eth.get_block_number() + 1
 
-        #     selector = err.message[:10]
-        #     data = err.message[10:]
-        #     assert selector == ErrorsContract.errors.One.selector
-
-        #     error_abi = cast(
-        #         ABIFunction,
-        #         [item for item in ErrorsContract.abi if item.get("name") == "One" and item.get("type") == "error"][0],
-        #     )
-        #     types = get_abi_input_types(error_abi)
-        #     assert types == []
-        #     abi_codec = ABICodec(default_registry)
-        #     decoded = abi_codec.decode(types, HexBytes(data))
-        #     assert not decoded
-
-        #     assert ErrorsContract.errors.One.decode_error_data(HexBytes(data)) == decoded
-        #     assert ErrorsContract.errors.decode_custom_error(err.message) == decoded
+        try:
+            deployed_contract.functions.revertWithErrorOne().transact()
+        except ContractCustomError as err:
+            # Errors should still be caught with the original type.
+            assert err.message == ErrorsContract.errors.One.selector
 
     def test_error_two(self, w3):
         """Test that we can decode strings."""
         deployed_contract = ErrorsContract.deploy(w3=w3, account=w3.eth.accounts[0])
+
+        # Test error handling with "call"
+
+        # Calls should fail and caught with custom error
         try:
-            deployed_contract.functions.revertWithErrorTwo().transact()
-        except ContractCustomError as err:
-            assert err.message
-
-            selector = err.message[:10]
-            data = err.message[10:]
-            assert selector == ErrorsContract.errors.Two.selector
-
-            error_abi = cast(
-                ABIFunction,
-                [item for item in ErrorsContract.abi if item.get("name") == "Two" and item.get("type") == "error"][0],
+            _ = deployed_contract.functions.revertWithErrorTwo().call()
+            assert False, "Expected exception."
+        except PypechainCallException as err:
+            # Catch custom error
+            assert isinstance(err.orig_exception, ContractCustomError)
+            assert err.decoded_error == (
+                "Two(I will not pledge allegiance to Bart., 0x0000000000000000000000000000000000000000, 255)"
             )
-            types = get_abi_input_types(error_abi)
-            assert types == ["string", "address", "uint8"]
-            abi_codec = ABICodec(default_registry)
-            decoded = abi_codec.decode(types, HexBytes(data))
-            assert decoded == (
-                "I will not pledge allegiance to Bart. I will not pledge allegiance to Bart. I will not pledge allegiance to Bart.",  # pylint: disable=line-too-long
+            assert err.decoded_error_name == "Two"
+            # Args keep orig type
+            assert err.decoded_error_args == (
+                "I will not pledge allegiance to Bart.",
                 "0x0000000000000000000000000000000000000000",
                 255,
             )
-            assert ErrorsContract.errors.Two.decode_error_data(HexBytes(data)) == decoded
-            assert ErrorsContract.errors.decode_custom_error(err.message) == decoded
+            assert err.contract_call_type == "call"
+            assert err.function_name == "revertWithErrorTwo"
+            assert err.fn_args == ()
+            assert err.fn_kwargs == {}
+            # Call functions don't write a block, so the block should be identical
+            assert err.block_number == deployed_contract.w3.eth.get_block_number()
+
+        # Calls should fail and caught with original web3 error
+        try:
+            _ = deployed_contract.functions.revertWithErrorTwo().call()
+            assert False, "Expected exception."
+        except ContractCustomError as err:
+            # Errors should still be caught with the original type.
+            assert err.message
+            assert err.message[:10] == ErrorsContract.errors.Two.selector
+
+        # Test error handling with "transact"
+
+        # Calls should fail and caught with custom error
+        try:
+            _ = deployed_contract.functions.revertWithErrorTwo().transact()
+            assert False, "Expected exception."
+        except PypechainCallException as err:
+            # Catch custom error
+            assert isinstance(err.orig_exception, ContractCustomError)
+            assert err.decoded_error == (
+                "Two(I will not pledge allegiance to Bart., 0x0000000000000000000000000000000000000000, 255)"
+            )
+            assert err.decoded_error_name == "Two"
+            # Args keep orig type
+            assert err.decoded_error_args == (
+                "I will not pledge allegiance to Bart.",
+                "0x0000000000000000000000000000000000000000",
+                255,
+            )
+            assert err.contract_call_type == "transact"
+            assert err.function_name == "revertWithErrorTwo"
+            assert err.fn_args == ()
+            assert err.fn_kwargs == {}
+            # We default the block number to be the "pending" block.
+            # Since this transaction failed, and the chain is on "mine to transact"
+            # mode, we expect the block number to be the next block.
+            assert err.block_number == deployed_contract.w3.eth.get_block_number() + 1
+
+        # Calls should fail and caught with original web3 error
+        try:
+            _ = deployed_contract.functions.revertWithErrorTwo().transact()
+            assert False, "Expected exception."
+        except ContractCustomError as err:
+            # Errors should still be caught with the original type.
+            assert err.message
+            assert err.message[:10] == ErrorsContract.errors.Two.selector
 
     def test_error_three(self, w3):
         """Test that we can decode structs and enums."""
         deployed_contract = ErrorsContract.deploy(w3=w3, account=w3.eth.accounts[0])
+
+        in_struct = ErrorsTypes.Ages(bart=1, lisa=2, homer=3, marge=4)
+
+        # Test error handling with "call"
+
+        # Calls should fail and caught with custom error
         try:
-            deployed_contract.functions.revertWithErrorThree().transact()
-        except ContractCustomError as err:
-            assert err.message
-
-            selector = err.message[:10]
-            data = err.message[10:]
-            assert selector == ErrorsContract.errors.Three.selector
-
-            error_abi = cast(
-                ABIFunction,
-                [item for item in ErrorsContract.abi if item.get("name") == "Three" and item.get("type") == "error"][0],
+            _ = deployed_contract.functions.revertWithErrorThree(in_struct).call()
+            assert False, "Expected exception."
+        except PypechainCallException as err:
+            # Catch custom error
+            assert isinstance(err.orig_exception, ContractCustomError)
+            assert err.decoded_error == (
+                "Two(I will not pledge allegiance to Bart., 0x0000000000000000000000000000000000000000, 255)"
             )
-            types = get_abi_input_types(error_abi)
-            assert types == ["bool", "(uint256,uint256,uint256,uint256)", "uint8"]
+            assert err.decoded_error_name == "Two"
+            # Args keep orig type
+            assert err.decoded_error_args == (
+                "I will not pledge allegiance to Bart.",
+                "0x0000000000000000000000000000000000000000",
+                255,
+            )
+            assert err.contract_call_type == "call"
+            assert err.function_name == "revertWithErrorTwo"
+            assert err.fn_args == ()
+            assert err.fn_kwargs == {}
+            # Call functions don't write a block, so the block should be identical
+            assert err.block_number == deployed_contract.w3.eth.get_block_number()
 
-            abi_codec = ABICodec(default_registry)
-            decoded = abi_codec.decode(types, HexBytes(data))
-            assert decoded == (False, (1, 2, 3, 4), 0)
+        # Calls should fail and caught with original web3 error
+        try:
+            _ = deployed_contract.functions.revertWithErrorThree(in_struct).call()
+            assert False, "Expected exception."
+        except ContractCustomError as err:
+            # Errors should still be caught with the original type.
+            assert err.message
+            assert err.message[:10] == ErrorsContract.errors.Three.selector
 
-            assert ErrorsContract.errors.Three.decode_error_data(HexBytes(data)) == decoded
-            assert ErrorsContract.errors.decode_custom_error(err.message) == decoded
+        # Test error handling with "transact"
+
+        # Calls should fail and caught with custom error
+        try:
+            _ = deployed_contract.functions.revertWithErrorThree(in_struct).transact()
+            assert False, "Expected exception."
+        except PypechainCallException as err:
+            # Catch custom error
+            assert isinstance(err.orig_exception, ContractCustomError)
+            assert err.decoded_error == (
+                "Two(I will not pledge allegiance to Bart., 0x0000000000000000000000000000000000000000, 255)"
+            )
+            assert err.decoded_error_name == "Two"
+            # Args keep orig type
+            assert err.decoded_error_args == (
+                "I will not pledge allegiance to Bart.",
+                "0x0000000000000000000000000000000000000000",
+                255,
+            )
+            assert err.contract_call_type == "transact"
+            assert err.function_name == "revertWithErrorTwo"
+            assert err.fn_args == ()
+            assert err.fn_kwargs == {}
+            # We default the block number to be the "pending" block.
+            # Since this transaction failed, and the chain is on "mine to transact"
+            # mode, we expect the block number to be the next block.
+            assert err.block_number == deployed_contract.w3.eth.get_block_number() + 1
+
+        # Calls should fail and caught with original web3 error
+        try:
+            _ = deployed_contract.functions.revertWithErrorThree(in_struct).transact()
+            assert False, "Expected exception."
+        except ContractCustomError as err:
+            # Errors should still be caught with the original type.
+            assert err.message
+            assert err.message[:10] == ErrorsContract.errors.Two.selector

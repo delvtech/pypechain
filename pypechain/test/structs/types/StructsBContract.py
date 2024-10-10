@@ -34,7 +34,7 @@ See documentation at https://github.com/delvtech/pypechain """
 from __future__ import annotations
 
 import copy
-from typing import Any, Type, cast, overload
+from typing import Any, Optional, Type, cast, overload
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ABI, ChecksumAddress, HexStr
@@ -69,14 +69,17 @@ class StructsBNoNameSingleValueContractFunction0(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> int:
         """returns int."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = int
 
         # Call the function
@@ -93,6 +96,19 @@ class StructsBNoNameSingleValueContractFunction0(PypechainContractFunction):
             ) from err
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=StructsBContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class StructsBNoNameSingleValueContractFunction(PypechainContractFunction):
@@ -153,14 +169,17 @@ class StructsBSingleSimpleStructContractFunction0(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> IStructs.SimpleStruct:
         """returns IStructs.SimpleStruct."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = IStructs.SimpleStruct
 
         # Call the function
@@ -177,6 +196,19 @@ class StructsBSingleSimpleStructContractFunction0(PypechainContractFunction):
             ) from err
 
         return cast(IStructs.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=StructsBContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class StructsBSingleSimpleStructContractFunction(PypechainContractFunction):

@@ -34,7 +34,7 @@ See documentation at https://github.com/delvtech/pypechain """
 from __future__ import annotations
 
 import copy
-from typing import Any, Type, cast, overload
+from typing import Any, Optional, Type, cast, overload
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ABI, ChecksumAddress, HexStr
@@ -54,7 +54,11 @@ from pypechain.core import (
     handle_contract_logic_error,
 )
 
-structs = {}
+from . import ErrorsTypes as Errors
+
+structs = {
+    "Errors.Ages": Errors.Ages,
+}
 
 
 class ErrorsRevertWithErrorOneContractFunction0(PypechainContractFunction):
@@ -65,13 +69,15 @@ class ErrorsRevertWithErrorOneContractFunction0(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> None:
         """returns None."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
         # Call the function
         try:
@@ -84,6 +90,19 @@ class ErrorsRevertWithErrorOneContractFunction0(PypechainContractFunction):
                 contract_call_type="call",
                 transaction=transaction,
                 block_identifier=block_identifier,
+            ) from err
+
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ErrorsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
 
@@ -138,20 +157,22 @@ class ErrorsRevertWithErrorOneContractFunction(PypechainContractFunction):
 
 
 class ErrorsRevertWithErrorThreeContractFunction0(PypechainContractFunction):
-    """ContractFunction for the revertWithErrorThree() method."""
+    """ContractFunction for the revertWithErrorThree(Errors.Ages) method."""
 
     _function_name = "revertWithErrorThree"
-    _type_signature = expand_struct_type_str(tuple([]), structs)
+    _type_signature = expand_struct_type_str(tuple(["Errors.Ages"]), structs)
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> None:
         """returns None."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
         # Call the function
         try:
@@ -164,6 +185,19 @@ class ErrorsRevertWithErrorThreeContractFunction0(PypechainContractFunction):
                 contract_call_type="call",
                 transaction=transaction,
                 block_identifier=block_identifier,
+            ) from err
+
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ErrorsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
 
@@ -182,7 +216,7 @@ class ErrorsRevertWithErrorThreeContractFunction(PypechainContractFunction):
     _functions: dict[str, PypechainContractFunction]
 
     @overload
-    def __call__(self) -> ErrorsRevertWithErrorThreeContractFunction0:  # type: ignore
+    def __call__(self, ages: Errors.Ages) -> ErrorsRevertWithErrorThreeContractFunction0:  # type: ignore
         ...
 
     def __call__(self, *args, **kwargs) -> ErrorsRevertWithErrorThreeContractFunction:  # type: ignore
@@ -225,13 +259,15 @@ class ErrorsRevertWithErrorTwoContractFunction0(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> None:
         """returns None."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
         # Call the function
         try:
@@ -244,6 +280,19 @@ class ErrorsRevertWithErrorTwoContractFunction0(PypechainContractFunction):
                 contract_call_type="call",
                 transaction=transaction,
                 block_identifier=block_identifier,
+            ) from err
+
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ErrorsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
 
@@ -414,7 +463,25 @@ errors_abi: ABI = cast(
     ABI,
     [
         {"type": "function", "name": "revertWithErrorOne", "inputs": [], "outputs": [], "stateMutability": "pure"},
-        {"type": "function", "name": "revertWithErrorThree", "inputs": [], "outputs": [], "stateMutability": "pure"},
+        {
+            "type": "function",
+            "name": "revertWithErrorThree",
+            "inputs": [
+                {
+                    "name": "ages",
+                    "type": "tuple",
+                    "internalType": "struct Errors.Ages",
+                    "components": [
+                        {"name": "bart", "type": "uint256", "internalType": "uint256"},
+                        {"name": "lisa", "type": "uint256", "internalType": "uint256"},
+                        {"name": "homer", "type": "uint256", "internalType": "uint256"},
+                        {"name": "marge", "type": "uint256", "internalType": "uint256"},
+                    ],
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "pure",
+        },
         {"type": "function", "name": "revertWithErrorTwo", "inputs": [], "outputs": [], "stateMutability": "pure"},
         {"type": "error", "name": "One", "inputs": []},
         {
@@ -457,7 +524,7 @@ class ErrorsContract(Contract):
     # `_raw_bytecode` unchanged as an original copy.
     # pylint: disable=line-too-long
     _raw_bytecode: HexStr | None = HexStr(
-        "0x608060405234801561001057600080fd5b50610216806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806349cbdbf514610046578063a13e7b7114610050578063dc785aeb14610058575b600080fd5b61004e610060565b005b61004e6100ac565b61004e6100c5565b60408051608081018252600181526002602082015260038183015260046060820181905291516309b8b98960e01b815290916100a3916000918491839101610182565b60405180910390fd5b604051630be0c21160e41b815260040160405180910390fd5b60405162f1f17b60e11b815260606004820152607160648201527f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f2060848201527f426172742e20492077696c6c206e6f7420706c6564676520616c6c656769616e60a48201527f636520746f20426172742e20492077696c6c206e6f7420706c6564676520616c60c4820152703632b3b4b0b731b2903a37902130b93a1760791b60e48201526000602482015260ff6044820152610104016100a3565b600060c082019050841515825283516020830152602084015160408301526040840151606083015260608401516080830152600483106101d257634e487b7160e01b600052602160045260246000fd5b8260a083015294935050505056fea2646970667358221220296623bdd3b38f3766971b76f4c245b8f5a41426d160fc493f0bfc894995e25e64736f6c63430008160033"
+        "0x608060405234801561001057600080fd5b5061021a806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063987daa8214610046578063a13e7b711461005b578063dc785aeb14610063575b600080fd5b610059610054366004610112565b61006b565b005b610059610095565b6100596100ae565b60008160006040516309b8b98960e01b815260040161008c93929190610186565b60405180910390fd5b604051630be0c21160e41b815260040160405180910390fd5b60405162f1f17b60e11b815260606004820152602560648201527f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f206084820152642130b93a1760d91b60a48201526000602482015260ff604482015260c40161008c565b60006080828403121561012457600080fd5b6040516080810181811067ffffffffffffffff8211171561015557634e487b7160e01b600052604160045260246000fd5b8060405250823581526020830135602082015260408301356040820152606083013560608201528091505092915050565b600060c082019050841515825283516020830152602084015160408301526040840151606083015260608401516080830152600483106101d657634e487b7160e01b600052602160045260246000fd5b8260a083015294935050505056fea2646970667358221220fbd0006d906ad7db99a5e4a04ebeb72141c1bdb4a68a5d5d18ad8b58cac0662a64736f6c63430008160033"
     )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:

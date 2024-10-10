@@ -1,0 +1,7 @@
+{
+  "id": "39ace55551cc16aae9bd29b707c219f3",
+  "source_id_to_path": {
+    "0": "pypechain/test/errors/contracts/Errors.sol"
+  },
+  "language": "Solidity"
+}
