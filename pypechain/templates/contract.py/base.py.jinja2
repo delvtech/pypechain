@@ -17,7 +17,7 @@ See documentation at https://github.com/delvtech/pypechain """
 # This file is bound to get very long depending on contract sizes.
 # pylint: disable=too-many-lines
 
-# methods are overriden with specific arguments instead of generic *args, **kwargs
+# methods are overridden with specific arguments instead of generic *args, **kwargs
 # pylint: disable=arguments-differ
 
 # consumers have too many opinions on line length
@@ -38,8 +38,6 @@ from dataclasses import fields, is_dataclass
 from typing import Any, NamedTuple, Tuple, Type, TypeVar, cast, overload
 from typing import Iterable, Sequence
 
-from eth_abi.codec import ABICodec
-from eth_abi.registry import registry as default_registry
 from eth_typing import ChecksumAddress, HexStr, ABIFunction, ABI
 from eth_account.signers.local import LocalAccount
 from hexbytes import HexBytes
@@ -71,6 +69,10 @@ from web3._utils.events import EventLogErrorFlags
 from pypechain.core import BaseEventArgs
 {% endif %}
 
+{% if has_errors %}
+from pypechain.core import PypechainBaseError
+{% endif %}
+
 {% if has_errors or has_events %}
 from pypechain.core import combomethod_typed
 {% endif %}
@@ -87,6 +89,9 @@ from pypechain.core import (
     get_arg_type_names,
     expand_struct_type_str,
     PypechainContractFunction,
+    PypechainContractLogicError,
+    PypechainBaseContractErrors,
+    handle_contract_logic_error,
 )
 
 
@@ -104,8 +109,9 @@ structs = {
 
 {% if has_events %}{{ events_block }}{% endif %}
 
-{% if has_errors %}{{ errors_block }}{% endif %}
 
 {{abi_block}}
+
+{{ errors_block }}
 
 {{contract_block}}

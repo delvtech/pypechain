@@ -9,6 +9,7 @@
 class {{contract_function_class_name}}{{i}}(PypechainContractFunction):
     """ContractFunction for the {{function_data.name}}({{",".join(function_data.signature_datas[i].input_types)}}) method."""
 
+    _function_name = "{{function_data.name}}"
     _type_signature = expand_struct_type_str(
         tuple({{function_data.signature_datas[i].input_types}}),
         structs
@@ -29,30 +30,65 @@ class {{contract_function_class_name}}{{i}}(PypechainContractFunction):
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> {{return_type}}:
         """returns {{return_type}}."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
+
         {% if output_types|length == 1 %}
+        # Define the expected return types from the smart contract call
         return_types = {{return_type}}
         {% elif output_types|length > 1%}
+        # Define the expected return types from the smart contract call
         return_types = [{{output_types|join(', ')}}]
         {% endif %}
+
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err: # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class={{contract_name}}ContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
+        
+
         {% if output_types|length == 1 %}
         return cast({{output_types[0]}}, rename_returned_types(structs, return_types, raw_values))
         {% elif output_types|length > 1%}
         return self.{{return_type}}(*rename_returned_types(structs, return_types, raw_values))
         {% endif %}
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err: # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class={{contract_name}}ContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending", # race condition here, best effort to get block of txn.
+            ) from err
+
+
 {% endfor %}
 class {{contract_function_class_name}}(PypechainContractFunction):
     """ContractFunction for the {{function_data.name}} method."""
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "{{function_data.name}}"
 
 
     # Make lookup for function signature -> overloaded function

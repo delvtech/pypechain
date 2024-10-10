@@ -26,14 +26,13 @@ contract Errors {
 
     function revertWithErrorTwo() public pure {
         revert Two(
-            "I will not pledge allegiance to Bart. I will not pledge allegiance to Bart. I will not pledge allegiance to Bart.",
+            "I will not pledge allegiance to Bart.",
             address(0),
             255
         );
     }
 
-    function revertWithErrorThree() public pure {
-        Ages memory ages = Ages(1, 2, 3, 4);
+    function revertWithErrorThree(Ages memory ages) public pure {
         revert Three(false, ages, Simpsons.BART);
     }
 }

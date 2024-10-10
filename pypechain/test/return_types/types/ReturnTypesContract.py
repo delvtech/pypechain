@@ -17,7 +17,7 @@ See documentation at https://github.com/delvtech/pypechain """
 # This file is bound to get very long depending on contract sizes.
 # pylint: disable=too-many-lines
 
-# methods are overriden with specific arguments instead of generic *args, **kwargs
+# methods are overridden with specific arguments instead of generic *args, **kwargs
 # pylint: disable=arguments-differ
 
 # consumers have too many opinions on line length
@@ -45,10 +45,12 @@ from web3.contract.contract import Contract, ContractConstructor, ContractFuncti
 from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import (
+    PypechainBaseContractErrors,
     PypechainContractFunction,
     dataclass_to_tuple,
     expand_struct_type_str,
     get_arg_type_names,
+    handle_contract_logic_error,
     rename_returned_types,
 )
 
@@ -64,6 +66,7 @@ structs = {
 class ReturnTypesMixStructsAndPrimitivesContractFunction0(PypechainContractFunction):
     """ContractFunction for the mixStructsAndPrimitives() method."""
 
+    _function_name = "mixStructsAndPrimitives"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     class ReturnValues(NamedTuple):
@@ -78,19 +81,45 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction0(PypechainContractFunct
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = [ReturnTypes.SimpleStruct, ReturnTypes.NestedStruct, int, str, bool]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesMixStructsAndPrimitivesContractFunction(PypechainContractFunction):
@@ -99,6 +128,8 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(PypechainContractFuncti
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "mixStructsAndPrimitives"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -144,24 +175,51 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(PypechainContractFuncti
 class ReturnTypesNamedSingleStructContractFunction0(PypechainContractFunction):
     """ContractFunction for the namedSingleStruct() method."""
 
+    _function_name = "namedSingleStruct"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnTypes.SimpleStruct:
         """returns ReturnTypes.SimpleStruct."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = ReturnTypes.SimpleStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(ReturnTypes.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesNamedSingleStructContractFunction(PypechainContractFunction):
@@ -170,6 +228,8 @@ class ReturnTypesNamedSingleStructContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "namedSingleStruct"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -215,24 +275,51 @@ class ReturnTypesNamedSingleStructContractFunction(PypechainContractFunction):
 class ReturnTypesNamedSingleValueContractFunction0(PypechainContractFunction):
     """ContractFunction for the namedSingleValue(int,int) method."""
 
+    _function_name = "namedSingleValue"
     _type_signature = expand_struct_type_str(tuple(["int", "int"]), structs)
 
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = int
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesNamedSingleValueContractFunction(PypechainContractFunction):
@@ -241,6 +328,8 @@ class ReturnTypesNamedSingleValueContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "namedSingleValue"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -286,6 +375,7 @@ class ReturnTypesNamedSingleValueContractFunction(PypechainContractFunction):
 class ReturnTypesNamedTwoMixedStructsContractFunction0(PypechainContractFunction):
     """ContractFunction for the namedTwoMixedStructs() method."""
 
+    _function_name = "namedTwoMixedStructs"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     class ReturnValues(NamedTuple):
@@ -297,19 +387,45 @@ class ReturnTypesNamedTwoMixedStructsContractFunction0(PypechainContractFunction
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = [ReturnTypes.SimpleStruct, ReturnTypes.NestedStruct]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesNamedTwoMixedStructsContractFunction(PypechainContractFunction):
@@ -318,6 +434,8 @@ class ReturnTypesNamedTwoMixedStructsContractFunction(PypechainContractFunction)
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "namedTwoMixedStructs"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -363,6 +481,7 @@ class ReturnTypesNamedTwoMixedStructsContractFunction(PypechainContractFunction)
 class ReturnTypesNamedTwoValuesContractFunction0(PypechainContractFunction):
     """ContractFunction for the namedTwoValues(int,int) method."""
 
+    _function_name = "namedTwoValues"
     _type_signature = expand_struct_type_str(tuple(["int", "int"]), structs)
 
     class ReturnValues(NamedTuple):
@@ -374,19 +493,45 @@ class ReturnTypesNamedTwoValuesContractFunction0(PypechainContractFunction):
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = [int, int]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesNamedTwoValuesContractFunction(PypechainContractFunction):
@@ -395,6 +540,8 @@ class ReturnTypesNamedTwoValuesContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "namedTwoValues"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -440,24 +587,51 @@ class ReturnTypesNamedTwoValuesContractFunction(PypechainContractFunction):
 class ReturnTypesNoNameSingleValueContractFunction0(PypechainContractFunction):
     """ContractFunction for the noNameSingleValue(int) method."""
 
+    _function_name = "noNameSingleValue"
     _type_signature = expand_struct_type_str(tuple(["int"]), structs)
 
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = int
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesNoNameSingleValueContractFunction(PypechainContractFunction):
@@ -466,6 +640,8 @@ class ReturnTypesNoNameSingleValueContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "noNameSingleValue"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -511,6 +687,7 @@ class ReturnTypesNoNameSingleValueContractFunction(PypechainContractFunction):
 class ReturnTypesNoNameTwoValuesContractFunction0(PypechainContractFunction):
     """ContractFunction for the noNameTwoValues(str) method."""
 
+    _function_name = "noNameTwoValues"
     _type_signature = expand_struct_type_str(tuple(["str"]), structs)
 
     class ReturnValues(NamedTuple):
@@ -522,19 +699,45 @@ class ReturnTypesNoNameTwoValuesContractFunction0(PypechainContractFunction):
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = [str, int]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesNoNameTwoValuesContractFunction(PypechainContractFunction):
@@ -543,6 +746,8 @@ class ReturnTypesNoNameTwoValuesContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "noNameTwoValues"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -588,24 +793,51 @@ class ReturnTypesNoNameTwoValuesContractFunction(PypechainContractFunction):
 class ReturnTypesSingleNestedStructContractFunction0(PypechainContractFunction):
     """ContractFunction for the singleNestedStruct() method."""
 
+    _function_name = "singleNestedStruct"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnTypes.NestedStruct:
         """returns ReturnTypes.NestedStruct."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = ReturnTypes.NestedStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(ReturnTypes.NestedStruct, rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesSingleNestedStructContractFunction(PypechainContractFunction):
@@ -614,6 +846,8 @@ class ReturnTypesSingleNestedStructContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "singleNestedStruct"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -659,24 +893,51 @@ class ReturnTypesSingleNestedStructContractFunction(PypechainContractFunction):
 class ReturnTypesSingleNestedStructArrayContractFunction0(PypechainContractFunction):
     """ContractFunction for the singleNestedStructArray() method."""
 
+    _function_name = "singleNestedStructArray"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> list[ReturnTypes.NestedStruct]:
         """returns list[ReturnTypes.NestedStruct]."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = list[ReturnTypes.NestedStruct]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(list[ReturnTypes.NestedStruct], rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesSingleNestedStructArrayContractFunction(PypechainContractFunction):
@@ -685,6 +946,8 @@ class ReturnTypesSingleNestedStructArrayContractFunction(PypechainContractFuncti
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "singleNestedStructArray"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -730,24 +993,51 @@ class ReturnTypesSingleNestedStructArrayContractFunction(PypechainContractFuncti
 class ReturnTypesSingleSimpleStructContractFunction0(PypechainContractFunction):
     """ContractFunction for the singleSimpleStruct() method."""
 
+    _function_name = "singleSimpleStruct"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnTypes.SimpleStruct:
         """returns ReturnTypes.SimpleStruct."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = ReturnTypes.SimpleStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(ReturnTypes.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesSingleSimpleStructContractFunction(PypechainContractFunction):
@@ -756,6 +1046,8 @@ class ReturnTypesSingleSimpleStructContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "singleSimpleStruct"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -801,6 +1093,7 @@ class ReturnTypesSingleSimpleStructContractFunction(PypechainContractFunction):
 class ReturnTypesTwoMixedStructsContractFunction0(PypechainContractFunction):
     """ContractFunction for the twoMixedStructs() method."""
 
+    _function_name = "twoMixedStructs"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     class ReturnValues(NamedTuple):
@@ -812,19 +1105,45 @@ class ReturnTypesTwoMixedStructsContractFunction0(PypechainContractFunction):
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = [ReturnTypes.SimpleStruct, ReturnTypes.NestedStruct]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesTwoMixedStructsContractFunction(PypechainContractFunction):
@@ -833,6 +1152,8 @@ class ReturnTypesTwoMixedStructsContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "twoMixedStructs"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -878,6 +1199,7 @@ class ReturnTypesTwoMixedStructsContractFunction(PypechainContractFunction):
 class ReturnTypesTwoSimpleStructsContractFunction0(PypechainContractFunction):
     """ContractFunction for the twoSimpleStructs() method."""
 
+    _function_name = "twoSimpleStructs"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     class ReturnValues(NamedTuple):
@@ -889,19 +1211,45 @@ class ReturnTypesTwoSimpleStructsContractFunction0(PypechainContractFunction):
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = [ReturnTypes.SimpleStruct, ReturnTypes.SimpleStruct]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class ReturnTypesTwoSimpleStructsContractFunction(PypechainContractFunction):
@@ -910,6 +1258,8 @@ class ReturnTypesTwoSimpleStructsContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "twoSimpleStructs"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -1335,6 +1685,16 @@ returntypes_abi: ABI = cast(
         },
     ],
 )
+
+
+class ReturnTypesContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the ReturnTypes contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class ReturnTypesContract(Contract):

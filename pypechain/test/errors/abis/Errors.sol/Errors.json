@@ -10,7 +10,35 @@
     {
       "type": "function",
       "name": "revertWithErrorThree",
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "ages",
+          "type": "tuple",
+          "internalType": "struct Errors.Ages",
+          "components": [
+            {
+              "name": "bart",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "lisa",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "homer",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "marge",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        }
+      ],
       "outputs": [],
       "stateMutability": "pure"
     },
@@ -92,21 +120,21 @@
     }
   ],
   "bytecode": {
-    "object": "0x608060405234801561001057600080fd5b50610216806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806349cbdbf514610046578063a13e7b7114610050578063dc785aeb14610058575b600080fd5b61004e610060565b005b61004e6100ac565b61004e6100c5565b60408051608081018252600181526002602082015260038183015260046060820181905291516309b8b98960e01b815290916100a3916000918491839101610182565b60405180910390fd5b604051630be0c21160e41b815260040160405180910390fd5b60405162f1f17b60e11b815260606004820152607160648201527f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f2060848201527f426172742e20492077696c6c206e6f7420706c6564676520616c6c656769616e60a48201527f636520746f20426172742e20492077696c6c206e6f7420706c6564676520616c60c4820152703632b3b4b0b731b2903a37902130b93a1760791b60e48201526000602482015260ff6044820152610104016100a3565b600060c082019050841515825283516020830152602084015160408301526040840151606083015260608401516080830152600483106101d257634e487b7160e01b600052602160045260246000fd5b8260a083015294935050505056fea2646970667358221220296623bdd3b38f3766971b76f4c245b8f5a41426d160fc493f0bfc894995e25e64736f6c63430008160033",
-    "sourceMap": "57:843:0:-:0;;;;;;;;;;;;;;;;;;;",
+    "object": "0x608060405234801561001057600080fd5b5061021a806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063987daa8214610046578063a13e7b711461005b578063dc785aeb14610063575b600080fd5b610059610054366004610112565b61006b565b005b610059610095565b6100596100ae565b60008160006040516309b8b98960e01b815260040161008c93929190610186565b60405180910390fd5b604051630be0c21160e41b815260040160405180910390fd5b60405162f1f17b60e11b815260606004820152602560648201527f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f206084820152642130b93a1760d91b60a48201526000602482015260ff604482015260c40161008c565b60006080828403121561012457600080fd5b6040516080810181811067ffffffffffffffff8211171561015557634e487b7160e01b600052604160045260246000fd5b8060405250823581526020830135602082015260408301356040820152606083013560608201528091505092915050565b600060c082019050841515825283516020830152602084015160408301526040840151606083015260608401516080830152600483106101d657634e487b7160e01b600052602160045260246000fd5b8260a083015294935050505056fea2646970667358221220fbd0006d906ad7db99a5e4a04ebeb72141c1bdb4a68a5d5d18ad8b58cac0662a64736f6c63430008160033",
+    "sourceMap": "57:738:0:-:0;;;;;;;;;;;;;;;;;;;",
     "linkReferences": {}
   },
   "deployedBytecode": {
-    "object": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c806349cbdbf514610046578063a13e7b7114610050578063dc785aeb14610058575b600080fd5b61004e610060565b005b61004e6100ac565b61004e6100c5565b60408051608081018252600181526002602082015260038183015260046060820181905291516309b8b98960e01b815290916100a3916000918491839101610182565b60405180910390fd5b604051630be0c21160e41b815260040160405180910390fd5b60405162f1f17b60e11b815260606004820152607160648201527f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f2060848201527f426172742e20492077696c6c206e6f7420706c6564676520616c6c656769616e60a48201527f636520746f20426172742e20492077696c6c206e6f7420706c6564676520616c60c4820152703632b3b4b0b731b2903a37902130b93a1760791b60e48201526000602482015260ff6044820152610104016100a3565b600060c082019050841515825283516020830152602084015160408301526040840151606083015260608401516080830152600483106101d257634e487b7160e01b600052602160045260246000fd5b8260a083015294935050505056fea2646970667358221220296623bdd3b38f3766971b76f4c245b8f5a41426d160fc493f0bfc894995e25e64736f6c63430008160033",
-    "sourceMap": "57:843:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;752:146;;;:::i;:::-;;420:71;;;:::i;497:249::-;;;:::i;752:146::-;825:16;;;;;;;;830:1;825:16;;833:1;825:16;;;;836:1;825:16;;;;839:1;825:16;;;;;;858:33;;-1:-1:-1;;;858:33:0;;825:16;;858:33;;806:16;;825;;806;;858:33;;:::i;:::-;;;;;;;;420:71;479:5;;-1:-1:-1;;;479:5:0;;;;;;;;;;;497:249;556:183;;-1:-1:-1;;;556:183:0;;1003:2:1;556:183:0;;;985:21:1;1042:3;1022:18;;;1015:31;1083:34;1062:19;;;1055:63;1155:34;1134:19;;;1127:63;1227:34;1206:19;;;1199:63;-1:-1:-1;;;1278:19:1;;;1271:48;710:1:0;1371:20:1;;;1364:62;726:3:0;1442:18:1;;;1435:45;1336:19;;556:183:0;737:749:1;14:718;205:4;247:3;236:9;232:19;224:27;;292:6;285:14;278:22;267:9;260:41;343:6;337:13;332:2;321:9;317:18;310:41;405:2;397:6;393:15;387:22;382:2;371:9;367:18;360:50;464:2;456:6;452:15;446:22;441:2;430:9;426:18;419:50;524:2;516:6;512:15;506:22;500:3;489:9;485:19;478:51;559:1;551:6;548:13;538:144;;604:10;599:3;595:20;592:1;585:31;639:4;636:1;629:15;667:4;664:1;657:15;538:144;719:6;713:3;702:9;698:19;691:35;14:718;;;;;;:::o",
+    "object": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c8063987daa8214610046578063a13e7b711461005b578063dc785aeb14610063575b600080fd5b610059610054366004610112565b61006b565b005b610059610095565b6100596100ae565b60008160006040516309b8b98960e01b815260040161008c93929190610186565b60405180910390fd5b604051630be0c21160e41b815260040160405180910390fd5b60405162f1f17b60e11b815260606004820152602560648201527f492077696c6c206e6f7420706c6564676520616c6c656769616e636520746f206084820152642130b93a1760d91b60a48201526000602482015260ff604482015260c40161008c565b60006080828403121561012457600080fd5b6040516080810181811067ffffffffffffffff8211171561015557634e487b7160e01b600052604160045260246000fd5b8060405250823581526020830135602082015260408301356040820152606083013560608201528091505092915050565b600060c082019050841515825283516020830152602084015160408301526040840151606083015260608401516080830152600483106101d657634e487b7160e01b600052602160045260246000fd5b8260a083015294935050505056fea2646970667358221220fbd0006d906ad7db99a5e4a04ebeb72141c1bdb4a68a5d5d18ad8b58cac0662a64736f6c63430008160033",
+    "sourceMap": "57:738:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;676:117;;;;;;:::i;:::-;;:::i;:::-;;420:71;;;:::i;497:173::-;;;:::i;676:117::-;759:5;766:4;772:13;753:33;;-1:-1:-1;;;753:33:0;;;;;;;;;;:::i;:::-;;;;;;;;420:71;479:5;;-1:-1:-1;;;479:5:0;;;;;;;;;;;497:173;556:107;;-1:-1:-1;;;556:107:0;;1738:2:1;556:107:0;;;1720:21:1;1777:2;1757:18;;;1750:30;1817:34;1796:19;;;1789:63;-1:-1:-1;;;1868:19:1;;;1861:36;634:1:0;1949:20:1;;;1942:62;650:3:0;2020:18:1;;;2013:45;1914:19;;556:107:0;1472:592:1;14:730;93:6;146:3;134:9;125:7;121:23;117:33;114:53;;;163:1;160;153:12;114:53;196:2;190:9;238:3;230:6;226:16;308:6;296:10;293:22;272:18;260:10;257:34;254:62;251:185;;;358:10;353:3;349:20;346:1;339:31;393:4;390:1;383:15;421:4;418:1;411:15;251:185;456:10;452:2;445:22;;504:9;491:23;483:6;476:39;576:2;565:9;561:18;548:32;543:2;535:6;531:15;524:57;642:2;631:9;627:18;614:32;609:2;601:6;597:15;590:57;708:2;697:9;693:18;680:32;675:2;667:6;663:15;656:57;732:6;722:16;;;14:730;;;;:::o;749:718::-;940:4;982:3;971:9;967:19;959:27;;1027:6;1020:14;1013:22;1002:9;995:41;1078:6;1072:13;1067:2;1056:9;1052:18;1045:41;1140:2;1132:6;1128:15;1122:22;1117:2;1106:9;1102:18;1095:50;1199:2;1191:6;1187:15;1181:22;1176:2;1165:9;1161:18;1154:50;1259:2;1251:6;1247:15;1241:22;1235:3;1224:9;1220:19;1213:51;1294:1;1286:6;1283:13;1273:144;;1339:10;1334:3;1330:20;1327:1;1320:31;1374:4;1371:1;1364:15;1402:4;1399:1;1392:15;1273:144;1454:6;1448:3;1437:9;1433:19;1426:35;749:718;;;;;;:::o",
     "linkReferences": {}
   },
   "methodIdentifiers": {
     "revertWithErrorOne()": "a13e7b71",
-    "revertWithErrorThree()": "49cbdbf5",
+    "revertWithErrorThree((uint256,uint256,uint256,uint256))": "987daa82",
     "revertWithErrorTwo()": "dc785aeb"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"One\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"trueOrFalse\",\"type\":\"bool\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"bart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lisa\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"homer\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"marge\",\"type\":\"uint256\"}],\"internalType\":\"struct Errors.Ages\",\"name\":\"theSimpsons\",\"type\":\"tuple\"},{\"internalType\":\"enum Errors.Simpsons\",\"name\":\"who\",\"type\":\"uint8\"}],\"name\":\"Three\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"message\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"value\",\"type\":\"uint8\"}],\"name\":\"Two\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"revertWithErrorOne\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"revertWithErrorThree\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"revertWithErrorTwo\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/errors/contracts/Errors.sol\":\"Errors\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/errors/contracts/Errors.sol\":{\"keccak256\":\"0x030ad57df8b425fc245b26c9bd4952510bb616e861bb199357d2a2881e52844d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://69c5d52eea1d469d61ae3e30c829780b11f4339c96dc8fe210bd01e4d4cfed7c\",\"dweb:/ipfs/QmdMs9nZGHh9vw1o5xAsJrhoUCqcPzBDyYarAHmsoA6mNk\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"One\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"trueOrFalse\",\"type\":\"bool\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"bart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lisa\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"homer\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"marge\",\"type\":\"uint256\"}],\"internalType\":\"struct Errors.Ages\",\"name\":\"theSimpsons\",\"type\":\"tuple\"},{\"internalType\":\"enum Errors.Simpsons\",\"name\":\"who\",\"type\":\"uint8\"}],\"name\":\"Three\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"message\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"value\",\"type\":\"uint8\"}],\"name\":\"Two\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"revertWithErrorOne\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"bart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lisa\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"homer\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"marge\",\"type\":\"uint256\"}],\"internalType\":\"struct Errors.Ages\",\"name\":\"ages\",\"type\":\"tuple\"}],\"name\":\"revertWithErrorThree\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"revertWithErrorTwo\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/errors/contracts/Errors.sol\":\"Errors\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/errors/contracts/Errors.sol\":{\"keccak256\":\"0x5967b904f620087bed0a2c6d7bf01981fa36c5b6a277babcc14bfae25c766515\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a7a507783b4a83736ae93faf3ed32401b4e9da8c194af46777c9519799c64a85\",\"dweb:/ipfs/QmTH6agCgUYuUSynuZUZwRifUQPnTjBa9GXdg8uaXo1Vob\"]}},\"version\":1}",
   "metadata": {
     "compiler": {
       "version": "0.8.22+commit.4fc1097e"
@@ -190,7 +218,35 @@
           "name": "revertWithErrorOne"
         },
         {
-          "inputs": [],
+          "inputs": [
+            {
+              "internalType": "struct Errors.Ages",
+              "name": "ages",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "bart",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lisa",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "homer",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "marge",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ],
           "stateMutability": "pure",
           "type": "function",
           "name": "revertWithErrorThree"
@@ -230,10 +286,10 @@
     },
     "sources": {
       "pypechain/test/errors/contracts/Errors.sol": {
-        "keccak256": "0x030ad57df8b425fc245b26c9bd4952510bb616e861bb199357d2a2881e52844d",
+        "keccak256": "0x5967b904f620087bed0a2c6d7bf01981fa36c5b6a277babcc14bfae25c766515",
         "urls": [
-          "bzz-raw://69c5d52eea1d469d61ae3e30c829780b11f4339c96dc8fe210bd01e4d4cfed7c",
-          "dweb:/ipfs/QmdMs9nZGHh9vw1o5xAsJrhoUCqcPzBDyYarAHmsoA6mNk"
+          "bzz-raw://a7a507783b4a83736ae93faf3ed32401b4e9da8c194af46777c9519799c64a85",
+          "dweb:/ipfs/QmTH6agCgUYuUSynuZUZwRifUQPnTjBa9GXdg8uaXo1Vob"
         ],
         "license": "MIT"
       }

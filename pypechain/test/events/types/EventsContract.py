@@ -17,7 +17,7 @@ See documentation at https://github.com/delvtech/pypechain """
 # This file is bound to get very long depending on contract sizes.
 # pylint: disable=too-many-lines
 
-# methods are overriden with specific arguments instead of generic *args, **kwargs
+# methods are overridden with specific arguments instead of generic *args, **kwargs
 # pylint: disable=arguments-differ
 
 # consumers have too many opinions on line length
@@ -49,11 +49,13 @@ from web3.types import BlockIdentifier, StateOverride, TxParams, TxReceipt
 
 from pypechain.core import (
     BaseEventArgs,
+    PypechainBaseContractErrors,
     PypechainContractFunction,
     combomethod_typed,
     dataclass_to_tuple,
     expand_struct_type_str,
     get_arg_type_names,
+    handle_contract_logic_error,
     rename_returned_types,
 )
 
@@ -65,24 +67,51 @@ structs = {}
 class EventsEmitNoEventsContractFunction0(PypechainContractFunction):
     """ContractFunction for the emitNoEvents(int,int) method."""
 
+    _function_name = "emitNoEvents"
     _type_signature = expand_struct_type_str(tuple(["int", "int"]), structs)
 
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
+        # Define the expected return types from the smart contract call
         return_types = int
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=EventsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=EventsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class EventsEmitNoEventsContractFunction(PypechainContractFunction):
@@ -91,6 +120,8 @@ class EventsEmitNoEventsContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "emitNoEvents"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -136,20 +167,46 @@ class EventsEmitNoEventsContractFunction(PypechainContractFunction):
 class EventsEmitOneEventContractFunction0(PypechainContractFunction):
     """ContractFunction for the emitOneEvent(int,str) method."""
 
+    _function_name = "emitOneEvent"
     _type_signature = expand_struct_type_str(tuple(["int", "str"]), structs)
 
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=EventsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=EventsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class EventsEmitOneEventContractFunction(PypechainContractFunction):
@@ -158,6 +215,8 @@ class EventsEmitOneEventContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "emitOneEvent"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -203,20 +262,46 @@ class EventsEmitOneEventContractFunction(PypechainContractFunction):
 class EventsEmitTwoEventsContractFunction0(PypechainContractFunction):
     """ContractFunction for the emitTwoEvents(int,str) method."""
 
+    _function_name = "emitTwoEvents"
     _type_signature = expand_struct_type_str(tuple(["int", "str"]), structs)
 
     def call(
         self,
         transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
+        block_identifier: BlockIdentifier | None = None,
         state_override: StateOverride | None = None,
         ccip_read_enabled: bool | None = None,
     ) -> None:
         """returns None."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=EventsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=EventsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
 
 
 class EventsEmitTwoEventsContractFunction(PypechainContractFunction):
@@ -225,6 +310,8 @@ class EventsEmitTwoEventsContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "emitTwoEvents"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -537,6 +624,16 @@ events_abi: ABI = cast(
         {"type": "event", "name": "EventB", "inputs": [], "anonymous": False},
     ],
 )
+
+
+class EventsContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the Events contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
 
 
 class EventsContract(Contract):
