@@ -49,6 +49,7 @@ from pypechain.core import (
     dataclass_to_tuple,
     expand_struct_type_str,
     get_arg_type_names,
+    handle_contract_logic_error,
     rename_returned_types,
 )
 
@@ -67,6 +68,7 @@ structs = {
 class StructsCAllStructsInternalContractFunction0(PypechainContractFunction):
     """ContractFunction for the allStructsInternal() method."""
 
+    _function_name = "allStructsInternal"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -82,7 +84,17 @@ class StructsCAllStructsInternalContractFunction0(PypechainContractFunction):
         return_types = StructsC.OuterStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=StructsCContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(StructsC.OuterStruct, rename_returned_types(structs, return_types, raw_values))
 
@@ -93,6 +105,8 @@ class StructsCAllStructsInternalContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "allStructsInternal"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -138,6 +152,7 @@ class StructsCAllStructsInternalContractFunction(PypechainContractFunction):
 class StructsCInnerStructIsExternalContractFunction0(PypechainContractFunction):
     """ContractFunction for the innerStructIsExternal() method."""
 
+    _function_name = "innerStructIsExternal"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -153,7 +168,17 @@ class StructsCInnerStructIsExternalContractFunction0(PypechainContractFunction):
         return_types = StructsC.CStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=StructsCContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(StructsC.CStruct, rename_returned_types(structs, return_types, raw_values))
 
@@ -164,6 +189,8 @@ class StructsCInnerStructIsExternalContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "innerStructIsExternal"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a

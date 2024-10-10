@@ -54,6 +54,7 @@ from pypechain.core import (
     dataclass_to_tuple,
     expand_struct_type_str,
     get_arg_type_names,
+    handle_contract_logic_error,
     rename_returned_types,
 )
 
@@ -65,6 +66,7 @@ structs = {}
 class EventsEmitNoEventsContractFunction0(PypechainContractFunction):
     """ContractFunction for the emitNoEvents(int,int) method."""
 
+    _function_name = "emitNoEvents"
     _type_signature = expand_struct_type_str(tuple(["int", "int"]), structs)
 
     def call(
@@ -80,7 +82,17 @@ class EventsEmitNoEventsContractFunction0(PypechainContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=EventsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
@@ -91,6 +103,8 @@ class EventsEmitNoEventsContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "emitNoEvents"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -136,6 +150,7 @@ class EventsEmitNoEventsContractFunction(PypechainContractFunction):
 class EventsEmitOneEventContractFunction0(PypechainContractFunction):
     """ContractFunction for the emitOneEvent(int,str) method."""
 
+    _function_name = "emitOneEvent"
     _type_signature = expand_struct_type_str(tuple(["int", "str"]), structs)
 
     def call(
@@ -149,7 +164,17 @@ class EventsEmitOneEventContractFunction0(PypechainContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=EventsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
 
 class EventsEmitOneEventContractFunction(PypechainContractFunction):
@@ -158,6 +183,8 @@ class EventsEmitOneEventContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "emitOneEvent"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -203,6 +230,7 @@ class EventsEmitOneEventContractFunction(PypechainContractFunction):
 class EventsEmitTwoEventsContractFunction0(PypechainContractFunction):
     """ContractFunction for the emitTwoEvents(int,str) method."""
 
+    _function_name = "emitTwoEvents"
     _type_signature = expand_struct_type_str(tuple(["int", "str"]), structs)
 
     def call(
@@ -216,7 +244,17 @@ class EventsEmitTwoEventsContractFunction0(PypechainContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=EventsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
 
 class EventsEmitTwoEventsContractFunction(PypechainContractFunction):
@@ -225,6 +263,8 @@ class EventsEmitTwoEventsContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "emitTwoEvents"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a

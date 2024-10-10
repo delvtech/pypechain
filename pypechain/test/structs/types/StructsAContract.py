@@ -49,6 +49,7 @@ from pypechain.core import (
     dataclass_to_tuple,
     expand_struct_type_str,
     get_arg_type_names,
+    handle_contract_logic_error,
     rename_returned_types,
 )
 
@@ -66,6 +67,7 @@ structs = {
 class StructsASingleNestedStructContractFunction0(PypechainContractFunction):
     """ContractFunction for the singleNestedStruct() method."""
 
+    _function_name = "singleNestedStruct"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -81,7 +83,17 @@ class StructsASingleNestedStructContractFunction0(PypechainContractFunction):
         return_types = IStructs.NestedStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=StructsAContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(IStructs.NestedStruct, rename_returned_types(structs, return_types, raw_values))
 
@@ -92,6 +104,8 @@ class StructsASingleNestedStructContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "singleNestedStruct"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -137,6 +151,7 @@ class StructsASingleNestedStructContractFunction(PypechainContractFunction):
 class StructsASingleSimpleStructContractFunction0(PypechainContractFunction):
     """ContractFunction for the singleSimpleStruct() method."""
 
+    _function_name = "singleSimpleStruct"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -152,7 +167,17 @@ class StructsASingleSimpleStructContractFunction0(PypechainContractFunction):
         return_types = IStructs.SimpleStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=StructsAContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(IStructs.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
@@ -163,6 +188,8 @@ class StructsASingleSimpleStructContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "singleSimpleStruct"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -208,6 +235,7 @@ class StructsASingleSimpleStructContractFunction(PypechainContractFunction):
 class StructsAStructAContractFunction0(PypechainContractFunction):
     """ContractFunction for the structA() method."""
 
+    _function_name = "structA"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -223,7 +251,17 @@ class StructsAStructAContractFunction0(PypechainContractFunction):
         return_types = StructsA.AStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=StructsAContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(StructsA.AStruct, rename_returned_types(structs, return_types, raw_values))
 
@@ -234,6 +272,8 @@ class StructsAStructAContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "structA"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a

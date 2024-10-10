@@ -36,10 +36,8 @@ from __future__ import annotations
 import copy
 from typing import Any, Type, cast, overload
 
-from eth_abi.codec import ABICodec
-from eth_abi.registry import registry as default_registry
 from eth_account.signers.local import LocalAccount
-from eth_typing import ABI, ABIFunction, ChecksumAddress, HexStr
+from eth_typing import ABI, ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
@@ -47,12 +45,13 @@ from web3.contract.contract import Contract, ContractConstructor, ContractFuncti
 from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import (
+    PypechainBaseContractErrors,
+    PypechainBaseError,
     PypechainContractFunction,
-    combomethod_typed,
     dataclass_to_tuple,
     expand_struct_type_str,
-    get_abi_input_types,
     get_arg_type_names,
+    handle_contract_logic_error,
 )
 
 structs = {}
@@ -61,6 +60,7 @@ structs = {}
 class ErrorsRevertWithErrorOneContractFunction0(PypechainContractFunction):
     """ContractFunction for the revertWithErrorOne() method."""
 
+    _function_name = "revertWithErrorOne"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -74,7 +74,17 @@ class ErrorsRevertWithErrorOneContractFunction0(PypechainContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ErrorsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
 
 class ErrorsRevertWithErrorOneContractFunction(PypechainContractFunction):
@@ -83,6 +93,8 @@ class ErrorsRevertWithErrorOneContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "revertWithErrorOne"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -128,6 +140,7 @@ class ErrorsRevertWithErrorOneContractFunction(PypechainContractFunction):
 class ErrorsRevertWithErrorThreeContractFunction0(PypechainContractFunction):
     """ContractFunction for the revertWithErrorThree() method."""
 
+    _function_name = "revertWithErrorThree"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -141,7 +154,17 @@ class ErrorsRevertWithErrorThreeContractFunction0(PypechainContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ErrorsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
 
 class ErrorsRevertWithErrorThreeContractFunction(PypechainContractFunction):
@@ -150,6 +173,8 @@ class ErrorsRevertWithErrorThreeContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "revertWithErrorThree"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -195,6 +220,7 @@ class ErrorsRevertWithErrorThreeContractFunction(PypechainContractFunction):
 class ErrorsRevertWithErrorTwoContractFunction0(PypechainContractFunction):
     """ContractFunction for the revertWithErrorTwo() method."""
 
+    _function_name = "revertWithErrorTwo"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -208,7 +234,17 @@ class ErrorsRevertWithErrorTwoContractFunction0(PypechainContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ErrorsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
 
 class ErrorsRevertWithErrorTwoContractFunction(PypechainContractFunction):
@@ -217,6 +253,8 @@ class ErrorsRevertWithErrorTwoContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "revertWithErrorTwo"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -302,103 +340,54 @@ class ErrorsContractFunctions(ContractFunctions):
         )
 
 
-class ErrorsOneContractError:
+class ErrorsOneContractError(PypechainBaseError):
     """ContractError for One."""
 
+    # Error name
+    name: str = "One"
     # 4 byte error selector
-    selector: str
+    selector: str = "0xbe0c2110"
     # error signature, i.e. CustomError(uint256,bool)
-    signature: str
-
-    # pylint: disable=useless-parent-delegation
-    def __init__(
-        self: "ErrorsOneContractError",
-    ) -> None:
-        self.selector = "0xbe0c2110"
-        self.signature = "One()"
-
-    @combomethod_typed
-    def decode_error_data(
-        self,
-        data: HexBytes,
-        # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
-    ) -> tuple[Any, ...]:
-        """Decodes error data returns from a smart contract."""
-        error_abi = cast(
-            ABIFunction,
-            [item for item in errors_abi if item.get("name") == "One" and item.get("type") == "error"][0],
-        )
-        types = get_abi_input_types(error_abi)
-        abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, data)
-        return decoded
+    signature: str = "One()"
+    # Error input types
+    input_types: list[str] = []
 
 
-class ErrorsThreeContractError:
+class ErrorsThreeContractError(PypechainBaseError):
     """ContractError for Three."""
 
+    # Error name
+    name: str = "Three"
     # 4 byte error selector
-    selector: str
+    selector: str = "0x09b8b989"
     # error signature, i.e. CustomError(uint256,bool)
-    signature: str
-
-    # pylint: disable=useless-parent-delegation
-    def __init__(
-        self: "ErrorsThreeContractError",
-    ) -> None:
-        self.selector = "0x09b8b989"
-        self.signature = "Three(bool,(uint256,uint256,uint256,uint256),uint8)"
-
-    @combomethod_typed
-    def decode_error_data(
-        self,
-        data: HexBytes,
-        # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
-    ) -> tuple[Any, ...]:
-        """Decodes error data returns from a smart contract."""
-        error_abi = cast(
-            ABIFunction,
-            [item for item in errors_abi if item.get("name") == "Three" and item.get("type") == "error"][0],
-        )
-        types = get_abi_input_types(error_abi)
-        abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, data)
-        return decoded
+    signature: str = "Three(bool,(uint256,uint256,uint256,uint256),uint8)"
+    # Error input types
+    input_types: list[str] = [
+        "bool",
+        "tuple",
+        "uint8",
+    ]
 
 
-class ErrorsTwoContractError:
+class ErrorsTwoContractError(PypechainBaseError):
     """ContractError for Two."""
 
+    # Error name
+    name: str = "Two"
     # 4 byte error selector
-    selector: str
+    selector: str = "0x01e3e2f6"
     # error signature, i.e. CustomError(uint256,bool)
-    signature: str
-
-    # pylint: disable=useless-parent-delegation
-    def __init__(
-        self: "ErrorsTwoContractError",
-    ) -> None:
-        self.selector = "0x01e3e2f6"
-        self.signature = "Two(string,address,uint8)"
-
-    @combomethod_typed
-    def decode_error_data(
-        self,
-        data: HexBytes,
-        # TODO: instead of returning a tuple, return a dataclass with the input names and types just like we do for functions
-    ) -> tuple[Any, ...]:
-        """Decodes error data returns from a smart contract."""
-        error_abi = cast(
-            ABIFunction,
-            [item for item in errors_abi if item.get("name") == "Two" and item.get("type") == "error"][0],
-        )
-        types = get_abi_input_types(error_abi)
-        abi_codec = ABICodec(default_registry)
-        decoded = abi_codec.decode(types, data)
-        return decoded
+    signature: str = "Two(string,address,uint8)"
+    # Error input types
+    input_types: list[str] = [
+        "string",
+        "address",
+        "uint8",
+    ]
 
 
-class ErrorsContractErrors:
+class ErrorsContractErrors(PypechainBaseContractErrors):
     """ContractErrors for the Errors contract."""
 
     One: ErrorsOneContractError
@@ -419,15 +408,6 @@ class ErrorsContractErrors:
             self.Three,
             self.Two,
         ]
-
-    def decode_custom_error(self, data: str) -> tuple[Any, ...]:
-        """Decodes a custom contract error."""
-        selector = data[:10]
-        for err in self._all:
-            if err.selector == selector:
-                return err.decode_error_data(HexBytes(data[10:]))
-
-        raise ValueError(f"Errors does not have a selector matching {selector}")
 
 
 errors_abi: ABI = cast(

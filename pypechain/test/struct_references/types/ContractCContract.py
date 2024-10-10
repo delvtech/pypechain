@@ -49,6 +49,7 @@ from pypechain.core import (
     dataclass_to_tuple,
     expand_struct_type_str,
     get_arg_type_names,
+    handle_contract_logic_error,
     rename_returned_types,
 )
 
@@ -65,6 +66,7 @@ structs = {
 class ContractCBuildStructContractFunction0(PypechainContractFunction):
     """ContractFunction for the buildStruct() method."""
 
+    _function_name = "buildStruct"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -80,7 +82,17 @@ class ContractCBuildStructContractFunction0(PypechainContractFunction):
         return_types = ContractB.StructsB
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ContractCContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(ContractB.StructsB, rename_returned_types(structs, return_types, raw_values))
 
@@ -91,6 +103,8 @@ class ContractCBuildStructContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "buildStruct"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a

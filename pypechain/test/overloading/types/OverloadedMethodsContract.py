@@ -49,6 +49,7 @@ from pypechain.core import (
     dataclass_to_tuple,
     expand_struct_type_str,
     get_arg_type_names,
+    handle_contract_logic_error,
     rename_returned_types,
 )
 
@@ -63,6 +64,7 @@ structs = {
 class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
     """ContractFunction for the doSomething(list[OverloadedMethods.NestedStruct]) method."""
 
+    _function_name = "doSomething"
     _type_signature = expand_struct_type_str(tuple(["list[OverloadedMethods.NestedStruct]"]), structs)
 
     def call(
@@ -78,7 +80,17 @@ class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
         return_types = list[OverloadedMethods.NestedStruct]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(list[OverloadedMethods.NestedStruct], rename_returned_types(structs, return_types, raw_values))
 
@@ -86,6 +98,7 @@ class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
 class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
     """ContractFunction for the doSomething(OverloadedMethods.SimpleStruct) method."""
 
+    _function_name = "doSomething"
     _type_signature = expand_struct_type_str(tuple(["OverloadedMethods.SimpleStruct"]), structs)
 
     def call(
@@ -101,7 +114,17 @@ class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
         return_types = OverloadedMethods.SimpleStruct
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(OverloadedMethods.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
@@ -109,6 +132,7 @@ class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
 class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
     """ContractFunction for the doSomething(int,str) method."""
 
+    _function_name = "doSomething"
     _type_signature = expand_struct_type_str(tuple(["int", "str"]), structs)
 
     class ReturnValues(NamedTuple):
@@ -130,7 +154,17 @@ class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
         return_types = [int, str]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
 
@@ -138,6 +172,7 @@ class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
 class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
     """ContractFunction for the doSomething(list[OverloadedMethods.SimpleStruct]) method."""
 
+    _function_name = "doSomething"
     _type_signature = expand_struct_type_str(tuple(["list[OverloadedMethods.SimpleStruct]"]), structs)
 
     def call(
@@ -153,7 +188,17 @@ class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
         return_types = list[OverloadedMethods.SimpleStruct]
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(list[OverloadedMethods.SimpleStruct], rename_returned_types(structs, return_types, raw_values))
 
@@ -161,6 +206,7 @@ class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
 class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
     """ContractFunction for the doSomething() method."""
 
+    _function_name = "doSomething"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -176,7 +222,17 @@ class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
@@ -184,6 +240,7 @@ class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
 class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
     """ContractFunction for the doSomething(str) method."""
 
+    _function_name = "doSomething"
     _type_signature = expand_struct_type_str(tuple(["str"]), structs)
 
     def call(
@@ -199,7 +256,17 @@ class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
         return_types = str
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(str, rename_returned_types(structs, return_types, raw_values))
 
@@ -207,6 +274,7 @@ class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
 class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
     """ContractFunction for the doSomething(int) method."""
 
+    _function_name = "doSomething"
     _type_signature = expand_struct_type_str(tuple(["int"]), structs)
 
     def call(
@@ -222,7 +290,17 @@ class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
@@ -230,6 +308,7 @@ class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
 class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
     """ContractFunction for the doSomething(int,int) method."""
 
+    _function_name = "doSomething"
     _type_signature = expand_struct_type_str(tuple(["int", "int"]), structs)
 
     def call(
@@ -245,7 +324,17 @@ class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
         return_types = int
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
@@ -256,6 +345,8 @@ class OverloadedMethodsDoSomethingContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "doSomething"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a

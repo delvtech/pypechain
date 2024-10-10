@@ -49,6 +49,7 @@ from pypechain.core import (
     dataclass_to_tuple,
     expand_struct_type_str,
     get_arg_type_names,
+    handle_contract_logic_error,
     rename_returned_types,
 )
 
@@ -58,6 +59,7 @@ structs = {}
 class NoConstructorNameContractFunction0(PypechainContractFunction):
     """ContractFunction for the name() method."""
 
+    _function_name = "name"
     _type_signature = expand_struct_type_str(tuple([]), structs)
 
     def call(
@@ -73,7 +75,17 @@ class NoConstructorNameContractFunction0(PypechainContractFunction):
         return_types = str
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=NoConstructorContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
         return cast(str, rename_returned_types(structs, return_types, raw_values))
 
@@ -84,6 +96,8 @@ class NoConstructorNameContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "name"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
@@ -129,6 +143,7 @@ class NoConstructorNameContractFunction(PypechainContractFunction):
 class NoConstructorSetNameContractFunction0(PypechainContractFunction):
     """ContractFunction for the setName(str) method."""
 
+    _function_name = "setName"
     _type_signature = expand_struct_type_str(tuple(["str"]), structs)
 
     def call(
@@ -142,7 +157,17 @@ class NoConstructorSetNameContractFunction0(PypechainContractFunction):
         # Define the expected return types from the smart contract call
 
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=NoConstructorContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
 
 
 class NoConstructorSetNameContractFunction(PypechainContractFunction):
@@ -151,6 +176,8 @@ class NoConstructorSetNameContractFunction(PypechainContractFunction):
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "setName"
 
     # Make lookup for function signature -> overloaded function
     # The function signatures are python types, as we need to do a
