@@ -50,6 +50,7 @@ from web3.contract.contract import ContractEvent, ContractEvents
 from web3.types import BlockIdentifier, StateOverride, TxParams
 from web3.types import EventData
 from web3._utils.filters import LogFilter
+import copy
 
 {% for name in structs_filenames%}
 from . import {{name}}Types as {{name}}

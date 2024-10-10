@@ -33,6 +33,7 @@ See documentation at https://github.com/delvtech/pypechain """
 
 from __future__ import annotations
 
+import copy
 from typing import Any, Type, cast, overload
 
 from eth_account.signers.local import LocalAccount
@@ -106,8 +107,9 @@ class StructsBNoNameSingleValueContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -176,8 +178,9 @@ class StructsBSingleSimpleStructContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs

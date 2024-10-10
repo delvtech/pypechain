@@ -33,6 +33,7 @@ See documentation at https://github.com/delvtech/pypechain """
 
 from __future__ import annotations
 
+import copy
 from typing import Any, Iterable, NamedTuple, Sequence, Type, cast, overload
 
 from eth_abi.codec import ABICodec
@@ -122,8 +123,9 @@ class ExampleFlipFlopContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -188,8 +190,9 @@ class ExampleGuessALetterContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -267,8 +270,9 @@ class ExampleMixStructsAndPrimitivesContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -337,8 +341,9 @@ class ExampleNamedSingleStructContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -413,8 +418,9 @@ class ExampleNamedTwoMixedStructsContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -483,8 +489,9 @@ class ExampleSingleNestedStructContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -553,8 +560,9 @@ class ExampleSingleSimpleStructContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -629,8 +637,9 @@ class ExampleTwoMixedStructsContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -705,8 +714,9 @@ class ExampleTwoSimpleStructsContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -775,8 +785,9 @@ class ExampleVecOfStructContractFunction(PypechainContractFunction):
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types
-        function_obj = self._functions[arg_types]
+        # Look up the function class based on arg types.
+        # We ensure we use a copy of the original object.
+        function_obj = copy.copy(self._functions[arg_types])
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
