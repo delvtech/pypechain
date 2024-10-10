@@ -33,6 +33,9 @@ class TestOverloading:
         x = 2
         y = 1
 
+        result = deployed_contract.functions.doSomething().call()
+        assert result == 2
+
         result = deployed_contract.functions.doSomething(s).call()
         assert result == "test string"
 

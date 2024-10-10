@@ -8,8 +8,12 @@ contract OverloadedMethods {
         uint intVal;
     }
     
+    // Function doesn't accept any parameters, returns a uint
+    function doSomething() public pure returns (uint) {
+        return 2;
+    }
 
-    // First version of the function accepts an integer, returns a uint
+    // Function accepts an integer, returns a uint
     function doSomething(uint x) public pure returns (uint) {
         return x * 2;
     }
