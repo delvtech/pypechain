@@ -68,9 +68,11 @@ def dataclass_to_tuple(instance: Any) -> Any:
     Returns
     -------
     Any
-        either a tuple or the orginial value
+        either a tuple or the original value
     """
-    if isinstance(instance, (list, tuple)):
+    # We expect vector inputs as lists, as set by the type hint of
+    # the function arguments.
+    if isinstance(instance, list):
         return [dataclass_to_tuple(x) for x in instance]
 
     if not is_dataclass(instance):
@@ -90,12 +92,12 @@ def get_arg_type_names(in_args: tuple[Any, ...] | list[Any] | Any) -> str:
 
     Parameters
     ----------
-    in_args : Sequence[Any]
+    in_args : tuple[Any, ...] | list[Any] | Any
         The input sequence of arguments.
 
     Returns
     -------
-    Sequence[Any]
+    str
         The types of the input sequence of arguments.
     """
     if isinstance(in_args, tuple):
