@@ -14,6 +14,7 @@ class {{contract_name}}{{error_info.name}}ContractError(BaseError):
         "{{error_param.solidity_type}}",
         {% endfor %}
     ]
+{% endfor %}
 
 class {{contract_name}}ContractErrors(BaseContractErrors):
     """ContractErrors for the {{contract_name}} contract."""
@@ -27,5 +28,5 @@ class {{contract_name}}ContractErrors(BaseContractErrors):
         {% for error_info in errors -%}
         self.{{error_info.name}} = {{contract_name}}{{error_info.name}}ContractError()
         {% endfor %}
-        self._all = [{%  for error_info in errors -%}self.{{error_info.name}},{%- endfor %}]
+        self._all = [{% for error_info in errors -%}self.{{error_info.name}},{%- endfor %}]
 
