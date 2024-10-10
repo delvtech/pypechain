@@ -6,6 +6,7 @@
 class OverloadedBalanceOfContractFunction0(PypechainContractFunction):
     """ContractFunction for the balanceOf() method."""
 
+    _function_name = "balanceOf"
     _type_signature = expand_struct_type_str(
         tuple([]),
         structs
@@ -19,27 +20,61 @@ class OverloadedBalanceOfContractFunction0(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> int:
         """returns int."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
+
         
+        # Define the expected return types from the smart contract call
         return_types = int
         
+
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err: # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
+        
+
         
         return cast(int, rename_returned_types(structs, return_types, raw_values))
         
+
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err: # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending", # race condition here, best effort to get block of txn.
+            ) from err
+
+
 
 class OverloadedBalanceOfContractFunction(PypechainContractFunction):
     """ContractFunction for the balanceOf method."""
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "balanceOf"
 
 
     # Make lookup for function signature -> overloaded function
@@ -98,6 +133,7 @@ class OverloadedBalanceOfContractFunction(PypechainContractFunction):
 class OverloadedBalanceOfWhoContractFunction0(PypechainContractFunction):
     """ContractFunction for the balanceOfWho(str) method."""
 
+    _function_name = "balanceOfWho"
     _type_signature = expand_struct_type_str(
         tuple(['str']),
         structs
@@ -111,27 +147,61 @@ class OverloadedBalanceOfWhoContractFunction0(PypechainContractFunction):
 
     def call(
         self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier = "latest",
-        state_override: StateOverride | None = None,
-        ccip_read_enabled: bool | None = None,
+        transaction: Optional[TxParams] = None,
+        block_identifier: Optional[BlockIdentifier] = None,
+        state_override: Optional[StateOverride] = None,
+        ccip_read_enabled: Optional[bool] = None,
     ) -> bool:
         """returns bool."""
-        # Define the expected return types from the smart contract call
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
+
         
+        # Define the expected return types from the smart contract call
         return_types = bool
         
+
         # Call the function
-        raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err: # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
+        
+
         
         return cast(bool, rename_returned_types(structs, return_types, raw_values))
         
+
+    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err: # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending", # race condition here, best effort to get block of txn.
+            ) from err
+
+
 
 class OverloadedBalanceOfWhoContractFunction(PypechainContractFunction):
     """ContractFunction for the balanceOfWho method."""
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
     # pylint: disable=function-redefined
+
+    _function_name = "balanceOfWho"
 
 
     # Make lookup for function signature -> overloaded function
