@@ -45,14 +45,6 @@ class TestErrors:
             # Errors should still be caught with the original type.
             assert err.message == ErrorsContract.errors.One.selector
 
-        # Calls should fail and caught with original web3 error
-        try:
-            _ = deployed_contract.functions.revertWithErrorOne().call()
-            assert False, "Expected exception."
-        except ContractCustomError as err:
-            # Errors should still be caught with the original type.
-            assert err.message == ErrorsContract.errors.One.selector
-
         # Test error handling with "transact"
 
         try:
