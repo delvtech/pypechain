@@ -97,7 +97,7 @@ class TestReturnTypes:
         """Tests two structs, one nested, and other values returned"""
         func = deployed_contract.functions.mixStructsAndPrimitives()
 
-        result: ReturnTypesMixStructsAndPrimitivesContractFunction.ReturnValues = func.call()
+        result = func.call()
 
         assert isinstance(result, func.ReturnValues)
         assert result == (
