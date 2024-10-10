@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Generic, Type, TypeVar
+from typing import Any, Generic, Literal, Type, TypeVar
 
 from eth_typing import BlockNumber
 from web3.exceptions import ContractCustomError, ContractLogicError, ContractPanicError, OffchainLookup
@@ -22,6 +22,8 @@ class PypechainCallException(Exception):
         # similar for other types of exceptions
         orig_exception: BaseException,
         decoded_error: str | None = None,
+        decoded_error_name: str | None = None,
+        decoded_error_args: tuple[Any, ...] | None = None,
         contract_call_type: str | None = None,
         function_name: str | None = None,
         fn_args: tuple | None = None,
@@ -34,6 +36,8 @@ class PypechainCallException(Exception):
         super().__init__(*args)
         self.orig_exception = orig_exception
         self.decoded_error = decoded_error
+        self.decoded_error_name = decoded_error_name
+        self.decoded_error_args = decoded_error_args
         self.contract_call_type = contract_call_type
         self.function_name = function_name
         self.fn_args = fn_args
@@ -71,6 +75,8 @@ class PypechainGenericError(PypechainCallException, Generic[T]):
         # similar for other types of exceptions
         orig_exception: T,
         decoded_error: str | None = None,
+        decoded_error_name: str | None = None,
+        decoded_error_args: tuple[Any, ...] | None = None,
         contract_call_type: str | None = None,
         function_name: str | None = None,
         fn_args: tuple | None = None,
@@ -85,6 +91,8 @@ class PypechainGenericError(PypechainCallException, Generic[T]):
             *args,
             orig_exception=orig_exception,
             decoded_error=decoded_error,
+            decoded_error_name=decoded_error_name,
+            decoded_error_args=decoded_error_args,
             contract_call_type=contract_call_type,
             function_name=function_name,
             fn_args=fn_args,
@@ -126,7 +134,7 @@ def handle_contract_logic_error(
     contract_function: PypechainContractFunction,
     errors_class: Type[PypechainBaseContractErrors],
     err: BaseException,
-    contract_call_type: str,
+    contract_call_type: Literal["call"] | Literal["transact"],
     transaction: TxParams | None,
     block_identifier: BlockIdentifier,
 ) -> PypechainGenericError | PypechainCallException:
@@ -136,10 +144,12 @@ def handle_contract_logic_error(
     # We first handle the base `ContractLogicError`
     if isinstance(err, ContractLogicError):
         # We decode the error here
-        (decoded_error_name, decoded_args) = errors_class().decode_custom_error(err.message)
-        decoded_error = f"{decoded_error_name}({','.join(decoded_args)})"
+        (decoded_error_name, decoded_error_args) = errors_class().decode_custom_error(err.message)
+        decoded_error = f"{decoded_error_name}({', '.join([str(e) for e in decoded_error_args])})"
     else:
-        decoded_error = ""
+        decoded_error_name = None
+        decoded_error_args = None
+        decoded_error = None
 
     raw_txn = None
     # Best effort to get raw transaction
@@ -155,6 +165,8 @@ def handle_contract_logic_error(
     if isinstance(err, ContractCustomError):
         return PypechainContractCustomError(
             decoded_error=decoded_error,
+            decoded_error_name=decoded_error_name,
+            decoded_error_args=decoded_error_args,
             orig_exception=err,
             contract_call_type=contract_call_type,
             function_name=contract_function._function_name,  # pylint: disable=protected-access
@@ -166,6 +178,8 @@ def handle_contract_logic_error(
     if isinstance(err, ContractPanicError):
         return PypechainContractPanicError(
             decoded_error=decoded_error,
+            decoded_error_name=decoded_error_name,
+            decoded_error_args=decoded_error_args,
             orig_exception=err,
             contract_call_type=contract_call_type,
             function_name=contract_function._function_name,  # pylint: disable=protected-access
@@ -177,6 +191,8 @@ def handle_contract_logic_error(
     if isinstance(err, OffchainLookup):
         return PypechainOffchainLookup(
             decoded_error=decoded_error,
+            decoded_error_name=decoded_error_name,
+            decoded_error_args=decoded_error_args,
             orig_exception=err,
             contract_call_type=contract_call_type,
             function_name=contract_function._function_name,  # pylint: disable=protected-access
@@ -189,6 +205,8 @@ def handle_contract_logic_error(
     if isinstance(err, ContractLogicError):
         return PypechainContractLogicError(
             decoded_error=decoded_error,
+            decoded_error_name=decoded_error_name,
+            decoded_error_args=decoded_error_args,
             orig_exception=err,
             contract_call_type=contract_call_type,
             function_name=contract_function._function_name,  # pylint: disable=protected-access
@@ -202,6 +220,8 @@ def handle_contract_logic_error(
     # the base PypechainCallException
     return PypechainCallException(
         decoded_error=decoded_error,
+        decoded_error_name=decoded_error_name,
+        decoded_error_args=decoded_error_args,
         orig_exception=err,
         contract_call_type=contract_call_type,
         function_name=contract_function._function_name,  # pylint: disable=protected-access
