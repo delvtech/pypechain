@@ -32,7 +32,7 @@ class ErrorInfo:
     inputs: list[ErrorParams]
 
 
-class BaseError:
+class PypechainBaseError:
     """The base class for a single error in a contract."""
 
     name: str
@@ -55,10 +55,10 @@ class BaseError:
         return decoded
 
 
-class BaseContractErrors:
+class PypechainBaseContractErrors:
     """The base class for a collection of errors within a contract."""
 
-    _all: list[BaseError]
+    _all: list[PypechainBaseError]
 
     def decode_custom_error(self, data: str | None) -> tuple[str, tuple[Any, ...]]:
         """Decodes a custom contract error."""

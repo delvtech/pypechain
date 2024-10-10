@@ -1,6 +1,6 @@
 {# loop over all errors and create types for each #}
 {%- for error_info in errors -%}
-class {{contract_name}}{{error_info.name}}ContractError(BaseError):
+class {{contract_name}}{{error_info.name}}ContractError(PypechainBaseError):
     """ContractError for {{error_info.name}}."""
     # Error name
     name: str = "{{error_info.name}}"
@@ -16,7 +16,7 @@ class {{contract_name}}{{error_info.name}}ContractError(BaseError):
     ]
 {% endfor %}
 
-class {{contract_name}}ContractErrors(BaseContractErrors):
+class {{contract_name}}ContractErrors(PypechainBaseContractErrors):
     """ContractErrors for the {{contract_name}} contract."""
 {% for error_info in errors %}
     {{error_info.name}}: {{contract_name}}{{error_info.name}}ContractError

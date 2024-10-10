@@ -9,7 +9,7 @@ from web3.exceptions import ContractCustomError, ContractLogicError, ContractPan
 from web3.types import BlockIdentifier, TxParams
 
 from .contract_function import PypechainContractFunction
-from .error import BaseContractErrors
+from .error import PypechainBaseContractErrors
 
 
 class PypechainCallException(Exception):
@@ -124,7 +124,7 @@ class PypechainContractLogicError(PypechainGenericError[ContractLogicError], Con
 
 def handle_contract_logic_error(
     contract_function: PypechainContractFunction,
-    errors_class: Type[BaseContractErrors],
+    errors_class: Type[PypechainBaseContractErrors],
     err: BaseException,
     contract_call_type: str,
     transaction: TxParams | None,

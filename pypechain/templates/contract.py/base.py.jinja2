@@ -71,7 +71,7 @@ from pypechain.core import BaseEventArgs
 {% endif %}
 
 {% if has_errors %}
-from pypechain.core import BaseError, BaseContractErrors
+from pypechain.core import PypechainBaseError, PypechainBaseContractErrors
 {% endif %}
 
 {% if has_errors or has_events %}

@@ -4,7 +4,7 @@ from .base_event import BaseEvent, BaseEventArgs
 from .combomethod_typed import combomethod_typed
 from .contract_call_exception import PypechainCallException, handle_contract_logic_error
 from .contract_function import PypechainContractFunction
-from .error import BaseContractErrors, BaseError, ErrorInfo, ErrorParams
+from .error import ErrorInfo, ErrorParams, PypechainBaseContractErrors, PypechainBaseError
 from .utilities import (
     dataclass_to_tuple,
     expand_struct_type_str,
