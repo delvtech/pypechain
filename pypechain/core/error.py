@@ -50,7 +50,8 @@ class PypechainBaseError:
         self,
         data: HexBytes,
         # TODO: instead of returning a tuple, return a dataclass
-        # with the input names and types just like we do for functions
+        # with the input names and types just like we do for functions.
+        # https://github.com/delvtech/pypechain/issues/138
     ) -> tuple[Any, ...]:
         """Decodes error data returns from a smart contract."""
 
