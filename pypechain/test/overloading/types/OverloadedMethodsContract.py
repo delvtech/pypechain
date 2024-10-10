@@ -34,7 +34,7 @@ See documentation at https://github.com/delvtech/pypechain """
 from __future__ import annotations
 
 import copy
-from typing import Any, NamedTuple, Optional, Type, cast, overload
+from typing import Any, NamedTuple, Type, cast, overload
 
 from eth_account.signers.local import LocalAccount
 from eth_typing import ABI, ChecksumAddress, HexStr
@@ -70,10 +70,10 @@ class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
 
     def call(
         self,
-        transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[StateOverride] = None,
-        ccip_read_enabled: Optional[bool] = None,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
     ) -> list[OverloadedMethods.NestedStruct]:
         """returns list[OverloadedMethods.NestedStruct]."""
         # We handle the block identifier = None case here for typing.
@@ -98,7 +98,7 @@ class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
 
         return cast(list[OverloadedMethods.NestedStruct], rename_returned_types(structs, return_types, raw_values))
 
-    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
         try:
             return super().transact(transaction)
         except Exception as err:  # pylint disable=broad-except
@@ -120,10 +120,10 @@ class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
 
     def call(
         self,
-        transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[StateOverride] = None,
-        ccip_read_enabled: Optional[bool] = None,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
     ) -> OverloadedMethods.SimpleStruct:
         """returns OverloadedMethods.SimpleStruct."""
         # We handle the block identifier = None case here for typing.
@@ -148,7 +148,7 @@ class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
 
         return cast(OverloadedMethods.SimpleStruct, rename_returned_types(structs, return_types, raw_values))
 
-    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
         try:
             return super().transact(transaction)
         except Exception as err:  # pylint disable=broad-except
@@ -176,10 +176,10 @@ class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
 
     def call(
         self,
-        transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[StateOverride] = None,
-        ccip_read_enabled: Optional[bool] = None,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
     ) -> ReturnValues:
         """returns ReturnValues."""
         # We handle the block identifier = None case here for typing.
@@ -204,7 +204,7 @@ class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
 
         return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
 
-    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
         try:
             return super().transact(transaction)
         except Exception as err:  # pylint disable=broad-except
@@ -226,10 +226,10 @@ class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
 
     def call(
         self,
-        transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[StateOverride] = None,
-        ccip_read_enabled: Optional[bool] = None,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
     ) -> list[OverloadedMethods.SimpleStruct]:
         """returns list[OverloadedMethods.SimpleStruct]."""
         # We handle the block identifier = None case here for typing.
@@ -254,7 +254,7 @@ class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
 
         return cast(list[OverloadedMethods.SimpleStruct], rename_returned_types(structs, return_types, raw_values))
 
-    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
         try:
             return super().transact(transaction)
         except Exception as err:  # pylint disable=broad-except
@@ -276,10 +276,10 @@ class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
 
     def call(
         self,
-        transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[StateOverride] = None,
-        ccip_read_enabled: Optional[bool] = None,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
         # We handle the block identifier = None case here for typing.
@@ -304,7 +304,7 @@ class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
-    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
         try:
             return super().transact(transaction)
         except Exception as err:  # pylint disable=broad-except
@@ -326,10 +326,10 @@ class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
 
     def call(
         self,
-        transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[StateOverride] = None,
-        ccip_read_enabled: Optional[bool] = None,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
     ) -> str:
         """returns str."""
         # We handle the block identifier = None case here for typing.
@@ -354,7 +354,7 @@ class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
 
         return cast(str, rename_returned_types(structs, return_types, raw_values))
 
-    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
         try:
             return super().transact(transaction)
         except Exception as err:  # pylint disable=broad-except
@@ -376,10 +376,10 @@ class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
 
     def call(
         self,
-        transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[StateOverride] = None,
-        ccip_read_enabled: Optional[bool] = None,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
         # We handle the block identifier = None case here for typing.
@@ -404,7 +404,7 @@ class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
-    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
         try:
             return super().transact(transaction)
         except Exception as err:  # pylint disable=broad-except
@@ -426,10 +426,10 @@ class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
 
     def call(
         self,
-        transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[StateOverride] = None,
-        ccip_read_enabled: Optional[bool] = None,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
     ) -> int:
         """returns int."""
         # We handle the block identifier = None case here for typing.
@@ -454,7 +454,7 @@ class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
 
-    def transact(self, transaction: Optional[TxParams] = None) -> HexBytes:
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
         try:
             return super().transact(transaction)
         except Exception as err:  # pylint disable=broad-except
