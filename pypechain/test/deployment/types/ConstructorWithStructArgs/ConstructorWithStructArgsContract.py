@@ -42,7 +42,7 @@ from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunctions
-from web3.types import BlockIdentifier, Nonce, StateOverride, TxParams
+from web3.types import BlockIdentifier, StateOverride, TxParams
 
 from pypechain.core import (
     PypechainBaseContractErrors,
@@ -124,9 +124,7 @@ class ConstructorWithStructArgsNameContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_and_transact(
-        self, account: LocalAccount, transaction: TxParams | None = None, nonce: Nonce | None = None
-    ) -> HexBytes:
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -163,10 +161,8 @@ class ConstructorWithStructArgsNameContractFunction0(PypechainContractFunction):
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
 
-        if nonce is None:
-            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
-        else:
-            raw_transaction["nonce"] = nonce
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address, block_identifier="pending")
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -293,9 +289,7 @@ class ConstructorWithStructArgsSetNameContractFunction0(PypechainContractFunctio
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_and_transact(
-        self, account: LocalAccount, transaction: TxParams | None = None, nonce: Nonce | None = None
-    ) -> HexBytes:
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -332,10 +326,8 @@ class ConstructorWithStructArgsSetNameContractFunction0(PypechainContractFunctio
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
 
-        if nonce is None:
-            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
-        else:
-            raw_transaction["nonce"] = nonce
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address, block_identifier="pending")
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -467,9 +459,7 @@ class ConstructorWithStructArgsThingContractFunction0(PypechainContractFunction)
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_and_transact(
-        self, account: LocalAccount, transaction: TxParams | None = None, nonce: Nonce | None = None
-    ) -> HexBytes:
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -506,10 +496,8 @@ class ConstructorWithStructArgsThingContractFunction0(PypechainContractFunction)
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
 
-        if nonce is None:
-            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
-        else:
-            raw_transaction["nonce"] = nonce
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address, block_identifier="pending")
 
         # Sign the raw transaction
         # Mismatched types between account and web3py

@@ -45,7 +45,7 @@ from web3._utils.events import EventLogErrorFlags
 from web3._utils.filters import LogFilter
 from web3.contract.contract import Contract, ContractConstructor, ContractEvent, ContractEvents, ContractFunctions
 from web3.logs import WARN
-from web3.types import BlockIdentifier, Nonce, StateOverride, TxParams, TxReceipt
+from web3.types import BlockIdentifier, StateOverride, TxParams, TxReceipt
 
 from pypechain.core import (
     BaseEventArgs,
@@ -120,9 +120,7 @@ class TransactTransactFunctionContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_and_transact(
-        self, account: LocalAccount, transaction: TxParams | None = None, nonce: Nonce | None = None
-    ) -> HexBytes:
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -159,10 +157,8 @@ class TransactTransactFunctionContractFunction0(PypechainContractFunction):
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
 
-        if nonce is None:
-            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
-        else:
-            raw_transaction["nonce"] = nonce
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address, block_identifier="pending")
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
