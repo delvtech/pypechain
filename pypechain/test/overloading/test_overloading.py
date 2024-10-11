@@ -7,9 +7,7 @@ import os
 import pytest
 from web3.exceptions import MismatchedABI
 
-from pypechain.test.overloading.types import OverloadedMethodsContract
-
-from .types import OverloadedMethodsTypes
+from .types.OverloadedMethods import OverloadedMethodsContract, OverloadedMethodsTypes
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name

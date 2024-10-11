@@ -8,9 +8,9 @@ from pathlib import Path
 import pytest
 from web3 import Web3
 
-from .types import ContractCContract
-from .types.ContractATypes import StructsA
-from .types.ContractBTypes import InnerStruct, StructsB
+from .types.ContractA import StructsA
+from .types.ContractB import InnerStruct, StructsB
+from .types.ContractC import ContractCContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name

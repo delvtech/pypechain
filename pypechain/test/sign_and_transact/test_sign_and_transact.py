@@ -15,7 +15,7 @@ from web3 import Web3
 
 from pypechain.core import PypechainCallException
 
-from .types import TransactContract
+from .types.Transact import TransactContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
