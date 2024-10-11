@@ -54,7 +54,7 @@ from pypechain.core import (
     rename_returned_types,
 )
 
-from . import OverloadedMethodsTypes as OverloadedMethods
+from .. import OverloadedMethods
 
 structs = {
     "OverloadedMethods.SimpleStruct": OverloadedMethods.SimpleStruct,

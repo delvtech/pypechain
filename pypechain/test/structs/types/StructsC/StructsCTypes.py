@@ -30,8 +30,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from . import IStructsTypes as IStructs
-from . import StructsCTypes as StructsC
+from .. import IStructs, StructsC
 
 
 @dataclass
