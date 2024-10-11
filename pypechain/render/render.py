@@ -8,6 +8,7 @@ from multiprocessing import Pool
 from pathlib import Path
 
 from pypechain.render.contract import ContractInfo, get_contract_infos, render_contract_file
+from pypechain.render.init import render_init_file
 from pypechain.render.types import render_types_file
 from pypechain.utilities.abi import AbiInfo
 from pypechain.utilities.file import write_string_to_file
@@ -113,7 +114,9 @@ def render_contract(
         A list of filenames and definitions for the generated Contract and Types files.
     """
     file_outputs: list[RenderOutput] = []
-    file_path = Path(output_dir)
+    contract_dir = Path(output_dir) / contract_info.contract_name
+    os.makedirs(contract_dir)
+    file_path = Path(contract_dir)
 
     rendered_contract_code = render_contract_file(contract_info)
     if rendered_contract_code:
@@ -137,8 +140,22 @@ def render_contract(
         write_string_to_file(types_file_path, rendered_types_code)
         if apply_formatting is True:
             format_file(types_file_path, line_length)
+        # Expose events and structs in init.
+        # TODO errors also exists in the types file, but isn't used.
+        # We avoid exposing to avoid confusion with error classes in
+        # the contract file.
+        file_outputs.append(
+            RenderOutput(
+                filename=f"{contract_info.contract_name}Types",
+                definitions=(
+                    [f"{struct.name}" for struct in contract_info.structs.values()]
+                    + [f"{event.capitalized_name}Event" for event in contract_info.events.values()]
+                ),
+            )
+        )
 
-        # We don't expose anything from the types file to avoid name collisions.
-        # Any imports from types file require the fully qualified name.
+    render_init_file(contract_dir, file_outputs)
+    if apply_formatting is True:
+        format_file(contract_dir / "__init__.py", line_length, remove_unused_imports=False)
 
     return file_outputs

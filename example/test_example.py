@@ -9,8 +9,7 @@ import pytest
 from web3 import Web3
 from web3.contract.contract import Contract
 
-from example.types import ExampleContract
-from example.types.ExampleTypes import InnerStruct, NestedStruct, SimpleStruct
+from example.types.Example import ExampleContract, InnerStruct, NestedStruct, SimpleStruct
 from pypechain.utilities.abi import load_abi_infos_from_file
 
 # using pytest fixtures necessitates this.

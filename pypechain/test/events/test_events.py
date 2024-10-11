@@ -7,8 +7,7 @@ import os
 from web3 import Web3
 from web3.logs import DISCARD
 
-from pypechain.test.events.types import EventsContract
-from pypechain.test.events.types.EventsTypes import EventAEvent, EventBEvent
+from .types.Events import EventAEvent, EventBEvent, EventsContract
 
 current_path = os.path.abspath(os.path.dirname(__file__))
 project_root = os.path.dirname(os.path.dirname(current_path))

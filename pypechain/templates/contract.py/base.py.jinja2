@@ -45,21 +45,20 @@ from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions, ContractConstructor
 from web3.contract.contract import ContractEvent, ContractEvents
-from web3.types import BlockIdentifier, StateOverride, TxParams
-from web3.types import EventData
+from web3.types import BlockIdentifier, StateOverride, TxParams, Nonce, EventData
 from web3._utils.filters import LogFilter
 import copy
 
 {% for name in structs_filenames%}
-from . import {{name}}Types as {{name}}
+from ..{{name}} import {{name}}Types as {{name}}
 {% endfor %}
 
 {% for name in structs_without_filenames%}
-from .{{name}}Types import {{name}}
+from ..{{name}}.{{name}}Types import {{name}}
 {% endfor %}
 
-{% for contract_type in link_references.contract_types %}
-from .{{contract_type}} import {{contract_type}}
+{% for contract_name in link_references.contract_names %}
+from ..{{contract_name}} import {{contract_name}}Contract
 {% endfor %}
 
 {% if has_events %}

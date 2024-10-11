@@ -7,7 +7,7 @@ from web3.exceptions import ContractCustomError
 
 from pypechain.core import PypechainCallException
 
-from .types import ErrorsContract, ErrorsTypes
+from .types.Errors import Ages, ErrorsContract
 
 
 @pytest.mark.usefixtures("process_contracts")
@@ -150,7 +150,7 @@ class TestErrors:
         """Test that we can decode structs and enums."""
         deployed_contract = ErrorsContract.deploy(w3=w3, account=w3.eth.accounts[0])
 
-        in_struct = ErrorsTypes.Ages(bart=1, lisa=2, homer=3, marge=4)
+        in_struct = Ages(bart=1, lisa=2, homer=3, marge=4)
 
         # Test error handling with "call"
 

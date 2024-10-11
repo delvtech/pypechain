@@ -11,9 +11,7 @@ from pathlib import Path
 from typing import NamedTuple, Sequence
 
 from pypechain.render import render_contracts
-from pypechain.render.init import render_init_file
 from pypechain.utilities.abi import AbiInfo, load_abi_infos_from_file
-from pypechain.utilities.types import RenderOutput
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -72,17 +70,18 @@ def pypechain(
     # Create/clear the output directory
     setup_directory(output_dir)
 
-    # Now process all gathered files
-    file_outputs: list[RenderOutput] = render_contracts(
-        abi_infos, output_dir, line_length, apply_formatting, parallel=parallel
-    )
-
-    # Render the __init__.py file
-    render_init_file(output_dir, file_outputs, line_length)
-
+    # Since setup directory looks for `pypechain.version`, we make this file first
     # Make a pypechain.version file
     with open(f"{output_dir}/pypechain.version", "w", encoding="utf-8") as f:
         f.write(f"pypechain == {importlib.metadata.version('pypechain')}")
+
+    # Now process all gathered files
+    render_contracts(abi_infos, output_dir, line_length, apply_formatting, parallel=parallel)
+
+    # Make an empty __init__.py file
+    # render_init_file(output_dir, file_outputs, line_length)
+    with open(f"{output_dir}/__init__.py", "w", encoding="utf-8") as f:
+        pass
 
 
 def gather_json_files(directory: str) -> list:
@@ -93,12 +92,20 @@ def gather_json_files(directory: str) -> list:
 def setup_directory(directory: str) -> None:
     """Set up the output directory. If it exists, clear it. Otherwise, create it."""
 
-    # If the directory exists, remove it
+    print(f"Setting up output directory {directory}.")
+
+    # If the directory exists, make sure it's a pypechain output directory
     if os.path.exists(directory):
-        shutil.rmtree(directory)
+        if os.path.isfile(f"{directory}/pypechain.version"):
+            # Clear the directory if it's a pypechain output directory
+            shutil.rmtree(directory)
+        else:
+            # Print error if directory isn't empty
+            if not len(os.listdir(directory)) == 0:
+                raise ValueError(f"Directory {directory} isn't empty, and is not a pypechain output directory.")
 
     # Create the directory
-    os.makedirs(directory)
+    os.makedirs(directory, exist_ok=True)
 
 
 class Args(NamedTuple):

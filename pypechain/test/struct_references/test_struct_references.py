@@ -8,9 +8,9 @@ from pathlib import Path
 import pytest
 from web3 import Web3
 
-from .types import ContractCContract
-from .types.ContractATypes import StructsA
-from .types.ContractBTypes import InnerStruct, StructsB
+from .types.ContractA import StructsA
+from .types.ContractB import InnerStruct, StructsB
+from .types.ContractC import ContractCContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
@@ -36,10 +36,12 @@ class TestStructs:
         is no ABI for it, so we shouldn't create a contract file."""
 
         expected_files = [
-            "types/__init__.py",
-            "types/ContractATypes.py",
-            "types/ContractBTypes.py",
-            "types/ContractCContract.py",
+            "types/ContractA/__init__.py",
+            "types/ContractA/ContractATypes.py",
+            "types/ContractB/__init__.py",
+            "types/ContractB/ContractBTypes.py",
+            "types/ContractC/__init__.py",
+            "types/ContractC/ContractCContract.py",
         ]
 
         results: list[tuple[bool, Path]] = []

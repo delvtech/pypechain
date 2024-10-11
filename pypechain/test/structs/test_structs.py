@@ -8,7 +8,8 @@ from pathlib import Path
 import pytest
 from web3 import Web3
 
-from .types import StructsAContract, StructsBContract
+from .types.StructsA import StructsAContract
+from .types.StructsB import StructsBContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
@@ -37,10 +38,10 @@ class TestStructs:
 
         expected_files = [
             "types/__init__.py",
-            "types/IStructsTypes.py",
-            "types/StructsAContract.py",
-            "types/StructsATypes.py",
-            "types/StructsBContract.py",
+            "types/IStructs/IStructsTypes.py",
+            "types/StructsA/StructsAContract.py",
+            "types/StructsA/StructsATypes.py",
+            "types/StructsB/StructsBContract.py",
         ]
 
         results: list[tuple[bool, Path]] = []

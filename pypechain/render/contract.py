@@ -6,9 +6,10 @@ import importlib.metadata
 import logging
 import re
 from dataclasses import dataclass
-from typing import Any, NamedTuple
+from typing import NamedTuple
 
 from eth_typing import ABI
+from jinja2 import Environment, Template
 
 from pypechain.utilities.abi import (
     AbiInfo,
@@ -394,15 +395,15 @@ def get_has_multiple_return_values(signature_datas: list[SignatureData]) -> bool
 class ContractTemplates(NamedTuple):
     """Templates for the generated contract file."""
 
-    base_template: Any
-    functions_template: Any
-    events_template: Any
-    errors_template: Any
-    abi_template: Any
-    contract_template: Any
+    base_template: Template
+    functions_template: Template
+    events_template: Template
+    errors_template: Template
+    abi_template: Template
+    contract_template: Template
 
 
-def get_templates_for_contract_file(env):
+def get_templates_for_contract_file(env: Environment) -> ContractTemplates:
     """Templates for the generated contract file."""
     return ContractTemplates(
         base_template=env.get_template("contract.py/base.py.jinja2"),

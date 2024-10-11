@@ -10,10 +10,10 @@ from eth_account.signers.local import LocalAccount
 from web3 import Web3
 from web3.types import RPCEndpoint
 
-from pypechain.test.deployment.types import ConstructorWithStructArgsContract
-from pypechain.test.deployment.types.ConstructorWithStructArgsTypes import Config, Items
-
-from .types import ConstructorNoArgsContract, ConstructorWithArgsContract, NoConstructorContract
+from .types.ConstructorNoArgs import ConstructorNoArgsContract
+from .types.ConstructorWithArgs import ConstructorWithArgsContract
+from .types.ConstructorWithStructArgs import Config, ConstructorWithStructArgsContract, Items
+from .types.NoConstructor import NoConstructorContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name

@@ -10,7 +10,8 @@ from eth_account.signers.local import LocalAccount
 from web3 import Web3
 from web3.types import RPCEndpoint
 
-from .types import ContractContract, MyLibraryContract
+from .types.Contract import ContractContract
+from .types.MyLibrary import MyLibraryContract
 
 # using pytest fixtures necessitates this.
 # pylint: disable=redefined-outer-name
