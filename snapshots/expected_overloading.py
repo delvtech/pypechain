@@ -117,7 +117,6 @@ class OverloadedBalanceOfContractFunction0(PypechainContractFunction):
         if "nonce" not in raw_transaction:
             raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address, block_identifier="pending")
 
-
         # Sign the raw transaction
         # Mismatched types between account and web3py
         signed_transaction = account.sign_transaction(raw_transaction) # type: ignore
@@ -250,7 +249,6 @@ class OverloadedBalanceOfContractFunction1(PypechainContractFunction):
 
         if "nonce" not in raw_transaction:
             raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address, block_identifier="pending")
-
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
