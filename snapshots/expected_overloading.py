@@ -79,7 +79,7 @@ class OverloadedBalanceOfContractFunction0(PypechainContractFunction):
                 block_identifier="pending", # race condition here, best effort to get block of txn.
             ) from err
     
-    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None, nonce: Nonce | None = None) -> HexBytes:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -105,11 +105,20 @@ class OverloadedBalanceOfContractFunction0(PypechainContractFunction):
         else:
             transaction_params["from"] = account.address
 
+        if "gas" not in transaction_params:
+            # Web3 default gas estimate seems to be underestimating gas, likely due to
+            # not looking at pending block. Here, we explicitly call estimate gas
+            # if gas isn't passed in.
+            transaction_params["gas"] = self.estimate_gas(transaction_params, block_identifier="pending")
+        
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
 
-        if "nonce" not in raw_transaction:
+        if nonce is None:
             raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+        else:
+            raw_transaction["nonce"] = nonce
+
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
@@ -206,7 +215,7 @@ class OverloadedBalanceOfContractFunction1(PypechainContractFunction):
                 block_identifier="pending", # race condition here, best effort to get block of txn.
             ) from err
     
-    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None, nonce: Nonce | None = None) -> HexBytes:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -232,11 +241,20 @@ class OverloadedBalanceOfContractFunction1(PypechainContractFunction):
         else:
             transaction_params["from"] = account.address
 
+        if "gas" not in transaction_params:
+            # Web3 default gas estimate seems to be underestimating gas, likely due to
+            # not looking at pending block. Here, we explicitly call estimate gas
+            # if gas isn't passed in.
+            transaction_params["gas"] = self.estimate_gas(transaction_params, block_identifier="pending")
+        
         # Build the raw transaction
         raw_transaction = self.build_transaction(transaction_params)
 
-        if "nonce" not in raw_transaction:
+        if nonce is None:
             raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+        else:
+            raw_transaction["nonce"] = nonce
+
 
         # Sign the raw transaction
         # Mismatched types between account and web3py
