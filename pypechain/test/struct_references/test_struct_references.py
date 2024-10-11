@@ -36,10 +36,12 @@ class TestStructs:
         is no ABI for it, so we shouldn't create a contract file."""
 
         expected_files = [
-            "types/__init__.py",
-            "types/ContractATypes.py",
-            "types/ContractBTypes.py",
-            "types/ContractCContract.py",
+            "types/ContractA/__init__.py",
+            "types/ContractA/ContractATypes.py",
+            "types/ContractB/__init__.py",
+            "types/ContractB/ContractBTypes.py",
+            "types/ContractC/__init__.py",
+            "types/ContractC/ContractCContract.py",
         ]
 
         results: list[tuple[bool, Path]] = []
