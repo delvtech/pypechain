@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Generic, Literal, Type, TypeVar
+from typing import Any, Generic, Literal, Type, TypeVar, Union
 
 from eth_typing import BlockNumber
 from web3.exceptions import ContractCustomError, ContractLogicError, ContractPanicError, OffchainLookup
@@ -15,6 +15,8 @@ from .error import PypechainBaseContractErrors
 # pylint: disable=too-many-positional-arguments
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-many-ancestors
+
+ContractCallType = Union[Literal["call"], Literal["transact"], Literal["build"]]
 
 
 class PypechainCallException(Exception):
@@ -29,7 +31,7 @@ class PypechainCallException(Exception):
         decoded_error: str | None = None,
         decoded_error_name: str | None = None,
         decoded_error_args: tuple[Any, ...] | None = None,
-        contract_call_type: str | None = None,
+        contract_call_type: ContractCallType | None = None,
         function_name: str | None = None,
         fn_args: tuple | None = None,
         fn_kwargs: dict[str, Any] | None = None,
@@ -80,7 +82,7 @@ class PypechainGenericError(PypechainCallException, Generic[T]):
         decoded_error: str | None = None,
         decoded_error_name: str | None = None,
         decoded_error_args: tuple[Any, ...] | None = None,
-        contract_call_type: str | None = None,
+        contract_call_type: ContractCallType | None = None,
         function_name: str | None = None,
         fn_args: tuple | None = None,
         fn_kwargs: dict[str, Any] | None = None,
@@ -126,7 +128,7 @@ def handle_contract_logic_error(
     contract_function: PypechainContractFunction,
     errors_class: Type[PypechainBaseContractErrors],
     err: BaseException,
-    contract_call_type: Literal["call"] | Literal["transact"],
+    contract_call_type: ContractCallType,
     transaction: TxParams | None,
     block_identifier: BlockIdentifier,
 ) -> PypechainGenericError | PypechainCallException:
@@ -143,10 +145,12 @@ def handle_contract_logic_error(
 
     raw_txn = None
     # Best effort to get raw transaction
-    try:
-        raw_txn = contract_function.build_transaction(transaction=transaction)
-    except Exception:  # pylint: disable=broad-except
-        pass
+    # Avoid rebuilding the transaction if the error itself is in build transaction
+    if contract_call_type != "build":
+        try:
+            raw_txn = contract_function.build_transaction(transaction=transaction)
+        except Exception:  # pylint: disable=broad-except
+            pass
 
     # Get the block number that the call was attempted on.
     block_number = contract_function.w3.eth.get_block(block_identifier=block_identifier).get("number", None)

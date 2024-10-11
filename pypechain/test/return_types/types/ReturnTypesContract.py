@@ -121,6 +121,70 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction0(PypechainContractFunct
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class ReturnTypesMixStructsAndPrimitivesContractFunction(PypechainContractFunction):
     """ContractFunction for the mixStructsAndPrimitives method."""
@@ -221,6 +285,70 @@ class ReturnTypesNamedSingleStructContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class ReturnTypesNamedSingleStructContractFunction(PypechainContractFunction):
     """ContractFunction for the namedSingleStruct method."""
@@ -318,6 +446,70 @@ class ReturnTypesNamedSingleValueContractFunction0(PypechainContractFunction):
                 err=err,
                 contract_call_type="transact",
                 transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
@@ -427,6 +619,70 @@ class ReturnTypesNamedTwoMixedStructsContractFunction0(PypechainContractFunction
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class ReturnTypesNamedTwoMixedStructsContractFunction(PypechainContractFunction):
     """ContractFunction for the namedTwoMixedStructs method."""
@@ -533,6 +789,70 @@ class ReturnTypesNamedTwoValuesContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class ReturnTypesNamedTwoValuesContractFunction(PypechainContractFunction):
     """ContractFunction for the namedTwoValues method."""
@@ -630,6 +950,70 @@ class ReturnTypesNoNameSingleValueContractFunction0(PypechainContractFunction):
                 err=err,
                 contract_call_type="transact",
                 transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
@@ -739,6 +1123,70 @@ class ReturnTypesNoNameTwoValuesContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class ReturnTypesNoNameTwoValuesContractFunction(PypechainContractFunction):
     """ContractFunction for the noNameTwoValues method."""
@@ -836,6 +1284,70 @@ class ReturnTypesSingleNestedStructContractFunction0(PypechainContractFunction):
                 err=err,
                 contract_call_type="transact",
                 transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
@@ -939,6 +1451,70 @@ class ReturnTypesSingleNestedStructArrayContractFunction0(PypechainContractFunct
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class ReturnTypesSingleNestedStructArrayContractFunction(PypechainContractFunction):
     """ContractFunction for the singleNestedStructArray method."""
@@ -1036,6 +1612,70 @@ class ReturnTypesSingleSimpleStructContractFunction0(PypechainContractFunction):
                 err=err,
                 contract_call_type="transact",
                 transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
@@ -1145,6 +1785,70 @@ class ReturnTypesTwoMixedStructsContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
 
 class ReturnTypesTwoMixedStructsContractFunction(PypechainContractFunction):
     """ContractFunction for the twoMixedStructs method."""
@@ -1248,6 +1952,70 @@ class ReturnTypesTwoSimpleStructsContractFunction0(PypechainContractFunction):
                 err=err,
                 contract_call_type="transact",
                 transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address)
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ReturnTypesContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
