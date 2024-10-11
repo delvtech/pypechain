@@ -51,11 +51,11 @@ from web3._utils.filters import LogFilter
 import copy
 
 {% for name in structs_filenames%}
-from . import {{name}}Types as {{name}}
+from .. import {{name}}
 {% endfor %}
 
 {% for name in structs_without_filenames%}
-from .{{name}}Types import {{name}}
+from ..{{name}}.{{name}}Types import {{name}}
 {% endfor %}
 
 {% for contract_type in link_references.contract_types %}

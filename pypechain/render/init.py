@@ -9,7 +9,7 @@ from pypechain.utilities.templates import get_jinja_env
 from pypechain.utilities.types import RenderOutput
 
 
-def render_init_file(output_dir: str, file_outputs: list[RenderOutput], line_length):
+def render_init_file(output_dir: Path, file_outputs: list[RenderOutput], line_length):
     """Creates an __init__.py file that imports all other files."""
     env = get_jinja_env()
     init_template = env.get_template("init.py.jinja2")
