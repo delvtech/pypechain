@@ -51,7 +51,7 @@ from web3._utils.filters import LogFilter
 import copy
 
 {% for name in structs_filenames%}
-from .. import {{name}}
+from ..{{name}} import {{name}}Types as {{name}}
 {% endfor %}
 
 {% for name in structs_without_filenames%}

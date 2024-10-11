@@ -59,7 +59,7 @@ from pypechain.core import (
     rename_returned_types,
 )
 
-from .. import Example
+from ..Example import ExampleTypes as Example
 from .ExampleTypes import FlipEvent, FlopEvent
 
 structs = {

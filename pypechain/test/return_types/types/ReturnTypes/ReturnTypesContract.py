@@ -54,7 +54,7 @@ from pypechain.core import (
     rename_returned_types,
 )
 
-from .. import ReturnTypes
+from ..ReturnTypes import ReturnTypesTypes as ReturnTypes
 
 structs = {
     "ReturnTypes.SimpleStruct": ReturnTypes.SimpleStruct,

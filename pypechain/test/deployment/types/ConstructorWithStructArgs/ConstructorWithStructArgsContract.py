@@ -54,7 +54,7 @@ from pypechain.core import (
     rename_returned_types,
 )
 
-from .. import ConstructorWithStructArgs
+from ..ConstructorWithStructArgs import ConstructorWithStructArgsTypes as ConstructorWithStructArgs
 
 structs = {
     "ConstructorWithStructArgs.Items": ConstructorWithStructArgs.Items,

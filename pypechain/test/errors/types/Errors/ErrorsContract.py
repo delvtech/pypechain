@@ -54,7 +54,7 @@ from pypechain.core import (
     handle_contract_logic_error,
 )
 
-from .. import Errors
+from ..Errors import ErrorsTypes as Errors
 
 structs = {
     "Errors.Ages": Errors.Ages,

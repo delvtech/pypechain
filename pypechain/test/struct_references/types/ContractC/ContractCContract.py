@@ -54,7 +54,8 @@ from pypechain.core import (
     rename_returned_types,
 )
 
-from .. import ContractA, ContractB
+from ..ContractA import ContractATypes as ContractA
+from ..ContractB import ContractBTypes as ContractB
 
 structs = {
     "ContractA.StructsA": ContractA.StructsA,

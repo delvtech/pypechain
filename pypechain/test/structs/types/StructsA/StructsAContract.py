@@ -54,7 +54,8 @@ from pypechain.core import (
     rename_returned_types,
 )
 
-from .. import IStructs, StructsA
+from ..IStructs import IStructsTypes as IStructs
+from ..StructsA import StructsATypes as StructsA
 
 structs = {
     "IStructs.InnerStruct": IStructs.InnerStruct,
