@@ -9,9 +9,4 @@ See documentation at https://github.com/delvtech/pypechain """
 
 
 from .StructsCContract import StructsCContract
-
-
-from .StructsCTypes import InnyStruct
-from .StructsCTypes import NestedStruct
-from .StructsCTypes import OuterStruct
-from .StructsCTypes import CStruct
+from .StructsCTypes import CStruct, InnyStruct, NestedStruct, OuterStruct

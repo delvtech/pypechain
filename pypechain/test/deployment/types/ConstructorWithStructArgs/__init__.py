@@ -9,7 +9,4 @@ See documentation at https://github.com/delvtech/pypechain """
 
 
 from .ConstructorWithStructArgsContract import ConstructorWithStructArgsContract
-
-
-from .ConstructorWithStructArgsTypes import Items
-from .ConstructorWithStructArgsTypes import Config
+from .ConstructorWithStructArgsTypes import Config, Items

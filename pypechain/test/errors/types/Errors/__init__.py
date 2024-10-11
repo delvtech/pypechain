@@ -9,6 +9,4 @@ See documentation at https://github.com/delvtech/pypechain """
 
 
 from .ErrorsContract import ErrorsContract
-
-
 from .ErrorsTypes import Ages

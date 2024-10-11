@@ -9,6 +9,4 @@ See documentation at https://github.com/delvtech/pypechain """
 
 
 from .TransactContract import TransactContract
-
-
 from .TransactTypes import SuccessEvent

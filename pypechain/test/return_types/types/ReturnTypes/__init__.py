@@ -9,8 +9,4 @@ See documentation at https://github.com/delvtech/pypechain """
 
 
 from .ReturnTypesContract import ReturnTypesContract
-
-
-from .ReturnTypesTypes import SimpleStruct
-from .ReturnTypesTypes import InnerStruct
-from .ReturnTypesTypes import NestedStruct
+from .ReturnTypesTypes import InnerStruct, NestedStruct, SimpleStruct

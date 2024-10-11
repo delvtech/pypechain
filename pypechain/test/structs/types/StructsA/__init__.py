@@ -9,6 +9,4 @@ See documentation at https://github.com/delvtech/pypechain """
 
 
 from .StructsAContract import StructsAContract
-
-
 from .StructsATypes import AStruct

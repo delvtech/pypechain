@@ -9,7 +9,4 @@ See documentation at https://github.com/delvtech/pypechain """
 
 
 from .EventsContract import EventsContract
-
-
-from .EventsTypes import EventAEvent
-from .EventsTypes import EventBEvent
+from .EventsTypes import EventAEvent, EventBEvent

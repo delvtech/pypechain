@@ -8,5 +8,4 @@ See documentation at https://github.com/delvtech/pypechain """
 # pylint: disable=invalid-name
 
 
-from .ContractBTypes import InnerStruct
-from .ContractBTypes import StructsB
+from .ContractBTypes import InnerStruct, StructsB

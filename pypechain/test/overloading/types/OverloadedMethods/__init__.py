@@ -9,7 +9,4 @@ See documentation at https://github.com/delvtech/pypechain """
 
 
 from .OverloadedMethodsContract import OverloadedMethodsContract
-
-
-from .OverloadedMethodsTypes import SimpleStruct
-from .OverloadedMethodsTypes import NestedStruct
+from .OverloadedMethodsTypes import NestedStruct, SimpleStruct

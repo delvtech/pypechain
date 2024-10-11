@@ -154,6 +154,8 @@ def render_contract(
             )
         )
 
-    render_init_file(contract_dir, file_outputs, line_length)
+    render_init_file(contract_dir, file_outputs)
+    if apply_formatting is True:
+        format_file(contract_dir / "__init__.py", line_length, remove_unused_imports=False)
 
     return file_outputs

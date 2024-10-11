@@ -8,6 +8,4 @@ See documentation at https://github.com/delvtech/pypechain """
 # pylint: disable=invalid-name
 
 
-from .IStructsTypes import InnerStruct
-from .IStructsTypes import SimpleStruct
-from .IStructsTypes import NestedStruct
+from .IStructsTypes import InnerStruct, NestedStruct, SimpleStruct

@@ -110,7 +110,7 @@ def capitalize_first_letter_only(string: str) -> str:
     return string[0].upper() + string[1:]
 
 
-def format_file(file_path: Path, line_length: int = 120, quiet=True) -> None:
+def format_file(file_path: Path, line_length: int = 120, quiet=True, remove_unused_imports=True) -> None:
     """Formats a file with isort and black.
 
     Parameters
@@ -122,6 +122,9 @@ def format_file(file_path: Path, line_length: int = 120, quiet=True) -> None:
     """
 
     quiet_flag = "--quiet" if quiet else ""
-    subprocess.run(f"autoflake --in-place {quiet_flag} --remove-all-unused-imports {file_path}", shell=True, check=True)
+    if remove_unused_imports:
+        subprocess.run(
+            f"autoflake --in-place {quiet_flag} --remove-all-unused-imports {file_path}", shell=True, check=True
+        )
     isort.file(file_path, config=isort.Config(quiet=quiet))
     subprocess.run(f"black {quiet_flag} --line-length={line_length} {file_path}", shell=True, check=True)
