@@ -54,7 +54,7 @@ from pypechain.core import (
     rename_returned_types,
 )
 
-from .MyLibraryContract import MyLibraryContract
+from ..MyLibrary import MyLibraryContract
 
 structs = {}
 

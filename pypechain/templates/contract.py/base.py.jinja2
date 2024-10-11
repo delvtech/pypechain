@@ -58,8 +58,8 @@ from .. import {{name}}
 from ..{{name}}.{{name}}Types import {{name}}
 {% endfor %}
 
-{% for contract_type in link_references.contract_types %}
-from .{{contract_type}} import {{contract_type}}
+{% for contract_name in link_references.contract_names %}
+from ..{{contract_name}} import {{contract_name}}Contract
 {% endfor %}
 
 {% if has_events %}

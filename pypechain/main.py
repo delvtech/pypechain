@@ -72,19 +72,18 @@ def pypechain(
     # Create/clear the output directory
     setup_directory(output_dir)
 
+    # Since setup directory looks for `pypechain.version`, we make this file first
+    # Make a pypechain.version file
+    with open(f"{output_dir}/pypechain.version", "w", encoding="utf-8") as f:
+        f.write(f"pypechain == {importlib.metadata.version('pypechain')}")
+
     # Now process all gathered files
-    file_outputs: list[RenderOutput] = render_contracts(
-        abi_infos, output_dir, line_length, apply_formatting, parallel=parallel
-    )
+    render_contracts(abi_infos, output_dir, line_length, apply_formatting, parallel=parallel)
 
     # Make an empty __init__.py file
     # render_init_file(output_dir, file_outputs, line_length)
     with open(f"{output_dir}/__init__.py", "w", encoding="utf-8") as f:
         pass
-
-    # Make a pypechain.version file
-    with open(f"{output_dir}/pypechain.version", "w", encoding="utf-8") as f:
-        f.write(f"pypechain == {importlib.metadata.version('pypechain')}")
 
 
 def gather_json_files(directory: str) -> list:
