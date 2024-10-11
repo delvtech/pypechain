@@ -30,7 +30,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .. import ReturnTypes
+from ..ReturnTypes import ReturnTypesTypes as ReturnTypes
 
 
 @dataclass

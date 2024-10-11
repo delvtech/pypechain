@@ -30,7 +30,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .. import OverloadedMethods
+from ..OverloadedMethods import OverloadedMethodsTypes as OverloadedMethods
 
 
 @dataclass

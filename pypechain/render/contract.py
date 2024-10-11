@@ -6,7 +6,7 @@ import importlib.metadata
 import logging
 import re
 from dataclasses import dataclass
-from typing import Any, NamedTuple
+from typing import NamedTuple
 
 from eth_typing import ABI
 from jinja2 import Environment, Template

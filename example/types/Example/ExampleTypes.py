@@ -32,7 +32,7 @@ from dataclasses import dataclass
 
 from pypechain.core import BaseEvent, BaseEventArgs, ErrorInfo, ErrorParams
 
-from .. import Example
+from ..Example import ExampleTypes as Example
 
 
 @dataclass(kw_only=True)

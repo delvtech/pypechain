@@ -30,7 +30,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .. import ContractA, ContractB
+from ..ContractA import ContractATypes as ContractA
+from ..ContractB import ContractBTypes as ContractB
 
 
 @dataclass
