@@ -114,6 +114,7 @@ def render_contract(
         A list of filenames and definitions for the generated Contract and Types files.
     """
     file_outputs: list[RenderOutput] = []
+    top_level_file_outputs: list[RenderOutput] = []
     contract_dir = Path(output_dir) / contract_info.contract_name
     os.makedirs(contract_dir)
     file_path = Path(contract_dir)
@@ -129,6 +130,13 @@ def render_contract(
         file_outputs.append(
             RenderOutput(
                 filename=f"{contract_info.contract_name}Contract",
+                definitions=[f"{contract_info.contract_name}Contract"],
+            )
+        )
+        # We also build the top level __init__.py file
+        top_level_file_outputs.append(
+            RenderOutput(
+                filename=f"{contract_info.contract_name}",
                 definitions=[f"{contract_info.contract_name}Contract"],
             )
         )
@@ -158,4 +166,4 @@ def render_contract(
     if apply_formatting is True:
         format_file(contract_dir / "__init__.py", line_length, remove_unused_imports=False)
 
-    return file_outputs
+    return top_level_file_outputs
