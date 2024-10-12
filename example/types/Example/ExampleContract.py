@@ -195,7 +195,9 @@ class ExampleFlipFlopContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+    def sign_transact_and_wait(
+        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+    ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -204,6 +206,9 @@ class ExampleFlipFlopContractFunction0(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        validate_transaction: bool, optional
+        Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
 
         Returns
         -------
@@ -213,7 +218,10 @@ class ExampleFlipFlopContractFunction0(PypechainContractFunction):
         tx_hash = self.sign_and_transact(account, transaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # Check the receipt, throwing an error if status == 0
-        return check_txn_receipt(self, tx_hash, tx_receipt)
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
 
 
 class ExampleFlipFlopContractFunction(PypechainContractFunction):
@@ -380,7 +388,9 @@ class ExampleGuessALetterContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+    def sign_transact_and_wait(
+        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+    ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -389,6 +399,9 @@ class ExampleGuessALetterContractFunction0(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        validate_transaction: bool, optional
+        Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
 
         Returns
         -------
@@ -398,7 +411,10 @@ class ExampleGuessALetterContractFunction0(PypechainContractFunction):
         tx_hash = self.sign_and_transact(account, transaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # Check the receipt, throwing an error if status == 0
-        return check_txn_receipt(self, tx_hash, tx_receipt)
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
 
 
 class ExampleGuessALetterContractFunction(PypechainContractFunction):
@@ -579,7 +595,9 @@ class ExampleMixStructsAndPrimitivesContractFunction0(PypechainContractFunction)
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+    def sign_transact_and_wait(
+        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+    ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -588,6 +606,9 @@ class ExampleMixStructsAndPrimitivesContractFunction0(PypechainContractFunction)
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        validate_transaction: bool, optional
+        Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
 
         Returns
         -------
@@ -597,7 +618,10 @@ class ExampleMixStructsAndPrimitivesContractFunction0(PypechainContractFunction)
         tx_hash = self.sign_and_transact(account, transaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # Check the receipt, throwing an error if status == 0
-        return check_txn_receipt(self, tx_hash, tx_receipt)
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
 
 
 class ExampleMixStructsAndPrimitivesContractFunction(PypechainContractFunction):
@@ -769,7 +793,9 @@ class ExampleNamedSingleStructContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+    def sign_transact_and_wait(
+        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+    ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -778,6 +804,9 @@ class ExampleNamedSingleStructContractFunction0(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        validate_transaction: bool, optional
+        Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
 
         Returns
         -------
@@ -787,7 +816,10 @@ class ExampleNamedSingleStructContractFunction0(PypechainContractFunction):
         tx_hash = self.sign_and_transact(account, transaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # Check the receipt, throwing an error if status == 0
-        return check_txn_receipt(self, tx_hash, tx_receipt)
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
 
 
 class ExampleNamedSingleStructContractFunction(PypechainContractFunction):
@@ -965,7 +997,9 @@ class ExampleNamedTwoMixedStructsContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+    def sign_transact_and_wait(
+        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+    ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -974,6 +1008,9 @@ class ExampleNamedTwoMixedStructsContractFunction0(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        validate_transaction: bool, optional
+        Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
 
         Returns
         -------
@@ -983,7 +1020,10 @@ class ExampleNamedTwoMixedStructsContractFunction0(PypechainContractFunction):
         tx_hash = self.sign_and_transact(account, transaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # Check the receipt, throwing an error if status == 0
-        return check_txn_receipt(self, tx_hash, tx_receipt)
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
 
 
 class ExampleNamedTwoMixedStructsContractFunction(PypechainContractFunction):
@@ -1155,7 +1195,9 @@ class ExampleSingleNestedStructContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+    def sign_transact_and_wait(
+        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+    ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -1164,6 +1206,9 @@ class ExampleSingleNestedStructContractFunction0(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        validate_transaction: bool, optional
+        Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
 
         Returns
         -------
@@ -1173,7 +1218,10 @@ class ExampleSingleNestedStructContractFunction0(PypechainContractFunction):
         tx_hash = self.sign_and_transact(account, transaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # Check the receipt, throwing an error if status == 0
-        return check_txn_receipt(self, tx_hash, tx_receipt)
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
 
 
 class ExampleSingleNestedStructContractFunction(PypechainContractFunction):
@@ -1345,7 +1393,9 @@ class ExampleSingleSimpleStructContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+    def sign_transact_and_wait(
+        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+    ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -1354,6 +1404,9 @@ class ExampleSingleSimpleStructContractFunction0(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        validate_transaction: bool, optional
+        Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
 
         Returns
         -------
@@ -1363,7 +1416,10 @@ class ExampleSingleSimpleStructContractFunction0(PypechainContractFunction):
         tx_hash = self.sign_and_transact(account, transaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # Check the receipt, throwing an error if status == 0
-        return check_txn_receipt(self, tx_hash, tx_receipt)
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
 
 
 class ExampleSingleSimpleStructContractFunction(PypechainContractFunction):
@@ -1541,7 +1597,9 @@ class ExampleTwoMixedStructsContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+    def sign_transact_and_wait(
+        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+    ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -1550,6 +1608,9 @@ class ExampleTwoMixedStructsContractFunction0(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        validate_transaction: bool, optional
+        Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
 
         Returns
         -------
@@ -1559,7 +1620,10 @@ class ExampleTwoMixedStructsContractFunction0(PypechainContractFunction):
         tx_hash = self.sign_and_transact(account, transaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # Check the receipt, throwing an error if status == 0
-        return check_txn_receipt(self, tx_hash, tx_receipt)
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
 
 
 class ExampleTwoMixedStructsContractFunction(PypechainContractFunction):
@@ -1737,7 +1801,9 @@ class ExampleTwoSimpleStructsContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+    def sign_transact_and_wait(
+        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+    ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -1746,6 +1812,9 @@ class ExampleTwoSimpleStructsContractFunction0(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        validate_transaction: bool, optional
+        Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
 
         Returns
         -------
@@ -1755,7 +1824,10 @@ class ExampleTwoSimpleStructsContractFunction0(PypechainContractFunction):
         tx_hash = self.sign_and_transact(account, transaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # Check the receipt, throwing an error if status == 0
-        return check_txn_receipt(self, tx_hash, tx_receipt)
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
 
 
 class ExampleTwoSimpleStructsContractFunction(PypechainContractFunction):
@@ -1927,7 +1999,9 @@ class ExampleVecOfStructContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
-    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+    def sign_transact_and_wait(
+        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+    ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
         Arguments
@@ -1936,6 +2010,9 @@ class ExampleVecOfStructContractFunction0(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        validate_transaction: bool, optional
+        Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
 
         Returns
         -------
@@ -1945,7 +2022,10 @@ class ExampleVecOfStructContractFunction0(PypechainContractFunction):
         tx_hash = self.sign_and_transact(account, transaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # Check the receipt, throwing an error if status == 0
-        return check_txn_receipt(self, tx_hash, tx_receipt)
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
 
 
 class ExampleVecOfStructContractFunction(PypechainContractFunction):

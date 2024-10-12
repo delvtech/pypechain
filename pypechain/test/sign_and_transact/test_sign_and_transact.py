@@ -79,6 +79,8 @@ class TestStructs:
             _ = deployed_contract.functions.TransactFunction().transact({"from": account.address})
 
         # Expect success with sign and transact
-        receipt = deployed_contract.functions.TransactFunction().sign_transact_and_wait(account=account)
+        receipt = deployed_contract.functions.TransactFunction().sign_transact_and_wait(
+            account=account, validate_transaction=True
+        )
         out_events = deployed_contract.events.Success().process_receipt_typed(receipt)
         assert len(list(out_events)) == 1
