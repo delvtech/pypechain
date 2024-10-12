@@ -48,6 +48,7 @@ from pypechain.core import (
     PypechainBaseContractErrors,
     PypechainBaseError,
     PypechainContractFunction,
+    check_txn_receipt,
     dataclass_to_tuple,
     expand_struct_type_str,
     get_arg_type_names,
@@ -174,6 +175,26 @@ class ErrorsRevertWithErrorOneContractFunction0(PypechainContractFunction):
                 transaction=transaction_params,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
+
+    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        tx_hash = self.sign_and_transact(account, transaction)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        # Check the receipt, throwing an error if status == 0
+        return check_txn_receipt(self, tx_hash, tx_receipt)
 
 
 class ErrorsRevertWithErrorOneContractFunction(PypechainContractFunction):
@@ -340,6 +361,26 @@ class ErrorsRevertWithErrorThreeContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        tx_hash = self.sign_and_transact(account, transaction)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        # Check the receipt, throwing an error if status == 0
+        return check_txn_receipt(self, tx_hash, tx_receipt)
+
 
 class ErrorsRevertWithErrorThreeContractFunction(PypechainContractFunction):
     """ContractFunction for the revertWithErrorThree method."""
@@ -504,6 +545,26 @@ class ErrorsRevertWithErrorTwoContractFunction0(PypechainContractFunction):
                 transaction=transaction_params,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
+
+    def sign_transact_and_wait(self, account: LocalAccount, transaction: TxParams | None = None) -> TxReceipt:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        tx_hash = self.sign_and_transact(account, transaction)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        # Check the receipt, throwing an error if status == 0
+        return check_txn_receipt(self, tx_hash, tx_receipt)
 
 
 class ErrorsRevertWithErrorTwoContractFunction(PypechainContractFunction):

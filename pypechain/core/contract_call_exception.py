@@ -5,8 +5,9 @@ from __future__ import annotations
 from typing import Any, Generic, Literal, Type, TypeVar, Union
 
 from eth_typing import BlockNumber
+from hexbytes import HexBytes
 from web3.exceptions import ContractCustomError, ContractLogicError, ContractPanicError, OffchainLookup
-from web3.types import BlockIdentifier, TxParams
+from web3.types import BlockIdentifier, TxParams, TxReceipt
 
 from .contract_function import PypechainContractFunction
 from .error import PypechainBaseContractErrors
@@ -17,6 +18,10 @@ from .error import PypechainBaseContractErrors
 # pylint: disable=too-many-ancestors
 
 ContractCallType = Union[Literal["call"], Literal["transact"], Literal["build"]]
+
+
+class FailedTransaction(Exception):
+    """Exception that is thrown when a transaction succeeds, but the status reports failure."""
 
 
 class PypechainCallException(Exception):
@@ -226,4 +231,53 @@ def handle_contract_logic_error(
                 block_number=block_number,
             )
         case _:
-            raise TypeError(f"Unexpected error type: {type(err)}")
+            raise err
+
+
+def check_txn_receipt(
+    contract_function: PypechainContractFunction,
+    tx_hash: HexBytes,
+    tx_receipt: TxReceipt,
+) -> TxReceipt:
+    """Check the txn receipt for errors."""
+    # Error checking when transaction doesn't throw an error, but instead
+    # has errors in the tx_receipt
+    block_number = tx_receipt.get("blockNumber")
+    # Check status here
+    status = tx_receipt.get("status", None)
+
+    error_message = None
+    if status is None:
+        error_message = "Receipt did not return status"
+
+    if status == 0:
+        # We use web3 tracing to attempt to get the error message
+        error_message = "Receipt has status of 0"
+        try:
+            # Tracing doesn't exist in typing for some reason.
+            # Doing this in error checking with try/catch.
+            trace = contract_function.w3.tracing.trace_transaction(tx_hash)  # type: ignore
+            if len(trace) > 0:
+                # Trace gives a list of values, the last one should contain the error
+                error_message = trace[-1].get("error", None)
+                # If no trace, add back in status == 0 error
+                if error_message is None:
+                    error_message = "Receipt has status of 0."
+        # TODO does this need to be BaseException?
+        except Exception as e:  # pylint: disable=broad-exception-caught
+            # Don't crash in crash reporting
+            error_message = f"Receipt has status of 0. Error getting trace: {repr(e)}"
+
+    if error_message is not None:
+        # Raise a pypechain error here
+        raise PypechainCallException(
+            orig_exception=FailedTransaction(error_message),
+            contract_call_type="transact",
+            function_name=contract_function._function_name,  # pylint: disable=protected-access
+            fn_args=contract_function.args,
+            fn_kwargs=contract_function.kwargs,
+            raw_txn=None,
+            block_number=block_number,
+        )
+
+    return tx_receipt

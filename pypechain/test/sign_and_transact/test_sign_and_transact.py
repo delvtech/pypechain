@@ -63,3 +63,22 @@ class TestStructs:
         receipt = w3.eth.get_transaction_receipt(tx_hash)
         out_events = deployed_contract.events.Success().process_receipt_typed(receipt)
         assert len(list(out_events)) == 1
+
+    def test_sign_transact_and_wait(self, w3: Web3):
+        """Test the sign and transact function"""
+        deployed_contract = TransactContract.deploy(w3=w3, account=w3.eth.accounts[0])
+
+        # Make a new account that's not a default anvil account
+        account: LocalAccount = Account().from_key(make_private_key())
+
+        # Fund the account with eth
+        w3.provider.make_request(method="anvil_setBalance", params=[account.address, hex(int(1e18))])
+
+        # Expect failure with transaction without signing
+        with pytest.raises(PypechainCallException):
+            _ = deployed_contract.functions.TransactFunction().transact({"from": account.address})
+
+        # Expect success with sign and transact
+        receipt = deployed_contract.functions.TransactFunction().sign_transact_and_wait(account=account)
+        out_events = deployed_contract.events.Success().process_receipt_typed(receipt)
+        assert len(list(out_events)) == 1
