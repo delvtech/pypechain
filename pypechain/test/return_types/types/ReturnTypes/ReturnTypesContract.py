@@ -222,6 +222,9 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction0(PypechainContractFunct
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -435,6 +438,9 @@ class ReturnTypesNamedSingleStructContractFunction0(PypechainContractFunction):
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -647,6 +653,9 @@ class ReturnTypesNamedSingleValueContractFunction0(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120
@@ -867,6 +876,9 @@ class ReturnTypesNamedTwoMixedStructsContractFunction0(PypechainContractFunction
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -1086,6 +1098,9 @@ class ReturnTypesNamedTwoValuesContractFunction0(PypechainContractFunction):
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -1298,6 +1313,9 @@ class ReturnTypesNoNameSingleValueContractFunction0(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120
@@ -1518,6 +1536,9 @@ class ReturnTypesNoNameTwoValuesContractFunction0(PypechainContractFunction):
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -1730,6 +1751,9 @@ class ReturnTypesSingleNestedStructContractFunction0(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120
@@ -1944,6 +1968,9 @@ class ReturnTypesSingleNestedStructArrayContractFunction0(PypechainContractFunct
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -2156,6 +2183,9 @@ class ReturnTypesSingleSimpleStructContractFunction0(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120
@@ -2376,6 +2406,9 @@ class ReturnTypesTwoMixedStructsContractFunction0(PypechainContractFunction):
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -2594,6 +2627,9 @@ class ReturnTypesTwoSimpleStructsContractFunction0(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120

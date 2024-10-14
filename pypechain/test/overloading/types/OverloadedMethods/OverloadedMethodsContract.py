@@ -212,6 +212,9 @@ class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -374,6 +377,9 @@ class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120
@@ -544,6 +550,9 @@ class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -706,6 +715,9 @@ class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120
@@ -870,6 +882,9 @@ class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -1032,6 +1047,9 @@ class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120
@@ -1196,6 +1214,9 @@ class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -1358,6 +1379,9 @@ class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120

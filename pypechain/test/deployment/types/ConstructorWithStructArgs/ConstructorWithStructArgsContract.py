@@ -212,6 +212,9 @@ class ConstructorWithStructArgsNameContractFunction0(PypechainContractFunction):
             The transaction hash.
         """
 
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
         if timeout is None:
             timeout = 120
         if poll_latency is None:
@@ -419,6 +422,9 @@ class ConstructorWithStructArgsSetNameContractFunction0(PypechainContractFunctio
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120
@@ -632,6 +638,9 @@ class ConstructorWithStructArgsThingContractFunction0(PypechainContractFunction)
         HexBytes
             The transaction hash.
         """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
 
         if timeout is None:
             timeout = 120
