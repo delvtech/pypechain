@@ -183,7 +183,12 @@ class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
             ) from err
 
     def sign_transact_and_wait(
-        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+        self,
+        account: LocalAccount,
+        transaction: TxParams | None = None,
+        timeout: float | None = None,
+        poll_latency: float | None = None,
+        validate_transaction: bool = False,
     ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
@@ -193,8 +198,12 @@ class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        timeout: float, optional
+            The number of seconds to wait for the transaction to be mined. Defaults to 120.
+        poll_latency: float, optional
+            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
         validate_transaction: bool, optional
-        Whether to validate the transaction. If True, will throw an exception if the resulting
+            Whether to validate the transaction. If True, will throw an exception if the resulting
             tx_receipt returned a failure status.
 
         Returns
@@ -202,8 +211,14 @@ class OverloadedMethodsDoSomethingContractFunction0(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        if timeout is None:
+            timeout = 120
+        if poll_latency is None:
+            poll_latency = 0.1
+
         tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
         # Check the receipt, throwing an error if status == 0
         if validate_transaction:
             return check_txn_receipt(self, tx_hash, tx_receipt)
@@ -331,7 +346,12 @@ class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
             ) from err
 
     def sign_transact_and_wait(
-        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+        self,
+        account: LocalAccount,
+        transaction: TxParams | None = None,
+        timeout: float | None = None,
+        poll_latency: float | None = None,
+        validate_transaction: bool = False,
     ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
@@ -341,8 +361,12 @@ class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        timeout: float, optional
+            The number of seconds to wait for the transaction to be mined. Defaults to 120.
+        poll_latency: float, optional
+            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
         validate_transaction: bool, optional
-        Whether to validate the transaction. If True, will throw an exception if the resulting
+            Whether to validate the transaction. If True, will throw an exception if the resulting
             tx_receipt returned a failure status.
 
         Returns
@@ -350,8 +374,14 @@ class OverloadedMethodsDoSomethingContractFunction1(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        if timeout is None:
+            timeout = 120
+        if poll_latency is None:
+            poll_latency = 0.1
+
         tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
         # Check the receipt, throwing an error if status == 0
         if validate_transaction:
             return check_txn_receipt(self, tx_hash, tx_receipt)
@@ -485,7 +515,12 @@ class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
             ) from err
 
     def sign_transact_and_wait(
-        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+        self,
+        account: LocalAccount,
+        transaction: TxParams | None = None,
+        timeout: float | None = None,
+        poll_latency: float | None = None,
+        validate_transaction: bool = False,
     ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
@@ -495,8 +530,12 @@ class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        timeout: float, optional
+            The number of seconds to wait for the transaction to be mined. Defaults to 120.
+        poll_latency: float, optional
+            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
         validate_transaction: bool, optional
-        Whether to validate the transaction. If True, will throw an exception if the resulting
+            Whether to validate the transaction. If True, will throw an exception if the resulting
             tx_receipt returned a failure status.
 
         Returns
@@ -504,8 +543,14 @@ class OverloadedMethodsDoSomethingContractFunction2(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        if timeout is None:
+            timeout = 120
+        if poll_latency is None:
+            poll_latency = 0.1
+
         tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
         # Check the receipt, throwing an error if status == 0
         if validate_transaction:
             return check_txn_receipt(self, tx_hash, tx_receipt)
@@ -633,7 +678,12 @@ class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
             ) from err
 
     def sign_transact_and_wait(
-        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+        self,
+        account: LocalAccount,
+        transaction: TxParams | None = None,
+        timeout: float | None = None,
+        poll_latency: float | None = None,
+        validate_transaction: bool = False,
     ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
@@ -643,8 +693,12 @@ class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        timeout: float, optional
+            The number of seconds to wait for the transaction to be mined. Defaults to 120.
+        poll_latency: float, optional
+            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
         validate_transaction: bool, optional
-        Whether to validate the transaction. If True, will throw an exception if the resulting
+            Whether to validate the transaction. If True, will throw an exception if the resulting
             tx_receipt returned a failure status.
 
         Returns
@@ -652,8 +706,14 @@ class OverloadedMethodsDoSomethingContractFunction3(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        if timeout is None:
+            timeout = 120
+        if poll_latency is None:
+            poll_latency = 0.1
+
         tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
         # Check the receipt, throwing an error if status == 0
         if validate_transaction:
             return check_txn_receipt(self, tx_hash, tx_receipt)
@@ -781,7 +841,12 @@ class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
             ) from err
 
     def sign_transact_and_wait(
-        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+        self,
+        account: LocalAccount,
+        transaction: TxParams | None = None,
+        timeout: float | None = None,
+        poll_latency: float | None = None,
+        validate_transaction: bool = False,
     ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
@@ -791,8 +856,12 @@ class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        timeout: float, optional
+            The number of seconds to wait for the transaction to be mined. Defaults to 120.
+        poll_latency: float, optional
+            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
         validate_transaction: bool, optional
-        Whether to validate the transaction. If True, will throw an exception if the resulting
+            Whether to validate the transaction. If True, will throw an exception if the resulting
             tx_receipt returned a failure status.
 
         Returns
@@ -800,8 +869,14 @@ class OverloadedMethodsDoSomethingContractFunction4(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        if timeout is None:
+            timeout = 120
+        if poll_latency is None:
+            poll_latency = 0.1
+
         tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
         # Check the receipt, throwing an error if status == 0
         if validate_transaction:
             return check_txn_receipt(self, tx_hash, tx_receipt)
@@ -929,7 +1004,12 @@ class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
             ) from err
 
     def sign_transact_and_wait(
-        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+        self,
+        account: LocalAccount,
+        transaction: TxParams | None = None,
+        timeout: float | None = None,
+        poll_latency: float | None = None,
+        validate_transaction: bool = False,
     ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
@@ -939,8 +1019,12 @@ class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        timeout: float, optional
+            The number of seconds to wait for the transaction to be mined. Defaults to 120.
+        poll_latency: float, optional
+            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
         validate_transaction: bool, optional
-        Whether to validate the transaction. If True, will throw an exception if the resulting
+            Whether to validate the transaction. If True, will throw an exception if the resulting
             tx_receipt returned a failure status.
 
         Returns
@@ -948,8 +1032,14 @@ class OverloadedMethodsDoSomethingContractFunction5(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        if timeout is None:
+            timeout = 120
+        if poll_latency is None:
+            poll_latency = 0.1
+
         tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
         # Check the receipt, throwing an error if status == 0
         if validate_transaction:
             return check_txn_receipt(self, tx_hash, tx_receipt)
@@ -1077,7 +1167,12 @@ class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
             ) from err
 
     def sign_transact_and_wait(
-        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+        self,
+        account: LocalAccount,
+        transaction: TxParams | None = None,
+        timeout: float | None = None,
+        poll_latency: float | None = None,
+        validate_transaction: bool = False,
     ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
@@ -1087,8 +1182,12 @@ class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        timeout: float, optional
+            The number of seconds to wait for the transaction to be mined. Defaults to 120.
+        poll_latency: float, optional
+            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
         validate_transaction: bool, optional
-        Whether to validate the transaction. If True, will throw an exception if the resulting
+            Whether to validate the transaction. If True, will throw an exception if the resulting
             tx_receipt returned a failure status.
 
         Returns
@@ -1096,8 +1195,14 @@ class OverloadedMethodsDoSomethingContractFunction6(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        if timeout is None:
+            timeout = 120
+        if poll_latency is None:
+            poll_latency = 0.1
+
         tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
         # Check the receipt, throwing an error if status == 0
         if validate_transaction:
             return check_txn_receipt(self, tx_hash, tx_receipt)
@@ -1225,7 +1330,12 @@ class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
             ) from err
 
     def sign_transact_and_wait(
-        self, account: LocalAccount, transaction: TxParams | None = None, validate_transaction: bool = False
+        self,
+        account: LocalAccount,
+        transaction: TxParams | None = None,
+        timeout: float | None = None,
+        poll_latency: float | None = None,
+        validate_transaction: bool = False,
     ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
@@ -1235,8 +1345,12 @@ class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
             The account to use for signing and sending the transaction.
         transaction : TxParams | None, optional
             The transaction parameters to use for sending the transaction.
+        timeout: float, optional
+            The number of seconds to wait for the transaction to be mined. Defaults to 120.
+        poll_latency: float, optional
+            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
         validate_transaction: bool, optional
-        Whether to validate the transaction. If True, will throw an exception if the resulting
+            Whether to validate the transaction. If True, will throw an exception if the resulting
             tx_receipt returned a failure status.
 
         Returns
@@ -1244,8 +1358,14 @@ class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
         HexBytes
             The transaction hash.
         """
+
+        if timeout is None:
+            timeout = 120
+        if poll_latency is None:
+            poll_latency = 0.1
+
         tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
         # Check the receipt, throwing an error if status == 0
         if validate_transaction:
             return check_txn_receipt(self, tx_hash, tx_receipt)

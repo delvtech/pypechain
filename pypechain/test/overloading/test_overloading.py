@@ -54,6 +54,12 @@ class TestOverloading:
         assert isinstance(result, deployed_contract.functions.doSomething(x, s).ReturnValues)
         assert result == deployed_contract.functions.doSomething(x, s).ReturnValues(x, s)
 
+        # Test kwargs, we pass arguments reversed, but with kwargs
+        # so we still expect the same result as above
+        result = deployed_contract.functions.doSomething(s=s, x=x).call()
+        assert isinstance(result, deployed_contract.functions.doSomething(x, s).ReturnValues)
+        assert result == deployed_contract.functions.doSomething(x, s).ReturnValues(x, s)
+
         result = deployed_contract.functions.doSomething(OverloadedMethodsTypes.SimpleStruct(s, x)).call()
         assert isinstance(result, OverloadedMethodsTypes.SimpleStruct)
         assert result == OverloadedMethodsTypes.SimpleStruct(s, x)
