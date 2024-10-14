@@ -42,7 +42,7 @@ from hexbytes import HexBytes
 from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractConstructor, ContractFunctions
-from web3.types import BlockIdentifier, StateOverride, TxParams
+from web3.types import BlockIdentifier, StateOverride, TxParams, TxReceipt
 
 from pypechain.core import (
     PypechainBaseContractErrors,
