@@ -325,7 +325,7 @@ def get_structs(
                     contract_name = get_struct_contract_name(component)
 
                 # Get the component name and type
-                component_name = get_param_name(component)  # strip [] if it is an array
+                component_name = get_param_name(component, remove_leading_underscore=True)  # strip [] if it is an array
                 component_type = (
                     get_struct_type(component) if is_struct(component_internal_type) else component.get("type", "")
                 )
@@ -621,6 +621,7 @@ def get_struct_contract_name(param_or_component: ABIComponent) -> str | None:
 
 def get_param_name(
     param_or_component: ABIComponent,
+    remove_leading_underscore: bool,
 ) -> str:
     """Returns the name for a given ABIFunctionParams or ABIFunctionComponents.
 
@@ -630,13 +631,18 @@ def get_param_name(
     Parameters
     ----------
     param : ABIFunctionParams | ABIFunctionComponents
+    remove_leading_underscore: bool
+        If True, remove the leading underscore from the name.
 
     Returns
     -------
     str
         The name of the item.
     """
-    return param_or_component.get("name", "").lstrip("_").rstrip("[]")
+    out = param_or_component.get("name", "").rstrip("[]")
+    if remove_leading_underscore:
+        out = out.lstrip("_")
+    return out
 
 
 @dataclass
@@ -719,6 +725,7 @@ def get_abi_items(abi: ABI) -> list[ABIElement]:
 
 def get_function_parameter_names(
     parameters: Sequence[ABIComponent],
+    remove_leading_underscore: bool,
 ) -> list[str]:
     """Parses a list of ABIComponent and returns a list of parameter
     names."""
@@ -726,7 +733,7 @@ def get_function_parameter_names(
     stringified_function_parameters: list[str] = []
     arg_counter: int = 1
     for _input in parameters:
-        if name := get_param_name(_input):
+        if name := get_param_name(_input, remove_leading_underscore):
             stringified_function_parameters.append(avoid_python_keywords(name))
         else:
             name = f"arg{arg_counter}"
@@ -735,7 +742,7 @@ def get_function_parameter_names(
     return stringified_function_parameters
 
 
-def get_input_names(function: ABIFunction) -> list[str]:
+def get_input_names(function: ABIFunction, remove_leading_underscore: bool) -> list[str]:
     """Returns function input name strings for jinja templating.
 
     i.e. for the solidity function signature:
@@ -748,13 +755,15 @@ def get_input_names(function: ABIFunction) -> list[str]:
     ----------
     function : ABIFunction
         A web3 dict of an ABI function description.
+    remove_leading_underscore: bool
+        If True, remove the leading underscore from the param name.
 
     Returns
     -------
     list[str]
         A list of function names i.e. ['arg1', 'arg2']
     """
-    return get_function_parameter_names(function.get("inputs", []))
+    return get_function_parameter_names(function.get("inputs", []), remove_leading_underscore)
 
 
 def get_output_names(function: ABIFunction) -> list[str]:
@@ -778,10 +787,10 @@ def get_output_names(function: ABIFunction) -> list[str]:
             name: 'from', type: 'str'}, name: '
         }]]
     """
-    return get_function_parameter_names(function.get("outputs", []))
+    return get_function_parameter_names(function.get("outputs", []), remove_leading_underscore=False)
 
 
-def get_input_names_and_types(function: ABIFunction) -> list[str]:
+def get_input_names_and_types(function: ABIFunction, remove_leading_underscore: bool) -> list[str]:
     """Returns function input name/type strings for jinja templating.
 
     i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
@@ -794,13 +803,15 @@ def get_input_names_and_types(function: ABIFunction) -> list[str]:
     ----------
     function : ABIFunction
         A web3 dict of an ABI function description.
+    remove_leading_underscore: bool
+        If True, remove the leading underscore from the param name.
 
     Returns
     -------
     list[str]
         A list of function names and corresponding python types, i.e. ['arg1: str', 'arg2: bool']
     """
-    return _get_names_and_types(function, "inputs")
+    return _get_names_and_types(function, "inputs", remove_leading_underscore)
 
 
 def get_input_types(function: ABIFunction) -> list[str]:
@@ -864,10 +875,12 @@ def get_output_names_and_types(function: ABIFunction) -> list[str]:
     list[str]
         A list of function names and corresponding python types, i.e. ['arg1: str', 'arg2: bool']
     """
-    return _get_names_and_types(function, "outputs")
+    return _get_names_and_types(function, "outputs", remove_leading_underscore=True)
 
 
-def _get_names_and_types(function: ABIFunction, parameters_type: Literal["inputs", "outputs"]) -> list[str]:
+def _get_names_and_types(
+    function: ABIFunction, parameters_type: Literal["inputs", "outputs"], remove_leading_underscore
+) -> list[str]:
     """Returns function input or output name/type strings for jinja templating.
 
     i.e. for the solidity function signature: function doThing(address who, uint256 amount, bool
@@ -882,6 +895,8 @@ def _get_names_and_types(function: ABIFunction, parameters_type: Literal["inputs
         A web3 dict of an ABI function description.
     parameters_type : Literal["inputs", "outputs"]
         If we are looking at the inputs or outputs of a function.
+    remove_leading_underscore: bool
+        If True, remove the leading underscore from the param name.
 
     Returns
     -------
@@ -890,7 +905,7 @@ def _get_names_and_types(function: ABIFunction, parameters_type: Literal["inputs
     """
     stringified_function_parameters: list[str] = []
     for index, param in enumerate(function.get(parameters_type, []), start=1):
-        name = get_param_name(param)
+        name = get_param_name(param, remove_leading_underscore=remove_leading_underscore)
         if not name:
             name = f"arg{index}"
         python_type = get_param_type(param)

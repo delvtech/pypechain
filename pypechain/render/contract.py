@@ -441,8 +441,8 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
     abi_constructor = get_abi_constructor(abi)
     constructor_data: SignatureData | None = (
         {
-            "input_names_and_types": get_input_names_and_types(abi_constructor),
-            "input_names": get_input_names(abi_constructor),
+            "input_names_and_types": get_input_names_and_types(abi_constructor, remove_leading_underscore=True),
+            "input_names": get_input_names(abi_constructor, remove_leading_underscore=True),
             "input_types": get_input_types(abi_constructor),
             "outputs": get_output_names(abi_constructor),
             "output_types": get_output_names_and_types(abi_constructor),
@@ -458,8 +458,8 @@ def get_function_datas(abi: ABI) -> GetFunctionDatasReturnValue:
             name = abi_function.get("name", "")
             name = re.sub(r"\W|^(?=\d)", "_", name)
             signature_data: SignatureData = {
-                "input_names_and_types": get_input_names_and_types(abi_function),
-                "input_names": get_input_names(abi_function),
+                "input_names_and_types": get_input_names_and_types(abi_function, remove_leading_underscore=False),
+                "input_names": get_input_names(abi_function, remove_leading_underscore=False),
                 "input_types": get_input_types(abi_function),
                 "outputs": get_output_names(abi_function),
                 "output_types": get_output_types(abi_function),
