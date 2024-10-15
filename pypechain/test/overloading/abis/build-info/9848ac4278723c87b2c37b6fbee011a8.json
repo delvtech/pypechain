@@ -1,7 +1,0 @@
-{
-  "id": "9848ac4278723c87b2c37b6fbee011a8",
-  "source_id_to_path": {
-    "0": "pypechain/test/overloading/contracts/OverloadedMethods.sol"
-  },
-  "language": "Solidity"
-}

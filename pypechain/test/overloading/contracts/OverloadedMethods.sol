@@ -52,9 +52,9 @@ contract OverloadedMethods {
 
     // Another overloaded version accepts a struct, returns unchanged
     function doSomething(
-        SimpleStruct memory simpleStruct
+        SimpleStruct memory _simpleStruct
     ) public pure returns (SimpleStruct memory) {
-        return SimpleStruct({_strVal: simpleStruct._strVal, _intVal: simpleStruct._intVal});
+        return SimpleStruct({_strVal: _simpleStruct._strVal, _intVal: _simpleStruct._intVal});
     }
 
     // Overloaded vec of structs as input

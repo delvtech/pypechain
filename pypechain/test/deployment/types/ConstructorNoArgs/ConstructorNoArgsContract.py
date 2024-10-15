@@ -450,7 +450,7 @@ class ConstructorNoArgsSetNameContractFunction(PypechainContractFunction):
     _functions: dict[str, PypechainContractFunction]
 
     @overload
-    def __call__(self, name: str) -> ConstructorNoArgsSetNameContractFunction0:  # type: ignore
+    def __call__(self, _name: str) -> ConstructorNoArgsSetNameContractFunction0:  # type: ignore
         ...
 
     def __call__(self, *args, **kwargs) -> ConstructorNoArgsSetNameContractFunction:  # type: ignore
