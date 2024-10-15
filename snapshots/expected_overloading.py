@@ -65,6 +65,24 @@ class OverloadedBalanceOfContractFunction0(PypechainContractFunction):
                 transaction=transaction,
                 block_identifier="pending", # race condition here, best effort to get block of txn.
             ) from err
+
+    def estimate_gas(
+        self, 
+        transaction: TxParams | None = None, 
+        block_identifier: BlockIdentifier | None = None, 
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err: # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending", # race condition here, best effort to get block of txn.
+            ) from err
     
     def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
         try:
@@ -242,6 +260,24 @@ class OverloadedBalanceOfContractFunction1(PypechainContractFunction):
                 errors_class=OverloadedContractErrors,
                 err=err,
                 contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending", # race condition here, best effort to get block of txn.
+            ) from err
+
+    def estimate_gas(
+        self, 
+        transaction: TxParams | None = None, 
+        block_identifier: BlockIdentifier | None = None, 
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err: # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedContractErrors,
+                err=err,
+                contract_call_type="build",
                 transaction=transaction,
                 block_identifier="pending", # race condition here, best effort to get block of txn.
             ) from err
