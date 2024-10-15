@@ -43,7 +43,8 @@ class PypechainCallException(Exception):
         raw_txn: TxParams | None = None,
         block_number: BlockNumber | None = None,
     ):
-        super().__init__(*args)
+        # We explicitly define which init we're calling due to multiple inheritance.
+        Exception.__init__(self, *args)
         self.orig_exception = orig_exception
         self.decoded_error = decoded_error
         self.decoded_error_name = decoded_error_name
@@ -94,7 +95,9 @@ class PypechainGenericError(PypechainCallException, Generic[T]):
         raw_txn: TxParams | None = None,
         block_number: BlockNumber | None = None,
     ):
-        super().__init__(
+        # We explicitly define which init we're calling due to multiple inheritance.
+        PypechainCallException.__init__(
+            self,
             *args,
             orig_exception=orig_exception,
             decoded_error=decoded_error,
