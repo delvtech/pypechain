@@ -1397,6 +1397,178 @@ class OverloadedMethodsDoSomethingContractFunction7(PypechainContractFunction):
             return tx_receipt
 
 
+class OverloadedMethodsDoSomethingContractFunction8(PypechainContractFunction):
+    """ContractFunction for the doSomething(str,int) method."""
+
+    _function_name = "doSomething"
+    _type_signature = expand_struct_type_str(tuple(["str", "int"]), structs)
+
+    class ReturnValues(NamedTuple):
+        """The return named tuple for DoSomething."""
+
+        arg1: str
+        int_input: int
+
+    def call(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+        ccip_read_enabled: bool | None = None,
+    ) -> ReturnValues:
+        """returns ReturnValues."""
+        # We handle the block identifier = None case here for typing.
+        if block_identifier is None:
+            block_identifier = self.w3.eth.default_block
+
+        # Define the expected return types from the smart contract call
+        return_types = [str, int]
+
+        # Call the function
+        try:
+            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="call",
+                transaction=transaction,
+                block_identifier=block_identifier,
+            ) from err
+
+        return self.ReturnValues(*rename_returned_types(structs, return_types, raw_values))
+
+    def transact(self, transaction: TxParams | None = None) -> HexBytes:
+        try:
+            return super().transact(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
+        try:
+            return super().build_transaction(transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+        if transaction is None:
+            transaction_params: TxParams = {}
+        else:
+            transaction_params: TxParams = transaction
+
+        if "from" in transaction_params:
+            # Ensure if transaction is set, it matches
+            assert (
+                transaction_params["from"] == account.address
+            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
+        else:
+            transaction_params["from"] = account.address
+
+        if "gas" not in transaction_params:
+            # Web3 default gas estimate seems to be underestimating gas, likely due to
+            # not looking at pending block. Here, we explicitly call estimate gas
+            # if gas isn't passed in.
+            transaction_params["gas"] = self.estimate_gas(transaction_params, block_identifier="pending")
+
+        # Build the raw transaction
+        raw_transaction = self.build_transaction(transaction_params)
+
+        if "nonce" not in raw_transaction:
+            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address, block_identifier="pending")
+
+        # Sign the raw transaction
+        # Mismatched types between account and web3py
+        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
+
+        # Send the signed transaction
+        try:
+            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=OverloadedMethodsContractErrors,
+                err=err,
+                contract_call_type="transact",
+                transaction=transaction_params,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def sign_transact_and_wait(
+        self,
+        account: LocalAccount,
+        transaction: TxParams | None = None,
+        timeout: float | None = None,
+        poll_latency: float | None = None,
+        validate_transaction: bool = False,
+    ) -> TxReceipt:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+        timeout: float, optional
+            The number of seconds to wait for the transaction to be mined. Defaults to 120.
+        poll_latency: float, optional
+            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
+        validate_transaction: bool, optional
+            Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
+        if timeout is None:
+            timeout = 120
+        if poll_latency is None:
+            poll_latency = 0.1
+
+        tx_hash = self.sign_and_transact(account, transaction)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
+        # Check the receipt, throwing an error if status == 0
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
+
+
 class OverloadedMethodsDoSomethingContractFunction(PypechainContractFunction):
     """ContractFunction for the doSomething method."""
 
@@ -1441,6 +1613,10 @@ class OverloadedMethodsDoSomethingContractFunction(PypechainContractFunction):
 
     @overload
     def __call__(self, x: int, y: int) -> OverloadedMethodsDoSomethingContractFunction7:  # type: ignore
+        ...
+
+    @overload
+    def __call__(self, x: str, s: int) -> OverloadedMethodsDoSomethingContractFunction8:  # type: ignore
         ...
 
     def __call__(self, *args, **kwargs) -> OverloadedMethodsDoSomethingContractFunction:  # type: ignore
@@ -1492,6 +1668,9 @@ class OverloadedMethodsDoSomethingContractFunction(PypechainContractFunction):
             OverloadedMethodsDoSomethingContractFunction7._type_signature: OverloadedMethodsDoSomethingContractFunction7.factory(
                 "OverloadedMethodsDoSomethingContractFunction7", **kwargs
             ),
+            OverloadedMethodsDoSomethingContractFunction8._type_signature: OverloadedMethodsDoSomethingContractFunction8.factory(
+                "OverloadedMethodsDoSomethingContractFunction8", **kwargs
+            ),
         }
         return out
 
@@ -1538,8 +1717,8 @@ overloadedmethods_abi: ABI = cast(
                             "type": "tuple",
                             "internalType": "struct OverloadedMethods.SimpleStruct",
                             "components": [
-                                {"name": "strVal", "type": "string", "internalType": "string"},
-                                {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                                {"name": "_strVal", "type": "string", "internalType": "string"},
+                                {"name": "_intVal", "type": "uint256", "internalType": "uint256"},
                             ],
                         },
                     ],
@@ -1558,8 +1737,8 @@ overloadedmethods_abi: ABI = cast(
                             "type": "tuple",
                             "internalType": "struct OverloadedMethods.SimpleStruct",
                             "components": [
-                                {"name": "strVal", "type": "string", "internalType": "string"},
-                                {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                                {"name": "_strVal", "type": "string", "internalType": "string"},
+                                {"name": "_intVal", "type": "uint256", "internalType": "uint256"},
                             ],
                         },
                     ],
@@ -1576,8 +1755,8 @@ overloadedmethods_abi: ABI = cast(
                     "type": "tuple",
                     "internalType": "struct OverloadedMethods.SimpleStruct",
                     "components": [
-                        {"name": "strVal", "type": "string", "internalType": "string"},
-                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "_strVal", "type": "string", "internalType": "string"},
+                        {"name": "_intVal", "type": "uint256", "internalType": "uint256"},
                     ],
                 }
             ],
@@ -1587,8 +1766,8 @@ overloadedmethods_abi: ABI = cast(
                     "type": "tuple",
                     "internalType": "struct OverloadedMethods.SimpleStruct",
                     "components": [
-                        {"name": "strVal", "type": "string", "internalType": "string"},
-                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "_strVal", "type": "string", "internalType": "string"},
+                        {"name": "_intVal", "type": "uint256", "internalType": "uint256"},
                     ],
                 }
             ],
@@ -1598,8 +1777,8 @@ overloadedmethods_abi: ABI = cast(
             "type": "function",
             "name": "doSomething",
             "inputs": [
-                {"name": "x", "type": "uint256", "internalType": "uint256"},
-                {"name": "s", "type": "string", "internalType": "string"},
+                {"name": "_x", "type": "uint256", "internalType": "uint256"},
+                {"name": "_s", "type": "string", "internalType": "string"},
             ],
             "outputs": [
                 {"name": "int_input", "type": "uint256", "internalType": "uint256"},
@@ -1616,8 +1795,8 @@ overloadedmethods_abi: ABI = cast(
                     "type": "tuple[]",
                     "internalType": "struct OverloadedMethods.SimpleStruct[]",
                     "components": [
-                        {"name": "strVal", "type": "string", "internalType": "string"},
-                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "_strVal", "type": "string", "internalType": "string"},
+                        {"name": "_intVal", "type": "uint256", "internalType": "uint256"},
                     ],
                 }
             ],
@@ -1627,8 +1806,8 @@ overloadedmethods_abi: ABI = cast(
                     "type": "tuple[]",
                     "internalType": "struct OverloadedMethods.SimpleStruct[]",
                     "components": [
-                        {"name": "strVal", "type": "string", "internalType": "string"},
-                        {"name": "intVal", "type": "uint256", "internalType": "uint256"},
+                        {"name": "_strVal", "type": "string", "internalType": "string"},
+                        {"name": "_intVal", "type": "uint256", "internalType": "uint256"},
                     ],
                 }
             ],
@@ -1644,14 +1823,14 @@ overloadedmethods_abi: ABI = cast(
         {
             "type": "function",
             "name": "doSomething",
-            "inputs": [{"name": "s", "type": "string", "internalType": "string"}],
+            "inputs": [{"name": "_s", "type": "string", "internalType": "string"}],
             "outputs": [{"name": "", "type": "string", "internalType": "string"}],
             "stateMutability": "pure",
         },
         {
             "type": "function",
             "name": "doSomething",
-            "inputs": [{"name": "x", "type": "uint256", "internalType": "uint256"}],
+            "inputs": [{"name": "_x", "type": "uint256", "internalType": "uint256"}],
             "outputs": [{"name": "", "type": "uint256", "internalType": "uint256"}],
             "stateMutability": "pure",
         },
@@ -1659,10 +1838,23 @@ overloadedmethods_abi: ABI = cast(
             "type": "function",
             "name": "doSomething",
             "inputs": [
-                {"name": "x", "type": "uint256", "internalType": "uint256"},
-                {"name": "y", "type": "uint256", "internalType": "uint256"},
+                {"name": "_x", "type": "uint256", "internalType": "uint256"},
+                {"name": "_y", "type": "uint256", "internalType": "uint256"},
             ],
             "outputs": [{"name": "added", "type": "uint256", "internalType": "uint256"}],
+            "stateMutability": "pure",
+        },
+        {
+            "type": "function",
+            "name": "doSomething",
+            "inputs": [
+                {"name": "_x", "type": "string", "internalType": "string"},
+                {"name": "_s", "type": "uint256", "internalType": "uint256"},
+            ],
+            "outputs": [
+                {"name": "", "type": "string", "internalType": "string"},
+                {"name": "int_input", "type": "uint256", "internalType": "uint256"},
+            ],
             "stateMutability": "pure",
         },
     ],
@@ -1687,7 +1879,7 @@ class OverloadedMethodsContract(Contract):
     # `_raw_bytecode` unchanged as an original copy.
     # pylint: disable=line-too-long
     _raw_bytecode: HexStr | None = HexStr(
-        "0x608060405234801561001057600080fd5b506107f9806100206000396000f3fe608060405234801561001057600080fd5b50600436106100885760003560e01c8063826926791161005b57806382692679146101395780638ae3048e1461014a578063a6b206bf14610165578063b2dd1d791461017857600080fd5b8063146c7dea1461008d5780631d37834b146100b45780633b6c27c4146100fe5780634a4c53e91461011e575b600080fd5b61009e61009b366004610324565b90565b6040516100ab91906104ae565b60405180910390f35b6100f16100c2366004610541565b604080518082018252606081526000602091820152815180830190925282518252918201519181019190915290565b6040516100ab919061057e565b61011061010c366004610591565b9091565b6040516100ab9291906105d8565b61012c61009b3660046105f1565b6040516100ab9190610695565b60025b6040519081526020016100ab565b61015861009b3660046106f9565b6040516100ab919061072e565b61013c610173366004610741565b61018b565b61013c61018636600461075a565b61019e565b600061019882600261077c565b92915050565b60006101aa82846107a1565b9392505050565b634e487b7160e01b600052604160045260246000fd5b6040516060810167ffffffffffffffff811182821017156101ea576101ea6101b1565b60405290565b604051601f8201601f1916810167ffffffffffffffff81118282101715610219576102196101b1565b604052919050565b600067ffffffffffffffff82111561023b5761023b6101b1565b5060051b60200190565b600082601f83011261025657600080fd5b813567ffffffffffffffff811115610270576102706101b1565b610283601f8201601f19166020016101f0565b81815284602083860101111561029857600080fd5b816020850160208301376000918101602001919091529392505050565b6000604082840312156102c757600080fd5b6040516040810167ffffffffffffffff82821081831117156102eb576102eb6101b1565b81604052829350843591508082111561030357600080fd5b5061031085828601610245565b825250602083013560208201525092915050565b6000602080838503121561033757600080fd5b823567ffffffffffffffff8082111561034f57600080fd5b818501915085601f83011261036357600080fd5b813561037661037182610221565b6101f0565b81815260059190911b8301840190848101908883111561039557600080fd5b8585015b83811015610432578035858111156103b15760008081fd5b86016060818c03601f19018113156103c95760008081fd5b6103d16101c7565b898301358152604080840135898111156103eb5760008081fd5b6103f98f8d83880101610245565b838d0152509183013591888311156104115760008081fd5b61041f8e8c858701016102b5565b9082015285525050918601918601610399565b5098975050505050505050565b6000815180845260005b8181101561046557602081850181015186830182015201610449565b506000602082860101526020601f19601f83011685010191505092915050565b600081516040845261049a604085018261043f565b602093840151949093019390935250919050565b600060208083018184528085518083526040925060408601915060408160051b87010184880160005b8381101561053357603f19898403018552815160608151855288820151818a8701526105058287018261043f565b9150508782015191508481038886015261051f8183610485565b9689019694505050908601906001016104d7565b509098975050505050505050565b60006020828403121561055357600080fd5b813567ffffffffffffffff81111561056a57600080fd5b610576848285016102b5565b949350505050565b6020815260006101aa6020830184610485565b600080604083850312156105a457600080fd5b82359150602083013567ffffffffffffffff8111156105c257600080fd5b6105ce85828601610245565b9150509250929050565b828152604060208201526000610576604083018461043f565b6000602080838503121561060457600080fd5b823567ffffffffffffffff8082111561061c57600080fd5b818501915085601f83011261063057600080fd5b813561063e61037182610221565b81815260059190911b8301840190848101908883111561065d57600080fd5b8585015b83811015610432578035858111156106795760008081fd5b6106878b89838a01016102b5565b845250918601918601610661565b600060208083016020845280855180835260408601915060408160051b87010192506020870160005b828110156106ec57603f198886030184526106da858351610485565b945092850192908501906001016106be565b5092979650505050505050565b60006020828403121561070b57600080fd5b813567ffffffffffffffff81111561072257600080fd5b61057684828501610245565b6020815260006101aa602083018461043f565b60006020828403121561075357600080fd5b5035919050565b6000806040838503121561076d57600080fd5b50508035926020909101359150565b808202811582820484141761019857634e487b7160e01b600052601160045260246000fd5b6000826107be57634e487b7160e01b600052601260045260246000fd5b50049056fea2646970667358221220bda866931d31d56519d7f24e2a69ea362471a83fcb4bd41e5fc750dac61ea0fb64736f6c63430008160033"
+        "0x608060405234801561001057600080fd5b50610887806100206000396000f3fe608060405234801561001057600080fd5b50600436106100935760003560e01c8063826926791161006657806382692679146101445780638ae3048e14610155578063a6b206bf14610170578063b2dd1d7914610183578063d5731daf1461019657600080fd5b8063146c7dea146100985780631d37834b146100bf5780633b6c27c4146101095780634a4c53e914610129575b600080fd5b6100a96100a636600461034b565b90565b6040516100b691906104d5565b60405180910390f35b6100fc6100cd366004610568565b604080518082018252606081526000602091820152815180830190925282518252918201519181019190915290565b6040516100b691906105a5565b61011b6101173660046105b8565b9091565b6040516100b69291906105ff565b6101376100a6366004610618565b6040516100b691906106bc565b60025b6040519081526020016100b6565b6101636100a6366004610720565b6040516100b69190610755565b61014761017e366004610768565b6101b2565b610147610191366004610781565b6101c5565b6101a46101173660046107a3565b6040516100b69291906107e8565b60006101bf82600261080a565b92915050565b60006101d1828461082f565b9392505050565b634e487b7160e01b600052604160045260246000fd5b6040516060810167ffffffffffffffff81118282101715610211576102116101d8565b60405290565b604051601f8201601f1916810167ffffffffffffffff81118282101715610240576102406101d8565b604052919050565b600067ffffffffffffffff821115610262576102626101d8565b5060051b60200190565b600082601f83011261027d57600080fd5b813567ffffffffffffffff811115610297576102976101d8565b6102aa601f8201601f1916602001610217565b8181528460208386010111156102bf57600080fd5b816020850160208301376000918101602001919091529392505050565b6000604082840312156102ee57600080fd5b6040516040810167ffffffffffffffff8282108183111715610312576103126101d8565b81604052829350843591508082111561032a57600080fd5b506103378582860161026c565b825250602083013560208201525092915050565b6000602080838503121561035e57600080fd5b823567ffffffffffffffff8082111561037657600080fd5b818501915085601f83011261038a57600080fd5b813561039d61039882610248565b610217565b81815260059190911b830184019084810190888311156103bc57600080fd5b8585015b83811015610459578035858111156103d85760008081fd5b86016060818c03601f19018113156103f05760008081fd5b6103f86101ee565b898301358152604080840135898111156104125760008081fd5b6104208f8d8388010161026c565b838d0152509183013591888311156104385760008081fd5b6104468e8c858701016102dc565b90820152855250509186019186016103c0565b5098975050505050505050565b6000815180845260005b8181101561048c57602081850181015186830182015201610470565b506000602082860101526020601f19601f83011685010191505092915050565b60008151604084526104c16040850182610466565b602093840151949093019390935250919050565b600060208083018184528085518083526040925060408601915060408160051b87010184880160005b8381101561055a57603f19898403018552815160608151855288820151818a87015261052c82870182610466565b9150508782015191508481038886015261054681836104ac565b9689019694505050908601906001016104fe565b509098975050505050505050565b60006020828403121561057a57600080fd5b813567ffffffffffffffff81111561059157600080fd5b61059d848285016102dc565b949350505050565b6020815260006101d160208301846104ac565b600080604083850312156105cb57600080fd5b82359150602083013567ffffffffffffffff8111156105e957600080fd5b6105f58582860161026c565b9150509250929050565b82815260406020820152600061059d6040830184610466565b6000602080838503121561062b57600080fd5b823567ffffffffffffffff8082111561064357600080fd5b818501915085601f83011261065757600080fd5b813561066561039882610248565b81815260059190911b8301840190848101908883111561068457600080fd5b8585015b83811015610459578035858111156106a05760008081fd5b6106ae8b89838a01016102dc565b845250918601918601610688565b600060208083016020845280855180835260408601915060408160051b87010192506020870160005b8281101561071357603f198886030184526107018583516104ac565b945092850192908501906001016106e5565b5092979650505050505050565b60006020828403121561073257600080fd5b813567ffffffffffffffff81111561074957600080fd5b61059d8482850161026c565b6020815260006101d16020830184610466565b60006020828403121561077a57600080fd5b5035919050565b6000806040838503121561079457600080fd5b50508035926020909101359150565b600080604083850312156107b657600080fd5b823567ffffffffffffffff8111156107cd57600080fd5b6107d98582860161026c565b95602094909401359450505050565b6040815260006107fb6040830185610466565b90508260208301529392505050565b80820281158282048414176101bf57634e487b7160e01b600052601160045260246000fd5b60008261084c57634e487b7160e01b600052601260045260246000fd5b50049056fea2646970667358221220cb6b165358e0dce09dd2ce7cc2cc547538816f764a835042e7e0826aeb7076b364736f6c63430008160033"
     )
 
     def __init__(self, address: ChecksumAddress | None = None) -> None:

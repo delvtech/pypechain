@@ -42,6 +42,14 @@ contract OverloadedMethods {
         return (_x, _s);
     }
 
+    // Another overloaded version uses same varible names but types are different
+    function doSomething(
+        string memory _x,
+        uint _s
+    ) public pure returns (string memory, uint int_input) {
+        return (_x, _s);
+    }
+
     // Another overloaded version accepts a struct, returns unchanged
     function doSomething(
         SimpleStruct memory simpleStruct
