@@ -134,6 +134,7 @@ def namespace_to_args(namespace: argparse.Namespace) -> Args:
 def parse_arguments(argv: Sequence[str] | None = None) -> Args:
     """Parse input arguments."""
     parser = argparse.ArgumentParser(description="Generates class files for a given abi.")
+
     parser.add_argument(
         "abi_file_path",
         help="Path to the abi JSON file or directory containing multiple JSON files.",
@@ -150,11 +151,9 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
         default=120,
         help="Optional argument for the output file's maximum line length. Defaults to 120.",
     )
-    # TODO apply-formatting won't work when calling with `--apply-formatting=False`
-    # https://github.com/delvtech/pypechain/issues/115
     parser.add_argument(
         "--apply-formatting",
-        type=bool,
+        action=argparse.BooleanOptionalAction,
         default=True,
         help="Optional argument to apply formatting to each file. Defaults to True.",
     )
