@@ -125,6 +125,24 @@ class ExampleFlipFlopContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ExampleContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
     def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
         try:
             return super().build_transaction(transaction)
@@ -332,6 +350,24 @@ class ExampleGuessALetterContractFunction0(PypechainContractFunction):
                 errors_class=ExampleContractErrors,
                 err=err,
                 contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ExampleContractErrors,
+                err=err,
+                contract_call_type="build",
                 transaction=transaction,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
@@ -561,6 +597,24 @@ class ExampleMixStructsAndPrimitivesContractFunction0(PypechainContractFunction)
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ExampleContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
     def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
         try:
             return super().build_transaction(transaction)
@@ -773,6 +827,24 @@ class ExampleNamedSingleStructContractFunction0(PypechainContractFunction):
                 errors_class=ExampleContractErrors,
                 err=err,
                 contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ExampleContractErrors,
+                err=err,
+                contract_call_type="build",
                 transaction=transaction,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
@@ -999,6 +1071,24 @@ class ExampleNamedTwoMixedStructsContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ExampleContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
     def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
         try:
             return super().build_transaction(transaction)
@@ -1215,6 +1305,24 @@ class ExampleSingleNestedStructContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ExampleContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
     def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
         try:
             return super().build_transaction(transaction)
@@ -1427,6 +1535,24 @@ class ExampleSingleSimpleStructContractFunction0(PypechainContractFunction):
                 errors_class=ExampleContractErrors,
                 err=err,
                 contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ExampleContractErrors,
+                err=err,
+                contract_call_type="build",
                 transaction=transaction,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
@@ -1653,6 +1779,24 @@ class ExampleTwoMixedStructsContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ExampleContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
     def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
         try:
             return super().build_transaction(transaction)
@@ -1875,6 +2019,24 @@ class ExampleTwoSimpleStructsContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ExampleContractErrors,
+                err=err,
+                contract_call_type="build",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
     def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
         try:
             return super().build_transaction(transaction)
@@ -2087,6 +2249,24 @@ class ExampleVecOfStructContractFunction0(PypechainContractFunction):
                 errors_class=ExampleContractErrors,
                 err=err,
                 contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=ExampleContractErrors,
+                err=err,
+                contract_call_type="build",
                 transaction=transaction,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
