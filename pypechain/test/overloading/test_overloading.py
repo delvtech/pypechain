@@ -46,7 +46,7 @@ class TestOverloading:
 
         # Test kwargs, we pass arguments reversed, but with kwargs
         # so we still expect the same result as above
-        result = deployed_contract.functions.doSomething(y=y, x=x).call()
+        result = deployed_contract.functions.doSomething(_y=y, _x=x).call()
         # Expected result is integer division
         assert result == 2 // 1
 
@@ -56,7 +56,7 @@ class TestOverloading:
 
         # Test kwargs, we pass arguments reversed, but with kwargs
         # so we still expect the same result as above
-        result = deployed_contract.functions.doSomething(s=s, x=x).call()
+        result = deployed_contract.functions.doSomething(_s=s, _x=x).call()
         assert isinstance(result, deployed_contract.functions.doSomething(x, s).ReturnValues)
         assert result == deployed_contract.functions.doSomething(x, s).ReturnValues(x, s)
 

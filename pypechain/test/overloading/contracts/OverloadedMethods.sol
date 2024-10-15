@@ -4,8 +4,8 @@ pragma solidity ^0.8.0;
 contract OverloadedMethods {
 
     struct SimpleStruct{
-        string strVal;
-        uint intVal;
+        string _strVal;
+        uint _intVal;
     }
 
     struct NestedStruct{
@@ -20,33 +20,33 @@ contract OverloadedMethods {
     }
 
     // Function accepts an integer, returns a uint
-    function doSomething(uint x) public pure returns (uint) {
-        return x * 2;
+    function doSomething(uint _x) public pure returns (uint) {
+        return _x * 2;
     }
 
     // Overloaded version accepts a string, returns a string
-    function doSomething(string memory s) public pure returns (string memory) {
-        return s;
+    function doSomething(string memory _s) public pure returns (string memory) {
+        return _s;
     }
 
     // Another overloaded version accepts two integers, returns a named uint
-    function doSomething(uint x, uint y) public pure returns (uint added) {
-        return x / y;
+    function doSomething(uint _x, uint _y) public pure returns (uint added) {
+        return _x / _y;
     }
 
     // Another overloaded version accepts an integer and a string, returns both unchanged
     function doSomething(
-        uint x,
-        string memory s
+        uint _x,
+        string memory _s
     ) public pure returns (uint int_input, string memory) {
-        return (x, s);
+        return (_x, _s);
     }
 
     // Another overloaded version accepts a struct, returns unchanged
     function doSomething(
         SimpleStruct memory simpleStruct
     ) public pure returns (SimpleStruct memory) {
-        return SimpleStruct({strVal: simpleStruct.strVal, intVal: simpleStruct.intVal});
+        return SimpleStruct({_strVal: simpleStruct._strVal, _intVal: simpleStruct._intVal});
     }
 
     // Overloaded vec of structs as input
