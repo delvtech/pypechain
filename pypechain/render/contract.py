@@ -267,8 +267,6 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
 
     has_bytecode = bool(contract_info.bytecode)
     has_events = bool(len(event_datas))
-    # if any function has overloading
-    has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
 
     structs_used = get_structs_for_abi(contract_info.abi)
     structs_filenames = list({struct.contract_name for struct in structs_used if struct.contract_name is not None})
@@ -313,7 +311,6 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
     )
 
     # if any function has overloading
-    has_overloading = any(function_data["has_overloading"] for function_data in function_datas.values())
     has_multiple_return_values = any(
         function_data["has_multiple_return_values"] for function_data in function_datas.values()
     )
@@ -325,7 +322,6 @@ def render_contract_file(contract_info: ContractInfo) -> str | None:
         structs_used=structs_used,
         structs_filenames=structs_filenames,
         structs_without_filenames=structs_without_filenames,
-        has_overloading=has_overloading,
         has_multiple_return_values=has_multiple_return_values,
         has_bytecode=has_bytecode,
         functions_block=functions_block,

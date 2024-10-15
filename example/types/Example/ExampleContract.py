@@ -79,8 +79,8 @@ class ExampleFlipFlopContractFunction0(PypechainContractFunction):
     class ReturnValues(NamedTuple):
         """The return named tuple for FlipFlop."""
 
-        _flop: int
-        _flip: int
+        flop: int
+        flip: int
 
     def call(
         self,
@@ -515,7 +515,7 @@ class ExampleMixStructsAndPrimitivesContractFunction0(PypechainContractFunction)
         simpleStruct: Example.SimpleStruct
         arg2: Example.NestedStruct
         arg3: int
-        _name: str
+        name: str
         YesOrNo: bool
 
     def call(

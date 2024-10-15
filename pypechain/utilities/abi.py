@@ -20,6 +20,9 @@ from pypechain.utilities.bytecode import get_bytecode_from_json, get_bytecode_li
 from pypechain.utilities.format import avoid_python_keywords, capitalize_first_letter_only
 from pypechain.utilities.types import LinkReferences, solidity_to_python_type
 
+# TODO cleanup
+# pylint: disable=too-many-lines
+
 
 class AbiJson(NamedTuple):
     """A JSON representation of a solidity contract's Application Boundary Interface."""
@@ -787,7 +790,7 @@ def get_output_names(function: ABIFunction) -> list[str]:
             name: 'from', type: 'str'}, name: '
         }]]
     """
-    return get_function_parameter_names(function.get("outputs", []), remove_leading_underscore=False)
+    return get_function_parameter_names(function.get("outputs", []), remove_leading_underscore=True)
 
 
 def get_input_names_and_types(function: ABIFunction, remove_leading_underscore: bool) -> list[str]:
