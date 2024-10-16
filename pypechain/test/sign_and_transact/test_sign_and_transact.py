@@ -12,6 +12,7 @@ from eth_utils.crypto import keccak
 from eth_utils.curried import text_if_str
 from hexbytes import HexBytes
 from web3 import Web3
+from web3.types import RPCEndpoint
 
 from pypechain.core import PypechainCallException
 
@@ -52,7 +53,7 @@ class TestStructs:
         account: LocalAccount = Account().from_key(make_private_key())
 
         # Fund the account with eth
-        w3.provider.make_request(method="anvil_setBalance", params=[account.address, hex(int(1e18))])
+        w3.provider.make_request(method=RPCEndpoint("anvil_setBalance"), params=[account.address, hex(int(1e18))])
 
         # Expect failure with transaction without signing
         with pytest.raises(PypechainCallException):
@@ -72,7 +73,7 @@ class TestStructs:
         account: LocalAccount = Account().from_key(make_private_key())
 
         # Fund the account with eth
-        w3.provider.make_request(method="anvil_setBalance", params=[account.address, hex(int(1e18))])
+        w3.provider.make_request(method=RPCEndpoint("anvil_setBalance"), params=[account.address, hex(int(1e18))])
 
         # Expect failure with transaction without signing
         with pytest.raises(PypechainCallException):
