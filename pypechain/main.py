@@ -11,7 +11,9 @@ from pathlib import Path
 from typing import NamedTuple, Sequence
 
 from pypechain.render import render_contracts
+from pypechain.render.init import render_init_file
 from pypechain.utilities.abi import AbiInfo, load_abi_infos_from_file
+from pypechain.utilities.format import format_file
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -72,16 +74,16 @@ def pypechain(
 
     # Since setup directory looks for `pypechain.version`, we make this file first
     # Make a pypechain.version file
-    with open(f"{output_dir}/pypechain.version", "w", encoding="utf-8") as f:
+    with open(Path(output_dir) / "pypechain.version", "w", encoding="utf-8") as f:
         f.write(f"pypechain == {importlib.metadata.version('pypechain')}")
 
     # Now process all gathered files
-    render_contracts(abi_infos, output_dir, line_length, apply_formatting, parallel=parallel)
+    file_outputs = render_contracts(abi_infos, output_dir, line_length, apply_formatting, parallel=parallel)
 
-    # Make an empty __init__.py file
-    # render_init_file(output_dir, file_outputs, line_length)
-    with open(f"{output_dir}/__init__.py", "w", encoding="utf-8") as f:
-        pass
+    # Make the top level __init__.py file
+    render_init_file(Path(output_dir), file_outputs)
+    if apply_formatting is True:
+        format_file(Path(output_dir) / "__init__.py", line_length, remove_unused_imports=False)
 
 
 def gather_json_files(directory: str) -> list:
@@ -132,6 +134,7 @@ def namespace_to_args(namespace: argparse.Namespace) -> Args:
 def parse_arguments(argv: Sequence[str] | None = None) -> Args:
     """Parse input arguments."""
     parser = argparse.ArgumentParser(description="Generates class files for a given abi.")
+
     parser.add_argument(
         "abi_file_path",
         help="Path to the abi JSON file or directory containing multiple JSON files.",
@@ -148,11 +151,9 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
         default=120,
         help="Optional argument for the output file's maximum line length. Defaults to 120.",
     )
-    # TODO apply-formatting won't work when calling with `--apply-formatting=False`
-    # https://github.com/delvtech/pypechain/issues/115
     parser.add_argument(
         "--apply-formatting",
-        type=bool,
+        action=argparse.BooleanOptionalAction,
         default=True,
         help="Optional argument to apply formatting to each file. Defaults to True.",
     )

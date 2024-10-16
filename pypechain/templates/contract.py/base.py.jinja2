@@ -45,7 +45,7 @@ from typing_extensions import Self
 from web3 import Web3
 from web3.contract.contract import Contract, ContractFunction, ContractFunctions, ContractConstructor
 from web3.contract.contract import ContractEvent, ContractEvents
-from web3.types import BlockIdentifier, StateOverride, TxParams, Nonce, EventData
+from web3.types import BlockIdentifier, StateOverride, TxParams, Nonce, EventData, TxReceipt
 from web3._utils.filters import LogFilter
 import copy
 
@@ -62,7 +62,6 @@ from ..{{contract_name}} import {{contract_name}}Contract
 {% endfor %}
 
 {% if has_events %}
-from web3.types import TxReceipt
 from web3.logs import WARN
 from web3._utils.events import EventLogErrorFlags
 from pypechain.core import BaseEventArgs
@@ -91,6 +90,7 @@ from pypechain.core import (
     PypechainContractLogicError,
     PypechainBaseContractErrors,
     handle_contract_logic_error,
+    check_txn_receipt,
 )
 
 

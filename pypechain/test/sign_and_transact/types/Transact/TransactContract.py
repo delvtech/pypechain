@@ -51,6 +51,7 @@ from pypechain.core import (
     BaseEventArgs,
     PypechainBaseContractErrors,
     PypechainContractFunction,
+    check_txn_receipt,
     combomethod_typed,
     dataclass_to_tuple,
     expand_struct_type_str,
@@ -103,6 +104,24 @@ class TransactTransactFunctionContractFunction0(PypechainContractFunction):
                 errors_class=TransactContractErrors,
                 err=err,
                 contract_call_type="transact",
+                transaction=transaction,
+                block_identifier="pending",  # race condition here, best effort to get block of txn.
+            ) from err
+
+    def estimate_gas(
+        self,
+        transaction: TxParams | None = None,
+        block_identifier: BlockIdentifier | None = None,
+        state_override: StateOverride | None = None,
+    ) -> int:
+        try:
+            return super().estimate_gas(transaction, block_identifier, state_override)
+        except Exception as err:  # pylint disable=broad-except
+            raise handle_contract_logic_error(
+                contract_function=self,
+                errors_class=TransactContractErrors,
+                err=err,
+                contract_call_type="build",
                 transaction=transaction,
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
@@ -177,6 +196,52 @@ class TransactTransactFunctionContractFunction0(PypechainContractFunction):
                 block_identifier="pending",  # race condition here, best effort to get block of txn.
             ) from err
 
+    def sign_transact_and_wait(
+        self,
+        account: LocalAccount,
+        transaction: TxParams | None = None,
+        timeout: float | None = None,
+        poll_latency: float | None = None,
+        validate_transaction: bool = False,
+    ) -> TxReceipt:
+        """Convenience method for signing and sending a transaction using the provided account.
+
+        Arguments
+        ---------
+        account : LocalAccount
+            The account to use for signing and sending the transaction.
+        transaction : TxParams | None, optional
+            The transaction parameters to use for sending the transaction.
+        timeout: float, optional
+            The number of seconds to wait for the transaction to be mined. Defaults to 120.
+        poll_latency: float, optional
+            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
+        validate_transaction: bool, optional
+            Whether to validate the transaction. If True, will throw an exception if the resulting
+            tx_receipt returned a failure status.
+
+        Returns
+        -------
+        HexBytes
+            The transaction hash.
+        """
+
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
+
+        if timeout is None:
+            timeout = 120
+        if poll_latency is None:
+            poll_latency = 0.1
+
+        tx_hash = self.sign_and_transact(account, transaction)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
+        # Check the receipt, throwing an error if status == 0
+        if validate_transaction:
+            return check_txn_receipt(self, tx_hash, tx_receipt)
+        else:
+            return tx_receipt
+
 
 class TransactTransactFunctionContractFunction(PypechainContractFunction):
     """ContractFunction for the TransactFunction method."""
@@ -219,8 +284,11 @@ class TransactTransactFunctionContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             TransactTransactFunctionContractFunction0._type_signature: TransactTransactFunctionContractFunction0.factory(
                 "TransactTransactFunctionContractFunction0", **kwargs
             ),
