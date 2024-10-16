@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Generic, Literal, Type, TypeVar, Union
+import copy
+from typing import Any, Generic, Literal, Type, TypeVar, Union, cast
 
 from eth_typing import BlockNumber
 from hexbytes import HexBytes
@@ -26,6 +27,8 @@ class FailedTransaction(Exception):
 
 class PypechainCallException(Exception):
     """Custom contract call exception wrapper that contains additional information on the function call"""
+
+    contract_call_type: ContractCallType | None
 
     def __init__(
         self,
@@ -66,6 +69,36 @@ class PypechainCallException(Exception):
             f"{', '.join(self.args)}{', ' if self.args else ''}"
             f"decoded_error={self.decoded_error}, "
             f"orig_exception={repr(self.orig_exception)})"
+        )
+
+    def __copy__(self):
+        return PypechainCallException(
+            *self.args,
+            orig_exception=self.orig_exception,
+            decoded_error=self.decoded_error,
+            decoded_error_name=self.decoded_error_name,
+            decoded_error_args=self.decoded_error_args,
+            contract_call_type=self.contract_call_type,  # type: ignore
+            function_name=self.function_name,
+            fn_args=self.fn_args,
+            fn_kwargs=self.fn_kwargs,
+            block_number=self.block_number,
+            raw_txn=self.raw_txn,
+        )
+
+    def __deepcopy__(self, memo):
+        return PypechainCallException(
+            *copy.deepcopy(self.args, memo),
+            orig_exception=copy.deepcopy(self.orig_exception, memo),
+            decoded_error=self.decoded_error,
+            decoded_error_name=self.decoded_error_name,
+            decoded_error_args=copy.deepcopy(self.decoded_error_args, memo),
+            contract_call_type=self.contract_call_type,  # type: ignore
+            function_name=self.function_name,
+            fn_args=copy.deepcopy(self.fn_args, memo),
+            fn_kwargs=copy.deepcopy(self.fn_kwargs, memo),
+            block_number=self.block_number,
+            raw_txn=copy.deepcopy(self.raw_txn, memo),
         )
 
 
@@ -117,6 +150,18 @@ class PypechainGenericError(PypechainCallException, Generic[T]):
         # Set `ContractLogicError` fields through `orig_exception`
         self.message = orig_exception.message
         self.data = orig_exception.data
+
+    def __copy__(self):
+        out = cast(PypechainGenericError, super().__copy__())
+        out.message = self.message
+        out.data = self.data
+
+        return out
+
+    def __deepcopy__(self, memo):
+        out = cast(PypechainGenericError, super().__deepcopy__(memo))
+        out.message = self.message
+        out.data = copy.deepcopy(self.data)
 
 
 class PypechainContractCustomError(PypechainGenericError[ContractCustomError], ContractCustomError):
