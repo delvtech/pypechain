@@ -283,8 +283,11 @@ class NoConstructorNameContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             NoConstructorNameContractFunction0._type_signature: NoConstructorNameContractFunction0.factory(
                 "NoConstructorNameContractFunction0", **kwargs
             ),
@@ -512,8 +515,11 @@ class NoConstructorSetNameContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             NoConstructorSetNameContractFunction0._type_signature: NoConstructorSetNameContractFunction0.factory(
                 "NoConstructorSetNameContractFunction0", **kwargs
             ),

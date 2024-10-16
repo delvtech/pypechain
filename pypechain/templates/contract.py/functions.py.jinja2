@@ -258,8 +258,11 @@ class {{contract_function_class_name}}(PypechainContractFunction):
     ) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object 
+        # (attached to a specific web3 and contract address)
+        out._functions = {
         {% for i in range(function_data.signature_datas|length) %}
             {{contract_function_class_name}}{{i}}._type_signature: {{contract_function_class_name}}{{i}}.factory(
                 "{{contract_function_class_name}}{{i}}",

@@ -288,8 +288,11 @@ class ConstructorWithStructArgsNameContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ConstructorWithStructArgsNameContractFunction0._type_signature: ConstructorWithStructArgsNameContractFunction0.factory(
                 "ConstructorWithStructArgsNameContractFunction0", **kwargs
             ),
@@ -517,8 +520,11 @@ class ConstructorWithStructArgsSetNameContractFunction(PypechainContractFunction
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ConstructorWithStructArgsSetNameContractFunction0._type_signature: ConstructorWithStructArgsSetNameContractFunction0.factory(
                 "ConstructorWithStructArgsSetNameContractFunction0", **kwargs
             ),
@@ -751,8 +757,11 @@ class ConstructorWithStructArgsThingContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ConstructorWithStructArgsThingContractFunction0._type_signature: ConstructorWithStructArgsThingContractFunction0.factory(
                 "ConstructorWithStructArgsThingContractFunction0", **kwargs
             ),

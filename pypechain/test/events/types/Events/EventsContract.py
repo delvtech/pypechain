@@ -290,8 +290,11 @@ class EventsEmitNoEventsContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             EventsEmitNoEventsContractFunction0._type_signature: EventsEmitNoEventsContractFunction0.factory(
                 "EventsEmitNoEventsContractFunction0", **kwargs
             ),
@@ -519,8 +522,11 @@ class EventsEmitOneEventContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             EventsEmitOneEventContractFunction0._type_signature: EventsEmitOneEventContractFunction0.factory(
                 "EventsEmitOneEventContractFunction0", **kwargs
             ),
@@ -748,8 +754,11 @@ class EventsEmitTwoEventsContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             EventsEmitTwoEventsContractFunction0._type_signature: EventsEmitTwoEventsContractFunction0.factory(
                 "EventsEmitTwoEventsContractFunction0", **kwargs
             ),

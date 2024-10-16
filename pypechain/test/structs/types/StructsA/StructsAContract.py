@@ -291,8 +291,11 @@ class StructsASingleNestedStructContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             StructsASingleNestedStructContractFunction0._type_signature: StructsASingleNestedStructContractFunction0.factory(
                 "StructsASingleNestedStructContractFunction0", **kwargs
             ),
@@ -525,8 +528,11 @@ class StructsASingleSimpleStructContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             StructsASingleSimpleStructContractFunction0._type_signature: StructsASingleSimpleStructContractFunction0.factory(
                 "StructsASingleSimpleStructContractFunction0", **kwargs
             ),
@@ -759,8 +765,11 @@ class StructsAStructAContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             StructsAStructAContractFunction0._type_signature: StructsAStructAContractFunction0.factory(
                 "StructsAStructAContractFunction0", **kwargs
             ),

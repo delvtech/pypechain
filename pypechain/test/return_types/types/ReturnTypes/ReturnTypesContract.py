@@ -298,8 +298,11 @@ class ReturnTypesMixStructsAndPrimitivesContractFunction(PypechainContractFuncti
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesMixStructsAndPrimitivesContractFunction0._type_signature: ReturnTypesMixStructsAndPrimitivesContractFunction0.factory(
                 "ReturnTypesMixStructsAndPrimitivesContractFunction0", **kwargs
             ),
@@ -532,8 +535,11 @@ class ReturnTypesNamedSingleStructContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesNamedSingleStructContractFunction0._type_signature: ReturnTypesNamedSingleStructContractFunction0.factory(
                 "ReturnTypesNamedSingleStructContractFunction0", **kwargs
             ),
@@ -766,8 +772,11 @@ class ReturnTypesNamedSingleValueContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesNamedSingleValueContractFunction0._type_signature: ReturnTypesNamedSingleValueContractFunction0.factory(
                 "ReturnTypesNamedSingleValueContractFunction0", **kwargs
             ),
@@ -1006,8 +1015,11 @@ class ReturnTypesNamedTwoMixedStructsContractFunction(PypechainContractFunction)
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesNamedTwoMixedStructsContractFunction0._type_signature: ReturnTypesNamedTwoMixedStructsContractFunction0.factory(
                 "ReturnTypesNamedTwoMixedStructsContractFunction0", **kwargs
             ),
@@ -1246,8 +1258,11 @@ class ReturnTypesNamedTwoValuesContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesNamedTwoValuesContractFunction0._type_signature: ReturnTypesNamedTwoValuesContractFunction0.factory(
                 "ReturnTypesNamedTwoValuesContractFunction0", **kwargs
             ),
@@ -1480,8 +1495,11 @@ class ReturnTypesNoNameSingleValueContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesNoNameSingleValueContractFunction0._type_signature: ReturnTypesNoNameSingleValueContractFunction0.factory(
                 "ReturnTypesNoNameSingleValueContractFunction0", **kwargs
             ),
@@ -1720,8 +1738,11 @@ class ReturnTypesNoNameTwoValuesContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesNoNameTwoValuesContractFunction0._type_signature: ReturnTypesNoNameTwoValuesContractFunction0.factory(
                 "ReturnTypesNoNameTwoValuesContractFunction0", **kwargs
             ),
@@ -1954,8 +1975,11 @@ class ReturnTypesSingleNestedStructContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesSingleNestedStructContractFunction0._type_signature: ReturnTypesSingleNestedStructContractFunction0.factory(
                 "ReturnTypesSingleNestedStructContractFunction0", **kwargs
             ),
@@ -2188,8 +2212,11 @@ class ReturnTypesSingleNestedStructArrayContractFunction(PypechainContractFuncti
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesSingleNestedStructArrayContractFunction0._type_signature: ReturnTypesSingleNestedStructArrayContractFunction0.factory(
                 "ReturnTypesSingleNestedStructArrayContractFunction0", **kwargs
             ),
@@ -2422,8 +2449,11 @@ class ReturnTypesSingleSimpleStructContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesSingleSimpleStructContractFunction0._type_signature: ReturnTypesSingleSimpleStructContractFunction0.factory(
                 "ReturnTypesSingleSimpleStructContractFunction0", **kwargs
             ),
@@ -2662,8 +2692,11 @@ class ReturnTypesTwoMixedStructsContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesTwoMixedStructsContractFunction0._type_signature: ReturnTypesTwoMixedStructsContractFunction0.factory(
                 "ReturnTypesTwoMixedStructsContractFunction0", **kwargs
             ),
@@ -2902,8 +2935,11 @@ class ReturnTypesTwoSimpleStructsContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ReturnTypesTwoSimpleStructsContractFunction0._type_signature: ReturnTypesTwoSimpleStructsContractFunction0.factory(
                 "ReturnTypesTwoSimpleStructsContractFunction0", **kwargs
             ),

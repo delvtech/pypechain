@@ -287,8 +287,11 @@ class StructsBNoNameSingleValueContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             StructsBNoNameSingleValueContractFunction0._type_signature: StructsBNoNameSingleValueContractFunction0.factory(
                 "StructsBNoNameSingleValueContractFunction0", **kwargs
             ),
@@ -521,8 +524,11 @@ class StructsBSingleSimpleStructContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             StructsBSingleSimpleStructContractFunction0._type_signature: StructsBSingleSimpleStructContractFunction0.factory(
                 "StructsBSingleSimpleStructContractFunction0", **kwargs
             ),

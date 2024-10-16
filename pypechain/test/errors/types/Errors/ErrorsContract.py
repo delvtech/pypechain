@@ -282,8 +282,11 @@ class ErrorsRevertWithErrorOneContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ErrorsRevertWithErrorOneContractFunction0._type_signature: ErrorsRevertWithErrorOneContractFunction0.factory(
                 "ErrorsRevertWithErrorOneContractFunction0", **kwargs
             ),
@@ -511,8 +514,11 @@ class ErrorsRevertWithErrorThreeContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ErrorsRevertWithErrorThreeContractFunction0._type_signature: ErrorsRevertWithErrorThreeContractFunction0.factory(
                 "ErrorsRevertWithErrorThreeContractFunction0", **kwargs
             ),
@@ -740,8 +746,11 @@ class ErrorsRevertWithErrorTwoContractFunction(PypechainContractFunction):
     def factory(cls, class_name: str, **kwargs: Any) -> Self:
         out = super().factory(class_name, **kwargs)
 
-        # We initialize our overridden functions here
-        cls._functions = {
+        # We initialize our overridden functions here.
+        # Note that we use the initialized object to ensure each function
+        # is attached to the instanciated object
+        # (attached to a specific web3 and contract address)
+        out._functions = {
             ErrorsRevertWithErrorTwoContractFunction0._type_signature: ErrorsRevertWithErrorTwoContractFunction0.factory(
                 "ErrorsRevertWithErrorTwoContractFunction0", **kwargs
             ),
