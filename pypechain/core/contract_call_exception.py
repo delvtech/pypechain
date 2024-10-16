@@ -155,13 +155,13 @@ class PypechainGenericError(PypechainCallException, Generic[T]):
         out = cast(PypechainGenericError, super().__copy__())
         out.message = self.message
         out.data = self.data
-
         return out
 
     def __deepcopy__(self, memo):
         out = cast(PypechainGenericError, super().__deepcopy__(memo))
         out.message = self.message
         out.data = copy.deepcopy(self.data)
+        return out
 
 
 class PypechainContractCustomError(PypechainGenericError[ContractCustomError], ContractCustomError):
