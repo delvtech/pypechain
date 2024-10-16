@@ -14,9 +14,9 @@ contract OverloadedMethods {
         SimpleStruct simpleStruct;
     }
     
-    // Function doesn't accept any parameters, returns a uint
-    function doSomething() public pure returns (uint) {
-        return 2;
+    // Function doesn't accept any parameters, returns the address of the contract
+    function doSomething() public view returns (address) {
+        return address(this);
     }
 
     // Function accepts an integer, returns a uint

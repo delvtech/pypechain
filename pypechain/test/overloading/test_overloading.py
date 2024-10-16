@@ -32,7 +32,7 @@ class TestOverloading:
         y = 1
 
         result = deployed_contract.functions.doSomething().call()
-        assert result == 2
+        assert result == deployed_contract.address
 
         result = deployed_contract.functions.doSomething(s).call()
         assert result == "test string"
@@ -111,3 +111,16 @@ class TestOverloading:
         with pytest.raises(MismatchedABI) as err:
             result = deployed_contract.functions.doSomething(x, y, s).call()  # type: ignore
         assert "Could not identify the intended function with name `doSomething`" in str(err.value)
+
+    def test_factory(self, w3):
+        """Tests creating multiple contracts with the same object"""
+        # Deploy two contracts
+        deployed_contract_1 = OverloadedMethodsContract.deploy(w3=w3, account=w3.eth.accounts[0])
+        deployed_contract_2 = OverloadedMethodsContract.deploy(w3=w3, account=w3.eth.accounts[0])
+
+        # Function overload with no arguments returns the address
+        # Ensure the referenced contract is actually the contract being called
+        result = deployed_contract_1.functions.doSomething().call()
+        assert result == deployed_contract_1.address
+        result = deployed_contract_2.functions.doSomething().call()
+        assert result == deployed_contract_2.address
