@@ -22,10 +22,14 @@
 
 Static Python bindings for ethereum smart contracts.
 
-- Parses JSON ABIs to create typesafe web3.py contract instances
-- Functions have typesafe function parameters and return values
-- Smart Contract internal types are exposed as dataclasses
-- Contract event interfaces are exposed as typesafe classes
+- Parses JSON ABIs to create typesafe web3.py contract instances.
+- Functions have typesafe function parameters and return values.
+- Functions have transparent exceptions that contains decoded error messages and more.
+- Smart Contract internal types are exposed as dataclasses.
+- Contract event interfaces are exposed as typesafe dataclasses.
+- Helper functions to deploy a given contract.
+- Helper functions for `get_logs_typed` and `process_receipt_typed` to return typesafe dataclass events.
+- Helper functions for signing, transacting, and waiting for transaction receipts.
 
 This project is a work-in-progress. All code is provided as is and without guarantee.
 
