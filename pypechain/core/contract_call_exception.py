@@ -49,6 +49,8 @@ class PypechainCallException(Exception):
         # We explicitly define which init we're calling due to multiple inheritance,
         # and handle passing in the correct arguments here
         exception_args = args + orig_exception.args
+        if decoded_error is not None:
+            exception_args += (decoded_error,)
         Exception.__init__(self, *exception_args)
         self.orig_exception = orig_exception
         self.decoded_error = decoded_error
