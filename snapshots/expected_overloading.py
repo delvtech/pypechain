@@ -157,8 +157,8 @@ class OverloadedBalanceOfContractFunction0(PypechainContractFunction):
         account: LocalAccount, 
         transaction: TxParams | None = None, 
         timeout: float | None = None, 
-        poll_latency : float | None = None, 
-        validate_transaction : bool = False,
+        poll_latency: float | None = None, 
+        validate_transaction: bool = False,
     ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
@@ -355,8 +355,8 @@ class OverloadedBalanceOfContractFunction1(PypechainContractFunction):
         account: LocalAccount, 
         transaction: TxParams | None = None, 
         timeout: float | None = None, 
-        poll_latency : float | None = None, 
-        validate_transaction : bool = False,
+        poll_latency: float | None = None, 
+        validate_transaction: bool = False,
     ) -> TxReceipt:
         """Convenience method for signing and sending a transaction using the provided account.
 
