@@ -123,14 +123,22 @@ def _add_structs(contract_infos: dict[str, ContractInfo], structs: StructInfo | 
             contract_name = struct.contract_name
         info = contract_infos.get(contract_name)
         if info:
-            # Sanity check, if this structure already exists, we compare the two and ensure
-            # it's the same structure
+            # If this structure already exists, we merge the two, ensuring
+            # that fields that exist in both are the same.
             if struct.name in info.structs:
-                assert info.structs[struct.name] == struct, (
-                    "Existing structure for contract "
-                    f"{struct.contract_name}:{struct.name} {info.structs[struct.name]} "
-                    f"does not match defined structure {struct}."
-                )
+                existing_struct = info.structs[struct.name]
+                assert existing_struct.name == struct.name
+                assert existing_struct.contract_name == struct.contract_name
+                for struct_key, struct_value in struct.values.items():
+                    if struct_key in existing_struct.values:
+                        assert existing_struct.values[struct_key] == struct_value, (
+                            "Existing value for struct "
+                            f"{struct.contract_name}.{struct.name}.{struct_key} does not match. "
+                            f"Existing value: {existing_struct.values[struct_key]} "
+                            f"New value: {struct_value}"
+                        )
+                    else:
+                        info.structs[struct.name].values[struct_key] = struct_value
             else:
                 info.structs[struct.name] = struct
         else:

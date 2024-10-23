@@ -34,7 +34,7 @@ def render_types_file(contract_info: ContractInfo) -> str | None:
     types_files_imported = []
     # Iterate through all structs and look at the contract_name of each struct value
     for struct in structs:
-        for struct_value in struct.values:
+        for struct_value in struct.values.values():
             # Add an import if it's a struct
             if struct_value.is_struct:
                 if struct_value.contract_name is not None:
