@@ -204,7 +204,7 @@ class StructInfo:
 
     name: str
     contract_name: str | None
-    values: list[StructValue]
+    values: dict[str, StructValue]
 
 
 @dataclass
@@ -315,7 +315,7 @@ def get_structs(
         if is_struct(internal_type) and components:
             struct_name = get_struct_name(param)
             struct_file_name = get_struct_contract_name(param)
-            struct_values: list[StructValue] = []
+            struct_values: dict[str, StructValue] = {}
 
             # Walk over the components of the struct
             for component in components:
@@ -335,14 +335,12 @@ def get_structs(
                 python_type = solidity_to_python_type(component_type, custom_types=list(structs.keys()))
 
                 # Collect information
-                struct_values.append(
-                    StructValue(
-                        name=component_name,
-                        solidity_type=component_type,
-                        python_type=python_type,
-                        is_struct=is_struct(component_internal_type),
-                        contract_name=contract_name,
-                    )
+                struct_values[component_name] = StructValue(
+                    name=component_name,
+                    solidity_type=component_type,
+                    python_type=python_type,
+                    is_struct=is_struct(component_internal_type),
+                    contract_name=contract_name,
                 )
 
             # Add the struct to the dict
