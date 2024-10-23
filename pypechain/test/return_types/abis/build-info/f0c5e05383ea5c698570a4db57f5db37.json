@@ -1,0 +1,7 @@
+{
+  "id": "f0c5e05383ea5c698570a4db57f5db37",
+  "source_id_to_path": {
+    "0": "pypechain/test/return_types/contracts/ReturnTypes.sol"
+  },
+  "language": "Solidity"
+}

@@ -1,0 +1,235 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "emitNoEvents",
+      "inputs": [
+        {
+          "name": "x",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "y",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "added",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "emitOneEvent",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "who",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "emitTwoEvents",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "who",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "EventA",
+      "inputs": [
+        {
+          "name": "who",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "EventB",
+      "inputs": [],
+      "anonymous": false
+    }
+  ],
+  "bytecode": {
+    "object": "0x608060405234801561001057600080fd5b50610214806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063307324fd14610046578063b517b0d81461005b578063c79ba18b1461006e575b600080fd5b61005961005436600461015f565b610093565b005b61005961006936600461015f565b6100da565b61008161007c36600461019b565b61014a565b60405190815260200160405180910390f35b806001600160a01b03167f9796ec8d639e8a8082085b1912b0c782def636bb8e5bde841892baff0f925433836040516100ce91815260200190565b60405180910390a25050565b806001600160a01b03167f9796ec8d639e8a8082085b1912b0c782def636bb8e5bde841892baff0f9254338360405161011591815260200190565b60405180910390a26040517f72c635b4ade595df848fdc26063ba6c3f276cd7121dadbacb0064e1e3a61961490600090a15050565b600061015682846101bd565b90505b92915050565b6000806040838503121561017257600080fd5b8235915060208301356001600160a01b038116811461019057600080fd5b809150509250929050565b600080604083850312156101ae57600080fd5b50508035926020909101359150565b8082018082111561015957634e487b7160e01b600052601160045260246000fdfea2646970667358221220f4fc44b59a7d7fc9f695214dbacf39738bcfb36286157033034ece49be233d7564736f6c63430008160033",
+    "sourceMap": "57:429:0:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c8063307324fd14610046578063b517b0d81461005b578063c79ba18b1461006e575b600080fd5b61005961005436600461015f565b610093565b005b61005961006936600461015f565b6100da565b61008161007c36600461019b565b61014a565b60405190815260200160405180910390f35b806001600160a01b03167f9796ec8d639e8a8082085b1912b0c782def636bb8e5bde841892baff0f925433836040516100ce91815260200190565b60405180910390a25050565b806001600160a01b03167f9796ec8d639e8a8082085b1912b0c782def636bb8e5bde841892baff0f9254338360405161011591815260200190565b60405180910390a26040517f72c635b4ade595df848fdc26063ba6c3f276cd7121dadbacb0064e1e3a61961490600090a15050565b600061015682846101bd565b90505b92915050565b6000806040838503121561017257600080fd5b8235915060208301356001600160a01b038116811461019057600080fd5b809150509250929050565b600080604083850312156101ae57600080fd5b50508035926020909101359150565b8082018082111561015957634e487b7160e01b600052601160045260246000fdfea2646970667358221220f4fc44b59a7d7fc9f695214dbacf39738bcfb36286157033034ece49be233d7564736f6c63430008160033",
+    "sourceMap": "57:429:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;154:97;;;;;;:::i;:::-;;:::i;:::-;;257:121;;;;;;:::i;:::-;;:::i;384:100::-;;;;;;:::i;:::-;;:::i;:::-;;;772:25:1;;;760:2;745:18;384:100:0;;;;;;;154:97;233:3;-1:-1:-1;;;;;226:18:0;;238:5;226:18;;;;772:25:1;;760:2;745:18;;626:177;226:18:0;;;;;;;;154:97;;:::o;257:121::-;337:3;-1:-1:-1;;;;;330:18:0;;342:5;330:18;;;;772:25:1;;760:2;745:18;;626:177;330:18:0;;;;;;;;363:8;;;;;;;257:121;;:::o;384:100::-;443:10;472:5;476:1;472;:5;:::i;:::-;465:12;;384:100;;;;;:::o;14:354:1:-;82:6;90;143:2;131:9;122:7;118:23;114:32;111:52;;;159:1;156;149:12;111:52;182:23;;;-1:-1:-1;255:2:1;240:18;;227:32;-1:-1:-1;;;;;288:31:1;;278:42;;268:70;;334:1;331;324:12;268:70;357:5;347:15;;;14:354;;;;;:::o;373:248::-;441:6;449;502:2;490:9;481:7;477:23;473:32;470:52;;;518:1;515;508:12;470:52;-1:-1:-1;;541:23:1;;;611:2;596:18;;;583:32;;-1:-1:-1;373:248:1:o;808:222::-;873:9;;;894:10;;;891:133;;;946:10;941:3;937:20;934:1;927:31;981:4;978:1;971:15;1009:4;1006:1;999:15",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "emitNoEvents(uint256,uint256)": "c79ba18b",
+    "emitOneEvent(uint256,address)": "307324fd",
+    "emitTwoEvents(uint256,address)": "b517b0d8"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"EventA\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"EventB\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"x\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"y\",\"type\":\"uint256\"}],\"name\":\"emitNoEvents\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"added\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"}],\"name\":\"emitOneEvent\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"}],\"name\":\"emitTwoEvents\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/events/contracts/Events.sol\":\"Events\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/events/contracts/Events.sol\":{\"keccak256\":\"0xa6b243686d4c8e5e64e4eca11c285183eef168a7b9f763b97f9fd0d886d2c430\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://62cd615e0fb4f5405a042f5a65b6c513388da7666bef5f69c32d0a9c7db071df\",\"dweb:/ipfs/QmWxZD2gtYMy3GNf2Es9q13Jgu14MNUkeJqZgaQqxnSecs\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.22+commit.4fc1097e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "EventA",
+          "anonymous": false
+        },
+        {
+          "inputs": [],
+          "type": "event",
+          "name": "EventB",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "x",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "y",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "emitNoEvents",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "added",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "emitOneEvent"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "emitTwoEvents"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "pypechain/test/events/contracts/Events.sol": "Events"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "pypechain/test/events/contracts/Events.sol": {
+        "keccak256": "0xa6b243686d4c8e5e64e4eca11c285183eef168a7b9f763b97f9fd0d886d2c430",
+        "urls": [
+          "bzz-raw://62cd615e0fb4f5405a042f5a65b6c513388da7666bef5f69c32d0a9c7db071df",
+          "dweb:/ipfs/QmWxZD2gtYMy3GNf2Es9q13Jgu14MNUkeJqZgaQqxnSecs"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 0
+}

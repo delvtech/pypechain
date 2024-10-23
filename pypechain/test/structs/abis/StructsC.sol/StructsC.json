@@ -1,0 +1,196 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "allStructsInternal",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct StructsC.OuterStruct",
+          "components": [
+            {
+              "name": "nested",
+              "type": "tuple",
+              "internalType": "struct StructsC.NestedStruct",
+              "components": [
+                {
+                  "name": "inner",
+                  "type": "tuple",
+                  "internalType": "struct StructsC.InnyStruct",
+                  "components": [
+                    {
+                      "name": "innerVal",
+                      "type": "uint256",
+                      "internalType": "uint256"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "innerStructIsExternal",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct StructsC.CStruct",
+          "components": [
+            {
+              "name": "inner",
+              "type": "tuple",
+              "internalType": "struct IStructs.InnerStruct",
+              "components": [
+                {
+                  "name": "boolVal",
+                  "type": "bool",
+                  "internalType": "bool"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "stateMutability": "pure"
+    }
+  ],
+  "bytecode": {
+    "object": "0x608060405234801561001057600080fd5b5060f48061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c80638012d826146037578063fc0db1de14606c575b600080fd5b604080518082018252600060208083018281529092528251808401845280830182815290529151918252015b60405180910390f35b608e60408051606081018252600091810191825260208101918252908152609e565b6040519051515181526020016063565b50604080516060810182526001918101918252602081019182529081529056fea2646970667358221220a897fe982f8c33895641b65745ff946b07724c9d9115b63b8c097c9d855b260464736f6c63430008160033",
+    "sourceMap": "101:892:3:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080604052348015600f57600080fd5b506004361060325760003560e01c80638012d826146037578063fc0db1de14606c575b600080fd5b604080518082018252600060208083018281529092528251808401845280830182815290529151918252015b60405180910390f35b608e60408051606081018252600091810191825260208101918252908152609e565b6040519051515181526020016063565b50604080516060810182526001918101918252602081019182529081529056fea2646970667358221220a897fe982f8c33895641b65745ff946b07724c9d9115b63b8c097c9d855b260464736f6c63430008160033",
+    "sourceMap": "101:892:3:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;837:154;-1:-1:-1;;;;;;;;;;;;;;;;;;;924:60:3;;941:40;;;;;924:60;;;941:40;;;924:60;;837:154;;208:55:4;;;181:18;837:154:3;;;;;;;;619:212;;-1:-1:-1;;;;;;;;;;;;;;;;;;;;;;;;670:18:3;-1:-1:-1;619:212:3;;;506:13:4;;500:20;494:27;476:46;;464:2;449:18;619:212:3;274:254:4;670:18:3;-1:-1:-1;719:105:3;;;779:27;;;;;802:1;757:52;;;779:27;;;719:105;;;757:52;;;719:105;;;;619:212::o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "allStructsInternal()": "fc0db1de",
+    "innerStructIsExternal()": "8012d826"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"allStructsInternal\",\"outputs\":[{\"components\":[{\"components\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"innerVal\",\"type\":\"uint256\"}],\"internalType\":\"struct StructsC.InnyStruct\",\"name\":\"inner\",\"type\":\"tuple\"}],\"internalType\":\"struct StructsC.NestedStruct\",\"name\":\"nested\",\"type\":\"tuple\"}],\"internalType\":\"struct StructsC.OuterStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"innerStructIsExternal\",\"outputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"boolVal\",\"type\":\"bool\"}],\"internalType\":\"struct IStructs.InnerStruct\",\"name\":\"inner\",\"type\":\"tuple\"}],\"internalType\":\"struct StructsC.CStruct\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/structs/contracts/StructsC.sol\":\"StructsC\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/structs/contracts/IStructs.sol\":{\"keccak256\":\"0xc007fcb8b79a776755256f2eff53653e10f375dafe9b28e19eb2a7aad88b2808\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ebd717b9d6ac40db7802a2593a9ae7e1b20dfa5d35f425aeef0d752c2e84fc7e\",\"dweb:/ipfs/QmY2KJvXZKiB6fkZHPojH69NaLQXhporkTGTtE4MSX5Em5\"]},\"pypechain/test/structs/contracts/StructsC.sol\":{\"keccak256\":\"0xbf6a10f3af066f279fc7addda493e4b61e98e9dfa0592c3bb10d207196f54efc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1ba888b8bd5efc76d7b208ffa0a3ca1848f9b6a29edb2a422b31e83fcd3f0cd7\",\"dweb:/ipfs/QmdBVMYryHGWkmhG89WRgZsHtk6Dj9mHC5ofP43zVgcS4t\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.22+commit.4fc1097e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "allStructsInternal",
+          "outputs": [
+            {
+              "internalType": "struct StructsC.OuterStruct",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "struct StructsC.NestedStruct",
+                  "name": "nested",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "struct StructsC.InnyStruct",
+                      "name": "inner",
+                      "type": "tuple",
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "innerVal",
+                          "type": "uint256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "innerStructIsExternal",
+          "outputs": [
+            {
+              "internalType": "struct StructsC.CStruct",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "struct IStructs.InnerStruct",
+                  "name": "inner",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "bool",
+                      "name": "boolVal",
+                      "type": "bool"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "pypechain/test/structs/contracts/StructsC.sol": "StructsC"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "pypechain/test/structs/contracts/IStructs.sol": {
+        "keccak256": "0xc007fcb8b79a776755256f2eff53653e10f375dafe9b28e19eb2a7aad88b2808",
+        "urls": [
+          "bzz-raw://ebd717b9d6ac40db7802a2593a9ae7e1b20dfa5d35f425aeef0d752c2e84fc7e",
+          "dweb:/ipfs/QmY2KJvXZKiB6fkZHPojH69NaLQXhporkTGTtE4MSX5Em5"
+        ],
+        "license": "MIT"
+      },
+      "pypechain/test/structs/contracts/StructsC.sol": {
+        "keccak256": "0xbf6a10f3af066f279fc7addda493e4b61e98e9dfa0592c3bb10d207196f54efc",
+        "urls": [
+          "bzz-raw://1ba888b8bd5efc76d7b208ffa0a3ca1848f9b6a29edb2a422b31e83fcd3f0cd7",
+          "dweb:/ipfs/QmdBVMYryHGWkmhG89WRgZsHtk6Dj9mHC5ofP43zVgcS4t"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 3
+}

@@ -1,0 +1,7 @@
+{
+  "id": "872a51ef2e57c9ca0469bceb563f5548",
+  "source_id_to_path": {
+    "0": "pypechain/test/events/contracts/Events.sol"
+  },
+  "language": "Solidity"
+}

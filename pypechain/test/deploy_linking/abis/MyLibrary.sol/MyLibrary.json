@@ -1,0 +1,113 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "add",
+      "inputs": [
+        {
+          "name": "a",
+          "type": "int256",
+          "internalType": "int256"
+        },
+        {
+          "name": "b",
+          "type": "int256",
+          "internalType": "int256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "int256",
+          "internalType": "int256"
+        }
+      ],
+      "stateMutability": "pure"
+    }
+  ],
+  "bytecode": {
+    "object": "0x60f6610039600b82828239805160001a60731461002c57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe730000000000000000000000000000000000000000301460806040526004361060335760003560e01c8063a5f3c23b146038575b600080fd5b60476043366004606a565b6059565b60405190815260200160405180910390f35b600060638284608b565b9392505050565b60008060408385031215607c57600080fd5b50508035926020909101359150565b808201828112600083128015821682158216171560b857634e487b7160e01b600052601160045260246000fd5b50509291505056fea264697066735822122005a4ed8899d0d0b37e2e1469b5fa9e841609aeb03530a92c9c31c0993e8364b864736f6c63430008160033",
+    "sourceMap": "57:116:1:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;57:116:1;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x730000000000000000000000000000000000000000301460806040526004361060335760003560e01c8063a5f3c23b146038575b600080fd5b60476043366004606a565b6059565b60405190815260200160405180910390f35b600060638284608b565b9392505050565b60008060408385031215607c57600080fd5b50508035926020909101359150565b808201828112600083128015821682158216171560b857634e487b7160e01b600052601160045260246000fd5b50509291505056fea264697066735822122005a4ed8899d0d0b37e2e1469b5fa9e841609aeb03530a92c9c31c0993e8364b864736f6c63430008160033",
+    "sourceMap": "57:116:1:-:0;;;;;;;;;;;;;;;;;;;;;;;;81:90;;;;;;:::i;:::-;;:::i;:::-;;;417:25:2;;;405:2;390:18;81:90:1;;;;;;;;135:6;159:5;163:1;159;:5;:::i;:::-;152:12;81:90;-1:-1:-1;;;81:90:1:o;14:246:2:-;80:6;88;141:2;129:9;120:7;116:23;112:32;109:52;;;157:1;154;147:12;109:52;-1:-1:-1;;180:23:2;;;250:2;235:18;;;222:32;;-1:-1:-1;14:246:2:o;453:313::-;517:9;;;545:11;;;492:3;575:9;;603:10;;599:19;;628:10;;620:19;;596:44;593:167;;;682:10;677:3;673:20;670:1;663:31;717:4;714:1;707:15;745:4;742:1;735:15;593:167;;;453:313;;;;:::o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "add(int256,int256)": "a5f3c23b"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"int256\",\"name\":\"a\",\"type\":\"int256\"},{\"internalType\":\"int256\",\"name\":\"b\",\"type\":\"int256\"}],\"name\":\"add\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/deploy_linking/contracts/MyLibrary.sol\":\"MyLibrary\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/deploy_linking/contracts/MyLibrary.sol\":{\"keccak256\":\"0xe593c008763077149438d86bda63b88b4ddfe985f02901a39a34d3a2800f3644\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://dba5635b184528ac30eadc0be78ea69e8d6240055fcf471fc33ea9076f6821fb\",\"dweb:/ipfs/QmNuFXV9fHkQmZf1T3pGAJZYjt1LJWJwQYzckvbxCBt1DN\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.22+commit.4fc1097e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "a",
+              "type": "int256"
+            },
+            {
+              "internalType": "int256",
+              "name": "b",
+              "type": "int256"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "add",
+          "outputs": [
+            {
+              "internalType": "int256",
+              "name": "",
+              "type": "int256"
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "pypechain/test/deploy_linking/contracts/MyLibrary.sol": "MyLibrary"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "pypechain/test/deploy_linking/contracts/MyLibrary.sol": {
+        "keccak256": "0xe593c008763077149438d86bda63b88b4ddfe985f02901a39a34d3a2800f3644",
+        "urls": [
+          "bzz-raw://dba5635b184528ac30eadc0be78ea69e8d6240055fcf471fc33ea9076f6821fb",
+          "dweb:/ipfs/QmNuFXV9fHkQmZf1T3pGAJZYjt1LJWJwQYzckvbxCBt1DN"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 1
+}

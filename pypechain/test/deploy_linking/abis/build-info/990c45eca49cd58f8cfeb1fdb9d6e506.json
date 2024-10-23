@@ -1,0 +1,8 @@
+{
+  "id": "990c45eca49cd58f8cfeb1fdb9d6e506",
+  "source_id_to_path": {
+    "0": "pypechain/test/deploy_linking/contracts/Contract.sol",
+    "1": "pypechain/test/deploy_linking/contracts/MyLibrary.sol"
+  },
+  "language": "Solidity"
+}

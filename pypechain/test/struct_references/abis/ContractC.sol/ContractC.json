@@ -1,0 +1,179 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "buildStruct",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct ContractB.StructsB",
+          "components": [
+            {
+              "name": "structA",
+              "type": "tuple",
+              "internalType": "struct ContractA.StructsA",
+              "components": [
+                {
+                  "name": "intVal",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "strVal",
+                  "type": "string",
+                  "internalType": "string"
+                }
+              ]
+            },
+            {
+              "name": "structB",
+              "type": "tuple",
+              "internalType": "struct ContractB.InnerStruct",
+              "components": [
+                {
+                  "name": "intVal",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "strVal",
+                  "type": "string",
+                  "internalType": "string"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "stateMutability": "pure"
+    }
+  ],
+  "bytecode": {
+    "object": "0x608060405234801561001057600080fd5b506101e2806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063a80476c814610030575b600080fd5b61003861004e565b604051610045919061016a565b60405180910390f35b6100566100cc565b6040518060400160405280604051806040016040528060018152602001604051806040016040528060018152602001606160f81b8152508152508152602001604051806040016040528060028152602001604051806040016040528060018152602001603160f91b815250815250815250905090565b6040805160808101825260009181019182526060808201529081908152602001610109604051806040016040528060008152602001606081525090565b905290565b80518252600060208083015160406020860152805180604087015260005b818110156101485782810184015187820160600152830161012c565b506000606082880101526060601f19601f830116870101935050505092915050565b602081526000825160406020840152610186606084018261010e565b90506020840151601f198483030160408501526101a3828261010e565b9594505050505056fea264697066735822122008df8170b2c76e5c63907987a567db4b097987ade9d37c5e5ffeabefcb313f9f64736f6c63430008160033",
+    "sourceMap": "148:347:2:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063a80476c814610030575b600080fd5b61003861004e565b604051610045919061016a565b60405180910390f35b6100566100cc565b6040518060400160405280604051806040016040528060018152602001604051806040016040528060018152602001606160f81b8152508152508152602001604051806040016040528060028152602001604051806040016040528060018152602001603160f91b815250815250815250905090565b6040805160808101825260009181019182526060808201529081908152602001610109604051806040016040528060008152602001606081525090565b905290565b80518252600060208083015160406020860152805180604087015260005b818110156101485782810184015187820160600152830161012c565b506000606082880101526060601f19601f830116870101935050505092915050565b602081526000825160406020840152610186606084018261010e565b90506020840151601f198483030160408501526101a3828261010e565b9594505050505056fea264697066735822122008df8170b2c76e5c63907987a567db4b097987ade9d37c5e5ffeabefcb313f9f64736f6c63430008160033",
+    "sourceMap": "148:347:2:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;203:290;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;;247:25;;:::i;:::-;303:183;;;;;;;;349:46;;;;;;;;378:1;349:46;;;;;;;;;;;;;;;;;-1:-1:-1;;;349:46:2;;;;;;303:183;;;;422:49;;;;;;;;454:1;422:49;;;;;;;;;;;;;;;;;-1:-1:-1;;;422:49:2;;;;;;303:183;;;284:202;;203:290;:::o;-1:-1:-1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;14:570:3:-;101:5;95:12;90:3;83:25;65:3;127:4;177;170:5;166:16;160:23;215:4;208;203:3;199:14;192:28;249:12;243:19;294:6;287:4;282:3;278:14;271:30;319:1;329:140;343:6;340:1;337:13;329:140;;;432:20;;;428:29;;422:36;404:11;;;417:2;400:20;393:66;358:10;;329:140;;;333:3;512:1;507:2;498:6;493:3;489:16;485:25;478:36;575:2;568;564:7;559:2;551:6;547:15;543:29;538:3;534:39;530:48;523:55;;;;;14:570;;;;:::o;589:547::-;766:2;755:9;748:21;729:4;804:6;798:13;847:4;842:2;831:9;827:18;820:32;875:60;931:2;920:9;916:18;902:12;875:60;:::i;:::-;861:74;;984:2;976:6;972:15;966:22;1058:2;1054:7;1042:9;1034:6;1030:22;1026:36;1019:4;1008:9;1004:20;997:66;1080:50;1123:6;1107:14;1080:50;:::i;:::-;1072:58;589:547;-1:-1:-1;;;;;589:547:3:o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "buildStruct()": "a80476c8"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"buildStruct\",\"outputs\":[{\"components\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct ContractA.StructsA\",\"name\":\"structA\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"intVal\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"strVal\",\"type\":\"string\"}],\"internalType\":\"struct ContractB.InnerStruct\",\"name\":\"structB\",\"type\":\"tuple\"}],\"internalType\":\"struct ContractB.StructsB\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/struct_references/contracts/ContractC.sol\":\"ContractC\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/struct_references/contracts/ContractA.sol\":{\"keccak256\":\"0x7c6e0e2f077d73754587b0760e3111b53eeb7ef6fbcd91ad0e32483e8e1673e4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://49991b12192da7819b81fd3c2738401ab2d9f08eec3b3e945dd9334a59edd3aa\",\"dweb:/ipfs/QmfX1i2YeftES985pspzVSU2DTVxwTWQ3z7QHaQqkx8NCD\"]},\"pypechain/test/struct_references/contracts/ContractB.sol\":{\"keccak256\":\"0xc680447e759596b0d1d0874f3ba118b8d71b1fc3f80311c5461d24d27bcff670\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://16b0140be9c1dbd83849476ee200cbb42bc7cd76b292f884bcbb139df9f07aeb\",\"dweb:/ipfs/QmaRrLLWUvU529RE1Xpi144JpAGcNn63vNVsUg6ZBvGWRd\"]},\"pypechain/test/struct_references/contracts/ContractC.sol\":{\"keccak256\":\"0x856595cf7c6f100e355ebe6cd3b16fa6e0a254ca2995e75bba460888d1546b2e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://56a2345f71c5d846833d1d038f1a501cdac62e27d67d78c88d013a26c41d80f8\",\"dweb:/ipfs/QmRj1qhg8GSE1v6QHfQB3sQaguS4mKKkPw9nnwRvbo4FgG\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.22+commit.4fc1097e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "buildStruct",
+          "outputs": [
+            {
+              "internalType": "struct ContractB.StructsB",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "struct ContractA.StructsA",
+                  "name": "structA",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "uint256",
+                      "name": "intVal",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "strVal",
+                      "type": "string"
+                    }
+                  ]
+                },
+                {
+                  "internalType": "struct ContractB.InnerStruct",
+                  "name": "structB",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "uint256",
+                      "name": "intVal",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "strVal",
+                      "type": "string"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "pypechain/test/struct_references/contracts/ContractC.sol": "ContractC"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "pypechain/test/struct_references/contracts/ContractA.sol": {
+        "keccak256": "0x7c6e0e2f077d73754587b0760e3111b53eeb7ef6fbcd91ad0e32483e8e1673e4",
+        "urls": [
+          "bzz-raw://49991b12192da7819b81fd3c2738401ab2d9f08eec3b3e945dd9334a59edd3aa",
+          "dweb:/ipfs/QmfX1i2YeftES985pspzVSU2DTVxwTWQ3z7QHaQqkx8NCD"
+        ],
+        "license": "MIT"
+      },
+      "pypechain/test/struct_references/contracts/ContractB.sol": {
+        "keccak256": "0xc680447e759596b0d1d0874f3ba118b8d71b1fc3f80311c5461d24d27bcff670",
+        "urls": [
+          "bzz-raw://16b0140be9c1dbd83849476ee200cbb42bc7cd76b292f884bcbb139df9f07aeb",
+          "dweb:/ipfs/QmaRrLLWUvU529RE1Xpi144JpAGcNn63vNVsUg6ZBvGWRd"
+        ],
+        "license": "MIT"
+      },
+      "pypechain/test/struct_references/contracts/ContractC.sol": {
+        "keccak256": "0x856595cf7c6f100e355ebe6cd3b16fa6e0a254ca2995e75bba460888d1546b2e",
+        "urls": [
+          "bzz-raw://56a2345f71c5d846833d1d038f1a501cdac62e27d67d78c88d013a26c41d80f8",
+          "dweb:/ipfs/QmRj1qhg8GSE1v6QHfQB3sQaguS4mKKkPw9nnwRvbo4FgG"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 2
+}
