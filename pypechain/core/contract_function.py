@@ -192,5 +192,4 @@ class PypechainContractFunction(ContractFunction):
         # Check the receipt, throwing an error if status == 0
         if validate_transaction:
             return check_txn_receipt(self, tx_hash, tx_receipt)
-        else:
-            return tx_receipt
+        return tx_receipt
