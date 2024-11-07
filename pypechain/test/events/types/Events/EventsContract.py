@@ -51,12 +51,10 @@ from pypechain.core import (
     BaseEventArgs,
     PypechainBaseContractErrors,
     PypechainContractFunction,
-    check_txn_receipt,
     combomethod_typed,
     dataclass_to_tuple,
     expand_struct_type_str,
     get_arg_type_names,
-    handle_contract_logic_error,
     rename_returned_types,
 )
 
@@ -64,12 +62,69 @@ from .EventsTypes import EventAEvent, EventBEvent
 
 structs = {}
 
+events_abi: ABI = cast(
+    ABI,
+    [
+        {
+            "type": "function",
+            "name": "emitNoEvents",
+            "inputs": [
+                {"name": "x", "type": "uint256", "internalType": "uint256"},
+                {"name": "y", "type": "uint256", "internalType": "uint256"},
+            ],
+            "outputs": [{"name": "added", "type": "uint256", "internalType": "uint256"}],
+            "stateMutability": "pure",
+        },
+        {
+            "type": "function",
+            "name": "emitOneEvent",
+            "inputs": [
+                {"name": "value", "type": "uint256", "internalType": "uint256"},
+                {"name": "who", "type": "address", "internalType": "address"},
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable",
+        },
+        {
+            "type": "function",
+            "name": "emitTwoEvents",
+            "inputs": [
+                {"name": "value", "type": "uint256", "internalType": "uint256"},
+                {"name": "who", "type": "address", "internalType": "address"},
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable",
+        },
+        {
+            "type": "event",
+            "name": "EventA",
+            "inputs": [
+                {"name": "who", "type": "address", "indexed": True, "internalType": "address"},
+                {"name": "value", "type": "uint256", "indexed": False, "internalType": "uint256"},
+            ],
+            "anonymous": False,
+        },
+        {"type": "event", "name": "EventB", "inputs": [], "anonymous": False},
+    ],
+)
+
+
+class EventsContractErrors(PypechainBaseContractErrors):
+    """ContractErrors for the Events contract."""
+
+    def __init__(
+        self,
+    ) -> None:
+
+        self._all = []
+
 
 class EventsEmitNoEventsContractFunction0(PypechainContractFunction):
     """ContractFunction for the emitNoEvents(int,int) method."""
 
     _function_name = "emitNoEvents"
     _type_signature = expand_struct_type_str(tuple(["int", "int"]), structs)
+    _error_class = EventsContractErrors
 
     def call(
         self,
@@ -87,166 +142,9 @@ class EventsEmitNoEventsContractFunction0(PypechainContractFunction):
         return_types = int
 
         # Call the function
-        try:
-            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="call",
-                transaction=transaction,
-                block_identifier=block_identifier,
-            ) from err
+        raw_values = self._call(transaction, block_identifier, state_override, ccip_read_enabled)
 
         return cast(int, rename_returned_types(structs, return_types, raw_values))
-
-    def transact(self, transaction: TxParams | None = None) -> HexBytes:
-        try:
-            return super().transact(transaction)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="transact",
-                transaction=transaction,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def estimate_gas(
-        self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier | None = None,
-        state_override: StateOverride | None = None,
-    ) -> int:
-        try:
-            return super().estimate_gas(transaction, block_identifier, state_override)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="build",
-                transaction=transaction,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
-        try:
-            return super().build_transaction(transaction)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="build",
-                transaction=transaction,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
-        """Convenience method for signing and sending a transaction using the provided account.
-
-        Arguments
-        ---------
-        account : LocalAccount
-            The account to use for signing and sending the transaction.
-        transaction : TxParams | None, optional
-            The transaction parameters to use for sending the transaction.
-
-        Returns
-        -------
-        HexBytes
-            The transaction hash.
-        """
-        if transaction is None:
-            transaction_params: TxParams = {}
-        else:
-            transaction_params: TxParams = transaction
-
-        if "from" in transaction_params:
-            # Ensure if transaction is set, it matches
-            assert (
-                transaction_params["from"] == account.address
-            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
-        else:
-            transaction_params["from"] = account.address
-
-        if "gas" not in transaction_params:
-            # Web3 default gas estimate seems to be underestimating gas, likely due to
-            # not looking at pending block. Here, we explicitly call estimate gas
-            # if gas isn't passed in.
-            transaction_params["gas"] = self.estimate_gas(transaction_params, block_identifier="pending")
-
-        # Build the raw transaction
-        raw_transaction = self.build_transaction(transaction_params)
-
-        if "nonce" not in raw_transaction:
-            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address, block_identifier="pending")
-
-        # Sign the raw transaction
-        # Mismatched types between account and web3py
-        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
-
-        # Send the signed transaction
-        try:
-            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="transact",
-                transaction=transaction_params,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def sign_transact_and_wait(
-        self,
-        account: LocalAccount,
-        transaction: TxParams | None = None,
-        timeout: float | None = None,
-        poll_latency: float | None = None,
-        validate_transaction: bool = False,
-    ) -> TxReceipt:
-        """Convenience method for signing and sending a transaction using the provided account.
-
-        Arguments
-        ---------
-        account : LocalAccount
-            The account to use for signing and sending the transaction.
-        transaction : TxParams | None, optional
-            The transaction parameters to use for sending the transaction.
-        timeout: float, optional
-            The number of seconds to wait for the transaction to be mined. Defaults to 120.
-        poll_latency: float, optional
-            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
-        validate_transaction: bool, optional
-            Whether to validate the transaction. If True, will throw an exception if the resulting
-            tx_receipt returned a failure status.
-
-        Returns
-        -------
-        HexBytes
-            The transaction hash.
-        """
-
-        # pylint: disable=too-many-arguments
-        # pylint: disable=too-many-positional-arguments
-
-        if timeout is None:
-            timeout = 120
-        if poll_latency is None:
-            poll_latency = 0.1
-
-        tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
-        # Check the receipt, throwing an error if status == 0
-        if validate_transaction:
-            return check_txn_receipt(self, tx_hash, tx_receipt)
-        else:
-            return tx_receipt
 
 
 class EventsEmitNoEventsContractFunction(PypechainContractFunction):
@@ -307,6 +205,7 @@ class EventsEmitOneEventContractFunction0(PypechainContractFunction):
 
     _function_name = "emitOneEvent"
     _type_signature = expand_struct_type_str(tuple(["int", "str"]), structs)
+    _error_class = EventsContractErrors
 
     def call(
         self,
@@ -321,164 +220,7 @@ class EventsEmitOneEventContractFunction0(PypechainContractFunction):
             block_identifier = self.w3.eth.default_block
 
         # Call the function
-        try:
-            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="call",
-                transaction=transaction,
-                block_identifier=block_identifier,
-            ) from err
-
-    def transact(self, transaction: TxParams | None = None) -> HexBytes:
-        try:
-            return super().transact(transaction)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="transact",
-                transaction=transaction,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def estimate_gas(
-        self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier | None = None,
-        state_override: StateOverride | None = None,
-    ) -> int:
-        try:
-            return super().estimate_gas(transaction, block_identifier, state_override)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="build",
-                transaction=transaction,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
-        try:
-            return super().build_transaction(transaction)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="build",
-                transaction=transaction,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
-        """Convenience method for signing and sending a transaction using the provided account.
-
-        Arguments
-        ---------
-        account : LocalAccount
-            The account to use for signing and sending the transaction.
-        transaction : TxParams | None, optional
-            The transaction parameters to use for sending the transaction.
-
-        Returns
-        -------
-        HexBytes
-            The transaction hash.
-        """
-        if transaction is None:
-            transaction_params: TxParams = {}
-        else:
-            transaction_params: TxParams = transaction
-
-        if "from" in transaction_params:
-            # Ensure if transaction is set, it matches
-            assert (
-                transaction_params["from"] == account.address
-            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
-        else:
-            transaction_params["from"] = account.address
-
-        if "gas" not in transaction_params:
-            # Web3 default gas estimate seems to be underestimating gas, likely due to
-            # not looking at pending block. Here, we explicitly call estimate gas
-            # if gas isn't passed in.
-            transaction_params["gas"] = self.estimate_gas(transaction_params, block_identifier="pending")
-
-        # Build the raw transaction
-        raw_transaction = self.build_transaction(transaction_params)
-
-        if "nonce" not in raw_transaction:
-            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address, block_identifier="pending")
-
-        # Sign the raw transaction
-        # Mismatched types between account and web3py
-        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
-
-        # Send the signed transaction
-        try:
-            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="transact",
-                transaction=transaction_params,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def sign_transact_and_wait(
-        self,
-        account: LocalAccount,
-        transaction: TxParams | None = None,
-        timeout: float | None = None,
-        poll_latency: float | None = None,
-        validate_transaction: bool = False,
-    ) -> TxReceipt:
-        """Convenience method for signing and sending a transaction using the provided account.
-
-        Arguments
-        ---------
-        account : LocalAccount
-            The account to use for signing and sending the transaction.
-        transaction : TxParams | None, optional
-            The transaction parameters to use for sending the transaction.
-        timeout: float, optional
-            The number of seconds to wait for the transaction to be mined. Defaults to 120.
-        poll_latency: float, optional
-            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
-        validate_transaction: bool, optional
-            Whether to validate the transaction. If True, will throw an exception if the resulting
-            tx_receipt returned a failure status.
-
-        Returns
-        -------
-        HexBytes
-            The transaction hash.
-        """
-
-        # pylint: disable=too-many-arguments
-        # pylint: disable=too-many-positional-arguments
-
-        if timeout is None:
-            timeout = 120
-        if poll_latency is None:
-            poll_latency = 0.1
-
-        tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
-        # Check the receipt, throwing an error if status == 0
-        if validate_transaction:
-            return check_txn_receipt(self, tx_hash, tx_receipt)
-        else:
-            return tx_receipt
+        raw_values = self._call(transaction, block_identifier, state_override, ccip_read_enabled)
 
 
 class EventsEmitOneEventContractFunction(PypechainContractFunction):
@@ -539,6 +281,7 @@ class EventsEmitTwoEventsContractFunction0(PypechainContractFunction):
 
     _function_name = "emitTwoEvents"
     _type_signature = expand_struct_type_str(tuple(["int", "str"]), structs)
+    _error_class = EventsContractErrors
 
     def call(
         self,
@@ -553,164 +296,7 @@ class EventsEmitTwoEventsContractFunction0(PypechainContractFunction):
             block_identifier = self.w3.eth.default_block
 
         # Call the function
-        try:
-            raw_values = super().call(transaction, block_identifier, state_override, ccip_read_enabled)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="call",
-                transaction=transaction,
-                block_identifier=block_identifier,
-            ) from err
-
-    def transact(self, transaction: TxParams | None = None) -> HexBytes:
-        try:
-            return super().transact(transaction)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="transact",
-                transaction=transaction,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def estimate_gas(
-        self,
-        transaction: TxParams | None = None,
-        block_identifier: BlockIdentifier | None = None,
-        state_override: StateOverride | None = None,
-    ) -> int:
-        try:
-            return super().estimate_gas(transaction, block_identifier, state_override)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="build",
-                transaction=transaction,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def build_transaction(self, transaction: TxParams | None = None) -> TxParams:
-        try:
-            return super().build_transaction(transaction)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="build",
-                transaction=transaction,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def sign_and_transact(self, account: LocalAccount, transaction: TxParams | None = None) -> HexBytes:
-        """Convenience method for signing and sending a transaction using the provided account.
-
-        Arguments
-        ---------
-        account : LocalAccount
-            The account to use for signing and sending the transaction.
-        transaction : TxParams | None, optional
-            The transaction parameters to use for sending the transaction.
-
-        Returns
-        -------
-        HexBytes
-            The transaction hash.
-        """
-        if transaction is None:
-            transaction_params: TxParams = {}
-        else:
-            transaction_params: TxParams = transaction
-
-        if "from" in transaction_params:
-            # Ensure if transaction is set, it matches
-            assert (
-                transaction_params["from"] == account.address
-            ), f"Transaction from {transaction_params['from']} does not match account {account.address}"
-        else:
-            transaction_params["from"] = account.address
-
-        if "gas" not in transaction_params:
-            # Web3 default gas estimate seems to be underestimating gas, likely due to
-            # not looking at pending block. Here, we explicitly call estimate gas
-            # if gas isn't passed in.
-            transaction_params["gas"] = self.estimate_gas(transaction_params, block_identifier="pending")
-
-        # Build the raw transaction
-        raw_transaction = self.build_transaction(transaction_params)
-
-        if "nonce" not in raw_transaction:
-            raw_transaction["nonce"] = self.w3.eth.get_transaction_count(account.address, block_identifier="pending")
-
-        # Sign the raw transaction
-        # Mismatched types between account and web3py
-        signed_transaction = account.sign_transaction(raw_transaction)  # type: ignore
-
-        # Send the signed transaction
-        try:
-            return self.w3.eth.send_raw_transaction(signed_transaction.raw_transaction)
-        except Exception as err:  # pylint disable=broad-except
-            raise handle_contract_logic_error(
-                contract_function=self,
-                errors_class=EventsContractErrors,
-                err=err,
-                contract_call_type="transact",
-                transaction=transaction_params,
-                block_identifier="pending",  # race condition here, best effort to get block of txn.
-            ) from err
-
-    def sign_transact_and_wait(
-        self,
-        account: LocalAccount,
-        transaction: TxParams | None = None,
-        timeout: float | None = None,
-        poll_latency: float | None = None,
-        validate_transaction: bool = False,
-    ) -> TxReceipt:
-        """Convenience method for signing and sending a transaction using the provided account.
-
-        Arguments
-        ---------
-        account : LocalAccount
-            The account to use for signing and sending the transaction.
-        transaction : TxParams | None, optional
-            The transaction parameters to use for sending the transaction.
-        timeout: float, optional
-            The number of seconds to wait for the transaction to be mined. Defaults to 120.
-        poll_latency: float, optional
-            The number of seconds to wait between polling for the transaction receipt. Defaults to 0.1.
-        validate_transaction: bool, optional
-            Whether to validate the transaction. If True, will throw an exception if the resulting
-            tx_receipt returned a failure status.
-
-        Returns
-        -------
-        HexBytes
-            The transaction hash.
-        """
-
-        # pylint: disable=too-many-arguments
-        # pylint: disable=too-many-positional-arguments
-
-        if timeout is None:
-            timeout = 120
-        if poll_latency is None:
-            poll_latency = 0.1
-
-        tx_hash = self.sign_and_transact(account, transaction)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout, poll_latency=poll_latency)
-        # Check the receipt, throwing an error if status == 0
-        if validate_transaction:
-            return check_txn_receipt(self, tx_hash, tx_receipt)
-        else:
-            return tx_receipt
+        raw_values = self._call(transaction, block_identifier, state_override, ccip_read_enabled)
 
 
 class EventsEmitTwoEventsContractFunction(PypechainContractFunction):
@@ -989,63 +575,6 @@ class EventsContractEvents(ContractEvents):
             Type[EventsEventBContractEvent],
             EventsEventBContractEvent.factory("EventB", w3=w3, contract_abi=abi, address=address, event_name="EventB"),
         )
-
-
-events_abi: ABI = cast(
-    ABI,
-    [
-        {
-            "type": "function",
-            "name": "emitNoEvents",
-            "inputs": [
-                {"name": "x", "type": "uint256", "internalType": "uint256"},
-                {"name": "y", "type": "uint256", "internalType": "uint256"},
-            ],
-            "outputs": [{"name": "added", "type": "uint256", "internalType": "uint256"}],
-            "stateMutability": "pure",
-        },
-        {
-            "type": "function",
-            "name": "emitOneEvent",
-            "inputs": [
-                {"name": "value", "type": "uint256", "internalType": "uint256"},
-                {"name": "who", "type": "address", "internalType": "address"},
-            ],
-            "outputs": [],
-            "stateMutability": "nonpayable",
-        },
-        {
-            "type": "function",
-            "name": "emitTwoEvents",
-            "inputs": [
-                {"name": "value", "type": "uint256", "internalType": "uint256"},
-                {"name": "who", "type": "address", "internalType": "address"},
-            ],
-            "outputs": [],
-            "stateMutability": "nonpayable",
-        },
-        {
-            "type": "event",
-            "name": "EventA",
-            "inputs": [
-                {"name": "who", "type": "address", "indexed": True, "internalType": "address"},
-                {"name": "value", "type": "uint256", "indexed": False, "internalType": "uint256"},
-            ],
-            "anonymous": False,
-        },
-        {"type": "event", "name": "EventB", "inputs": [], "anonymous": False},
-    ],
-)
-
-
-class EventsContractErrors(PypechainBaseContractErrors):
-    """ContractErrors for the Events contract."""
-
-    def __init__(
-        self,
-    ) -> None:
-
-        self._all = []
 
 
 class EventsContract(Contract):
