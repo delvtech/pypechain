@@ -24,7 +24,9 @@ dependencies = [
     "isort", 
     "jinja2", 
     "toml", 
-    "web3 >= 7.2.0",
+    // TODO new event api for web3 introduced to 7.5.0 breaks pypechain
+    // https://github.com/delvtech/pypechain/issues/149
+    "web3 >= 7.2.0, < 7.5.0",
 ]
 
 [project.scripts]
