@@ -3,15 +3,16 @@
 from __future__ import annotations
 
 import copy
-from typing import Any, Generic, Literal, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, Generic, Literal, Type, TypeVar, Union, cast
 
 from eth_typing import BlockNumber
 from hexbytes import HexBytes
 from web3.exceptions import ContractCustomError, ContractLogicError, ContractPanicError, OffchainLookup
 from web3.types import BlockIdentifier, TxParams, TxReceipt
 
-from .contract_function import PypechainContractFunction
-from .error import PypechainBaseContractErrors
+if TYPE_CHECKING:
+    from .contract_function import PypechainContractFunction
+    from .error import PypechainBaseContractErrors
 
 # pylint: disable=too-many-arguments
 # pylint: disable=too-many-positional-arguments
