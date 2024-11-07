@@ -89,8 +89,6 @@ from pypechain.core import (
     PypechainContractFunction,
     PypechainContractLogicError,
     PypechainBaseContractErrors,
-    handle_contract_logic_error,
-    check_txn_receipt,
 )
 
 
@@ -103,14 +101,12 @@ structs = {
 {% endif %}
 {%- endfor %}}
 
+{{abi_block}}
+
+{{ errors_block }}
 
 {{functions_block}}
 
 {% if has_events %}{{ events_block }}{% endif %}
-
-
-{{abi_block}}
-
-{{ errors_block }}
 
 {{contract_block}}
