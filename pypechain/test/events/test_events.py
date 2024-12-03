@@ -29,10 +29,10 @@ class TestEvents:
         # if the receipt has multiple events. This is expected, as web3 under the hood
         # loops through all events, regardless of the event attached. Hence, we discard
         # any events, as we handle looping over known events here.
-        event_aa = list(deployed_contract.events.EventA().process_receipt_typed(receipt_a, errors=DISCARD))
-        event_ab = list(deployed_contract.events.EventA().process_receipt_typed(receipt_b, errors=DISCARD))
-        event_ba = list(deployed_contract.events.EventB().process_receipt_typed(receipt_a, errors=DISCARD))
-        event_bb = list(deployed_contract.events.EventB().process_receipt_typed(receipt_b, errors=DISCARD))
+        event_aa = list(deployed_contract.events.EventA.process_receipt_typed(receipt_a, errors=DISCARD))
+        event_ab = list(deployed_contract.events.EventA.process_receipt_typed(receipt_b, errors=DISCARD))
+        event_ba = list(deployed_contract.events.EventB.process_receipt_typed(receipt_a, errors=DISCARD))
+        event_bb = list(deployed_contract.events.EventB.process_receipt_typed(receipt_b, errors=DISCARD))
 
         assert len(event_aa) == 1
         assert isinstance(event_aa[0], EventAEvent)

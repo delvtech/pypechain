@@ -556,9 +556,9 @@ class EventsEventBContractEvent(ContractEvent):
 class EventsContractEvents(ContractEvents):
     """ContractEvents for the Events contract."""
 
-    EventA: Type[EventsEventAContractEvent]
+    EventA: EventsEventAContractEvent
 
-    EventB: Type[EventsEventBContractEvent]
+    EventB: EventsEventBContractEvent
 
     def __init__(
         self,
@@ -567,13 +567,11 @@ class EventsContractEvents(ContractEvents):
         address: ChecksumAddress | None = None,
     ) -> None:
         super().__init__(abi, w3, address)
-        self.EventA = cast(
-            Type[EventsEventAContractEvent],
-            EventsEventAContractEvent.factory("EventA", w3=w3, contract_abi=abi, address=address, event_name="EventA"),
+        self.EventA = EventsEventAContractEvent.factory(
+            "EventA", w3=w3, contract_abi=abi, address=address, event_name="EventA"
         )
-        self.EventB = cast(
-            Type[EventsEventBContractEvent],
-            EventsEventBContractEvent.factory("EventB", w3=w3, contract_abi=abi, address=address, event_name="EventB"),
+        self.EventB = EventsEventBContractEvent.factory(
+            "EventB", w3=w3, contract_abi=abi, address=address, event_name="EventB"
         )
 
 

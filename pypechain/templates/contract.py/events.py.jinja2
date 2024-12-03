@@ -91,7 +91,7 @@ class {{contract_name}}{{event.capitalized_name}}ContractEvent(ContractEvent):
 class {{contract_name}}ContractEvents(ContractEvents):
     """ContractEvents for the {{contract_name}} contract."""
 {% for event in events %}
-    {{event.name}}: Type[{{contract_name}}{{event.capitalized_name}}ContractEvent]
+    {{event.name}}: {{contract_name}}{{event.capitalized_name}}ContractEvent
 {% endfor %}
 
     def __init__(
@@ -102,11 +102,11 @@ class {{contract_name}}ContractEvents(ContractEvents):
     ) -> None:
         super().__init__(abi, w3, address)
         {% for event in events -%}
-        self.{{event.name}} = cast(Type[{{contract_name}}{{event.capitalized_name}}ContractEvent], {{contract_name}}{{event.capitalized_name}}ContractEvent.factory(
+        self.{{event.name}} = {{contract_name}}{{event.capitalized_name}}ContractEvent.factory(
             "{{event.name}}",
             w3=w3,
             contract_abi=abi,
             address=address,
             event_name="{{event.name}}"
-        ))
+        )
         {% endfor %}

@@ -260,7 +260,7 @@ class TransactSuccessContractEvent(ContractEvent):
 class TransactContractEvents(ContractEvents):
     """ContractEvents for the Transact contract."""
 
-    Success: Type[TransactSuccessContractEvent]
+    Success: TransactSuccessContractEvent
 
     def __init__(
         self,
@@ -269,11 +269,8 @@ class TransactContractEvents(ContractEvents):
         address: ChecksumAddress | None = None,
     ) -> None:
         super().__init__(abi, w3, address)
-        self.Success = cast(
-            Type[TransactSuccessContractEvent],
-            TransactSuccessContractEvent.factory(
-                "Success", w3=w3, contract_abi=abi, address=address, event_name="Success"
-            ),
+        self.Success = TransactSuccessContractEvent.factory(
+            "Success", w3=w3, contract_abi=abi, address=address, event_name="Success"
         )
 
 
