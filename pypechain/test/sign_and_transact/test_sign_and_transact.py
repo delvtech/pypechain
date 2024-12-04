@@ -62,7 +62,7 @@ class TestStructs:
         # Expect success with sign and transact
         tx_hash = deployed_contract.functions.TransactFunction().sign_and_transact(account=account)
         receipt = w3.eth.get_transaction_receipt(tx_hash)
-        out_events = deployed_contract.events.Success().process_receipt_typed(receipt)
+        out_events = deployed_contract.events.Success.process_receipt_typed(receipt)
         assert len(list(out_events)) == 1
 
     def test_sign_transact_and_wait(self, w3: Web3):
@@ -83,5 +83,5 @@ class TestStructs:
         receipt = deployed_contract.functions.TransactFunction().sign_transact_and_wait(
             account=account, validate_transaction=True
         )
-        out_events = deployed_contract.events.Success().process_receipt_typed(receipt)
+        out_events = deployed_contract.events.Success.process_receipt_typed(receipt)
         assert len(list(out_events)) == 1
