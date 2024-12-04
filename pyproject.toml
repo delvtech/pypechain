@@ -24,7 +24,7 @@ dependencies = [
     "isort", 
     "jinja2", 
     "toml", 
-    "web3 >= 7.6.0",
+    "web3 == 7.6",
 ]
 
 [project.scripts]
