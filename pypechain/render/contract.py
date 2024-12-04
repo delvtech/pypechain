@@ -183,7 +183,7 @@ def _add_events(contract_infos: dict[str, ContractInfo], events: EventInfo | lis
                     log_str = (
                         "Detected the use of the same event with different signatures. "
                         "Pypechain does not yet support overloaded events. "
-                        "Will only use the last definition."
+                        'Expect "Mismatched ABI" errors in web3py when attempting to access overloaded events. '
                     )
                     logging.warning(log_str)
                     # Dont warn again.
