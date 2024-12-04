@@ -11,10 +11,10 @@
     "linkReferences": {}
   },
   "methodIdentifiers": {},
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/structs/contracts/IStructs.sol\":\"IStructs\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/structs/contracts/IStructs.sol\":{\"keccak256\":\"0xc007fcb8b79a776755256f2eff53653e10f375dafe9b28e19eb2a7aad88b2808\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ebd717b9d6ac40db7802a2593a9ae7e1b20dfa5d35f425aeef0d752c2e84fc7e\",\"dweb:/ipfs/QmY2KJvXZKiB6fkZHPojH69NaLQXhporkTGTtE4MSX5Em5\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.24+commit.e11b9ed9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"pypechain/test/structs/contracts/IStructs.sol\":\"IStructs\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"pypechain/test/structs/contracts/IStructs.sol\":{\"keccak256\":\"0xc007fcb8b79a776755256f2eff53653e10f375dafe9b28e19eb2a7aad88b2808\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ebd717b9d6ac40db7802a2593a9ae7e1b20dfa5d35f425aeef0d752c2e84fc7e\",\"dweb:/ipfs/QmY2KJvXZKiB6fkZHPojH69NaLQXhporkTGTtE4MSX5Em5\"]}},\"version\":1}",
   "metadata": {
     "compiler": {
-      "version": "0.8.22+commit.4fc1097e"
+      "version": "0.8.24+commit.e11b9ed9"
     },
     "language": "Solidity",
     "output": {
