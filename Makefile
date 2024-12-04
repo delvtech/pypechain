@@ -1,21 +1,40 @@
-.PHONY: build build-test build-test-sol build-test-types clean
+.PHONY: build clean build-test build-sol-test build-types-test clean-test build-example build-sol-example build-types-example clean-example
 
-build-test:
-	make build-test-sol
-	make build-test-types
-	make build-test-format-abi
-
-build-test-sol:
-	sh scripts/rebuild_sol.sh	
-
-build-test-format-abi:
-	python scripts/format_json_dir.py
-
-build-test-types:
-	sh scripts/regenerate_types.sh
+build:
+	make build-test
+	make build-example
 
 clean:
-	rm -rf example/abis/* && rm -rf example/types/* && rm -rf pypechain/test/*/abis/* && rm -rf pypechain/test/*/types/*
+	make clean-test
+	make clean-example
+
+build-test:
+	make build-sol-test
+	make build-types-test
+
+build-sol-test:
+	sh scripts/build_sol_test.sh	
+	python scripts/format_json_dir_test.py
+
+build-types-test:
+	sh scripts/generate_types_test.sh
+
+clean-test:
+	rm -rf rm -rf pypechain/test/*/abis/* && rm -rf pypechain/test/*/types/*
+
+build-example:
+	make build-sol-example
+	make build-types-example
+
+build-sol-example:
+	sh scripts/build_sol_example.sh	
+	python scripts/format_json_dir_example.py
+
+build-types-example:
+	sh scripts/generate_types_example.sh
+
+clean-example:
+	rm -rf example/abis/* && rm -rf example/types/*
 
 
 

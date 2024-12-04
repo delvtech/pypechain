@@ -1,6 +1,8 @@
 """Formatting utilities."""
 
+import json
 import keyword
+import os
 import subprocess
 from pathlib import Path
 
@@ -128,3 +130,20 @@ def format_file(file_path: Path, line_length: int = 120, quiet=True, remove_unus
         )
     isort.file(file_path, config=isort.Config(quiet=quiet))
     subprocess.run(f"black {quiet_flag} --line-length={line_length} {file_path}", shell=True, check=True)
+
+
+def format_json_dir(json_dir):
+    """Recursively format json files under a directory."""
+    for root, dirs, files in os.walk(json_dir):
+        # Format any outer json files
+        for file in files:
+            if file.endswith(".json"):
+                json_file = os.path.join(root, file)
+                # Format the JSON file
+                with open(json_file, "r", encoding="utf-8") as file:
+                    data = json.load(file)
+                with open(json_file, "w", encoding="utf-8") as file:
+                    json.dump(data, file, ensure_ascii=False, indent=2)
+
+        for d in dirs:
+            format_json_dir(d)

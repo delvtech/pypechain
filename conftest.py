@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import os
 import shutil
 import subprocess
@@ -16,6 +15,7 @@ from web3.middleware import ExtraDataToPOAMiddleware
 from web3.types import RPCEndpoint
 
 from pypechain import pypechain
+from pypechain.utilities.format import format_json_dir
 
 # pylint: disable=redefined-outer-name
 
@@ -153,22 +153,6 @@ def initialize_web3_with_http_provider(
     return web3
 
 
-def _format_json_dir(json_dir):
-    for root, dirs, files in os.walk(json_dir):
-        # Format any outer json files
-        for file in files:
-            if file.endswith(".json"):
-                json_file = os.path.join(root, file)
-                # Format the JSON file
-                with open(json_file, "r", encoding="utf-8") as file:
-                    data = json.load(file)
-                with open(json_file, "w", encoding="utf-8") as file:
-                    json.dump(data, file, ensure_ascii=False, indent=2)
-
-        for d in dirs:
-            _format_json_dir(d)
-
-
 @pytest.fixture(scope="class")
 def process_contracts(request):
     """Generate ABIs for all contracts and pypechain types from those abis."""
@@ -207,7 +191,7 @@ def process_contracts(request):
     #             subprocess.run(command, shell=True, check=True)
 
     # Format the output json files
-    _format_json_dir(abis_dir)
+    format_json_dir(abis_dir)
 
     # Run the pypechain module after processing all contracts
     pypechain(f"{test_dir}/abis", f"{test_dir}/types")
