@@ -26,6 +26,8 @@ class PypechainOverloadedFunctions(ContractFunction):
         # setting the member variables that are not used by the overloaded functions
         # wrapper. This avoids a check against the abi for this function name.
 
+        # pylint: disable=super-init-not-called
+
         if not self.abi_element_identifier:
             self.abi_element_identifier = type(self).__name__
 
