@@ -2,15 +2,34 @@
 
 from __future__ import annotations
 
-from typing import Any, Type
+from typing import Any, Optional, Type
 
 from eth_account.signers.local import LocalAccount
+from eth_typing import ABIFunction
 from hexbytes import HexBytes
+from web3._utils.abi import get_name_from_abi_element_identifier
 from web3.contract.contract import ContractFunction
 from web3.types import BlockIdentifier, StateOverride, TxParams, TxReceipt
 
 from .contract_call_exception import check_txn_receipt, handle_contract_logic_error
 from .error import PypechainBaseContractErrors
+
+
+class PypechainOverloadedFunctions(ContractFunction):
+    """The contract functions object that wraps a collection of overloaded functions."""
+
+    _factory_kwargs: dict[str, Any]
+    _overloaded_functions: dict[str, Type[PypechainContractFunction]]
+
+    def __init__(self, abi: Optional[ABIFunction] = None) -> None:
+        # We overload the init function here to not do anything to avoid
+        # setting the member variables that are not used by the overloaded functions
+        # wrapper. This avoids a check against the abi for this function name.
+
+        if not self.abi_element_identifier:
+            self.abi_element_identifier = type(self).__name__
+
+        self.fn_name = get_name_from_abi_element_identifier(self.abi_element_identifier)
 
 
 class PypechainContractFunction(ContractFunction):
