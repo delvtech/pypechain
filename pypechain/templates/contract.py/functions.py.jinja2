@@ -58,7 +58,7 @@ class {{contract_function_class_name}}{{i}}(PypechainContractFunction):
         {% endif %}
 
 {% endfor %}
-class {{contract_function_class_name}}(PypechainContractFunction):
+class {{contract_function_class_name}}(PypechainOverloadedFunctions):
     """ContractFunction for the {{function_data.name}} method."""
     # super() call methods are generic, while our version adds values & types
     # pylint: disable=arguments-differ# disable this warning when there is overloading
@@ -80,15 +80,29 @@ class {{contract_function_class_name}}(PypechainContractFunction):
 {% endfor %}
 
     def __call__(self, *args, **kwargs) -> {{contract_function_class_name}}:  # type: ignore
-        clone = super().__call__(*(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()})
+        # Special case when there are no args or kwargs
+        if len(args) == 0 and len(kwargs) == 0:
+            # We need to specify the element identifier as the function call without arguments.
+            # Despite this setting the member variable `abi_element_identifier`
+            # that's shared across this object, this field gets overwritten in the
+            # clone if arguments are provided.
+            self.abi_element_identifier = self._function_name + "()"
+            clone = super().__call__()
+        else:
+            clone = super().__call__(*(dataclass_to_tuple(arg) for arg in args), **{key: dataclass_to_tuple(arg) for key, arg in kwargs.items()})
 
         # Arguments is the flattened set of arguments from args and kwargs, ordered by the abi
         # We get the python types of the args passed in, but remapped from tuples -> dataclasses
         arg_types = get_arg_type_names(clone.arguments)
 
-        # Look up the function class based on arg types.
-        # We ensure we use a copy of the original object.
-        function_obj = copy.copy(self._functions[arg_types])
+        # Grab the relevant kwargs when factory was called.
+        factory_kwargs = self._factory_kwargs
+        factory_kwargs["abi_element_identifier"] = clone.abi_element_identifier
+
+        function_obj = self._overloaded_functions[arg_types].factory(
+            self._function_name,
+            **factory_kwargs
+        )
 
         function_obj.args = clone.args
         function_obj.kwargs = clone.kwargs
@@ -101,17 +115,16 @@ class {{contract_function_class_name}}(PypechainContractFunction):
         cls, class_name: str, **kwargs: Any
     ) -> Self:
         out = super().factory(class_name, **kwargs)
+        # Store the factory args for downstream consumption
+        out._factory_kwargs = kwargs
 
         # We initialize our overridden functions here.
         # Note that we use the initialized object to ensure each function
-        # is attached to the instanciated object 
+        # is attached to the instantiated object 
         # (attached to a specific web3 and contract address)
-        out._functions = {
+        out._overloaded_functions = {
         {% for i in range(function_data.signature_datas|length) %}
-            {{contract_function_class_name}}{{i}}._type_signature: {{contract_function_class_name}}{{i}}.factory(
-                "{{contract_function_class_name}}{{i}}",
-                **kwargs
-            ),
+            {{contract_function_class_name}}{{i}}._type_signature: {{contract_function_class_name}}{{i}},
         {% endfor %}
         }
         return out

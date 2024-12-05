@@ -161,9 +161,9 @@ class OverloadedApprovalContractEvent(ContractEvent):
 class OverloadedContractEvents(ContractEvents):
     """ContractEvents for the Overloaded contract."""
 
-    Transfer: Type[OverloadedTransferContractEvent]
+    Transfer: OverloadedTransferContractEvent
 
-    Approval: Type[OverloadedApprovalContractEvent]
+    Approval: OverloadedApprovalContractEvent
 
 
     def __init__(
@@ -173,18 +173,18 @@ class OverloadedContractEvents(ContractEvents):
         address: ChecksumAddress | None = None,
     ) -> None:
         super().__init__(abi, w3, address)
-        self.Transfer = cast(Type[OverloadedTransferContractEvent], OverloadedTransferContractEvent.factory(
+        self.Transfer = OverloadedTransferContractEvent.factory(
             "Transfer",
             w3=w3,
             contract_abi=abi,
             address=address,
             event_name="Transfer"
-        ))
-        self.Approval = cast(Type[OverloadedApprovalContractEvent], OverloadedApprovalContractEvent.factory(
+        )
+        self.Approval = OverloadedApprovalContractEvent.factory(
             "Approval",
             w3=w3,
             contract_abi=abi,
             address=address,
             event_name="Approval"
-        ))
+        )
         

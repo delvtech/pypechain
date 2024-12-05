@@ -3,7 +3,7 @@
 from .base_event import BaseEvent, BaseEventArgs
 from .combomethod_typed import combomethod_typed
 from .contract_call_exception import FailedTransaction, PypechainCallException
-from .contract_function import PypechainContractFunction
+from .contract_function import PypechainContractFunction, PypechainOverloadedFunctions
 from .error import ErrorInfo, ErrorParams, PypechainBaseContractErrors, PypechainBaseError
 from .utilities import (
     dataclass_to_tuple,

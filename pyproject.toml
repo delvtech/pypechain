@@ -1,7 +1,7 @@
 [project]
 
 name = "pypechain"
-version = "0.0.47"
+version = "0.0.48"
 authors = [
     { name = "Matthew Brown", email = "matt@delv.tech" },
     { name = "Dylan Paiton", email = "dylan@delv.tech" },
@@ -24,9 +24,7 @@ dependencies = [
     "isort", 
     "jinja2", 
     "toml", 
-    # TODO new event api for web3 introduced to 7.5.0 breaks pypechain
-    # https://github.com/delvtech/pypechain/issues/149
-    "web3 >= 7.2.0, < 7.5.0",
+    "web3 == 7.6",
 ]
 
 [project.scripts]

@@ -110,7 +110,7 @@ class TestOverloading:
 
         with pytest.raises(MismatchedABI) as err:
             result = deployed_contract.functions.doSomething(x, y, s).call()  # type: ignore
-        assert "Could not identify the intended function with name `doSomething`" in str(err.value)
+        assert "ABI Not Found!" in str(err.value)
 
     def test_factory(self, w3):
         """Tests creating multiple contracts with the same object"""
