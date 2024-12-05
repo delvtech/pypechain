@@ -24,12 +24,12 @@ def main(argv: Sequence[str] | None = None) -> None:
     argv : Sequence[str] | None, optional
         Command line arguments
     """
-    abi_file_path, output_dir, line_length, apply_formatting, parallel = parse_arguments(argv)
-    pypechain(abi_file_path, output_dir, line_length, apply_formatting, parallel)
+    abi_file_paths, output_dir, line_length, apply_formatting, parallel = parse_arguments(argv)
+    pypechain(abi_file_paths, output_dir, line_length, apply_formatting, parallel)
 
 
 def pypechain(
-    abi_file_path: str,
+    abi_file_paths: list[str],
     output_dir: str = "pypechain_types",
     line_length: int = 120,
     apply_formatting: bool = True,
@@ -52,12 +52,16 @@ def pypechain(
     json_files_to_process: list[Path] = []
 
     # Check if provided path is a directory or file
-    if os.path.isdir(abi_file_path):
-        # If directory, gather all JSON files recursively in the directory
-        json_files_to_process.extend(gather_json_files(abi_file_path))
-    else:
-        # Otherwise, add the single file to the list
-        json_files_to_process.append(Path(abi_file_path))
+    for abi_file_path in abi_file_paths:
+        if os.path.isdir(abi_file_path):
+            # If directory, gather all JSON files recursively in the directory
+            json_files_to_process.extend(gather_json_files(abi_file_path))
+        else:
+            # Otherwise, add the single file to the list
+            json_files_to_process.append(Path(abi_file_path).resolve())
+
+    # Remove duplicates
+    json_files_to_process = list(set(json_files_to_process))
 
     # Parse the files and gather AbiInfos
     abi_infos: list[AbiInfo] = []
@@ -88,7 +92,7 @@ def pypechain(
 
 def gather_json_files(directory: str) -> list:
     """Gather all JSON files in the specified directory and its subdirectories."""
-    return list(Path(directory).rglob("*.json"))
+    return list(Path(directory).resolve().rglob("*.json"))
 
 
 def setup_directory(directory: str) -> None:
@@ -113,7 +117,7 @@ def setup_directory(directory: str) -> None:
 class Args(NamedTuple):
     """Command line arguments for pypechain."""
 
-    abi_file_path: str
+    abi_file_paths: list[str]
     output_dir: str
     line_length: int
     apply_formatting: bool
@@ -123,7 +127,7 @@ class Args(NamedTuple):
 def namespace_to_args(namespace: argparse.Namespace) -> Args:
     """Convert argprase.Namespace to Args."""
     return Args(
-        abi_file_path=namespace.abi_file_path,
+        abi_file_paths=namespace.abi_file_paths,
         output_dir=namespace.output_dir,
         line_length=namespace.line_length,
         apply_formatting=namespace.apply_formatting,
@@ -136,8 +140,9 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
     parser = argparse.ArgumentParser(description="Generates class files for a given abi.")
 
     parser.add_argument(
-        "abi_file_path",
-        help="Path to the abi JSON file or directory containing multiple JSON files.",
+        "abi_file_paths",
+        nargs="*",
+        help="Path(s) to the abi JSON file or directory containing multiple JSON files.",
     )
 
     parser.add_argument(
