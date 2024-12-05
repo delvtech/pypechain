@@ -29,7 +29,7 @@ def main(argv: Sequence[str] | None = None) -> None:
 
 
 def pypechain(
-    abi_file_paths: list[str],
+    abi_file_paths: list[str] | str,
     output_dir: str = "pypechain_types",
     line_length: int = 120,
     apply_formatting: bool = True,
@@ -39,8 +39,8 @@ def pypechain(
 
     Parameters
     ----------
-    abi_file_path : str
-        Path to the abi JSON file.
+    abi_file_paths : list[str] | str
+        Path(s) to the abi JSON file.
     output_dir: str, optional
         Path to the directory where files will be generated. Defaults to 'pypechain_types'.
     line_length : int, optional
@@ -48,6 +48,9 @@ def pypechain(
     apply_formatting : bool, optional
         If True, autoflake, isort and black will be applied to the file in that order, by default True.
     """
+    if isinstance(abi_file_paths, str):
+        abi_file_paths = [abi_file_paths]
+
     # List to store all JSON ABI files to be processed
     json_files_to_process: list[Path] = []
 
