@@ -144,7 +144,7 @@ def parse_arguments(argv: Sequence[str] | None = None) -> Args:
 
     parser.add_argument(
         "abi_file_paths",
-        nargs="*",
+        nargs="+",
         help="Path(s) to the abi JSON file or directory containing multiple JSON files.",
     )
 
