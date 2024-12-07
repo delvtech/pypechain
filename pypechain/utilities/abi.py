@@ -703,6 +703,21 @@ def load_abi_infos_from_file(file_path: Path) -> list[AbiInfo]:
                 )
             ]
 
+        if is_abi(json_file):
+            abi = get_abi_from_json(json_file)
+            # TODO bytecode should be none
+            bytecode = ""
+            bytecode_link_references = []
+            contract_name = file_path.name.removesuffix(".json")
+            return [
+                AbiInfo(
+                    abi=abi,
+                    bytecode=bytecode,
+                    contract_name=contract_name,
+                    bytecode_link_references=bytecode_link_references,
+                )
+            ]
+
         raise ValueError("Unknown ABI Json format")
 
 
@@ -975,7 +990,7 @@ def get_abi_from_json(json_abi: FoundryJson | HardhatJson | ABI) -> ABI:
 
 def is_abi(maybe_abi: object) -> TypeGuard[ABI]:
     """Typeguard for ABI's"""
-    if not isinstance(json, list):
+    if not isinstance(maybe_abi, list):
         return False  # ABI should be a list
 
     # Check if there's at least one entry with 'name', 'inputs', and 'type'

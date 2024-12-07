@@ -104,6 +104,7 @@ def solidity_to_python_type(solidity_type: str, custom_types: list[str] = []) ->
         "uint200",
         "uint208",
         "uint216",
+        "uint224",
         "uint232",
         "uint240",
         "uint248",
